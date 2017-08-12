@@ -1,2 +1,4 @@
 # aprendizaje-maquina-2017
-Notas y material para el curso de aprendiza de máquina 2017 (ITAM)
+Repositorio de notas, material y datos para el curso de aprendizaje de máquina 2017 (ITAM).
+
+- Notas (https://felipegonzalez.github.io/aprendizaje-maquina-2017/)
