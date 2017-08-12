@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html >
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Aprendizaje de máquina</title>
+  <meta name="description" content="Notas y material para el curso de aprendizaje de máquina 2017 (ITAM)">
+  <meta name="generator" content="bookdown 0.4.2 and GitBook 2.6.7">
+
+  <meta property="og:title" content="Aprendizaje de máquina" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="Notas y material para el curso de aprendizaje de máquina 2017 (ITAM)" />
+  <meta name="github-repo" content="felipegonzalez/aprendizaje-maquina-2017" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Aprendizaje de máquina" />
+  
+  <meta name="twitter:description" content="Notas y material para el curso de aprendizaje de máquina 2017 (ITAM)" />
+  
+
+<meta name="author" content="Felipe González">
+
+
+<meta name="date" content="2017-08-12">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  
+  
+<link rel="prev" href="index.html">
+
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+<link rel="stylesheet" href="toc.css" type="text/css" />
+<link rel="stylesheet" href="font-awesome.min.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Aprendizaje Máquina</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Temario y referencias</a><ul>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#evaluacion"><i class="fa fa-check"></i>Evaluación</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#software-r-y-rstudio"><i class="fa fa-check"></i>Software: R y Rstudio</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#referencias-principales"><i class="fa fa-check"></i>Referencias principales</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#otras-referencias"><i class="fa fa-check"></i>Otras referencias</a></li>
+</ul></li>
+<li class="chapter" data-level="1" data-path="introduccion.html"><a href="introduccion.html"><i class="fa fa-check"></i><b>1</b> Introducción</a><ul>
+<li class="chapter" data-level="1.1" data-path="introduccion.html"><a href="introduccion.html#que-es-aprendizaje-de-maquina-machine-learning"><i class="fa fa-check"></i><b>1.1</b> ¿Qué es aprendizaje de máquina (machine learning)?</a></li>
+<li class="chapter" data-level="1.2" data-path="introduccion.html"><a href="introduccion.html#aprendizaje-supervisado-1"><i class="fa fa-check"></i><b>1.2</b> Aprendizaje Supervisado</a></li>
+<li class="chapter" data-level="1.3" data-path="introduccion.html"><a href="introduccion.html#predicciones"><i class="fa fa-check"></i><b>1.3</b> Predicciones</a></li>
+<li class="chapter" data-level="1.4" data-path="introduccion.html"><a href="introduccion.html#como-evaluar-el-desempeno-de-un-modelo"><i class="fa fa-check"></i><b>1.4</b> ¿Cómo evaluar el desempeño de un modelo?</a><ul>
+<li class="chapter" data-level="1.4.1" data-path="introduccion.html"><a href="introduccion.html#error-de-entrenamiento"><i class="fa fa-check"></i><b>1.4.1</b> Error de entrenamiento</a></li>
+<li class="chapter" data-level="1.4.2" data-path="introduccion.html"><a href="introduccion.html#error-de-prediccion"><i class="fa fa-check"></i><b>1.4.2</b> Error de predicción</a></li>
+</ul></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Publicado con bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Aprendizaje de máquina</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="introduccion" class="section level1">
+<h1><span class="header-section-number">Clase 1</span> Introducción</h1>
+<div id="que-es-aprendizaje-de-maquina-machine-learning" class="section level2">
+<h2><span class="header-section-number">1.1</span> ¿Qué es aprendizaje de máquina (machine learning)?</h2>
+<p>Métodos computacionales para <strong>aprender de datos</strong> con el fin de mejorar el <strong>desempeño</strong> en alguna tarea o toma de decisión.</p>
+<p>Usualmente la tarea es predecir datos no observados (porque son costosos de medir o porque son observables sólo en el futuro), pero más generalmente buscamos modelar patrones o encontrar estructuras interesantes en los datos.</p>
+<div id="ejemplos-de-tareas-de-aprendizaje" class="section level4 unnumbered">
+<h4>Ejemplos de tareas de aprendizaje:</h4>
+<ul>
+<li>Predecir si un cliente de tarjeta de crédito va a caer en impago en los próximos tres meses.</li>
+<li>Reconocer palabras escritas a mano (OCR).</li>
+<li>Detectar llamados de ballenas en grabaciones de boyas.</li>
+<li>Estimar el ingreso mensual de un hogar a partir de las características de la vivienda, posesiones y equipamiento y localización geográfica.</li>
+<li>Dividir a los clientes de Netflix según sus gustos.</li>
+<li>Recomendar artículos a clientes de un programa de lealtad o servicio online.</li>
+</ul>
+<p>Las razones usuales para intentar resolver estos problemas computacionalmente son diversas:</p>
+<ul>
+<li>Quisiéramos obtener una respuesta barata, rápida, <strong>automatizada</strong>, y con suficiente precisión. Por ejemplo, reconocer caracteres en una placa de coche de una fotografía se puede hacer por personas, pero eso es lento y costoso. Igual oír cada segundo de grabación de las boyas para saber si hay ballenas o no. Hacer mediciones directas del ingreso de un hogar requiere mucho tiempo y esfuerzo.</li>
+<li>Quisiéramos <strong>superar el desempeño actual</strong> de los expertos o de reglas simples utilizando datos: por ejemplo, en la decisión de dar o no un préstamo a un solicitante, puede ser posible tomar mejores decisiones con algoritmos que con evaluaciones personales o con reglas simples que toman en cuenta el ingreso mensual, por ejemplo.</li>
+<li>Queremos <strong>entender de manera más completa y sistemática</strong> el comportamiento de un fenómeno, identificando variables o patrones importantes.</li>
+</ul>
+</div>
+<div id="ejemplo-reconocimiento-de-digitos-escritos-a-mano" class="section level4 unnumbered">
+<h4>Ejemplo: reconocimiento de dígitos escritos a mano</h4>
+<p>¿Cómo reconocer los siguientes dígitos de manera automática?</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">graficar_digitos &lt;-<span class="st"> </span><span class="cf">function</span>(data_frame){
+  matriz_digitos &lt;-<span class="st"> </span><span class="kw">lapply</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(data_frame), <span class="cf">function</span>(x){ 
+        <span class="kw">matrix</span>(data_frame[x, <span class="dv">257</span><span class="op">:</span><span class="dv">2</span>], <span class="dv">16</span>, <span class="dv">16</span>)[<span class="dv">16</span><span class="op">:</span><span class="dv">1</span>, ]
+    })
+    <span class="kw">image</span>(<span class="kw">Reduce</span>(<span class="st">&quot;rbind&quot;</span>, matriz_digitos), 
+    <span class="dt">col =</span> <span class="kw">terrain.colors</span>(<span class="dv">30</span>), <span class="dt">axes =</span> <span class="ot">FALSE</span>)
+    <span class="kw">text</span>(<span class="kw">seq</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">1</span><span class="op">/</span><span class="dv">10</span>) <span class="op">+</span><span class="st"> </span><span class="fl">0.05</span>, <span class="fl">0.05</span>, <span class="dt">label =</span> data_frame[, <span class="dv">1</span>], <span class="dt">cex =</span> <span class="fl">1.5</span>)
+}</code></pre></div>
+<p>En los datos tenemos los valores de cada pixel (los caracteres son imagenes de 16x16 pixeles), y una <em>etiqueta</em> asociada, que es el número que la imagen representa. Podemos ver las imágenes y las etiquetas:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(ElemStatLearn)
+muestra_<span class="dv">1</span> &lt;-<span class="st"> </span>zip.train[<span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(zip.train), <span class="dv">10</span>), ]
+<span class="kw">graficar_digitos</span>(muestra_<span class="dv">1</span>)</code></pre></div>
+<p><img src="01-introduccion_files/figure-html/grafdigitos-1.png" width="768" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">muestra_<span class="dv">2</span> &lt;-<span class="st"> </span>zip.train[<span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(zip.train), <span class="dv">10</span>), ]
+<span class="kw">graficar_digitos</span>(muestra_<span class="dv">2</span>)</code></pre></div>
+<p><img src="01-introduccion_files/figure-html/unnamed-chunk-2-1.png" width="768" /></p>
+<p>Los 16x16=256 están escritos acomodando las filas de la imagen en vector de 256 valores (cada renglón de <code>zip.train</code>). Un dígito entonces se representa como sigue:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dim</span>(zip.train)</code></pre></div>
+<pre><code>## [1] 7291  257</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">zip.train[<span class="dv">1</span>,]</code></pre></div>
+<pre><code>##   [1]  6.000 -1.000 -1.000 -1.000 -1.000 -1.000 -1.000 -1.000 -0.631  0.862
+##  [11] -0.167 -1.000 -1.000 -1.000 -1.000 -1.000 -1.000 -1.000 -1.000 -1.000
+##  [21] -1.000 -1.000 -1.000 -0.992  0.297  1.000  0.307 -1.000 -1.000 -1.000
+##  [31] -1.000 -1.000 -1.000 -1.000 -1.000 -1.000 -1.000 -1.000 -1.000 -0.410
+##  [41]  1.000  0.986 -0.565 -1.000 -1.000 -1.000 -1.000 -1.000 -1.000 -1.000
+##  [51] -1.000 -1.000 -1.000 -1.000 -0.683  0.825  1.000  0.562 -1.000 -1.000
+##  [61] -1.000 -1.000 -1.000 -1.000 -1.000 -1.000 -1.000 -1.000 -1.000 -0.938
+##  [71]  0.540  1.000  0.778 -0.715 -1.000 -1.000 -1.000 -1.000 -1.000 -1.000
+##  [81] -1.000 -1.000 -1.000 -1.000 -1.000  0.100  1.000  0.922 -0.439 -1.000
+##  [91] -1.000 -1.000 -1.000 -1.000 -1.000 -1.000 -1.000 -1.000 -1.000 -1.000
+## [101] -0.257  0.950  1.000 -0.162 -1.000 -1.000 -1.000 -0.987 -0.714 -0.832
+## [111] -1.000 -1.000 -1.000 -1.000 -1.000 -0.797  0.909  1.000  0.300 -0.961
+## [121] -1.000 -1.000 -0.550  0.485  0.996  0.867  0.092 -1.000 -1.000 -1.000
+## [131] -1.000  0.278  1.000  0.877 -0.824 -1.000 -0.905  0.145  0.977  1.000
+## [141]  1.000  1.000  0.990 -0.745 -1.000 -1.000 -0.950  0.847  1.000  0.327
+## [151] -1.000 -1.000  0.355  1.000  0.655 -0.109 -0.185  1.000  0.988 -0.723
+## [161] -1.000 -1.000 -0.630  1.000  1.000  0.068 -0.925  0.113  0.960  0.308
+## [171] -0.884 -1.000 -0.075  1.000  0.641 -0.995 -1.000 -1.000 -0.677  1.000
+## [181]  1.000  0.753  0.341  1.000  0.707 -0.942 -1.000 -1.000  0.545  1.000
+## [191]  0.027 -1.000 -1.000 -1.000 -0.903  0.792  1.000  1.000  1.000  1.000
+## [201]  0.536  0.184  0.812  0.837  0.978  0.864 -0.630 -1.000 -1.000 -1.000
+## [211] -1.000 -0.452  0.828  1.000  1.000  1.000  1.000  1.000  1.000  1.000
+## [221]  1.000  0.135 -1.000 -1.000 -1.000 -1.000 -1.000 -1.000 -0.483  0.813
+## [231]  1.000  1.000  1.000  1.000  1.000  1.000  0.219 -0.943 -1.000 -1.000
+## [241] -1.000 -1.000 -1.000 -1.000 -1.000 -0.974 -0.429  0.304  0.823  1.000
+## [251]  0.482 -0.474 -0.991 -1.000 -1.000 -1.000 -1.000</code></pre>
+</div>
+<div id="aprendizaje-supervisado" class="section level4 unnumbered">
+<h4>Aprendizaje supervisado</h4>
+<p>Las tareas de aprendizaje se divide en dos grandes partes: aprendizaje supervisado y aprendizaje no supervisado.</p>
+<ul>
+<li><strong>Aprendizaje supervisado</strong> Construir un modelo o algoritmo para predecir o estimar un <em>target</em> o una <em>variable de salida</em> a partir de ciertas variables de entrada.</li>
+</ul>
+<p>Predecir y estimar, en este contexto, se refieren a cosas similares. Generalmente se usa <em>predecir</em> cuando se trata de variables que no son observables ahora, sino en el futuro, y <em>estimar</em> cuando nos interesan variables actuales que no podemos observar ahora por costos o por la naturaleza del fenómeno.</p>
+<p>Por ejemplo, para identificar a los clientes con alto riesgo de impago de tarjeta de crédito, utilizamos datos históricos de clientes que han pagado y no han pagado. Con estos datos entrenamos un algoritmo para detectar anticipadamente los clientes con alto riesgo de impago.</p>
+<p>Usualmente dividimos los problemas de aprendizaje supervisado en dos tipos, dependiendo de la variables salida:</p>
+<ul>
+<li>Problemas de <strong>regresión</strong>: cuando la salida es una variable numérica</li>
+<li>Problemas de <strong>clasificación</strong>: cuando la salida es una variable categórica.</li>
+</ul>
+</div>
+<div id="ejemplo-predecir-el-rendimiento-de-un-coche." class="section level4 unnumbered">
+<h4>Ejemplo: predecir el rendimiento de un coche.</h4>
+<p>Estimar directamente el rendimiento (km por litro de combustible) de un coche es costoso: hay que hacer varias pruebas en diversas condiciones, etc. ¿Podríamos estimar el rendimiento de un coche usando variables más accesibles, peso del coche, año de producción, etc.?</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(ISLR)
+datos &lt;-<span class="st"> </span>Auto[, <span class="kw">c</span>(<span class="st">&#39;name&#39;</span>, <span class="st">&#39;weight&#39;</span>,<span class="st">&#39;year&#39;</span>, <span class="st">&#39;mpg&#39;</span>)]
+datos<span class="op">$</span>peso_kg &lt;-<span class="st"> </span>datos<span class="op">$</span>weight<span class="op">*</span><span class="fl">0.45359237</span>
+datos<span class="op">$</span>rendimiento_kpl &lt;-<span class="st"> </span>datos<span class="op">$</span>mpg<span class="op">*</span>(<span class="fl">1.609344</span><span class="op">/</span><span class="fl">3.78541178</span>)
+<span class="kw">head</span>(datos[, <span class="kw">c</span>(<span class="st">&#39;name&#39;</span>,<span class="st">&#39;peso_kg&#39;</span>, <span class="st">&#39;rendimiento_kpl&#39;</span>)])</code></pre></div>
+<pre><code>##                        name  peso_kg rendimiento_kpl
+## 1 chevrolet chevelle malibu 1589.388        7.652587
+## 2         buick skylark 320 1675.117        6.377156
+## 3        plymouth satellite 1558.543        7.652587
+## 4             amc rebel sst 1557.183        6.802299
+## 5               ford torino 1564.440        7.227443
+## 6          ford galaxie 500 1969.044        6.377156</code></pre>
+<p>Y podríamos comenzar graficando rendimiento contra peso. Cada punto representa un coche distinto. En esta gráfica vemos que los valores de rendimiento varían según según peso de una manera sistemática: cuanto más grande es el peso, más bajo es el rendimiento:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(ggplot2)
+<span class="kw">ggplot</span>(datos, 
+  <span class="kw">aes</span>(<span class="dt">x=</span>peso_kg, <span class="dt">y=</span>rendimiento_kpl)) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_point</span>() </code></pre></div>
+<p><img src="01-introduccion_files/figure-html/unnamed-chunk-5-1.png" width="480" /></p>
+<p>Podemos entonces ajustar una curva, que para cada nivel de peso da un valor de rendimiento que se ‘aleja lo menos posible’ de los valores de rendimiento cercanos. Por ejemplo: según la curva roja, ¿cómo haríamos la predicción para un peso de 1500 kg?</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(datos, 
+  <span class="kw">aes</span>(<span class="dt">x=</span>peso_kg, <span class="dt">y=</span>rendimiento_kpl)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">se =</span><span class="ot">FALSE</span>, <span class="dt">colour=</span><span class="st">&#39;red&#39;</span>, <span class="dt">size=</span><span class="fl">1.1</span>, 
+    <span class="dt">span=</span><span class="fl">0.5</span>, <span class="dt">method=</span><span class="st">&#39;loess&#39;</span>)</code></pre></div>
+<p><img src="01-introduccion_files/figure-html/unnamed-chunk-6-1.png" width="480" /></p>
+</div>
+<div id="aprendizaje-no-supervisado" class="section level4 unnumbered">
+<h4>Aprendizaje no supervisado</h4>
+<ul>
+<li><strong>Aprendizaje no supervisado</strong> En este caso no hay <em>target</em> o variable salida. Buscamos modelar y entender las relaciones entre variables y entre observaciones, o patrones importantes o interesantes en los datos.</li>
+</ul>
+<p>Los problemas supervisados tienen un objetivo claro: hacer las mejores predicciones posibles bajo ciertas restricciones. Los problemas no supervisados tienden a tener objetivos más vagos, y por lo mismo pueden ser más difíciles.</p>
+</div>
+<div id="ejemplo-tipos-de-coches-en-el-mercado" class="section level4 unnumbered">
+<h4>Ejemplo: tipos de coches en el mercado</h4>
+<p>Quisieramos encontrar categorías de coches tales que: las categorías son diferentes entre sí, y los coches en una misma categoría son similares entre sí. Esta agrupación nos permite entender la estructura general de los datos, cómo están organizados en términos de similitud de características.</p>
+<p>En este ejemplo, encontramos un plano de máxima variabilidad donde proyectamos los coches, y después formamos grupos de coches similares:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">autos &lt;-<span class="st"> </span>Auto[, <span class="kw">c</span>(<span class="st">&#39;mpg&#39;</span>,<span class="st">&#39;displacement&#39;</span>, <span class="st">&#39;horsepower&#39;</span>,<span class="st">&#39;acceleration&#39;</span>)]
+comps_autos &lt;-<span class="st"> </span><span class="kw">princomp</span>(autos, <span class="dt">cor =</span> T)
+clust &lt;-<span class="st"> </span><span class="kw">hclust</span>(<span class="kw">dist</span>(comps_autos<span class="op">$</span>scores[,<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>]), <span class="dt">method =</span> <span class="st">&#39;ward.D&#39;</span>)
+autos<span class="op">$</span>grupo &lt;-<span class="st"> </span><span class="kw">cutree</span>(clust, <span class="dt">k =</span> <span class="dv">4</span>)
+autos<span class="op">$</span>Comp.<span class="dv">1</span> &lt;-<span class="st"> </span>comps_autos<span class="op">$</span>scores[,<span class="dv">1</span>]
+autos<span class="op">$</span>Comp.<span class="dv">2</span> &lt;-<span class="st"> </span>comps_autos<span class="op">$</span>scores[,<span class="dv">2</span>]
+autos<span class="op">$</span>nombre &lt;-<span class="st"> </span>Auto<span class="op">$</span>name
+<span class="kw">ggplot</span>(autos, <span class="kw">aes</span>(<span class="dt">x=</span>Comp.<span class="dv">1</span>, <span class="dt">y=</span>Comp.<span class="dv">2</span>, <span class="dt">colour=</span><span class="kw">factor</span>(grupo), <span class="dt">label=</span>nombre)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_point</span>()</code></pre></div>
+<p><img src="01-introduccion_files/figure-html/unnamed-chunk-7-1.png" width="480" /></p>
+<p>¿Cómo interpretamos los grupos?</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(<span class="kw">subset</span>(autos, grupo<span class="op">==</span><span class="dv">1</span>))</code></pre></div>
+<pre><code>##   mpg displacement horsepower acceleration grupo    Comp.1     Comp.2
+## 1  18          307        130         12.0     1 -1.817719 -0.5042535
+## 2  15          350        165         11.5     1 -2.800712 -0.3938195
+## 3  18          318        150         11.0     1 -2.310357 -0.7966085
+## 4  16          304        150         12.0     1 -2.213807 -0.3989781
+## 5  17          302        140         10.5     1 -2.225309 -0.9183779
+## 6  15          429        198         10.0     1 -3.900596 -0.6915313
+##                      nombre
+## 1 chevrolet chevelle malibu
+## 2         buick skylark 320
+## 3        plymouth satellite
+## 4             amc rebel sst
+## 5               ford torino
+## 6          ford galaxie 500</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(<span class="kw">subset</span>(autos, grupo<span class="op">==</span><span class="dv">2</span>))</code></pre></div>
+<pre><code>##    mpg displacement horsepower acceleration grupo      Comp.1     Comp.2
+## 15  24          113         95         15.0     2  0.50234800 -0.3800473
+## 19  27           97         88         14.5     2  0.79722704 -0.7509781
+## 22  24          107         90         14.5     2  0.52837050 -0.5437610
+## 24  26          121        113         12.5     2 -0.04757934 -1.2605758
+## 30  27           97         88         14.5     2  0.79722704 -0.7509781
+## 31  28          140         90         15.5     2  0.76454526 -0.4100595
+##                   nombre
+## 15 toyota corona mark ii
+## 19          datsun pl510
+## 22           audi 100 ls
+## 24              bmw 2002
+## 30          datsun pl510
+## 31   chevrolet vega 2300</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(<span class="kw">subset</span>(autos, grupo<span class="op">==</span><span class="dv">3</span>))</code></pre></div>
+<pre><code>##    mpg displacement horsepower acceleration grupo      Comp.1       Comp.2
+## 16  22          198         95         15.5     3  0.01913364  0.090471378
+## 17  18          199         97         15.5     3 -0.26705470  0.339015545
+## 18  21          200         85         16.0     3  0.16412490  0.315611651
+## 25  21          199         90         15.0     3 -0.05362631  0.004579963
+## 34  19          232        100         13.0     3 -0.79359758 -0.413938751
+## 35  16          225        105         15.5     3 -0.63973365  0.517394423
+##                       nombre
+## 16           plymouth duster
+## 17                amc hornet
+## 18             ford maverick
+## 25               amc gremlin
+## 34               amc gremlin
+## 35 plymouth satellite custom</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(<span class="kw">subset</span>(autos, grupo<span class="op">==</span><span class="dv">4</span>))</code></pre></div>
+<pre><code>##    mpg displacement horsepower acceleration grupo    Comp.1    Comp.2
+## 20  26           97         46         20.5     4 2.2421696 1.1703377
+## 21  25          110         87         17.5     4 1.0737328 0.3205227
+## 23  25          104         95         17.5     4 0.9902507 0.3021997
+## 47  22          140         72         19.0     4 1.1727317 1.0419917
+## 52  30           79         70         19.5     4 2.0927389 0.5620939
+## 54  31           71         65         19.0     4 2.1920905 0.3319627
+##                          nombre
+## 20 volkswagen 1131 deluxe sedan
+## 21                  peugeot 504
+## 23                     saab 99e
+## 47          chevrolet vega (sw)
+## 52                  peugeot 304
+## 54          toyota corolla 1200</code></pre>
+</div>
+</div>
+<div id="aprendizaje-supervisado-1" class="section level2">
+<h2><span class="header-section-number">1.2</span> Aprendizaje Supervisado</h2>
+<p>Por el momento nos concentramos en problemas supervisados de regresión, es decir predicción de variables numerícas.</p>
+<p>¿Cómo entendemos el problema de predicción?</p>
+<p>Para entender lo que estamos intentando hacer, pensaremos en términos de <strong>modelos teóricos que generan los datos</strong>. Otra manera de ver esto: para construir algo de teoría, es necesario hacer algunos supuestos acerca de cómo funciona el fenómeno que nos interesa, y cómo fueron generados las observaciones que usamos para construir nuestros modelos.</p>
+<p>Si <span class="math inline">\(Y\)</span> es la respuesta que queremos predecir, y <span class="math inline">\(X\)</span> es una entrada que queremos usar para predecir <span class="math inline">\(Y\)</span>, consideramos que <span class="math inline">\(Y\)</span> y <span class="math inline">\(X\)</span> están relacionadas como sigue: <span class="math display">\[Y=f(X)+\epsilon,\]</span> donde <span class="math inline">\(\epsilon\)</span> es una término de error aleatorio que no depende de <span class="math inline">\(X\)</span>, y que tiene valor esperado <span class="math inline">\(\textrm{E}(\epsilon)=0\)</span>.</p>
+<ul>
+<li><span class="math inline">\(f\)</span> expresa la relación sistemática que hay entre <span class="math inline">\(Y\)</span> y <span class="math inline">\(X\)</span>: para cada valor posible de <span class="math inline">\(X\)</span>, la <code>contribución</code> de <span class="math inline">\(X\)</span> a <span class="math inline">\(Y\)</span> es <span class="math inline">\(f(X)\)</span>.</li>
+<li>Pero <span class="math inline">\(X\)</span> <strong>no determina</strong> a <span class="math inline">\(Y\)</span>, como en el ejemplo anterior de rendimiento de coches. Entonces agregamos una error aleatorio <span class="math inline">\(\epsilon\)</span>, con media cero (si la media no es cero podemos agregar una constante a <span class="math inline">\(f\)</span>), que no contiene información acerca de <span class="math inline">\(X\)</span> (independiente de <span class="math inline">\(X\)</span>).</li>
+<li><span class="math inline">\(\epsilon\)</span> representa, por ejemplo, el efecto de variables que no hemos medido o procesos aleatorios que determinan la respuesta.</li>
+</ul>
+<div id="ejemplo" class="section level4 unnumbered">
+<h4>Ejemplo</h4>
+<p>Vamos a usar simulación para entender estas ideas: supongamos que <span class="math inline">\(X\)</span> es el número de años de estudio de una persona y <span class="math inline">\(Y\)</span> es su ingreso mensual. En primer lugar, estas son el número de años de estudio de 8 personas:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">7</span>,<span class="dv">10</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">5</span>,<span class="dv">9</span>,<span class="dv">13</span>,<span class="dv">2</span>,<span class="dv">4</span>)</code></pre></div>
+<p>Ahora <em>supondremos</em> que la dependencia de Y de X está dada por <span class="math inline">\(Y=f(X)+\epsilon\)</span> por una función <span class="math inline">\(f\)</span> que no conocemos (esta función está determinada por el fenómeno)</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">f &lt;-<span class="st"> </span><span class="cf">function</span>(x){
+  <span class="dv">1000</span><span class="op">*</span><span class="kw">sqrt</span>(x)
+}</code></pre></div>
+<p>El ingreso no se determina únicamente por número de años de estudio. Suponemos entonces que hay una variable adicional que perturba los niveles de <span class="math inline">\(f(X)\)</span> por una cantidad aleatoria. Los valores que observamos de <span class="math inline">\(Y\)</span> están dados entonces por:</p>
+<p>Entonces podríamos obtener, por ejemplo:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x.<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="dv">0</span>,<span class="dv">13</span>,<span class="fl">0.5</span>)
+y.<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">f</span>(x.<span class="dv">1</span>)
+dat.<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">x=</span>x.<span class="dv">1</span>,<span class="dt">y=</span>y.<span class="dv">1</span>)
+<span class="kw">set.seed</span>(<span class="dv">280572</span>)
+error &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span class="kw">length</span>(x), <span class="dv">0</span>, <span class="dv">500</span>)
+y &lt;-<span class="st"> </span><span class="kw">f</span>(x) <span class="op">+</span><span class="st"> </span>error
+datos &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">x=</span>x, <span class="dt">y=</span>y)
+datos<span class="op">$</span>y.media &lt;-<span class="st"> </span><span class="kw">f</span>(datos<span class="op">$</span>x)
+<span class="kw">ggplot</span>(datos, <span class="kw">aes</span>(<span class="dt">x=</span>x, <span class="dt">y=</span>y)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">data=</span>dat.<span class="dv">2</span>, <span class="dt">colour=</span><span class="st">&#39;blue&#39;</span>, <span class="dt">size=</span><span class="fl">1.1</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_segment</span>(<span class="kw">aes</span>(<span class="dt">x=</span>x, <span class="dt">xend=</span>x, <span class="dt">y=</span>y, <span class="dt">yend=</span>y.media), <span class="dt">col=</span><span class="st">&#39;red&#39;</span>)</code></pre></div>
+<p><img src="01-introduccion_files/figure-html/unnamed-chunk-11-1.png" width="480" /></p>
+<p>Pero en problemas de aprendizaje nunca conocemos esta <span class="math inline">\(f\)</span> verdadera, aunque quizá sabemos algo acerca de sus propiedades (por ejemplo, continua, de variación suave). Lo que tenemos son los datos, que también podrían haber resultado en (¡es el mismo modelo y la misma f!:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">28015</span>)
+error &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span class="kw">length</span>(x), <span class="dv">0</span>, <span class="dv">500</span>)
+y &lt;-<span class="st"> </span><span class="kw">f</span>(x) <span class="op">+</span><span class="st"> </span>error
+datos &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">x=</span>x, <span class="dt">y=</span>y)
+<span class="kw">ggplot</span>(datos, <span class="kw">aes</span>(<span class="dt">x=</span>x, <span class="dt">y=</span>y)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>() </code></pre></div>
+<p><img src="01-introduccion_files/figure-html/unnamed-chunk-12-1.png" width="480" /></p>
+<p>Bajo los supuestos del modelo <span class="math inline">\(Y=f(X)+\epsilon\)</span>, <strong>aprender de los datos</strong> significa intentar recuperar o estimar la forma de la función <span class="math inline">\(f\)</span> que no conocemos. <span class="math inline">\(f\)</span> representa una relación sistemática entre <span class="math inline">\(Y\)</span> y <span class="math inline">\(X\)</span>.</p>
+<p>¿Qué tan bien podemos estimar esa <span class="math inline">\(f\)</span> que no conocemos, con los datos disponibles? Incluso este ejemplo tan simple muestra las dificultades que vamos a enfrentar, y la importancia de determinar con cuidado qué tanta información tenemos, y qué tan buenas pueden ser nuestras predicciones.</p>
+</div>
+</div>
+<div id="predicciones" class="section level2">
+<h2><span class="header-section-number">1.3</span> Predicciones</h2>
+<p>La idea es entonces producir una estimación de f que nos permita hacer predicciones.</p>
+<p>Si denotamos por <span class="math inline">\(\hat{f}\)</span> a una estimación de <span class="math inline">\(f\)</span> construida a partir de los datos, podemos hacer predicciones aplicando <span class="math inline">\(\hat{f}\)</span> a valores de <span class="math inline">\(X\)</span>. La predicción de Y la denotamos por <span class="math inline">\(\hat{Y}\)</span>, y <span class="math display">\[\hat{Y}=\hat{f}(X).\]</span> El error de predicción (residual) está dado por el valor observado menos la predicción: <span class="math display">\[Y-\hat{Y}.\]</span></p>
+<p>En nuestro ejemplo anterior, podríamos construir, por ejemplo, una función lineal ajustada por mínimos cuadrados:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">curva.<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">geom_smooth</span>(<span class="dt">data=</span>datos,
+  <span class="dt">method =</span> <span class="st">&quot;lm&quot;</span>, <span class="dt">se=</span><span class="ot">FALSE</span>, <span class="dt">color=</span><span class="st">&quot;red&quot;</span>, <span class="dt">formula =</span> y <span class="op">~</span><span class="st"> </span>x, <span class="dt">size=</span><span class="fl">1.1</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(datos, <span class="kw">aes</span>(<span class="dt">x=</span>x, <span class="dt">y=</span>y)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span>curva.<span class="dv">1</span></code></pre></div>
+<p><img src="01-introduccion_files/figure-html/unnamed-chunk-14-1.png" width="480" /></p>
+<p>En este caso <span class="math inline">\(\hat{f}\)</span> es una recta, y la podemos usar para hacer predicciones. Por ejemplo, si <span class="math inline">\(X=8\)</span> años de estudio, nuestra predicción del ingreso <span class="math inline">\(\hat{Y}=\hat{f}(8)\)</span> sería</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">lineal &lt;-<span class="st"> </span><span class="kw">lm</span>(y<span class="op">~</span>x,<span class="dt">data =</span> datos)
+pred.<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">predict</span>(lineal, <span class="dt">newdata =</span> <span class="kw">data.frame</span>(<span class="dt">x=</span><span class="dv">8</span>))
+pred.<span class="dv">1</span></code></pre></div>
+<pre><code>##        1 
+## 2589.377</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(datos, <span class="kw">aes</span>(<span class="dt">x=</span>x, <span class="dt">y=</span>y)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span>curva.<span class="dv">1</span> <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_segment</span>(<span class="dt">x=</span><span class="dv">0</span>, <span class="dt">xend=</span><span class="dv">8</span>, <span class="dt">y=</span>pred.<span class="dv">1</span>, <span class="dt">yend=</span>pred.<span class="dv">1</span>, <span class="dt">colour=</span><span class="st">&#39;salmon&#39;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_segment</span>(<span class="dt">x=</span><span class="dv">8</span>, <span class="dt">xend=</span><span class="dv">8</span>, <span class="dt">y=</span><span class="dv">0</span>, <span class="dt">yend=</span>pred.<span class="dv">1</span>, <span class="dt">colour=</span><span class="st">&#39;salmon&#39;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">annotate</span>(<span class="st">&#39;text&#39;</span>, <span class="dt">x=</span><span class="fl">0.5</span>,<span class="dt">y=</span>pred.<span class="dv">1</span><span class="op">+</span><span class="dv">100</span>, <span class="dt">label=</span><span class="kw">round</span>(pred.<span class="dv">1</span>,<span class="dv">1</span>))</code></pre></div>
+<p><img src="01-introduccion_files/figure-html/unnamed-chunk-16-1.png" width="480" /></p>
+<p>Claramente nuestras predicciones no son perfectas usando esta recta. ¿De dónde proviene el error en la predicción? Si establemos que el error es una función creciente de <span class="math inline">\(Y-\hat{Y}\)</span>, vemos que <span class="math display">\[ Y-\hat{Y} = f(X) + \epsilon - \hat{f}(X)= (f(X) - \hat{f}(X)) + \epsilon,\]</span> donde vemos que hay dos componentes que pueden hacer grande a <span class="math inline">\(Y-\hat{Y}\)</span>:</p>
+<ul>
+<li>La diferencia <span class="math inline">\(f(X) - \hat{f}(X)\)</span> está asociada a <strong>error reducible</strong>, pues depende de qué tan bien estimemos <span class="math inline">\(f(X)\)</span> con <span class="math inline">\(\hat{f}(X)\)</span></li>
+<li>El error aleatorio <span class="math inline">\(\epsilon\)</span>, asociado a <strong>error irreducible</strong>.</li>
+</ul>
+<p>Cualquiera de estas dos cantidades pueden hacer que nuestras predicciones no sean precisas. Para cuantificar nuestro modelo <span class="math inline">\(\hat{f}(X)\)</span>, sin embargo, preferimos calcular una medida de ajuste general, por ejemplo, el error cuadrático medio, que está dado por:</p>
+<p><span class="math display">\[\textrm{E}(Y-\hat{Y})^2 = (f(X) - \hat{f}(X))^2 + \textrm{Var} (\epsilon),\]</span></p>
+<p>En el contexto de error cuadrático medio, el primer término es el error irreducible, y al segundo le llamamos error irreducible. Esta fórmula establece, por un lado, que si <span class="math inline">\(\epsilon\)</span> varía mucho, entonces en promedio vamos a hacer predicciones malas. Por otra parte, dice que si nuestra estimación de <span class="math inline">\(f\)</span> es pobre, entonces el error de predicción también sufre.</p>
+<div class="comentario">
+<p>
+En aprendizaje supervisado, nuestro objetivo es reducir el error reducible tanto como sea posible. No podemos hacer nada acerca del error irreducible, pues este se debe a aleatoriedad en el fenómeno o a variables que no conocemos.
+</p>
+</div>
+<div id="como-estimar-f" class="section level4 unnumbered">
+<h4>¿Cómo estimar <span class="math inline">\(f\)</span>?</h4>
+<p>Comenzamos generalizando nuestras definiciones para más de una entrada:</p>
+<p>Si <span class="math inline">\(Y\)</span> es la respuesta que queremos predecir, y <span class="math inline">\(X_1,X_2, \ldots, X_p\)</span> son entradas que queremos usar para predecir <span class="math inline">\(Y\)</span>, consideramos que <span class="math inline">\(Y\)</span> y <span class="math inline">\(X_1, X_2, \ldots, X_p\)</span> están relacionadas como sigue: <span class="math display">\[Y=f(X_1,X_2, \ldots, X_p)+\epsilon,\]</span> donde <span class="math inline">\(\epsilon\)</span> es una término de error aleatorio que tiene valor esperado <span class="math inline">\(\textrm{E}(\epsilon)=0\)</span>.</p>
+<p>Así que generalmente nuestro problema es más difícil: no queremos estimar una curva (<span class="math inline">\(p=1\)</span>) sino una función de varias variables.</p>
+</div>
+<div id="ejemplo-1" class="section level4 unnumbered">
+<h4>Ejemplo</h4>
+<p>Una función <span class="math inline">\(\hat{f}(X_1,X_2)\)</span> estimada para predecir el rendimiento en función del peso del coche (<span class="math inline">\(X_1\)</span>) y también el año (<span class="math inline">\(X_2\)</span>) está dada a continuación. Nótese como las estimaciones en algunos casos pueden entenderse más como <strong>interpolar</strong> y en otros más como <strong>extrapolaciones</strong>. Más tarde tendremos que entender la contribución al error de predicción de estos aspectos del ajuste.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(ggplot2)
+mod_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">loess</span>(mpg<span class="op">~</span>year<span class="op">+</span>weight, <span class="dt">data=</span>Auto, <span class="dt">family=</span><span class="st">&#39;symmetric&#39;</span>, <span class="dt">degree=</span><span class="dv">1</span>, 
+  <span class="dt">span=</span><span class="fl">0.15</span>)
+Auto<span class="op">$</span>fit &lt;-<span class="st"> </span><span class="kw">predict</span>(mod_<span class="dv">1</span>)
+weight &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="dv">1600</span>, <span class="dv">5200</span>, <span class="dt">by=</span><span class="dv">100</span>)
+year &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="dv">70</span>,<span class="dv">82</span>, <span class="dt">by=</span><span class="dv">1</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(reshape2)
+dat.grid &lt;-<span class="st"> </span><span class="kw">expand.grid</span>(<span class="dt">weight=</span>weight, <span class="dt">year =</span> year)
+dat.grid<span class="op">$</span>pred.mpg &lt;-<span class="st"> </span><span class="kw">melt</span>(<span class="kw">predict</span>(mod_<span class="dv">1</span>, dat.grid))[,<span class="st">&#39;value&#39;</span>]
+<span class="kw">ggplot</span>(dat.grid, <span class="kw">aes</span>(<span class="dt">x=</span>weight, <span class="dt">y=</span>pred.mpg)) <span class="op">+</span><span class="st"> </span>
+<span class="kw">facet_wrap</span>(<span class="op">~</span>year,<span class="dt">nrow=</span><span class="dv">2</span>)<span class="op">+</span>
+<span class="st"> </span><span class="kw">geom_point</span>(<span class="dt">data=</span>Auto, <span class="kw">aes</span>(<span class="dt">x=</span>weight, <span class="dt">y=</span>mpg),<span class="dt">alpha=</span><span class="fl">0.5</span>)<span class="op">+</span>
+<span class="kw">geom_line</span>(<span class="dt">colour=</span><span class="st">&#39;red&#39;</span>,<span class="dt">size=</span><span class="fl">1.1</span>) <span class="op">+</span><span class="st"> </span><span class="kw">geom_hline</span>(<span class="dt">yintercept=</span><span class="dv">30</span>, <span class="dt">col=</span><span class="st">&#39;gray&#39;</span>)</code></pre></div>
+<pre><code>## Warning: Removed 2 rows containing missing values (geom_path).</code></pre>
+<p><img src="01-introduccion_files/figure-html/unnamed-chunk-19-1.png" width="480" /></p>
+</div>
+<div id="notacion" class="section level4 unnumbered">
+<h4>Notación</h4>
+<p>Las observaciones o datos que usaremos para construir nuestras estimaciones las denotamos como sigue.</p>
+<p>Cada {} (o caso, o ejemplo) está dada por un el valor de una variable de entrada <span class="math inline">\(X\)</span> y un valor de la variable de salida <span class="math inline">\(Y\)</span>. Cuando tenemos <span class="math inline">\(n\)</span> ejemplos, las escribimos como los pares <span class="math inline">\((x_1,y_1), (x_2,y_2) \ldots, (x_n,y_n)\)</span>. Escribimos también <span class="math display">\[\underline{X} =  \left ( \begin{array}{cccc}
+x_{1} &amp; x_{12} &amp; \ldots  &amp; x_{1p} \\
+x_{21} &amp; x_{22} &amp; \ldots  &amp; x_{2p} \\
+\vdots &amp; \vdots &amp;   &amp;  \vdots \\
+x_{n1} &amp; x_{n2} &amp; \ldots  &amp; x_{np} \\
+ \end{array} \right)\]</span> y <span class="math display">\[\underline{y} =(y_1,y_2, \ldots, y_n)^t.\]</span></p>
+<p>Adicionalmente, usamos la notación</p>
+<p><span class="math display">\[{\mathcal L}=\{ (x_1,y_1),(x_2,y_2),\ldots, (x_n, y_n) \}\]</span></p>
+<p>para denotar al conjunto de datos con los que construimos nuestro modelo. A este conjunto le llamaremos {} (learning set)</p>
+</div>
+<div id="ejemplo-2" class="section level4">
+<h4><span class="header-section-number">1.3.0.1</span> Ejemplo</h4>
+<p>Para el modelo anterior de rendimiento, tenemos</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">X &lt;-<span class="st"> </span>Auto[, <span class="kw">c</span>(<span class="st">&#39;weight&#39;</span>, <span class="st">&#39;year&#39;</span>)]
+y &lt;-<span class="st"> </span>Auto<span class="op">$</span>mpg
+<span class="kw">dim</span>(X)</code></pre></div>
+<pre><code>## [1] 392   2</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dim</span>(y)</code></pre></div>
+<pre><code>## NULL</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(X)</code></pre></div>
+<pre><code>##   weight year
+## 1   3504   70
+## 2   3693   70
+## 3   3436   70
+## 4   3433   70
+## 5   3449   70
+## 6   4341   70</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">tail</span>(X)</code></pre></div>
+<pre><code>##     weight year
+## 392   2950   82
+## 393   2790   82
+## 394   2130   82
+## 395   2295   82
+## 396   2625   82
+## 397   2720   82</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(y)</code></pre></div>
+<pre><code>## [1] 18 15 18 16 17 15</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">tail</span>(y)</code></pre></div>
+<pre><code>## [1] 27 27 44 32 28 31</code></pre>
+<p>Los métodos para construir la estimación <span class="math inline">\(\hat{f}\)</span> se dividen en dos grandes grupos: {} y {}.</p>
+</div>
+<div id="metodos-parametricos" class="section level4">
+<h4><span class="header-section-number">1.3.0.2</span> Métodos paramétricos</h4>
+<p>En los métodos paramétricos seleccionamos, usando los datos, una <span class="math inline">\(\hat{f}\)</span> de una colección de modelos que pueden ser descritos por un número fijo de parámetros. Por ejemplo, podríamos establecer que la función <span class="math inline">\(f\)</span> tiene la forma:</p>
+<p><span class="math display">\[f(X_1,X_2) = \beta_0 + \beta_1 X_1 + \beta_2 X_2,\]</span></p>
+<p>que son funciones lineales en dos variables. En este caso, tenemos tres parámetros <span class="math inline">\((\beta_0,\beta_1,\beta_2)\)</span>, que describen a la familia completa.</p>
+<p>Usando los datos de entrenamiento, entrenamos este modelo para encontrar <span class="math inline">\((\beta_0,\beta_1,\beta_2)\)</span> tales que</p>
+<p><span class="math display">\[Y \approx \beta_0 + \beta_1 X_1 + \beta_2 X_2,\]</span> es decir, el modelo ajustado regresa valores cercanos a los observados.</p>
+<p>En general, este enfoque es muy tratable numéricamente pues el problema se reduce a estimar tres valores numéricos, en lugar de intentar estimar una función <span class="math inline">\(f\)</span> arbitraria. Su desventaja es que quizá ningún miembro familia de modelos establecida (por ejemplo, modelos lineales) puede aproximar razonablemente bien a la verdadera función <span class="math inline">\(f\)</span>. Es decir, estos métodos tienen {} potencial grande. Por ejemplo:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mod.<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">lm</span>(mpg<span class="op">~</span>year<span class="op">+</span>weight, <span class="dt">data=</span>Auto)
+Auto<span class="op">$</span>fit &lt;-<span class="st"> </span><span class="kw">predict</span>(mod.<span class="dv">1</span>)
+weight &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="dv">1600</span>, <span class="dv">5200</span>, <span class="dt">by=</span><span class="dv">100</span>)
+year &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="dv">70</span>,<span class="dv">82</span>, <span class="dt">by=</span><span class="dv">1</span>)
+z &lt;-<span class="st">  </span><span class="kw">outer</span>(weight, year, <span class="cf">function</span>(x,y){ <span class="kw">predict</span>(mod.<span class="dv">1</span>, 
+  <span class="dt">newdata=</span><span class="kw">data.frame</span>(<span class="dt">weight=</span>x,<span class="dt">year=</span>y))})
+<span class="kw">layout</span>(<span class="kw">t</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>))
+res &lt;-<span class="st"> </span><span class="kw">persp</span>(weight, year, z, <span class="dt">theta=</span><span class="dv">50</span>,<span class="dt">phi=</span><span class="dv">10</span>, <span class="dt">col=</span><span class="st">&#39;red&#39;</span>, <span class="dt">lty=</span><span class="dv">1</span>) 
+<span class="kw">points</span>(<span class="kw">trans3d</span>(<span class="dt">x=</span>Auto[,<span class="st">&#39;weight&#39;</span>],<span class="dt">y=</span>Auto[,<span class="st">&#39;year&#39;</span>],<span class="dt">z=</span> Auto<span class="op">$</span>mpg, <span class="dt">pmat=</span>res), 
+  <span class="dt">col=</span><span class="dv">2</span><span class="op">-</span>(<span class="kw">residuals</span>(mod.<span class="dv">1</span>)<span class="op">&gt;</span><span class="dv">0</span>), <span class="dt">cex=</span><span class="fl">0.5</span>,<span class="dt">pch=</span><span class="dv">16</span>) 
+res &lt;-<span class="st"> </span><span class="kw">persp</span>(weight, year, z, <span class="dt">theta=</span><span class="op">-</span><span class="dv">20</span>,<span class="dt">phi=</span><span class="dv">10</span>, <span class="dt">col=</span><span class="st">&#39;red&#39;</span>, <span class="dt">lty=</span><span class="dv">1</span>) 
+<span class="kw">points</span>(<span class="kw">trans3d</span>(<span class="dt">x=</span>Auto[,<span class="st">&#39;weight&#39;</span>],<span class="dt">y=</span>Auto[,<span class="st">&#39;year&#39;</span>],<span class="dt">z=</span> Auto<span class="op">$</span>mpg, <span class="dt">pmat=</span>res), 
+  <span class="dt">col=</span><span class="dv">2</span><span class="op">-</span>(<span class="kw">residuals</span>(mod.<span class="dv">1</span>)<span class="op">&gt;</span><span class="dv">0</span>), <span class="dt">cex=</span><span class="fl">0.5</span>,<span class="dt">pch=</span><span class="dv">16</span>) </code></pre></div>
+<p><img src="01-introduccion_files/figure-html/unnamed-chunk-21-1.png" width="480" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(reshape2)
+dat.grid &lt;-<span class="st"> </span><span class="kw">expand.grid</span>(<span class="dt">weight=</span>weight, <span class="dt">year =</span> year)
+dat.grid<span class="op">$</span>pred.mpg &lt;-<span class="st"> </span><span class="kw">melt</span>(<span class="kw">predict</span>(mod.<span class="dv">1</span>, dat.grid))[,<span class="st">&#39;value&#39;</span>]
+
+<span class="kw">ggplot</span>(dat.grid, <span class="kw">aes</span>(<span class="dt">x=</span>weight, <span class="dt">y=</span>pred.mpg)) <span class="op">+</span><span class="st"> </span>
+<span class="kw">facet_wrap</span>(<span class="op">~</span>year,<span class="dt">nrow=</span><span class="dv">2</span>)<span class="op">+</span>
+<span class="st"> </span><span class="kw">geom_point</span>(<span class="dt">data=</span>Auto, <span class="kw">aes</span>(<span class="dt">x=</span>weight, <span class="dt">y=</span>mpg),<span class="dt">alpha=</span><span class="fl">0.5</span>)<span class="op">+</span>
+<span class="kw">geom_line</span>(<span class="dt">colour=</span><span class="st">&#39;red&#39;</span>,<span class="dt">size=</span><span class="fl">1.1</span>) <span class="op">+</span><span class="st"> </span><span class="kw">geom_hline</span>(<span class="dt">yintercept=</span><span class="dv">30</span>, <span class="dt">col=</span><span class="st">&#39;gray&#39;</span>)</code></pre></div>
+<p><img src="01-introduccion_files/figure-html/unnamed-chunk-22-1.png" width="480" /></p>
+<p>Por otro lado, estos métodos nos protegen generalmente de <strong>sobreajustar</strong> los datos, es decir, incorporar en nuestra estimación de <span class="math inline">\(\hat{f}\)</span> aspectos del error (<span class="math inline">\(\epsilon\)</span>), lo que tiene como consecuencia también predicciones pobres.</p>
+<p>Si recordamos nuestro ejemplo anterior (ver gráficas abajo), quizá un ajuste lineal es a lo mejor que podemos aspirar, pues usar un método más flexible (línea roja) para este problema parece ser mala idea (recuérdese la forma de curva correspondiente a la <span class="math inline">\(f\)</span> verdadera):</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">curva.<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">geom_smooth</span>(<span class="dt">data=</span>datos,
+  <span class="dt">method =</span> <span class="st">&quot;lm&quot;</span>, <span class="dt">se=</span><span class="ot">FALSE</span>, <span class="dt">color=</span><span class="st">&quot;gray&quot;</span>, <span class="dt">formula =</span> y <span class="op">~</span><span class="st"> </span>x, <span class="dt">size=</span><span class="fl">1.1</span>)
+curva.<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">geom_smooth</span>(<span class="dt">data=</span>datos,
+  <span class="dt">method =</span> <span class="st">&quot;loess&quot;</span>, <span class="dt">se=</span><span class="ot">FALSE</span>, <span class="dt">color=</span><span class="st">&quot;red&quot;</span>, <span class="dt">span=</span><span class="fl">0.5</span>, <span class="dt">size=</span><span class="fl">1.1</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(datos, <span class="kw">aes</span>(<span class="dt">x=</span>x, <span class="dt">y=</span>y)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span>curva.<span class="dv">1</span> <span class="op">+</span><span class="st"> </span>curva.<span class="dv">2</span></code></pre></div>
+<pre><code>## Warning in simpleLoess(y, x, w, span, degree = degree, parametric =
+## parametric, : pseudoinverse used at 2</code></pre>
+<pre><code>## Warning in simpleLoess(y, x, w, span, degree = degree, parametric =
+## parametric, : neighborhood radius 2</code></pre>
+<pre><code>## Warning in simpleLoess(y, x, w, span, degree = degree, parametric =
+## parametric, : reciprocal condition number 2.4698e-17</code></pre>
+<p><img src="01-introduccion_files/figure-html/unnamed-chunk-24-1.png" width="480" /></p>
+<p>¿Por qué las predicciones del modelo rojo van a ser pobres? ¿En qué rangos de <span class="math inline">\(X\)</span>?</p>
+</div>
+<div id="metodos-no-parametricos" class="section level4 unnumbered">
+<h4>Métodos no paramétricos</h4>
+<p>Los métodos no paramétricos suponen menos acerca de la forma funcional de <span class="math inline">\(f\)</span>, y su número de <code>parámetros</code> depende del tamaño de los datos que estamos considerando. Potencialmente, estos métodos pueden aproximar formas funcionales mucho más generales, pero típicamente requieren de más datos para obtener resultados razonables.</p>
+<p>En nuestro ejemplo simple de años de estudio e ingreso, podemos ver qué pasa con un método no paramétrico cuando no suavizamos lo suficiente (línea roja). Por otro lado, la línea gris, con más suavizamiento, se aproxima razonablemente bien a la función <span class="math inline">\(f\)</span> (ver arriba).</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">curva.<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">geom_smooth</span>(<span class="dt">data=</span>datos,
+  <span class="dt">method =</span> <span class="st">&quot;loess&quot;</span>, <span class="dt">se=</span><span class="ot">FALSE</span>, <span class="dt">color=</span><span class="st">&quot;gray&quot;</span>, <span class="dt">span=</span><span class="fl">1.5</span>, <span class="dt">size=</span><span class="fl">1.1</span>)
+curva.<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">geom_smooth</span>(<span class="dt">data=</span>datos,
+  <span class="dt">method =</span> <span class="st">&quot;loess&quot;</span>, <span class="dt">se=</span><span class="ot">FALSE</span>, <span class="dt">color=</span><span class="st">&quot;red&quot;</span>, <span class="dt">span=</span><span class="fl">0.5</span>, <span class="dt">size=</span><span class="fl">1.1</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(datos, <span class="kw">aes</span>(<span class="dt">x=</span>x, <span class="dt">y=</span>y)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span>curva.<span class="dv">1</span> <span class="op">+</span><span class="st"> </span>curva.<span class="dv">2</span></code></pre></div>
+<pre><code>## Warning in simpleLoess(y, x, w, span, degree = degree, parametric =
+## parametric, : pseudoinverse used at 2</code></pre>
+<pre><code>## Warning in simpleLoess(y, x, w, span, degree = degree, parametric =
+## parametric, : neighborhood radius 2</code></pre>
+<pre><code>## Warning in simpleLoess(y, x, w, span, degree = degree, parametric =
+## parametric, : reciprocal condition number 2.4698e-17</code></pre>
+<p><img src="01-introduccion_files/figure-html/unnamed-chunk-26-1.png" width="480" /></p>
+</div>
+</div>
+<div id="como-evaluar-el-desempeno-de-un-modelo" class="section level2">
+<h2><span class="header-section-number">1.4</span> ¿Cómo evaluar el desempeño de un modelo?</h2>
+<p>En tareas de aprendizaje no conocemos la función <span class="math inline">\(f\)</span> tal que <span class="math display">\[Y=f(X)+\epsilon,\]</span>. y tampoco conocemos la <span class="math inline">\(\epsilon\)</span> correspondiente a cada observación. En el ajuste intentamos separar lo que le corresponde a <span class="math inline">\(f(x)\)</span> de lo que corresponde al ruido <span class="math inline">\(\epsilon\)</span>, pero, ¿cómo sabemos qué tan bien lo hicimos? ¿No habrá algún método que consistentemente devuelva las mejores estimaciones de <span class="math inline">\(f\)</span>?</p>
+<p>En cuanto a la segunda pregunta, invocamos el teorema folklórico de aprendizaje máquina/estadística: no hay ningún método razonable que supere consistentemnte a todos los otros métodos razonables ({}). Eso quiere decir que típicamente probamos varios enfoques, y entonces es necesario evaluarlos para ver cuál da los mejores resultados.</p>
+<p>Supongamos entonces que medimos el error de predicción mediante el error cuadrático medio (ECM), es decir: <span class="math display">\[(Y-\hat{Y})^2\]</span> \marginnote{Veremos más tarde por qué usar el ECM, en lugar de algo en principio más simple como <span class="math inline">\(|Y-\hat{Y}|\)</span>.</p>
+<div id="error-de-entrenamiento" class="section level3">
+<h3><span class="header-section-number">1.4.1</span> Error de entrenamiento</h3>
+<p>Nuestro primer criterio es considerar el error promedio en las <code>predicciones</code> que nuestro modelo hace en los datos que usamos para entrenar ese modelo. Esta cantidad está dada por:</p>
+<p>Supongamos que <span class="math inline">\(hat{f} = \hat{f}_{\mathcal L}\)</span> (usamos <span class="math inline">\({\mathcal L}\)</span> para ajustar o entrenar <span class="math inline">\(\hat{f}\)</span>), El error de entrenamiento está dado por: <span class="math display">\[\overline{err} = \frac{1}{n}\sum_{i=1}^n (y_i-\hat{f}(x_i))^2.\]</span></p>
+<p>Esta cantidad es en realidad una medida de qué tan bien se ajusta <span class="math inline">\(\hat{f}\)</span> a los datos de entrenamiento: qué tanto fue exitoso el método en replicar los datos de la muestra de entrenamiento.</p>
+<div id="ejemplo-3" class="section level4">
+<h4><span class="header-section-number">1.4.1.1</span> Ejemplo</h4>
+<p>En el ejemplo que hemos estado usando, ¿que curva preferirías para predecir, la gris o la roja? ¿Cuál tiene menor error de entrenamiento?</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">280572</span>)
+error &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span class="kw">length</span>(x), <span class="dv">0</span>, <span class="dv">500</span>)
+y &lt;-<span class="st"> </span><span class="kw">f</span>(x) <span class="op">+</span><span class="st"> </span>error
+datos &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">x=</span>x, <span class="dt">y=</span>y)
+curva.<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">geom_smooth</span>(<span class="dt">data=</span>datos,
+  <span class="dt">method =</span> <span class="st">&quot;loess&quot;</span>, <span class="dt">se=</span><span class="ot">FALSE</span>, <span class="dt">color=</span><span class="st">&quot;gray&quot;</span>, <span class="dt">span=</span><span class="fl">1.5</span>, <span class="dt">size=</span><span class="fl">1.1</span>)
+curva.<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">geom_smooth</span>(<span class="dt">data=</span>datos,
+  <span class="dt">method =</span> <span class="st">&quot;loess&quot;</span>, <span class="dt">se=</span><span class="ot">FALSE</span>, <span class="dt">color=</span><span class="st">&quot;red&quot;</span>, <span class="dt">span=</span><span class="fl">0.5</span>, <span class="dt">size=</span><span class="fl">1.1</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(datos, <span class="kw">aes</span>(<span class="dt">x=</span>x, <span class="dt">y=</span>y)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span>curva.<span class="dv">1</span> <span class="op">+</span><span class="st"> </span>curva.<span class="dv">2</span></code></pre></div>
+<pre><code>## Warning in simpleLoess(y, x, w, span, degree = degree, parametric =
+## parametric, : pseudoinverse used at 2</code></pre>
+<pre><code>## Warning in simpleLoess(y, x, w, span, degree = degree, parametric =
+## parametric, : neighborhood radius 2</code></pre>
+<pre><code>## Warning in simpleLoess(y, x, w, span, degree = degree, parametric =
+## parametric, : reciprocal condition number 2.4698e-17</code></pre>
+<p><img src="01-introduccion_files/figure-html/unnamed-chunk-28-1.png" width="480" /></p>
+<p>El error de entrenamiento usando la curva roja, que denotamos por <span class="math inline">\(\hat{f}_1\)</span>, es de</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mod.<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">loess</span>(y<span class="op">~</span>x, <span class="dt">data=</span>datos, <span class="dt">span=</span><span class="fl">0.5</span>)</code></pre></div>
+<pre><code>## Warning in simpleLoess(y, x, w, span, degree = degree, parametric =
+## parametric, : pseudoinverse used at 2</code></pre>
+<pre><code>## Warning in simpleLoess(y, x, w, span, degree = degree, parametric =
+## parametric, : neighborhood radius 2</code></pre>
+<pre><code>## Warning in simpleLoess(y, x, w, span, degree = degree, parametric =
+## parametric, : reciprocal condition number 2.4698e-17</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">mean</span>((<span class="kw">fitted</span>(mod.<span class="dv">1</span>)<span class="op">-</span><span class="st"> </span>datos<span class="op">$</span>y)<span class="op">^</span><span class="dv">2</span>)</code></pre></div>
+<pre><code>## [1] 47594.83</code></pre>
+<p>El error de entrenamiento usando la curva gris, que denotamos por <span class="math inline">\(\hat{f}_2\)</span>, es de</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mod.<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">loess</span>(y<span class="op">~</span>x, <span class="dt">data=</span>datos, <span class="dt">span=</span><span class="fl">1.5</span>)
+<span class="kw">mean</span>((<span class="kw">fitted</span>(mod.<span class="dv">2</span>)<span class="op">-</span><span class="st"> </span>datos<span class="op">$</span>y)<span class="op">^</span><span class="dv">2</span>)</code></pre></div>
+<pre><code>## [1] 135246.8</code></pre>
+<p>Así que el modelo rojo se <code>desempeña</code> mejor que el gris <strong>sobre la muestra de entrenamiento</strong>. Sin embargo, cualquier persona razonable preferiría usar la curva gris y no la roja. ¿Por qué?</p>
+<p>Cuando hacemos aprendizaje, ¿queremos realmente que <span class="math inline">\(\overline{err}\)</span> sea chico? En realidad no. Lo que realmente queremos es que el error de predicción sea chico {}.</p>
+<p>En general, el valor de <span class="math inline">\(\overline{err}\)</span> (error de entrenamiento) no necesariamente dice algo acerca de qué tan bueno es nuestro modelo para predecir <span class="math inline">\(Y\)</span> en función de <span class="math inline">\(X\)</span>.</p>
+<p>Es decir, en realidad queremos que, si <span class="math inline">\((X_0,Y_0)\)</span> denota una nueva observación producida por el mismo fenómeno, el valor esperado <span class="math display">\[\textrm{Err} = \textrm{E}(Y_0-\hat{f}(X_0))^2\]</span> *{</p>
+</div>
+</div>
+<div id="error-de-prediccion" class="section level3">
+<h3><span class="header-section-number">1.4.2</span> Error de predicción</h3>
+<p>El <strong>error de predicción</strong> para el modelo <span class="math inline">\(\hat{f}\)</span> está dado por: <span class="math display">\[{Err} = \textrm{E}(Y_0-\hat{f}(X_0))^2,\]</span> que promedia sobre observaciones <span class="math inline">\((X_0,Y_0)\)</span> que no están en el conjunto de entrenamiento.</p>
+<p>Usualmente podemos estimar esta cantidad con una {}. Tenemos entonces que <span class="math display">\[{\mathcal L}=\{ (x_1,y_1), (x_2,y_2), \ldots (x_n, y_n)   \}\]</span> es la muestra de entrenamiento que usamos para ajustar <span class="math inline">\(\hat{f}\)</span>. Sea</p>
+<p><span class="math display">\[{\mathcal T}=\{ (x_1^0,y_1^0), (x_2^0,y_2^0), \ldots, (x_m^0, y_m^0)   \}\]</span></p>
+<p>otra muestra del fenómeno que nos interesa, independiente de <span class="math inline">\({\mathcal L}\)</span> y que no se usó para construir <span class="math inline">\(\hat{f}\)</span>.</p>
+<p>El estimado del error de predicción de <span class="math inline">\(\hat{f}\)</span> basado en la muestra <span class="math inline">\({\mathcal T}\)</span> es <span class="math display">\[\widehat{Err} = \frac{1}{m}\sum_{i=1}^m (y_i^0-\hat{f}(x_i^0))^2.\]</span> Si <span class="math inline">\(m\)</span> es grande, entonces <span class="math display">\[\widehat{Err}\approx Err.\]</span></p>
+<div id="ejemplo-4" class="section level4 unnumbered">
+<h4>Ejemplo</h4>
+<p>En nuestro ejemplo anterior, podemos generar, simulando, nuevas muestras (es un ejemplo sintético). En cada simulación de nuevos datos, estimamos el error que obtendríamos:</p>
+<p>En este caso, simulamos varias veces un conjunto de datos de prueba del mismo tamaño que el original. También podríamos simular un conjunto con un número muy grande de observaciones, y evaluar en este conjunto de prueba a los dos modelos}</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(plyr)</code></pre></div>
+<pre><code>## 
+## Attaching package: &#39;plyr&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:ElemStatLearn&#39;:
+## 
+##     ozone</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">errores.prueba &lt;-<span class="st"> </span><span class="kw">rdply</span>(<span class="dv">200</span>, <span class="cf">function</span>(i){
+  error &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span class="kw">length</span>(x), <span class="dv">0</span>, <span class="dv">500</span>)
+  y &lt;-<span class="st"> </span><span class="kw">f</span>(x) <span class="op">+</span><span class="st"> </span>error
+  datos &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">x=</span>x, <span class="dt">y=</span>y)
+  pred.<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">predict</span>(mod.<span class="dv">1</span>, <span class="dt">newdata=</span>datos)
+  pred.<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">predict</span>(mod.<span class="dv">2</span>, <span class="dt">newdata=</span>datos)
+  error.<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">mean</span>((datos<span class="op">$</span>y<span class="op">-</span>pred.<span class="dv">1</span>)<span class="op">^</span><span class="dv">2</span>)
+  error.<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">mean</span>((datos<span class="op">$</span>y<span class="op">-</span>pred.<span class="dv">2</span>)<span class="op">^</span><span class="dv">2</span>)
+  <span class="kw">c</span>(error.<span class="dv">1</span>, error.<span class="dv">2</span>)
+})
+<span class="kw">names</span>(errores.prueba) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;n&#39;</span>,<span class="st">&#39;rojo&#39;</span>, <span class="st">&#39;gris&#39;</span>)
+errores.m &lt;-<span class="st"> </span><span class="kw">melt</span>(errores.prueba, <span class="dt">id.vars=</span><span class="st">&#39;n&#39;</span>)
+<span class="kw">ggplot</span>(errores.m, <span class="kw">aes</span>(<span class="dt">x=</span>value, <span class="dt">colour=</span>variable)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_density</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">xlab</span>(<span class="st">&#39;Error (ECM) de prueba&#39;</span>)</code></pre></div>
+<p><img src="01-introduccion_files/figure-html/unnamed-chunk-31-1.png" width="480" /></p>
+<p>y vemos que en promedio, el modelo gris se desempeña en la predicción considerablemente mejor que el modelo rojo, aún cuando el error de entrenamiento del modelo rojo era mucho más bajo! La razón es que el modelo rojo <em>sobreajusta</em> a los datos: capturó parte de la componente de error en <span class="math inline">\(\hat{f}\)</span>, y eso hace el error reducible más grande.</p>
+<p>Considerando esto, quizá deberíamos intentar un modelo más rígido para hacer la estimación (por ejemplo, restringiendo la estimación a rectas). ¿Qué obtenemos en este caso?</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mod.<span class="dv">3</span> &lt;-<span class="st"> </span><span class="kw">lm</span>(y<span class="op">~</span>x, <span class="dt">data=</span>datos)
+<span class="kw">mean</span>((<span class="kw">fitted</span>(mod.<span class="dv">3</span>)<span class="op">-</span><span class="st"> </span>datos<span class="op">$</span>y)<span class="op">^</span><span class="dv">2</span>)</code></pre></div>
+<pre><code>## [1] 353572.2</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">curva.<span class="dv">3</span> &lt;-<span class="st"> </span><span class="kw">geom_smooth</span>(<span class="dt">data=</span>datos,
+  <span class="dt">method =</span> <span class="st">&quot;lm&quot;</span>, <span class="dt">se=</span><span class="ot">FALSE</span>, <span class="dt">color=</span><span class="st">&quot;blue&quot;</span>, <span class="dt">size=</span><span class="fl">1.1</span>)
+<span class="kw">ggplot</span>(datos, <span class="kw">aes</span>(<span class="dt">x=</span>x, <span class="dt">y=</span>y)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span>curva.<span class="dv">1</span> <span class="op">+</span><span class="st"> </span>curva.<span class="dv">2</span> <span class="op">+</span><span class="st"> </span>curva.<span class="dv">3</span></code></pre></div>
+<pre><code>## Warning in simpleLoess(y, x, w, span, degree = degree, parametric =
+## parametric, : pseudoinverse used at 2</code></pre>
+<pre><code>## Warning in simpleLoess(y, x, w, span, degree = degree, parametric =
+## parametric, : neighborhood radius 2</code></pre>
+<pre><code>## Warning in simpleLoess(y, x, w, span, degree = degree, parametric =
+## parametric, : reciprocal condition number 2.4698e-17</code></pre>
+<p><img src="01-introduccion_files/figure-html/unnamed-chunk-32-1.png" width="480" /></p>
+<p>Que es el error de entrenamiento más alto de los tres modelos que hemos probado. ¿Cómo se desempeña en predicción?</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(plyr)
+errores.prueba &lt;-<span class="st"> </span><span class="kw">rdply</span>(<span class="dv">200</span>, <span class="cf">function</span>(i){
+  error &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span class="kw">length</span>(x), <span class="dv">0</span>, <span class="dv">500</span>)
+  y &lt;-<span class="st"> </span><span class="kw">f</span>(x) <span class="op">+</span><span class="st"> </span>error
+  datos &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">x=</span>x, <span class="dt">y=</span>y)
+  pred.<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">predict</span>(mod.<span class="dv">1</span>, <span class="dt">newdata=</span>datos)
+  pred.<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">predict</span>(mod.<span class="dv">2</span>, <span class="dt">newdata=</span>datos)
+  pred.<span class="dv">3</span> &lt;-<span class="st"> </span><span class="kw">predict</span>(mod.<span class="dv">3</span>, <span class="dt">newdata=</span>datos)
+  error.<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">mean</span>((datos<span class="op">$</span>y<span class="op">-</span>pred.<span class="dv">1</span>)<span class="op">^</span><span class="dv">2</span>)
+  error.<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">mean</span>((datos<span class="op">$</span>y<span class="op">-</span>pred.<span class="dv">2</span>)<span class="op">^</span><span class="dv">2</span>)
+  error.<span class="dv">3</span> &lt;-<span class="st"> </span><span class="kw">mean</span>((datos<span class="op">$</span>y<span class="op">-</span>pred.<span class="dv">3</span>)<span class="op">^</span><span class="dv">2</span>)
+  <span class="kw">c</span>(error.<span class="dv">1</span>, error.<span class="dv">2</span>, error.<span class="dv">3</span>)
+})
+<span class="kw">names</span>(errores.prueba) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;n&#39;</span>,<span class="st">&#39;rojo&#39;</span>, <span class="st">&#39;gris&#39;</span>,<span class="st">&#39;lineal&#39;</span>)
+errores.m &lt;-<span class="st"> </span><span class="kw">melt</span>(errores.prueba, <span class="dt">id.vars=</span><span class="st">&#39;n&#39;</span>)
+<span class="kw">ggplot</span>(errores.m, <span class="kw">aes</span>(<span class="dt">x=</span>value, <span class="dt">colour=</span>variable)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_density</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">xlab</span>(<span class="st">&#39;Error (ECM) de prueba&#39;</span>)</code></pre></div>
+<p><img src="01-introduccion_files/figure-html/unnamed-chunk-33-1.png" width="480" /></p>
+<p>Y resulta que este modelo rígido lineal se desempeña tan mal como el rojo que sobreajusta.</p>
+<p>En resumen,</p>
+<div class="comentario">
+<ul>
+<li>
+En aprendizaje supervisado, siempre estamos interesados en reducir el error de predicción.
+</li>
+<li>
+El error de entrenamiento no sirve para seleccionar o evaluar modelos, pues no necesariamente tiene qué ver con el error de predicción
+</li>
+<li>
+El error de predicción se puede estimar con una muestra de prueba, independiente de la muestra que se usó para ajustar nuestro modelo.
+</li>
+</ul>
+</div>
+<p>El error de predicción se minimiza intentando minimizar el error reducible (cantidad teórica). Esto requiere buscar métodos y modelos <strong>con la complejidad adecuada</strong> para la cantidad de datos que tenemos y su estructura.</p>
+<ul>
+<li>Modelos demasiado rígidos o simples fallan en ajustar patrones reales de los datos (no ajustan, están sesgados).</li>
+<li>Modelos demasiado flexibles o complejos fallan pues capturan ruido como si fuera variación sistemática (sobreajustan, varían demasiado).</li>
+</ul>
+
+<div id="refs" class="references">
+<div>
+<p>James, Gareth, Daniela Witten, Trevor Hastie, and Robert Tibshirani. 2014. <em>An Introduction to Statistical Learning: With Applications in R</em>. Springer Publishing Company, Incorporated. <a href="http://www-bcf.usc.edu/~gareth/ISL/" class="uri">http://www-bcf.usc.edu/~gareth/ISL/</a>.</p>
+</div>
+<div>
+<p>Ng, Andrew. 2017. “Machine Learning.” <a href="https://www.coursera.org/learn/machine-learning" class="uri">https://www.coursera.org/learn/machine-learning</a>.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="index.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"google": false,
+"weibo": false,
+"instapper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/felipegonzalez/aprendizaje-maquina-2017/edit/master/01-introduccion.Rmd",
+"text": "Edit"
+},
+"download": ["aprendizaje-maquina.pdf", "aprendizaje-maquina.epub"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:" && /^https?:/.test(script.src))
+      script.src  = script.src.replace(/^https?:/, '');
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
