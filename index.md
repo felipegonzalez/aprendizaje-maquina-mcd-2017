@@ -1,0 +1,57 @@
+--- 
+title: "Aprendizaje de máquina"
+author: "Felipe González"
+date: "2017-08-12"
+site: bookdown::bookdown_site
+output: bookdown::gitbook
+bibliography: [book.bib]
+documentclass: book
+biblio-style: apalike
+link-citations: yes
+github-repo: felipegonzalez/aprendizaje-maquina-2017
+description: "Notas y material para el curso de aprendizaje de máquina 2017 (ITAM)"
+---
+
+
+# Temario y referencias {-}
+
+**Todas las notas y material del curso estarán en este** [repositorio](https://github.com/felipegonzalez/aprendizaje-maquina-2017).
+
+- Introducción al aprendizaje máquina
+- Regresión lineal múltiple y descenso en gradiente
+- Problemas de clasificación y regresión logística
+- Validación cruzada y métodos de remuestreo
+- Regularización y selección de modelos
+- Redes neuronales
+- Árboles y bosques aleatorios
+- Máquinas de soporte vectorial
+- Diagnóstico y mejora en problemas de aprendizaje supervisado.
+- Componentes principales
+- Análisis de conglomerados
+
+
+### Evaluación {-}
+
+- Tareas semanales (20%)
+- Examen parcial (30% práctico, 20% teórico)
+- Un examen final (30% práctico)
+
+### Software: R y Rstudio {-}
+
+- [R](https://cran.r-project.org) Sitio de R (CRAN)
+- [Rstudio](https://www.rstudio.com/products/RStudio/) Interfaz gráfica para trabajar en R.
+- [Recursos para aprender R](https://www.rstudio.com/online-learning/#R)
+
+
+### Referencias principales {-}
+
+- An Introduction to Statistical Learning, @ISL 
+- Curso de Machine Learning de Andrew Ng, @Ngcoursera
+
+### Otras referencias {-}
+
+- Pattern Recognition and Machine Learning
+- The Elements of Statistical Learning
+
+
+
