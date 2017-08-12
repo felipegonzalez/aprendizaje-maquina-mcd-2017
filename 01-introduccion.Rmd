@@ -7,12 +7,14 @@
 Métodos computacionales para **aprender de datos**  con el fin
 de mejorar el **desempeño** en alguna tarea o toma de decisión. 
 
+```{block, type='comentario'}
 Usualmente la tarea
 es predecir datos no observados (porque son costosos de medir o porque son observables
-sólo en el futuro), pero más generalmente buscamos modelar patrones o estructuras
-interesantes en los datos.
+sólo en el futuro), pero más generalmente buscamos modelar patrones o 
+encontrar estructuras interesantes en los datos.
+```
 
-### Ejemplos de tareas de aprendizaje:
+#### Ejemplos de tareas de aprendizaje:
 
 - Predecir si un cliente de tarjeta de crédito va a caer en impago en los próximos
 tres meses.
