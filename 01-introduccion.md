@@ -1073,7 +1073,7 @@ En el ejemplo simple que vimos en la sección \@ref(aprendizaje), utilizamos
 una sola muestra de entrenamiento para evaluar el algoritmo. ¿Será posible
 que escogimos una muestra atípica?
 - Corre el ejemplo con otra muestra y reporta tus resultados de error de entrenamiento y error de prueba para los tres métodos.
-- Puntos extra (difícil): evalúa los tres métodos comparando estos valores para
+- Opcional (difícil): evalúa los tres métodos comparando estos valores para
 un número grande de distintas simulaciones de los datos de entrenamiento.
 
 
