@@ -68,6 +68,7 @@ que la imagen representa. Podemos ver las imágenes y las etiquetas:
 ```r
 library(dplyr)
 library(tidyr)
+library(purrr)
 library(readr)
 zip_train <- read_csv(file = 'datos/zip-train.csv')
 muestra_1 <- sample_n(zip_train, 10)
@@ -495,7 +496,7 @@ En primer lugar, estas son el número de años de estudio de 8 personas:
 
 
 ```r
-x <- c(1,7,10,0,0,5,9,13,2,4)
+x <- c(1,7,10,0,0,5,9,13,2,4,17,18,1,2)
 ```
 
 Ahora *supondremos* que la dependencia de Y de X está dada por
@@ -504,7 +505,7 @@ determinada por el fenómeno)
 
 ```r
 f <- function(x){
-  1000*sqrt(x)
+  ifelse(x < 10, 1000*sqrt(x), 1000*sqrt(10))
 }
 ```
 
@@ -517,10 +518,10 @@ valores que observamos de $Y$ están dados entonces por $Y=f(X)+\epsilon$.
 Entonces podríamos obtener, por ejemplo:
 
 ```r
-x_g <- seq(0,13,0.5)
+x_g <- seq(0,20,0.5)
 y_g <- f(x_g)
 dat_g <- data.frame(x = x_g, y = y_g)
-set.seed(280572)
+set.seed(281)
 error <- rnorm(length(x), 0, 500)
 y <- f(x) + error
 datos <- data_frame(x = x, y = y)
@@ -603,7 +604,7 @@ pred_1
 
 ```
 ##        1 
-## 2589.377
+## 2193.561
 ```
 
 
@@ -627,7 +628,7 @@ y_0 - pred_1
 
 ```
 ##        1 
-## 610.6227
+## 1006.439
 ```
 
 
@@ -653,7 +654,7 @@ Esta es una cantidad aleatoria, de modo que en algunos casos este error
 puede ser más grande o más chico. Usualmente buscamos una $\hat{f}$ de
 modo que el error promedio sea chico:
 
-$$E (Y - \hat{f}(X))^2 $$
+$$Err = E (Y - \hat{f}(X))^2 $$
 
 
 
@@ -669,7 +670,7 @@ Supongamos que tenemos un conjunto de datos *etiquetados* (generados según $(X,
 
 $${\mathcal L}=\{ (x^{(1)},y^{(1)}),(x^{(2)},y^{(2)}), \ldots, (x^{(N)}, y^{(N)}) \}$$
 que llamamos **conjunto de entrenamiento**. Nótese que usamos minúsculas
-para denotar observaciones particulares de $(X,Y).
+para denotar observaciones particulares de $(X,Y)$.
 
 Un **algoritmo de aprendizaje** es una regla que asigna a cada conjunto de
 entrenamiento ${\mathcal L}$ una función $\hat{f}$:
@@ -686,20 +687,183 @@ $$(y_0^{(j)} - \hat{f}(x_0^{(j)}))^2$$
 
 y el error sobre la muestra ${\mathcal T}$ es
 
-$$\frac{1}{m}\sum_{j=1}^m (y_0^{(j)} - \hat{f}(x_0^{(j)}))^2$$
+$$\hat{Err} =   \frac{1}{m}\sum_{j=1}^m (y_0^{(j)} - \hat{f}(x_0^{(j)}))^2$$
 
 Es muy importante considerar dos muestras separadas en esta definición:
 
 - No tiene mucho sentido medir el desempeño de nuestro algoritmo sobre 
 la muestra de entrenamiento, pues el algoritmo puede ver las etiquetas.
 
+- Considerar el error sobre una muestra diferente a la de entrenamiento
+nos permite evaluar si nuestro algoritmo **generaliza**, que se puede
+pensar como "verdadero" aprendizaje.
+
+- Nótese que $\hat{Err}$ es una estimación de $Err$ (por la ley de los grandes
+números, si ${\mathcal T}$ es muestra i.i.d. de $(X,Y)$).
+
+También consideramos el **error de entrenamiento**, dado por
+
+$$\overline{err} = \frac{1}{N}\sum_{i=1}^N (y^{(i)} - \hat{f}(x^{(i)}))^2$$
+- Pregunta: ¿Por qué $\overline{err}$ no necesariamente es una buena estimación
+  de $Err$?
+
+#### Ejemplo
+
+En el ejemplo que hemos estado usando, ¿que curva preferirías para
+predecir, la gris, la roja o la azul? ¿Cuál tiene menor error de entrenamiento?
+
+
+```r
+set.seed(280572)
+error <- rnorm(length(x), 0, 500)
+y <- f(x) + error
+datos_entrena <- data.frame(x=x, y=y)
+head(datos_entrena)
+```
+
+```
+##    x          y
+## 1  1   86.22033
+## 2  7 2353.75863
+## 3 10 3078.71029
+## 4  0 -397.80229
+## 5  0  424.73363
+## 6  5 3075.92998
+```
+
+```r
+curva.1 <- geom_smooth(data=datos_entrena,
+  method = "loess", se=FALSE, color="gray", span=1, size=1.1)
+curva.2 <- geom_smooth(data=datos_entrena,
+  method = "loess", se=FALSE, color="red", span=0.3, size=1.1)
+curva.3 <- geom_smooth(data=datos_entrena,
+  method = "lm", se=FALSE, color="blue", size=1.1)
+```
+
+
+```r
+ggplot(datos_entrena, aes(x=x, y=y)) + geom_point() + curva.1 + curva.2 + curva.3
+```
+
+<img src="01-introduccion_files/figure-html/unnamed-chunk-24-1.png" width="480" />
+
+
+Calculamos los errores de entrenamiento de cada curva:
+
+
+```r
+mod_rojo <- loess(y ~ x, data = datos_entrena, span=0.3)
+mod_gris <- loess(y ~ x, data = datos_entrena, span=1)
+mod_recta <- lm(y ~ x, data = datos_entrena)
+df_mods <- data_frame(nombre = c('recta', 'rojo','gris'))
+df_mods$modelo <- list(mod_recta, mod_rojo, mod_gris)
+```
+
+
+```r
+error_f <- function(df){
+  function(mod){
+    preds <- predict(mod, newdata = df)
+    round(sqrt(mean((preds-df$y)^2)))
+  }
+}
+error_ent <- error_f(datos_entrena)
+
+df_mods <- df_mods %>% 
+  mutate(error_entrena = map_dbl(modelo, error_ent))
+df_mods
+```
+
+```
+## # A tibble: 3 x 3
+##   nombre      modelo error_entrena
+##    <chr>      <list>         <dbl>
+## 1  recta    <S3: lm>           782
+## 2   rojo <S3: loess>           189
+## 3   gris <S3: loess>           389
+```
+
+El error de entrenamiento es considerablemente menor para la curva
+roja, y es más grande para la recta.
+
+Sin embargo, consideremos que tenemos una nueva muestra (de prueba).
+
+
+```r
+set.seed(218052272)
+x_0 <- sample(0:13, 100, replace = T)
+error <- rnorm(length(x), 0, 500)
+y_0 <- f(x_0) + error
+```
+
+```
+## Warning in f(x_0) + error: longer object length is not a multiple of
+## shorter object length
+```
+
+```r
+datos_prueba <- data_frame(x = x_0, y = y_0)
+datos_prueba
+```
+
+```
+## # A tibble: 100 x 2
+##        x         y
+##    <int>     <dbl>
+##  1     9 2156.1160
+##  2    11 3227.0968
+##  3     3 2382.2805
+##  4    10 3481.5850
+##  5     7 2732.8020
+##  6     7 2325.9217
+##  7    12 3463.7795
+##  8     0 -563.9233
+##  9    10 3295.5705
+## 10     0  365.9880
+## # ... with 90 more rows
+```
+
+
+```r
+error_p <- error_f(datos_prueba)
+df_mods <- df_mods %>% 
+  mutate(error_prueba = map_dbl(modelo, error_p))
+df_mods
+```
+
+```
+## # A tibble: 3 x 4
+##   nombre      modelo error_entrena error_prueba
+##    <chr>      <list>         <dbl>        <dbl>
+## 1  recta    <S3: lm>           782          738
+## 2   rojo <S3: loess>           189          620
+## 3   gris <S3: loess>           389          512
+```
+
+
+### Observaciones
+
+- El mejor modelo entrenamiento es uno que "sobreajusta" a los datos, pero es
+el peor con una muestra de prueba. La curva roja aprende del una componente
+de ruido del modelo - lo cual realmente no es aprendizaje.
+
+- El modelo de la recta no es bueno en entrenamiento ni en prueba. Este modelo
+no tiene la capacidad para aprender de la señal en los datos.
+
+- El mejor modelo en la muestra de prueba es uno que está entre la recta y
+la curva roja en términos de flexibilidad. 
+
+- Nuestra intuición para escoger el modelo gris desde el principio se refleja
+en que *generaliza* mejor que los otros, y eso a su vez se refleja en
+un error de prueba más bajo.
+
 
 
 ## ¿Por qué tenemos errores?
 
 
-Claramente nuestras predicciones no son perfectas usando esta recta. ¿De dónde
-proviene el error en la predicción? Si establemos que el error es una función
+ ¿De dónde
+provienen los errores en la predicción? Si establemos que el error es una función
 creciente de $Y-\hat{Y}$, vemos que
 $$ Y-\hat{Y} = f(X) + \epsilon - \hat{f}(X)= (f(X) - \hat{f}(X)) + \epsilon,$$
 donde vemos que hay dos componentes que pueden hacer grande a $Y-\hat{Y}$:
@@ -711,88 +875,19 @@ depende de qué tan bien estimemos $f(X)$ con $\hat{f}(X)$
 Cualquiera de estas dos cantidades pueden hacer que nuestras predicciones no sean
 precisas. 
 
+En nuestro ejemplo anterior, el error reducible:
+
+- Es grande para el modelo rojo, pues responde demasiado fuerte a ruido en los datos (tiene varianza alta).
+- Es grande para el modelo de la recta, pues no tiene capacidad para acercarse a
+la verdadera curva (está sesgado).
+
+
 <div class="comentario">
 <p>En aprendizaje supervisado, nuestro objetivo es reducir el error reducible tanto como sea posible (obtener la mejor estimación de <span class="math inline"><em>f</em></span>). No podemos hacer nada acerca del error irreducible, pues este se debe a aleatoriedad en el fenómeno o a variables que no conocemos.</p>
 </div>
-Para cuantificar nuestro modelo $\hat{f}(X)$, sin embargo, preferimos
-calcular una medida de ajuste general, por ejemplo, el error cuadrático medio,
-que está dado por:
-
-$$\textrm{E}(Y-\hat{Y})^2 = (f(X) - \hat{f}(X))^2 + \textrm{Var} (\epsilon),$$
-
-En el contexto de error cuadrático medio, el primer término es el error irreducible,
-y al segundo le llamamos error irreducible. Esta fórmula establece, por un lado,
-que
-si $\epsilon$ varía mucho, entonces en promedio vamos a hacer predicciones malas.
-Por otra parte, dice que si nuestra estimación de $f$ es pobre, entonces el error
-de predicción también sufre.
 
 
 
-
-#### ¿Cómo estimar $f$? {-}
-
-Comenzamos generalizando nuestras definiciones para más de una entrada:
-
-Si $Y$ es la respuesta
-que queremos predecir, y $X_1,X_2, \ldots, X_p$ son entradas que queremos usar para predecir
-$Y$, consideramos que $Y$ y $X_1, X_2, \ldots, X_p$ están relacionadas como sigue:
-$$Y=f(X_1,X_2, \ldots, X_p)+\epsilon,$$
-donde $\epsilon$ es una término de error aleatorio
-que tiene valor esperado $\textrm{E}(\epsilon)=0$.
-
-Así que generalmente nuestro problema es más difícil: no queremos estimar
-una curva ($p=1$) sino una función de varias variables. 
-
-#### Ejemplo {-}
-
-Una función $\hat{f}(X_1,X_2)$ estimada para predecir el rendimiento en función
-del peso del coche ($X_1$) y también el año ($X_2$) está dada a continuación.
- Nótese como las estimaciones en algunos casos
-pueden entenderse más como **interpolar** y en otros más como **extrapolaciones**.
-Más tarde tendremos que entender la contribución al error de predicción
-de estos aspectos del ajuste.
-
-
-```r
-library(ggplot2)
-mod_1 <- loess(mpg~year+weight, data=Auto, family='symmetric', degree=1, 
-  span=0.15)
-Auto$fit <- predict(mod_1)
-weight <- seq(1600, 5200, by=100)
-year <- seq(70,82, by=1)
-```
-
-
-```r
-library(reshape2)
-```
-
-```
-## 
-## Attaching package: 'reshape2'
-```
-
-```
-## The following object is masked from 'package:tidyr':
-## 
-##     smiths
-```
-
-```r
-dat.grid <- expand.grid(weight=weight, year = year)
-dat.grid$pred.mpg <- melt(predict(mod_1, dat.grid))[,'value']
-ggplot(dat.grid, aes(x=weight, y=pred.mpg)) + 
-facet_wrap(~year,nrow=2)+
- geom_point(data=Auto, aes(x=weight, y=mpg),alpha=0.5)+
-geom_line(colour='red',size=1.1) + geom_hline(yintercept=30, col='gray')
-```
-
-```
-## Warning: Removed 2 rows containing missing values (geom_path).
-```
-
-<img src="01-introduccion_files/figure-html/unnamed-chunk-25-1.png" width="480" />
 
 #### Notación {-}
 
@@ -802,93 +897,36 @@ las denotamos como sigue.
 Cada {\em observación} (o caso, o ejemplo) 
 está dada por un el valor de una variable de entrada $X$
 y un valor de la variable de salida $Y$. 
-Cuando tenemos $n$ ejemplos, las escribimos como los pares
-$(x_1,y_1), (x_2,y_2) \ldots, (x_n,y_n)$.
-Escribimos también 
+Cuando tenemos $N$ ejemplos de entrenamiento, los
+escribimos como los pares
+$$(x^{(1)},y^{(1)}), (x^{(2)},y^{(2)}) \ldots, (x^{(N)},y^{(N)})$$.
+Cuando los datos de entrada contienen $p$ variables o atributos, escribimos
+$$x^{(i)} = (x_1^{(i)}, x_2^{(i)},\ldots, x_p^{(i)})$$
+
+Escribimos también la matriz de entradas de dimensión Nxp:
 $$\underline{X} =  \left ( \begin{array}{cccc}
-x_{1} & x_{12} & \ldots  & x_{1p} \\
-x_{21} & x_{22} & \ldots  & x_{2p} \\
+x_1^{(1)} & x_2^{(1)} & \ldots  & x_p^{(1)} \\
+x_1^{(2)} & x_2^{(2)} & \ldots  & x_p^{(2)}\\
 \vdots & \vdots &   &  \vdots \\
-x_{n1} & x_{n2} & \ldots  & x_{np} \\
+x_1^{(N)} & x_2^{(N)} & \ldots  & x_p^{(N)} \\
  \end{array} \right)$$
-y $$\underline{y} =(y_1,y_2, \ldots, y_n)^t.$$
+y $$\underline{y} =(y^{(1)},y^{(2)}, \ldots, y^{(N)})^t.$$
 
 Adicionalmente, usamos la notación
 
-$${\mathcal L}=\{ (x_1,y_1),(x_2,y_2),\ldots, (x_n, y_n) \}$$
+$${\mathcal L}=\{ (x^{(1)},y^{(1)}), (x^{(2)},y^{(2)}), \ldots, (x^{(N)},y^{(N)}) \}$$
 
 para denotar al conjunto de datos con los que construimos nuestro
 modelo. A este conjunto le llamaremos {\em conjunto o muestra de entrenamiento}
 (learning set)
 
-#### Ejemplo
-Para el modelo anterior de rendimiento, tenemos 
 
 
-```r
-X <- Auto[, c('weight', 'year')]
-y <- Auto$mpg
-dim(X)
-```
+## ¿Cómo estimar $f$? 
 
-```
-## [1] 392   2
-```
-
-```r
-dim(y)
-```
-
-```
-## NULL
-```
-
-```r
-head(X)
-```
-
-```
-##   weight year
-## 1   3504   70
-## 2   3693   70
-## 3   3436   70
-## 4   3433   70
-## 5   3449   70
-## 6   4341   70
-```
-
-```r
-tail(X)
-```
-
-```
-##     weight year
-## 392   2950   82
-## 393   2790   82
-## 394   2130   82
-## 395   2295   82
-## 396   2625   82
-## 397   2720   82
-```
-
-```r
-head(y)
-```
-
-```
-## [1] 18 15 18 16 17 15
-```
-
-```r
-tail(y)
-```
-
-```
-## [1] 27 27 44 32 28 31
-```
 
 Los métodos para construir la estimación $\hat{f}$ se dividen en dos
-grandes grupos: {\bf paramétricos} y {\bf no paramétricos}.
+grandes grupos:  *paramétricos* y *no paramétricos*.
 
 #### Métodos paramétricos
 
@@ -897,7 +935,7 @@ una $\hat{f}$ de una colección de modelos que pueden ser descritos
 por un número fijo de parámetros. Por ejemplo, podríamos establecer que
 la función $f$ tiene la forma:
 
-$$f(X_1,X_2) = \beta_0 + \beta_1 X_1 + \beta_2 X_2,$$
+$$f(x_1,x_2) = \beta_0 + \beta_1 x_1 + \beta_2 x_2,$$
 
 que son funciones lineales en dos variables. En este caso, tenemos
 tres parámetros $(\beta_0,\beta_1,\beta_2)$, que describen a la familia 
@@ -906,7 +944,7 @@ completa.
 Usando los datos de entrenamiento, entrenamos este modelo
 para encontrar $(\beta_0,\beta_1,\beta_2)$  tales que 
 
-$$Y \approx \beta_0 + \beta_1 X_1 + \beta_2 X_2,$$
+$$y^{(i)} \approx \beta_0 + \beta_1 x_1^{(i)} + \beta_2 x_2^{(i)},$$
 es decir, el modelo ajustado regresa valores cercanos a los observados.
 
 En general, este enfoque es muy tratable numéricamente pues el problema
@@ -919,82 +957,48 @@ estos métodos tienen {\em sesgo} potencial grande. Por ejemplo:
 
 
 ```r
-mod.1 <- lm(mpg~year+weight, data=Auto)
-Auto$fit <- predict(mod.1)
+mod_1 <- lm(mpg~year+weight, data=Auto)
+Auto$fit <- predict(mod_1)
 weight <- seq(1600, 5200, by=100)
 year <- seq(70,82, by=1)
-z <-  outer(weight, year, function(x,y){ predict(mod.1, 
+z <-  outer(weight, year, function(x,y){ predict(mod_1, 
   newdata=data.frame(weight=x,year=y))})
 layout(t(1:2))
 res <- persp(weight, year, z, theta=50,phi=10, col='red', lty=1) 
 points(trans3d(x=Auto[,'weight'],y=Auto[,'year'],z= Auto$mpg, pmat=res), 
-  col=2-(residuals(mod.1)>0), cex=0.5,pch=16) 
+  col=2-(residuals(mod_1)>0), cex=0.5,pch=16) 
 res <- persp(weight, year, z, theta=-20,phi=10, col='red', lty=1) 
 points(trans3d(x=Auto[,'weight'],y=Auto[,'year'],z= Auto$mpg, pmat=res), 
-  col=2-(residuals(mod.1)>0), cex=0.5,pch=16) 
+  col=2-(residuals(mod_1)>0), cex=0.5,pch=16) 
 ```
 
-<img src="01-introduccion_files/figure-html/unnamed-chunk-27-1.png" width="480" />
+<img src="01-introduccion_files/figure-html/unnamed-chunk-30-1.png" width="768" />
 
 
 
 
 ```r
-library(reshape2)
 dat.grid <- expand.grid(weight=weight, year = year)
-dat.grid$pred.mpg <- melt(predict(mod.1, dat.grid))[,'value']
-
+values <- predict(mod_1, dat.grid) 
+dat.grid$pred.mpg <- values
 ggplot(dat.grid, aes(x=weight, y=pred.mpg)) + 
 facet_wrap(~year,nrow=2)+
  geom_point(data=Auto, aes(x=weight, y=mpg),alpha=0.5)+
 geom_line(colour='red',size=1.1) + geom_hline(yintercept=30, col='gray')
 ```
 
-<img src="01-introduccion_files/figure-html/unnamed-chunk-28-1.png" width="480" />
+<img src="01-introduccion_files/figure-html/unnamed-chunk-31-1.png" width="480" />
 
-Por otro lado, estos métodos nos protegen generalmente de **sobreajustar**
+Por otro lado, si la estructura rígida de estos modelos describe aproximadamente
+el comportamiento de los datos, estos modelos nos pueden proteger contra
+ **sobreajustar**
 los datos, es decir, incorporar en nuestra estimación de $\hat{f}$ aspectos
 del error ($\epsilon$), lo que tiene como consecuencia también predicciones pobres.
 
 
-Si recordamos nuestro ejemplo anterior (ver gráficas abajo), quizá un
-ajuste lineal es a lo mejor que podemos aspirar, pues usar un método más
-flexible (línea roja) para este problema parece ser mala idea (recuérdese
-la forma de curva correspondiente a la $f$ verdadera):
 
 
 
-```r
-curva.1 <- geom_smooth(data=datos,
-  method = "lm", se=FALSE, color="gray", formula = y ~ x, size=1.1)
-curva.2 <- geom_smooth(data=datos,
-  method = "loess", se=FALSE, color="red", span=0.5, size=1.1)
-```
-
-
-```r
-ggplot(datos, aes(x=x, y=y)) + geom_point() + curva.1 + curva.2
-```
-
-```
-## Warning in simpleLoess(y, x, w, span, degree = degree, parametric =
-## parametric, : pseudoinverse used at 2
-```
-
-```
-## Warning in simpleLoess(y, x, w, span, degree = degree, parametric =
-## parametric, : neighborhood radius 2
-```
-
-```
-## Warning in simpleLoess(y, x, w, span, degree = degree, parametric =
-## parametric, : reciprocal condition number 2.4698e-17
-```
-
-<img src="01-introduccion_files/figure-html/unnamed-chunk-30-1.png" width="480" />
-
-¿Por qué las predicciones del modelo rojo van a ser pobres? ¿En qué rangos
-de $X$?
 
 #### Métodos no paramétricos {-}
 Los métodos no paramétricos suponen menos acerca de la forma funcional de $f$,
@@ -1003,356 +1007,28 @@ Potencialmente, estos métodos pueden aproximar formas funcionales mucho más
 generales, pero típicamente requieren de más datos para obtener resultados
 razonables.
 
-En nuestro ejemplo simple de años de estudio e ingreso, podemos
-ver qué pasa con un método no paramétrico cuando no suavizamos
-lo suficiente (línea roja). Por otro lado, la línea gris, con más suavizamiento,
-se aproxima razonablemente bien a la función $f$ (ver arriba).
-
-
-```r
-curva.1 <- geom_smooth(data=datos,
-  method = "loess", se=FALSE, color="gray", span=1.5, size=1.1)
-curva.2 <- geom_smooth(data=datos,
-  method = "loess", se=FALSE, color="red", span=0.5, size=1.1)
-```
-
-
-```r
-ggplot(datos, aes(x=x, y=y)) + geom_point() + curva.1 + curva.2
-```
-
-```
-## Warning in simpleLoess(y, x, w, span, degree = degree, parametric =
-## parametric, : pseudoinverse used at 2
-```
-
-```
-## Warning in simpleLoess(y, x, w, span, degree = degree, parametric =
-## parametric, : neighborhood radius 2
-```
-
-```
-## Warning in simpleLoess(y, x, w, span, degree = degree, parametric =
-## parametric, : reciprocal condition number 2.4698e-17
-```
-
-<img src="01-introduccion_files/figure-html/unnamed-chunk-32-1.png" width="480" />
-
-## ¿Cómo evaluar el desempeño de un modelo?
-
-En tareas de aprendizaje no conocemos la función $f$ tal que
-$$Y=f(X)+\epsilon,$$.
-y tampoco conocemos la $\epsilon$ correspondiente a cada observación. En el ajuste
-intentamos separar lo que le corresponde a $f(x)$ de lo que corresponde al ruido
-$\epsilon$, pero, ¿cómo sabemos qué tan bien lo hicimos? ¿No habrá algún
-método que consistentemente devuelva las mejores estimaciones de $f$?
-
-En cuanto a la segunda pregunta, invocamos el teorema folklórico de
-aprendizaje máquina/estadística: no hay ningún método razonable que supere
-consistentemnte a todos los otros métodos razonables ({\em no free lunch}). 
-Eso quiere decir que típicamente probamos varios enfoques, y entonces
-es necesario evaluarlos para ver cuál da los mejores resultados.
-
-Supongamos entonces que medimos el error de predicción mediante
-el error cuadrático medio (ECM), es decir:
-$$(Y-\hat{Y})^2$$
-\marginnote{Veremos más tarde por qué usar el ECM, en lugar de algo
-en principio más simple como $|Y-\hat{Y}|$.
-
-
-### Error de entrenamiento
-
-Nuestro primer criterio es considerar el error promedio en las `predicciones` que nuestro
-modelo hace en los datos que usamos para entrenar ese modelo. Esta cantidad está dada
-por:
-
-Supongamos que $hat{f} = \hat{f}_{\mathcal L}$ (usamos ${\mathcal L}$ para
-ajustar o entrenar $\hat{f}$), El error de entrenamiento está dado por:
-$$\overline{err} = \frac{1}{n}\sum_{i=1}^n (y_i-\hat{f}(x_i))^2.$$
-
-Esta cantidad es en realidad una medida de qué tan bien se ajusta $\hat{f}$
-a los datos de entrenamiento: qué tanto fue exitoso el método en replicar
-los datos de la muestra de entrenamiento.
-
-
-
 #### Ejemplo
 
-En el ejemplo que hemos estado usando, ¿que curva preferirías para
-predecir, la gris o la roja? ¿Cuál tiene menor error de entrenamiento?
 
 
 ```r
-set.seed(280572)
-error <- rnorm(length(x), 0, 500)
-y <- f(x) + error
-datos <- data.frame(x=x, y=y)
-curva.1 <- geom_smooth(data=datos,
-  method = "loess", se=FALSE, color="gray", span=1.5, size=1.1)
-curva.2 <- geom_smooth(data=datos,
-  method = "loess", se=FALSE, color="red", span=0.5, size=1.1)
+mod_2 <- loess(mpg~year+weight, data=Auto, family='symmetric', degree=1, 
+  span=0.15)
+Auto$fit <- predict(mod_2)
+weight <- seq(1600, 5200, by=100)
+year <- seq(70,82, by=1)
 ```
 
 
 ```r
-ggplot(datos, aes(x=x, y=y)) + geom_point() + curva.1 + curva.2
+dat.grid <- expand.grid(weight = weight, year = year)
+values <- predict(mod_2, dat.grid) %>% data.frame %>% 
+  gather(year, value, year.70:year.82)
+dat.grid$pred.mpg <- values$value
+ggplot(dat.grid, aes(x=weight, y=pred.mpg)) + 
+facet_wrap(~year,nrow=2)+
+ geom_point(data=Auto, aes(x=weight, y=mpg),alpha=0.5)+
+geom_line(colour='red',size=1.1) + geom_hline(yintercept=30, col='gray')
 ```
 
-```
-## Warning in simpleLoess(y, x, w, span, degree = degree, parametric =
-## parametric, : pseudoinverse used at 2
-```
-
-```
-## Warning in simpleLoess(y, x, w, span, degree = degree, parametric =
-## parametric, : neighborhood radius 2
-```
-
-```
-## Warning in simpleLoess(y, x, w, span, degree = degree, parametric =
-## parametric, : reciprocal condition number 2.4698e-17
-```
-
-<img src="01-introduccion_files/figure-html/unnamed-chunk-34-1.png" width="480" />
-
-El error de entrenamiento usando la curva roja, que denotamos por $\hat{f}_1$, es 
-de
-
-```r
-mod.1 <- loess(y~x, data=datos, span=0.5)
-```
-
-```
-## Warning in simpleLoess(y, x, w, span, degree = degree, parametric =
-## parametric, : pseudoinverse used at 2
-```
-
-```
-## Warning in simpleLoess(y, x, w, span, degree = degree, parametric =
-## parametric, : neighborhood radius 2
-```
-
-```
-## Warning in simpleLoess(y, x, w, span, degree = degree, parametric =
-## parametric, : reciprocal condition number 2.4698e-17
-```
-
-```r
-mean((fitted(mod.1)- datos$y)^2)
-```
-
-```
-## [1] 47594.83
-```
-
-
-El error de entrenamiento usando la curva gris, que denotamos por $\hat{f}_2$, es 
-de
-
-```r
-mod.2 <- loess(y~x, data=datos, span=1.5)
-mean((fitted(mod.2)- datos$y)^2)
-```
-
-```
-## [1] 135246.8
-```
-
-Así que el modelo rojo se `desempeña` mejor que el gris **sobre la muestra
-de entrenamiento**. Sin embargo, cualquier persona razonable preferiría usar
-la curva gris y no la roja. ¿Por qué?
-
-Cuando hacemos aprendizaje, ¿queremos realmente que $\overline{err}$ sea chico?
-En realidad no. Lo que realmente queremos es que el error de predicción
-sea chico {\em para valores futuros o no observados de pares $(X,Y)$}.
-
-En general, el valor de $\overline{err}$ (error de entrenamiento) 
-no necesariamente dice algo
-acerca de qué tan bueno es nuestro modelo para predecir $Y$ en función de $X$.
-
-Es decir, en realidad queremos que, si $(X_0,Y_0)$ denota una nueva observación
-producida por el mismo fenómeno, el valor esperado
-$$\textrm{Err} = \textrm{E}(Y_0-\hat{f}(X_0))^2$$
-*{\em *sea lo más chico posible*. Es decir, que nuevas predicciones sean lo mejor
-posibles desde el punto de vista del error cuadrático medio.
-
-
-### Error de predicción
-
-El **error de predicción** para el modelo $\hat{f}$ está dado por:
-$${Err} = \textrm{E}(Y_0-\hat{f}(X_0))^2,$$
-que promedia sobre observaciones $(X_0,Y_0)$ que no están en el conjunto de entrenamiento.
-
-Usualmente podemos estimar esta cantidad con una {\em muestra de prueba}.
-Tenemos entonces que 
-$${\mathcal L}=\{ (x_1,y_1), (x_2,y_2), \ldots (x_n, y_n)   \}$$
-es la muestra de entrenamiento que usamos para ajustar $\hat{f}$.
-Sea 
-
-$${\mathcal T}=\{ (x_1^0,y_1^0), (x_2^0,y_2^0), \ldots, (x_m^0, y_m^0)   \}$$
-
-otra muestra del fenómeno que nos interesa, independiente de ${\mathcal L}$ y que
-no se usó para construir $\hat{f}$. 
-
-El estimado del error de predicción de $\hat{f}$ basado en  la muestra ${\mathcal T}$
-es
-$$\widehat{Err} = \frac{1}{m}\sum_{i=1}^m (y_i^0-\hat{f}(x_i^0))^2.$$
-Si $m$ es grande, entonces
-$$\widehat{Err}\approx Err.$$
-
-
-#### Ejemplo {-}
-En nuestro ejemplo anterior, podemos generar, simulando, nuevas muestras
-(es un ejemplo sintético). En cada simulación de nuevos datos, estimamos
-el error que obtendríamos: 
-
-En este caso, simulamos varias veces un conjunto de datos de prueba
-del mismo tamaño que el original. También podríamos simular un conjunto
-con un número muy grande de observaciones, y evaluar en este conjunto de prueba
-a los dos modelos}
-
-
-```r
-library(plyr)
-```
-
-```
-## -------------------------------------------------------------------------
-```
-
-```
-## You have loaded plyr after dplyr - this is likely to cause problems.
-## If you need functions from both plyr and dplyr, please load plyr first, then dplyr:
-## library(plyr); library(dplyr)
-```
-
-```
-## -------------------------------------------------------------------------
-```
-
-```
-## 
-## Attaching package: 'plyr'
-```
-
-```
-## The following objects are masked from 'package:dplyr':
-## 
-##     arrange, count, desc, failwith, id, mutate, rename, summarise,
-##     summarize
-```
-
-```r
-errores.prueba <- rdply(200, function(i){
-  error <- rnorm(length(x), 0, 500)
-  y <- f(x) + error
-  datos <- data.frame(x=x, y=y)
-  pred.1 <- predict(mod.1, newdata=datos)
-  pred.2 <- predict(mod.2, newdata=datos)
-  error.1 <- mean((datos$y-pred.1)^2)
-  error.2 <- mean((datos$y-pred.2)^2)
-  c(error.1, error.2)
-})
-names(errores.prueba) <- c('n','rojo', 'gris')
-errores.m <- melt(errores.prueba, id.vars='n')
-ggplot(errores.m, aes(x=value, colour=variable)) + geom_density() +
-  xlab('Error (ECM) de prueba')
-```
-
-<img src="01-introduccion_files/figure-html/unnamed-chunk-37-1.png" width="480" />
-
-y  vemos que en promedio, el modelo gris se desempeña en la predicción
-considerablemente mejor que el modelo rojo, aún cuando el error de entrenamiento
-del modelo rojo era mucho más bajo! La razón es que el modelo rojo
-*sobreajusta*  a los datos: capturó parte de la componente de error en
-$\hat{f}$, y eso hace el error reducible más grande. 
-
-Considerando esto, quizá deberíamos intentar un modelo más rígido para
-hacer la estimación (por ejemplo, restringiendo la estimación a rectas).
-¿Qué obtenemos en este caso?
-
-
-```r
-mod.3 <- lm(y~x, data=datos)
-mean((fitted(mod.3)- datos$y)^2)
-```
-
-```
-## [1] 353572.2
-```
-
-```r
-curva.3 <- geom_smooth(data=datos,
-  method = "lm", se=FALSE, color="blue", size=1.1)
-ggplot(datos, aes(x=x, y=y)) + geom_point() + curva.1 + curva.2 + curva.3
-```
-
-```
-## Warning in simpleLoess(y, x, w, span, degree = degree, parametric =
-## parametric, : pseudoinverse used at 2
-```
-
-```
-## Warning in simpleLoess(y, x, w, span, degree = degree, parametric =
-## parametric, : neighborhood radius 2
-```
-
-```
-## Warning in simpleLoess(y, x, w, span, degree = degree, parametric =
-## parametric, : reciprocal condition number 2.4698e-17
-```
-
-<img src="01-introduccion_files/figure-html/unnamed-chunk-38-1.png" width="480" />
-
-Que es el error de entrenamiento más alto de los tres modelos que hemos probado.
-¿Cómo se desempeña en predicción?
-
-
-```r
-library(plyr)
-errores.prueba <- rdply(200, function(i){
-  error <- rnorm(length(x), 0, 500)
-  y <- f(x) + error
-  datos <- data.frame(x=x, y=y)
-  pred.1 <- predict(mod.1, newdata=datos)
-  pred.2 <- predict(mod.2, newdata=datos)
-  pred.3 <- predict(mod.3, newdata=datos)
-  error.1 <- mean((datos$y-pred.1)^2)
-  error.2 <- mean((datos$y-pred.2)^2)
-  error.3 <- mean((datos$y-pred.3)^2)
-  c(error.1, error.2, error.3)
-})
-names(errores.prueba) <- c('n','rojo', 'gris','lineal')
-errores.m <- melt(errores.prueba, id.vars='n')
-ggplot(errores.m, aes(x=value, colour=variable)) + geom_density() +
-  xlab('Error (ECM) de prueba')
-```
-
-<img src="01-introduccion_files/figure-html/unnamed-chunk-39-1.png" width="480" />
-
-Y resulta que este modelo rígido lineal se desempeña tan mal
-como el rojo que sobreajusta.
-
-En resumen,
-
-<div class="comentario">
-<ul>
-<li>En aprendizaje supervisado, siempre estamos interesados en reducir el error de predicción.</li>
-<li>El error de entrenamiento no sirve para seleccionar o evaluar modelos, pues no necesariamente tiene qué ver con el error de predicción</li>
-<li>El error de predicción se puede estimar con una muestra de prueba, independiente de la muestra que se usó para ajustar nuestro modelo.</li>
-</ul>
-</div>
-
- El error de predicción se minimiza intentando minimizar
-el error reducible (cantidad teórica). Esto requiere buscar métodos y modelos
-**con la complejidad adecuada**
-para la cantidad de datos que tenemos y su estructura.
-
-- Modelos demasiado rígidos o simples fallan en ajustar patrones
-reales de los datos (no ajustan, están sesgados).
-- Modelos demasiado flexibles o complejos fallan pues capturan
-ruido como si fuera variación sistemática (sobreajustan, varían demasiado).
-
-
-
-
+<img src="01-introduccion_files/figure-html/unnamed-chunk-33-1.png" width="480" />
