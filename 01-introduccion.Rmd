@@ -315,7 +315,7 @@ es el número de años de estudio de una persona y $Y$ es su ingreso mensual.
 En primer lugar, estas son el número de años de estudio de 8 personas:
 
 ```{r, fig.width=5, fig.asp=0.7}
-x <- c(1,7,10,0,0,5,9,13,2,4)
+x <- c(1,7,10,0,0,5,9,13,2,4,17,18,1,2)
 ```
 
 Ahora *supondremos* que la dependencia de Y de X está dada por
@@ -323,7 +323,7 @@ $Y=f(X)+\epsilon$ por una función $f$ que no conocemos (esta función está
 determinada por el fenómeno)
 ```{r}
 f <- function(x){
-  1000*sqrt(x)
+  ifelse(x < 10, 1000*sqrt(x), 1000*sqrt(10))
 }
 ```
 
@@ -335,10 +335,10 @@ valores que observamos de $Y$ están dados entonces por $Y=f(X)+\epsilon$.
 
 Entonces podríamos obtener, por ejemplo:
 ```{r, fig.width=5, fig.asp=0.7}
-x_g <- seq(0,13,0.5)
+x_g <- seq(0,20,0.5)
 y_g <- f(x_g)
 dat_g <- data.frame(x = x_g, y = y_g)
-set.seed(280572)
+set.seed(281)
 error <- rnorm(length(x), 0, 500)
 y <- f(x) + error
 datos <- data_frame(x = x, y = y)
@@ -369,6 +369,7 @@ todavía es vaga y requiere refinamiento:
 Bajo los supuestos del modelo $Y=f(X)+\epsilon$, **aprender de los datos**
 significa intentar recuperar o estimar la forma de la función $f$ que no conocemos.
 $f$ representa la relación sistemática entre $Y$ y $X$.
+
 ```
 
 ¿Qué tan bien podemos estimar esa $f$ que no conocemos, con
@@ -483,13 +484,92 @@ $$(y_0^{(j)} - \hat{f}(x_0^{(j)}))^2$$
 
 y el error sobre la muestra ${\mathcal T}$ es
 
-$$\frac{1}{m}\sum_{j=1}^m (y_0^{(j)} - \hat{f}(x_0^{(j)}))^2$$
+$$\hat{Err} =   \frac{1}{m}\sum_{j=1}^m (y_0^{(j)} - \hat{f}(x_0^{(j)}))^2$$
 
 Es muy importante considerar dos muestras separadas en esta definición:
 
 - No tiene mucho sentido medir el desempeño de nuestro algoritmo sobre 
 la muestra de entrenamiento, pues el algoritmo puede ver las etiquetas.
 
+- Considerar el error sobre una muestra diferente a la de entrenamiento
+nos permite evaluar si nuestro algoritmo **generaliza**, que se puede
+pensar como "verdadero" aprendizaje.
+
+También consideramos el **error de entrenamiento**, dado por
+
+$$\overline{err} = \frac{1}{m}\sum_{i=1}^m (y^{(i)} - \hat{f}(x^{(i)}))^2$$
+
+#### Ejemplo
+
+En el ejemplo que hemos estado usando, ¿que curva preferirías para
+predecir, la gris o la roja? ¿Cuál tiene menor error de entrenamiento?
+
+```{r, fig.width=5, fig.asp=0.7}
+set.seed(280572)
+error <- rnorm(length(x), 0, 500)
+y <- f(x) + error
+datos_entrena <- data.frame(x=x, y=y)
+curva.1 <- geom_smooth(data=datos,
+  method = "loess", se=FALSE, color="gray", span=1, size=1.1)
+curva.2 <- geom_smooth(data=datos,
+  method = "loess", se=FALSE, color="red", span=0.3, size=1.1)
+curva.3 <- geom_smooth(data=datos,
+  method = "lm", se=FALSE, color="blue", size=1.1)
+```
+
+```{r, fig.width=5, fig.asp=0.7, warning = FALSE}
+ggplot(datos, aes(x=x, y=y)) + geom_point() + curva.1 + curva.2 + curva.3
+```
+
+
+Calculamos los errores de entrenamiento de cada curva:
+
+```{r, warning = FALSE}
+mod_1 <- loess(y ~ x, data = datos, span=0.5)
+y_hat <- predict(mod_1)
+y_hat
+```
+```{r}
+mean((y_hat - y)^2)
+```
+
+Y para la curva gris:
+
+```{r}
+mod_2 <- loess(y ~ x, data = datos, span=1.5)
+y_hat <- predict(mod_2)
+y_hat
+```
+
+```{r}
+mean((y_hat - y)^2)
+```
+
+El error de entrenamiento es considerablemente menor para la curva
+roja.
+
+
+Sin embargo, consideremos que tenemos una nueva muestra (de prueba).
+
+```{r, fig.width=5, fig.asp=0.7}
+set.seed(218052272)
+x_0 <- sample(0:13, 20, replace = T)
+error <- rnorm(length(x), 0, 500)
+y_0 <- f(x_0) + error
+datos_prueba <- data.frame(x=x_0, y=y_0)
+datos_prueba
+```
+
+```{r}
+y_hat <- predict(mod_1, newdata = datos_prueba)
+mean((y_hat - y_0) ^2)
+y_hat <- predict(mod_2, newdata = datos_prueba)
+mean((y_hat - y_0) ^2)
+```
+
+```{r}
+
+```
 
 
 ## ¿Por qué tenemos errores?
@@ -744,60 +824,7 @@ $$(Y-\hat{Y})^2$$
 en principio más simple como $|Y-\hat{Y}|$.
 
 
-### Error de entrenamiento
 
-Nuestro primer criterio es considerar el error promedio en las `predicciones` que nuestro
-modelo hace en los datos que usamos para entrenar ese modelo. Esta cantidad está dada
-por:
-
-Supongamos que $hat{f} = \hat{f}_{\mathcal L}$ (usamos ${\mathcal L}$ para
-ajustar o entrenar $\hat{f}$), El error de entrenamiento está dado por:
-$$\overline{err} = \frac{1}{n}\sum_{i=1}^n (y_i-\hat{f}(x_i))^2.$$
-
-Esta cantidad es en realidad una medida de qué tan bien se ajusta $\hat{f}$
-a los datos de entrenamiento: qué tanto fue exitoso el método en replicar
-los datos de la muestra de entrenamiento.
-
-
-
-#### Ejemplo
-
-En el ejemplo que hemos estado usando, ¿que curva preferirías para
-predecir, la gris o la roja? ¿Cuál tiene menor error de entrenamiento?
-
-```{r, fig.width=5, fig.asp=0.7}
-set.seed(280572)
-error <- rnorm(length(x), 0, 500)
-y <- f(x) + error
-datos <- data.frame(x=x, y=y)
-curva.1 <- geom_smooth(data=datos,
-  method = "loess", se=FALSE, color="gray", span=1.5, size=1.1)
-curva.2 <- geom_smooth(data=datos,
-  method = "loess", se=FALSE, color="red", span=0.5, size=1.1)
-```
-
-```{r, fig.width=5, fig.asp=0.7}
-ggplot(datos, aes(x=x, y=y)) + geom_point() + curva.1 + curva.2
-```
-
-El error de entrenamiento usando la curva roja, que denotamos por $\hat{f}_1$, es 
-de
-```{r}
-mod.1 <- loess(y~x, data=datos, span=0.5)
-mean((fitted(mod.1)- datos$y)^2)
-```
-
-
-El error de entrenamiento usando la curva gris, que denotamos por $\hat{f}_2$, es 
-de
-```{r}
-mod.2 <- loess(y~x, data=datos, span=1.5)
-mean((fitted(mod.2)- datos$y)^2)
-```
-
-Así que el modelo rojo se `desempeña` mejor que el gris **sobre la muestra
-de entrenamiento**. Sin embargo, cualquier persona razonable preferiría usar
-la curva gris y no la roja. ¿Por qué?
 
 Cuando hacemos aprendizaje, ¿queremos realmente que $\overline{err}$ sea chico?
 En realidad no. Lo que realmente queremos es que el error de predicción
