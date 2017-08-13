@@ -281,17 +281,16 @@ decir predicción de variables numéricas.
 
 ¿Cómo entendemos el problema de predicción?
 
-### Modelo teórico
+### Proceso generador de datos (modelo teórico)
 
 Para entender lo que estamos intentando hacer, pensaremos en términos
-de **modelos teóricos que generan los datos**. Otra manera de ver esto:
-para construir algo de teoría, es necesario hacer algunos supuestos acerca
-de cómo funciona el fenómeno que nos interesa, y cómo fueron generados
-las observaciones que usamos para construir nuestros modelos.
+de **modelos probabilísticos que generan los datos**. La idea es que
+estos representan los procesos que generan los datos o las observaciones.
 
 Si $Y$ es la respuesta
 que queremos predecir, y $X$ es una entrada que queremos usar para predecir
-$Y$, consideramos que $Y$ y $X$ están relacionadas como sigue:
+$Y$,  
+consideramos que las variables aleatorias $Y$ y $X$ están relacionadas como sigue:
 $$Y=f(X)+\epsilon,$$
 donde $\epsilon$ es una término de error aleatorio que no depende de $X$, y
 que tiene valor esperado $\textrm{E}(\epsilon)=0$.
@@ -306,6 +305,8 @@ no es cero podemos agregar una constante a $f$), que no contiene información
 acerca de $X$ (independiente de $X$).
 - $\epsilon$ representa, por ejemplo, el efecto de variables que no hemos
 medido o  procesos aleatorios que determinan la respuesta.
+
+
 
 #### Ejemplo {-}
 
@@ -400,8 +401,9 @@ ggplot(datos, aes(x = x, y = y)) + geom_point() + curva_1
 ```
 
 En este caso $\hat{f}$  es una recta, y la podemos usar para hacer predicciones.
-Por ejemplo, si $X=8$ años de estudio, nuestra predicción del ingreso 
-$\hat{Y}=\hat{f}(8)$ sería
+Por ejemplo, si tenemos una observación con
+$x_0=8$ años de estudio, nuestra predicción del ingreso 
+$\hat{y}=\hat{f}(8)$ sería
 
 ```{r}
 lineal <- lm(y ~ x,data = datos)
@@ -413,10 +415,84 @@ pred_1
 ggplot(datos, aes(x = x, y = y)) + geom_point() + curva_1 +
   geom_segment(x = 0, xend = 8, y = pred_1, yend = pred_1, colour = 'salmon') +
   geom_segment(x = 8, xend = 8, y = 0, yend = pred_1, colour = 'salmon') +
-  annotate('text', x = 0.5, y = pred_1 + 100, label = round(pred_1, 1))
+  annotate('text', x = 0.5, y = pred_1 + 100, label = round(pred_1, 1)) +
+  geom_point( x= 8, y =3200, col='green', size = 4)
+```
+
+Si observamos que para esta observación con $x_0=8$, resulta que 
+el correspondiente ingreso es $y_0=3200$, entonces el error sería
+```{r}
+y_0 <- 3200
+y_0 - pred_1
 ```
 
 
+```{block, type='comentario'}
+En aprendizaje buscamos que estos errores sean lo más cercano a cero que
+sea posible.
+```
+
+## Cuantificación de error o precisión
+
+El elemento faltante para definir la tarea de aprendizaje supervisado es 
+qué significa aproximar *bien* a $f$, o tener predicciones precisas. Para
+esto definimos una **función de pérdida**:
+
+$$L(Y, \hat{f}(X)),$$
+
+que nos dice cuánto nos cuesta hacer la predicción $\hat{f}(X)$ cuando el
+verdadero valor es $Y$ y las variables de entrada son $X$. 
+Una opción conveniente para problemas de regresión
+es la pérdida cuadrática:
+
+$$L(Y, \hat{f}(X)) =  (Y - \hat{f}(X))^2$$
+Esta es una cantidad aleatoria, de modo que en algunos casos este error
+puede ser más grande o más chico. Usualmente buscamos una $\hat{f}$ de
+modo que el error promedio sea chico:
+
+$$E (Y - \hat{f}(X))^2 $$
+
+
+
+## Tarea de aprendizaje supervisado
+
+Ahora tenemos los elementos para definir con precisión el problema
+de aprendizaje supervisado. 
+
+Consideramos un proceso generador de datos $(X,Y)$. En primer lugar,
+tenemos datos de los que vamos a aprender.
+
+Supongamos que tenemos un conjunto de datos *etiquetados* (generados según $(X,Y)$)
+
+$${\mathcal L}=\{ (x^{(1)},y^{(1)}),(x^{(2)},y^{(2)}), \ldots, (x^{(N)}, y^{(N)}) \}$$
+que llamamos **conjunto de entrenamiento**. Nótese que usamos minúsculas
+para denotar observaciones particulares de $(X,Y).
+
+Un **algoritmo de aprendizaje** es una regla que asigna a cada conjunto de
+entrenamiento ${\mathcal L}$ una función $\hat{f}$:
+
+$${\mathcal L} \to \hat{f}.$$
+El desempeño del predictor particular $\hat{f}$ se mide como sigue: si
+en el futuro observamos otra muestra ${\mathcal T}$ (que podemos llamar **muestra de prueba**)
+
+$${\mathcal T}=\{ (x_0^{(1)},y_0^{(1)}),(x_0^{(2)},y_0^{(2)}), \ldots, (x_0^{(m)}, y_0^{(m)}) \}$$
+
+entonces decimos que el **error de predicción** (cuadrático) de $\hat{f}$ para el
+ejemplo $(x_0^{(j)},y_0^{(j)})$ está dado por
+$$(y_0^{(j)} - \hat{f}(x_0^{(j)}))^2$$
+
+y el error sobre la muestra ${\mathcal T}$ es
+
+$$\frac{1}{m}\sum_{j=1}^m (y_0^{(j)} - \hat{f}(x_0^{(j)}))^2$$
+
+Es muy importante considerar dos muestras separadas en esta definición:
+
+- No tiene mucho sentido medir el desempeño de nuestro algoritmo sobre 
+la muestra de entrenamiento, pues el algoritmo puede ver las etiquetas.
+
+
+
+## ¿Por qué tenemos errores?
 
 
 Claramente nuestras predicciones no son perfectas usando esta recta. ¿De dónde
@@ -439,45 +515,6 @@ estimación de $f$). No podemos hacer nada acerca
 del error irreducible, pues este se debe a aleatoriedad en el fenómeno o 
 a variables que no conocemos.
 ```
-
-## Cuantificación de error o precisión
-
-El elemento faltante para definir la tarea de aprendizaje supervisado es 
-qué significa aproximar *bien* a $f$, o tener predicciones precisas. Para
-esto definimos una **función de pérdida**:
-
-$$L(Y, \hat{f}(X)),$$
-
-que nos dice cuánto nos cuesta hacer la predicción $\hat{f}(X)$ cuando el
-verdadero valor es $Y$ y las variables de entrada son $X$. 
-Una opción conveniente para problemas de regresión
-es la pérdida cuadrática:
-
-$$L(Y, \hat{f}(X)) =  (Y - \hat{f}(X))^2$$
-
-Y buscamos reducir el valor promedio de 
-
-
-
-## Tarea de aprendizaje supervisado
-
-Ahora tenemos los elementos para definir con precisión el problema
-de aprendizaje supervisado. 
-
-Supongamos que tenemos un conjunto de datos *etiquetados*
-$${\mathcal L} = \{ (x_i,y_i) \}_{i=1}^N$$
-
-que llamamos **conjunto de entrenamiento**.
-Buscamos definir un algoritmo que asigne a este conjunto de entrenamiento una
-función
-
-
-
-
-## Cuantificación del error
-
-Ahora estamos listos para 
-
 Para cuantificar nuestro modelo $\hat{f}(X)$, sin embargo, preferimos
 calcular una medida de ajuste general, por ejemplo, el error cuadrático medio,
 que está dado por:
