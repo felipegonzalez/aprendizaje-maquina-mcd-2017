@@ -656,9 +656,12 @@ modo que el error promedio sea chico:
 
 $$Err = E (Y - \hat{f}(X))^2 $$
 
+**Nota**: Intenta demostrar que bajo error cuadrático medio y suponiendo
+el modelo aditivo $Y=f(X)+\epsilon$, el mejor predictor
+de $Y$ es $f(x)= E[Y|X=x]$. Es decir: lo que nos interesa es aproximar
+lo mejor que se pueda la esperanza condicional
 
-
-## Tarea de aprendizaje supervisado
+## Tarea de aprendizaje supervisado {#aprendizaje}
 
 Ahora tenemos los elementos para definir con precisión el problema
 de aprendizaje supervisado. 
@@ -945,7 +948,8 @@ Usando los datos de entrenamiento, entrenamos este modelo
 para encontrar $(\beta_0,\beta_1,\beta_2)$  tales que 
 
 $$y^{(i)} \approx \beta_0 + \beta_1 x_1^{(i)} + \beta_2 x_2^{(i)},$$
-es decir, el modelo ajustado regresa valores cercanos a los observados.
+es decir, el modelo ajustado regresa valores cercanos a los observados. Esta
+aproximación se traducirá en un problema de optimización.
 
 En general, este enfoque es muy tratable numéricamente pues el problema
 se reduce a estimar tres valores numéricos, en lugar de intentar estimar una función $f$
@@ -998,8 +1002,6 @@ del error ($\epsilon$), lo que tiene como consecuencia también predicciones pob
 
 
 
-
-
 #### Métodos no paramétricos {-}
 Los métodos no paramétricos suponen menos acerca de la forma funcional de $f$,
 y su número de `parámetros` depende del tamaño de los datos que estamos considerando.
@@ -1009,6 +1011,10 @@ razonables.
 
 #### Ejemplo
 
+En este ejemplo usamos regresión loess, que funciona haciendo promedios
+locales ponderados de puntos de entrenamiento cercanos a donde queremos
+hacer predicciones. La ponderación se hace en función de la distancia de
+los puntos de entrenamiento al punto donde queremos predecir.
 
 
 ```r
@@ -1032,3 +1038,45 @@ geom_line(colour='red',size=1.1) + geom_hline(yintercept=30, col='gray')
 ```
 
 <img src="01-introduccion_files/figure-html/unnamed-chunk-33-1.png" width="480" />
+
+
+## Resumen
+
+- Aprendizaje de máquina: algoritmos que aprenden de los datos para predecir cantidades
+numéricas, o clasificar (aprendizaje supervisado), o para encontrar estructura en los
+datos (aprendizaje no supervisado).
+
+- En aprendizaje supervisado, el esquema general es: 
+  - un algoritmo aprende de una
+muestra de entrenamiento ${\mathcal L}$, que es generada por el proceso generador de datos que nos interesa. Eso quiere decir que produce una función $hat{f}$ (a partir de ${\matchal L}$) que nos sirve para hacer predicciones $x \to \hat{f}(x)$ de $y$
+  - El error de predicción del algoritmo es $Err$, que mide en promedio qué tan lejos están las predicciones de valores reales.
+  - Para estimar esta cantidad usamos una muestra de prueba ${\mathcal T}$, que
+  es independiente de ${\mathcal L}$.
+  - Esta es porque nos interesa el desempeño futuro de $\hat{f}$ para nuevos casos
+  que el algoritmo no ha visto (esto es aprender).
+  
+- El error en la muestra de entrenamiento no necesariamente es buen indicador
+del desempeño futuro de nuestro algoritmo.
+
+- Para obtener las mejores predicciones posibles, es necesario que el algoritmo
+sea capaz de capturar patrones en los datos, pero no tanto que tienda a absorber ruido
+en la estimación - es un balance de complejidad y rigidez. En términos estadísticos,
+se trata de un balance de varianza y sesgo.
+
+- Hay dos tipos de métodos generales: paramétricos y no paramétricos. Los paramétricos
+seleccionan un número finito de parámetros para construir $\hat{f}$, el número de
+parámetros de los no paramétricos depende del conjunto de entrenamiento.
+
+## Tarea
+
+En el ejemplo simple que vimos en la sección \@ref(aprendizaje), utilizamos
+una sola muestra de entrenamiento para evaluar el algoritmo. ¿Será posible
+que escogimos una muestra atípica?
+- Corre el ejemplo con otra muestra y reporta tus resultados de error de entrenamiento y error de prueba para los tres métodos.
+- Puntos extra (difícil): evalúa los tres métodos comparando estos valores para
+un número grande de distintas simulaciones de los datos de entrenamiento.
+
+
+
+
+

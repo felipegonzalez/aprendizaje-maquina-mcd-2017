@@ -118,11 +118,13 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul></li>
 <li class="chapter" data-level="1.3" data-path="introduccion.html"><a href="introduccion.html#predicciones"><i class="fa fa-check"></i><b>1.3</b> Predicciones</a></li>
 <li class="chapter" data-level="1.4" data-path="introduccion.html"><a href="introduccion.html#cuantificacion-de-error-o-precision"><i class="fa fa-check"></i><b>1.4</b> Cuantificación de error o precisión</a></li>
-<li class="chapter" data-level="1.5" data-path="introduccion.html"><a href="introduccion.html#tarea-de-aprendizaje-supervisado"><i class="fa fa-check"></i><b>1.5</b> Tarea de aprendizaje supervisado</a><ul>
+<li class="chapter" data-level="1.5" data-path="introduccion.html"><a href="introduccion.html#aprendizaje"><i class="fa fa-check"></i><b>1.5</b> Tarea de aprendizaje supervisado</a><ul>
 <li class="chapter" data-level="1.5.1" data-path="introduccion.html"><a href="introduccion.html#observaciones"><i class="fa fa-check"></i><b>1.5.1</b> Observaciones</a></li>
 </ul></li>
 <li class="chapter" data-level="1.6" data-path="introduccion.html"><a href="introduccion.html#por-que-tenemos-errores"><i class="fa fa-check"></i><b>1.6</b> ¿Por qué tenemos errores?</a></li>
 <li class="chapter" data-level="1.7" data-path="introduccion.html"><a href="introduccion.html#como-estimar-f"><i class="fa fa-check"></i><b>1.7</b> ¿Cómo estimar <span class="math inline">\(f\)</span>?</a></li>
+<li class="chapter" data-level="1.8" data-path="introduccion.html"><a href="introduccion.html#resumen"><i class="fa fa-check"></i><b>1.8</b> Resumen</a></li>
+<li class="chapter" data-level="1.9" data-path="introduccion.html"><a href="introduccion.html#tarea"><i class="fa fa-check"></i><b>1.9</b> Tarea</a></li>
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Publicado con bookdown</a></li>
@@ -509,8 +511,9 @@ En aprendizaje buscamos que estos errores sean lo más cercano a cero que sea po
 <p>que nos dice cuánto nos cuesta hacer la predicción <span class="math inline">\(\hat{f}(X)\)</span> cuando el verdadero valor es <span class="math inline">\(Y\)</span> y las variables de entrada son <span class="math inline">\(X\)</span>. Una opción conveniente para problemas de regresión es la pérdida cuadrática:</p>
 <p><span class="math display">\[L(Y, \hat{f}(X)) =  (Y - \hat{f}(X))^2\]</span> Esta es una cantidad aleatoria, de modo que en algunos casos este error puede ser más grande o más chico. Usualmente buscamos una <span class="math inline">\(\hat{f}\)</span> de modo que el error promedio sea chico:</p>
 <p><span class="math display">\[Err = E (Y - \hat{f}(X))^2 \]</span></p>
+<p><strong>Nota</strong>: Intenta demostrar que bajo error cuadrático medio y suponiendo el modelo aditivo <span class="math inline">\(Y=f(X)+\epsilon\)</span>, el mejor predictor de <span class="math inline">\(Y\)</span> es <span class="math inline">\(f(x)= E[Y|X=x]\)</span>. Es decir: lo que nos interesa es aproximar lo mejor que se pueda la esperanza condicional</p>
 </div>
-<div id="tarea-de-aprendizaje-supervisado" class="section level2">
+<div id="aprendizaje" class="section level2">
 <h2><span class="header-section-number">1.5</span> Tarea de aprendizaje supervisado</h2>
 <p>Ahora tenemos los elementos para definir con precisión el problema de aprendizaje supervisado.</p>
 <p>Consideramos un proceso generador de datos <span class="math inline">\((X,Y)\)</span>. En primer lugar, tenemos datos de los que vamos a aprender.</p>
@@ -663,7 +666,7 @@ x_1^{(N)} &amp; x_2^{(N)} &amp; \ldots  &amp; x_p^{(N)} \\
 <p><span class="math display">\[f(x_1,x_2) = \beta_0 + \beta_1 x_1 + \beta_2 x_2,\]</span></p>
 <p>que son funciones lineales en dos variables. En este caso, tenemos tres parámetros <span class="math inline">\((\beta_0,\beta_1,\beta_2)\)</span>, que describen a la familia completa.</p>
 <p>Usando los datos de entrenamiento, entrenamos este modelo para encontrar <span class="math inline">\((\beta_0,\beta_1,\beta_2)\)</span> tales que</p>
-<p><span class="math display">\[y^{(i)} \approx \beta_0 + \beta_1 x_1^{(i)} + \beta_2 x_2^{(i)},\]</span> es decir, el modelo ajustado regresa valores cercanos a los observados.</p>
+<p><span class="math display">\[y^{(i)} \approx \beta_0 + \beta_1 x_1^{(i)} + \beta_2 x_2^{(i)},\]</span> es decir, el modelo ajustado regresa valores cercanos a los observados. Esta aproximación se traducirá en un problema de optimización.</p>
 <p>En general, este enfoque es muy tratable numéricamente pues el problema se reduce a estimar tres valores numéricos, en lugar de intentar estimar una función <span class="math inline">\(f\)</span> arbitraria. Su desventaja es que quizá ningún miembro familia de modelos establecida (por ejemplo, modelos lineales) puede aproximar razonablemente bien a la verdadera función <span class="math inline">\(f\)</span>. Es decir, estos métodos tienen {} potencial grande. Por ejemplo:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mod_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">lm</span>(mpg<span class="op">~</span>year<span class="op">+</span>weight, <span class="dt">data=</span>Auto)
 Auto<span class="op">$</span>fit &lt;-<span class="st"> </span><span class="kw">predict</span>(mod_<span class="dv">1</span>)
@@ -695,6 +698,7 @@ dat.grid<span class="op">$</span>pred.mpg &lt;-<span class="st"> </span>values
 </div>
 <div id="ejemplo-2" class="section level4">
 <h4><span class="header-section-number">1.7.0.2</span> Ejemplo</h4>
+<p>En este ejemplo usamos regresión loess, que funciona haciendo promedios locales ponderados de puntos de entrenamiento cercanos a donde queremos hacer predicciones. La ponderación se hace en función de la distancia de los puntos de entrenamiento al punto donde queremos predecir.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mod_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">loess</span>(mpg<span class="op">~</span>year<span class="op">+</span>weight, <span class="dt">data=</span>Auto, <span class="dt">family=</span><span class="st">&#39;symmetric&#39;</span>, <span class="dt">degree=</span><span class="dv">1</span>, 
   <span class="dt">span=</span><span class="fl">0.15</span>)
 Auto<span class="op">$</span>fit &lt;-<span class="st"> </span><span class="kw">predict</span>(mod_<span class="dv">2</span>)
@@ -709,6 +713,25 @@ dat.grid<span class="op">$</span>pred.mpg &lt;-<span class="st"> </span>values<s
 <span class="st"> </span><span class="kw">geom_point</span>(<span class="dt">data=</span>Auto, <span class="kw">aes</span>(<span class="dt">x=</span>weight, <span class="dt">y=</span>mpg),<span class="dt">alpha=</span><span class="fl">0.5</span>)<span class="op">+</span>
 <span class="kw">geom_line</span>(<span class="dt">colour=</span><span class="st">&#39;red&#39;</span>,<span class="dt">size=</span><span class="fl">1.1</span>) <span class="op">+</span><span class="st"> </span><span class="kw">geom_hline</span>(<span class="dt">yintercept=</span><span class="dv">30</span>, <span class="dt">col=</span><span class="st">&#39;gray&#39;</span>)</code></pre></div>
 <p><img src="01-introduccion_files/figure-html/unnamed-chunk-33-1.png" width="480" /></p>
+</div>
+</div>
+<div id="resumen" class="section level2">
+<h2><span class="header-section-number">1.8</span> Resumen</h2>
+<ul>
+<li><p>Aprendizaje de máquina: algoritmos que aprenden de los datos para predecir cantidades numéricas, o clasificar (aprendizaje supervisado), o para encontrar estructura en los datos (aprendizaje no supervisado).</p></li>
+<li>En aprendizaje supervisado, el esquema general es:</li>
+<li>un algoritmo aprende de una muestra de entrenamiento <span class="math inline">\({\mathcal L}\)</span>, que es generada por el proceso generador de datos que nos interesa. Eso quiere decir que produce una función <span class="math inline">\(hat{f}\)</span> (a partir de <span class="math inline">\({\matchal L}\)</span>) que nos sirve para hacer predicciones <span class="math inline">\(x \to \hat{f}(x)\)</span> de <span class="math inline">\(y\)</span></li>
+<li>El error de predicción del algoritmo es <span class="math inline">\(Err\)</span>, que mide en promedio qué tan lejos están las predicciones de valores reales.</li>
+<li>Para estimar esta cantidad usamos una muestra de prueba <span class="math inline">\({\mathcal T}\)</span>, que es independiente de <span class="math inline">\({\mathcal L}\)</span>.</li>
+<li><p>Esta es porque nos interesa el desempeño futuro de <span class="math inline">\(\hat{f}\)</span> para nuevos casos que el algoritmo no ha visto (esto es aprender).</p></li>
+<li><p>El error en la muestra de entrenamiento no necesariamente es buen indicador del desempeño futuro de nuestro algoritmo.</p></li>
+<li><p>Para obtener las mejores predicciones posibles, es necesario que el algoritmo sea capaz de capturar patrones en los datos, pero no tanto que tienda a absorber ruido en la estimación - es un balance de complejidad y rigidez. En términos estadísticos, se trata de un balance de varianza y sesgo.</p></li>
+<li><p>Hay dos tipos de métodos generales: paramétricos y no paramétricos. Los paramétricos seleccionan un número finito de parámetros para construir <span class="math inline">\(\hat{f}\)</span>, el número de parámetros de los no paramétricos depende del conjunto de entrenamiento.</p></li>
+</ul>
+</div>
+<div id="tarea" class="section level2">
+<h2><span class="header-section-number">1.9</span> Tarea</h2>
+<p>En el ejemplo simple que vimos en la sección <a href="introduccion.html#aprendizaje">1.5</a>, utilizamos una sola muestra de entrenamiento para evaluar el algoritmo. ¿Será posible que escogimos una muestra atípica? - Corre el ejemplo con otra muestra y reporta tus resultados de error de entrenamiento y error de prueba para los tres métodos. - Puntos extra (difícil): evalúa los tres métodos comparando estos valores para un número grande de distintas simulaciones de los datos de entrenamiento.</p>
 
 <div id="refs" class="references">
 <div>
@@ -716,7 +739,6 @@ dat.grid<span class="op">$</span>pred.mpg &lt;-<span class="st"> </span>values<s
 </div>
 <div>
 <p>Ng, Andrew. 2017. “Machine Learning.” <a href="https://www.coursera.org/learn/machine-learning" class="uri">https://www.coursera.org/learn/machine-learning</a>.</p>
-</div>
 </div>
 </div>
 </div>
