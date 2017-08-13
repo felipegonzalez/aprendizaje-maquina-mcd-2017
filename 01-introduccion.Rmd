@@ -9,13 +9,14 @@ cbbPalette <- c("#000000", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2"
 
 ## ¿Qué es aprendizaje de máquina (machine learning)? 
 
-Métodos computacionales para **aprender de datos**  con el fin
-de mejorar el **desempeño** en alguna tarea o toma de decisión. 
+Métodos **computacionales** para **aprender de datos**  con el fin
+de producir reglas para 
+mejorar el **desempeño** en alguna tarea o toma de decisión. 
 
-Usualmente la tarea
-es predecir datos no observados (porque son costosos de medir o porque son observables
-sólo en el futuro), pero más generalmente buscamos modelar patrones o 
-encontrar estructuras interesantes en los datos.
+En este curso nos enfocamos en las tareas de aprendizaje supervisado 
+(predecir o estimar una variable respuesta a partir de datos de entrada) y
+aprendizaje no supervisado (describir estructuras interesantes en datos,
+donde no necesariamente hay una respuesta que predecir).
 
 #### Ejemplos de tareas de aprendizaje: {-}
 
@@ -28,7 +29,7 @@ de la vivienda, posesiones y equipamiento y localización geográfica.
 - Dividir a los clientes de Netflix según sus gustos.
 - Recomendar artículos a clientes de un programa de lealtad o servicio online.
 
-Las razones usuales para intentar resolver estos problemas computacionalmente
+Las razones usuales para intentar resolver estos problemas **computacionalmente**
 son diversas:
 
 - Quisiéramos obtener una respuesta barata, rápida, **automatizada**, y 
@@ -44,20 +45,30 @@ o con reglas simples que toman en cuenta el ingreso mensual, por ejemplo.
 - Queremos **entender de manera más completa y sistemática** el comportamiento de un fenómeno,
 identificando variables o patrones importantes.
 
+Es posible aproximarse a todos estos problemas usando reglas (por ejemplo,
+si los pixeles del centro de la imagen están vacíos, entonces es un cero, 
+si el crédito total es mayor al 50\% del ingreso anual, declinar el préstamo, etc)
+Las razones para intentar usar **aprendizaje** para producir reglas en lugar
+de intentar construir estas reglas directamente son, por ejemplo:
+
+- Cuando conjuntos de reglas creadas a mano se desempeñan mal (por ejemplo, para
+otorgar créditos, reconocer caracteres, etc.)
+- Reglas creadas a mano pueden ser difíciles de mantener (por ejemplo, un corrector
+ortográfico.)
 
 #### Ejemplo: reconocimiento de dígitos escritos a mano {-}
 
 
 ¿Cómo reconocer los siguientes dígitos de  manera automática?
 
-```{r funcgraf}
-graficar_digitos <- function(data_frame){
-  matriz_digitos <- lapply(1:nrow(data_frame), function(x){ 
-    	matrix(data_frame[x, 257:2], 16, 16)[16:1, ]
+```{r funcgraf, include = FALSE}
+graficar_digitos <- function(d_frame){
+  matriz_digitos <- lapply(1:nrow(d_frame), function(i){ 
+    	matrix(as.numeric(d_frame[i, 257:2]), 16, 16)[16:1, ]
     })
 	image(Reduce("rbind", matriz_digitos), 
     col = terrain.colors(30), axes = FALSE)
-	text(seq(0,1,1/10) + 0.05, 0.05, label = data_frame[, 1], cex = 1.5)
+	text(seq(0,1,1/10) + 0.05, 0.05, label = d_frame$X1, cex = 1.5)
 }
 ```
 
@@ -66,26 +77,72 @@ imagenes de 16x16 pixeles), y una *etiqueta* asociada, que es el número
 que la imagen representa. Podemos ver las imágenes y las etiquetas:
 
 
-```{r grafdigitos, fig.width = 8, fig.asp = 0.4}
-library(ElemStatLearn)
-muestra_1 <- zip.train[sample(1:nrow(zip.train), 10), ]
+```{r grafdigitos, fig.width = 8, fig.asp = 0.4, warning=FALSE, message = FALSE}
+library(dplyr)
+library(tidyr)
+library(readr)
+zip_train <- read_csv(file = 'datos/zip-train.csv')
+muestra_1 <- sample_n(zip_train, 10)
 graficar_digitos(muestra_1)
 ```
 
 ```{r, fig.width = 8, fig.asp = 0.4}
-muestra_2 <- zip.train[sample(1:nrow(zip.train), 10), ]
+muestra_2 <- sample_n(zip_train, 10) 
 graficar_digitos(muestra_2)
 ```
 
 Los 16x16=256 están escritos acomodando las filas de la imagen en 
- vector de 256 valores (cada renglón de `zip.train`). Un dígito entonces
+ vector de 256 valores (cada renglón de `zip_train`). Un dígito entonces
  se representa como sigue:
 
 ```{r}
-dim(zip.train)
-zip.train[1,]
+dim(zip_train)
+as.numeric(zip_train[1,])
 ```
 
+- Un enfoque más utilizado anteriormente para resolver este tipo de problemas
+consistía en procesar estas imágenes con filtros hechos a mano (por ejemplo,
+calcular cuántos pixeles están prendidos, si existen ciertas curvas o trazos)
+para después construir reglas para determinar cada dígito. Actualmente,
+el enfoque más exitoso es utilizar métodos de aprendizaje que aprendan
+automáticamente esos filtros y esas reglas basadas en filtros (redes convolucionales).
+
+#### Ejemplo:  predecir ingreso trimestral {-}
+
+Consideramos la medición de ingreso total trimestral para una
+muestra de hogares de la encuesta de ENIGH. Cada una de estas mediciones
+es muy costosa en tiempo y dinero. 
+
+```{r, message = FALSE, warning = FALSE, fig.width=5, fig.asp=0.7}
+dat_ingreso <- read_csv(file = 'datos/enigh-ejemplo.csv')
+ggplot(dat_ingreso, aes(x=INGTOT)) +  
+  geom_histogram(bins = 100) + 
+  scale_x_log10()
+```
+
+Pero quizá podemos usar otras variables más fácilmente medibles
+para predecir el ingreso de un hogar. Por ejemplo, si consideramos el número
+de focos en la vivienda:
+
+```{r, message = FALSE, warning = FALSE, fig.width=5, fig.asp=0.7}
+ggplot(dat_ingreso, aes(x = FOCOS, y = INGTOT)) + 
+  geom_point() +
+  scale_y_log10() + xlim(c(0,50))
+```
+
+O el tamaño de la localidad:
+```{r, message = FALSE, warning = FALSE, fig.width=5, fig.asp=0.7}
+ggplot(dat_ingreso, aes(x = tamaño_localidad, y = INGTOT)) + 
+  geom_boxplot() +
+  scale_y_log10() 
+```
+
+
+- En algunas encuestas se pregunta directamente el ingreso mensual del hogar. La
+respuesta es generalmente una mala estimación del verdadero ingreso, por lo que
+actualmente se prefiere utilizar aprendizaje para estimar a partir de otras
+variables que son más fielmente reportadas por encuestados (años de estudio,
+ocupación, número de focos en el hogar, etc.)
 
 
 
@@ -115,9 +172,10 @@ clientes con alto riesgo de impago.
 Usualmente dividimos los problemas de aprendizaje supervisado en dos tipos,
 dependiendo de la variables salida:
 
-
-- Problemas de **regresión**: cuando la salida es una variable numérica
-- Problemas de **clasificación**: cuando la salida es una variable categórica.
+- Problemas de **regresión**: cuando la salida es una variable numérica. El ejemplo
+de estimación de ingreso es un problema de regresión
+- Problemas de **clasificación**: cuando la salida es una variable categórica. El
+ejemplo de detección de dígitos escritos a manos es un problema de clasificación.
 
 
 #### Ejemplo: predecir el rendimiento de un coche. {-}
@@ -133,7 +191,10 @@ library(ISLR)
 datos <- Auto[, c('name', 'weight','year', 'mpg')]
 datos$peso_kg <- datos$weight*0.45359237
 datos$rendimiento_kpl <- datos$mpg*(1.609344/3.78541178)
-head(datos[, c('name','peso_kg', 'rendimiento_kpl')])
+set.seed(213)
+datos_muestra <- sample_n(datos, 50)
+datos_muestra %>% select(name, peso_kg, rendimiento_kpl)
+
 ```
 
 Y podríamos comenzar graficando rendimiento contra
@@ -146,7 +207,7 @@ más bajo es el rendimiento:
 
 ```{r, fig.width=5, fig.asp=0.7}
 library(ggplot2)
-ggplot(datos, 
+ggplot(datos_muestra, 
   aes(x=peso_kg, y=rendimiento_kpl)) + 
   geom_point() 
 ```
@@ -159,10 +220,12 @@ valores de rendimiento cercanos. Por ejemplo: según la curva roja,
 
 
 ```{r, fig.width=5, fig.asp=0.7}
-ggplot(datos, 
+ggplot(datos_muestra, 
   aes(x=peso_kg, y=rendimiento_kpl)) + geom_point() + 
   geom_smooth(se =FALSE, colour='red', size=1.1, 
-    span=0.5, method='loess')
+    span=0.4, method='loess') + 
+  geom_smooth(se =FALSE, colour='gray', size=1.1, 
+    span=2, method='loess')
 ```
 
 
@@ -189,24 +252,24 @@ En este ejemplo, encontramos un plano de máxima variabilidad donde proyectamos
 los coches, y después formamos grupos de coches similares:
 
 ```{r, fig.width=5, fig.asp=0.7}
-autos <- Auto[, c('mpg','displacement', 'horsepower','acceleration')]
-comps_autos <- princomp(autos, cor = T)
+autos <- Auto %>% select(mpg, displacement, horsepower, acceleration)
+comps_autos <- princomp(autos, cor = TRUE)
 clust <- hclust(dist(comps_autos$scores[,1:2]), method = 'ward.D')
 autos$grupo <- cutree(clust, k = 4)
 autos$Comp.1 <- comps_autos$scores[,1]
 autos$Comp.2 <- comps_autos$scores[,2]
 autos$nombre <- Auto$name
 ggplot(autos, aes(x=Comp.1, y=Comp.2, colour=factor(grupo), label=nombre)) +
-  geom_point()
+  geom_point() 
 ```
 
 ¿Cómo interpretamos los grupos?
 
 ```{r}
-head(subset(autos, grupo==1))
-head(subset(autos, grupo==2))
-head(subset(autos, grupo==3))
-head(subset(autos, grupo==4))
+head(filter(autos, grupo==1))
+head(filter(autos, grupo==3))
+head(filter(autos, grupo==2))
+head(filter(autos, grupo==4))
 
 ```
 
@@ -214,9 +277,11 @@ head(subset(autos, grupo==4))
 ## Aprendizaje Supervisado
 
 Por el momento nos concentramos en problemas supervisados de regresión, es
-decir predicción de variables numerícas.
+decir predicción de variables numéricas.
 
 ¿Cómo entendemos el problema de predicción?
+
+### Modelo teórico
 
 Para entender lo que estamos intentando hacer, pensaremos en términos
 de **modelos teóricos que generan los datos**. Otra manera de ver esto:
@@ -262,47 +327,51 @@ f <- function(x){
 ```
 
 El ingreso no se determina
-únicamente por número de años de estudio. Suponemos entonces que hay una variable
+únicamente por número de años de estudio. Suponemos entonces que hay algunas 
+variables
 adicional que perturba los niveles de $f(X)$ por una cantidad aleatoria. Los
-valores que observamos de $Y$ están dados entonces por:
+valores que observamos de $Y$ están dados entonces por $Y=f(X)+\epsilon$.
 
 Entonces podríamos obtener, por ejemplo:
 ```{r, fig.width=5, fig.asp=0.7}
-x.1 <- seq(0,13,0.5)
-y.1 <- f(x.1)
-dat.2 <- data.frame(x=x.1,y=y.1)
+x_g <- seq(0,13,0.5)
+y_g <- f(x_g)
+dat_g <- data.frame(x = x_g, y = y_g)
 set.seed(280572)
 error <- rnorm(length(x), 0, 500)
 y <- f(x) + error
-datos <- data.frame(x=x, y=y)
-datos$y.media <- f(datos$x)
-ggplot(datos, aes(x=x, y=y)) + geom_point() +
-  geom_line(data=dat.2, colour='blue', size=1.1) +
-  geom_segment(aes(x=x, xend=x, y=y, yend=y.media), col='red')
+datos <- data_frame(x = x, y = y)
+datos$y_media <- f(datos$x)
+ggplot(datos, aes(x = x, y = y)) + geom_point() +
+  geom_line(data=dat_g, colour = 'blue', size = 1.1) +
+  geom_segment(aes(x = x, xend = x, y = y, yend = y_media), col='red')
 ```
 
 
-Pero en problemas de aprendizaje nunca conocemos esta $f$ verdadera,
+En problemas de aprendizaje nunca conocemos esta $f$ verdadera,
 aunque quizá sabemos algo acerca de sus propiedades (por ejemplo, continua, de 
 variación suave). Lo que tenemos son los datos, que también podrían haber resultado
-en (¡es el mismo modelo y la misma f!:
+en (para otra muestra de personas, por ejemplo):
 
 ```{r, fig.width=5, fig.asp=0.7}
 set.seed(28015)
 error <- rnorm(length(x), 0, 500)
 y <- f(x) + error
-datos <- data.frame(x=x, y=y)
-ggplot(datos, aes(x=x, y=y)) + geom_point() 
+datos <- data.frame(x = x, y = y)
+ggplot(datos, aes(x = x, y = y)) + geom_point() 
 ```
 
+La siguiente observación nos da una idea de lo que intentamos hacer, aunque
+todavía es vaga y requiere refinamiento:
 
-
+```{block, type='comentario'}
 Bajo los supuestos del modelo $Y=f(X)+\epsilon$, **aprender de los datos**
 significa intentar recuperar o estimar la forma de la función $f$ que no conocemos.
-$f$ representa una relación sistemática entre $Y$ y $X$.
+$f$ representa la relación sistemática entre $Y$ y $X$.
+```
 
 ¿Qué tan bien podemos estimar esa $f$ que no conocemos, con
-los datos disponibles?
+los datos disponibles? ¿Qué significa *estimar bien*?
 Incluso este ejemplo tan simple muestra las dificultades que vamos a
 enfrentar, y la importancia de determinar con cuidado qué tanta información
 tenemos, y qué tan buenas pueden ser nuestras predicciones.
@@ -318,16 +387,16 @@ El error de predicción (residual) está dado por el valor observado menos la pr
 $$Y-\hat{Y}.$$
 
 
-En nuestro ejemplo anterior, podríamos construir, por ejemplo, una función
-lineal ajustada por mínimos cuadrados:
+En nuestro ejemplo anterior, podríamos construir, por ejemplo, una recta
+ajustada por mínimos cuadrados:
 
 ```{r}
-curva.1 <- geom_smooth(data=datos,
-  method = "lm", se=FALSE, color="red", formula = y ~ x, size=1.1)
+curva_1 <- geom_smooth(data=datos,
+  method = "lm", se=FALSE, color="red", formula = y ~ x, size = 1.1)
 ```
 
 ```{r, fig.width=5, fig.asp=0.7}
-ggplot(datos, aes(x=x, y=y)) + geom_point() + curva.1
+ggplot(datos, aes(x = x, y = y)) + geom_point() + curva_1
 ```
 
 En este caso $\hat{f}$  es una recta, y la podemos usar para hacer predicciones.
@@ -335,16 +404,16 @@ Por ejemplo, si $X=8$ años de estudio, nuestra predicción del ingreso
 $\hat{Y}=\hat{f}(8)$ sería
 
 ```{r}
-lineal <- lm(y~x,data = datos)
-pred.1 <- predict(lineal, newdata = data.frame(x=8))
-pred.1
+lineal <- lm(y ~ x,data = datos)
+pred_1 <- predict(lineal, newdata = data.frame(x=8))
+pred_1
 ```
 
 ```{r, fig.width=5, fig.asp=0.7}
-ggplot(datos, aes(x=x, y=y)) + geom_point() + curva.1 +
-  geom_segment(x=0, xend=8, y=pred.1, yend=pred.1, colour='salmon') +
-  geom_segment(x=8, xend=8, y=0, yend=pred.1, colour='salmon') +
-  annotate('text', x=0.5,y=pred.1+100, label=round(pred.1,1))
+ggplot(datos, aes(x = x, y = y)) + geom_point() + curva_1 +
+  geom_segment(x = 0, xend = 8, y = pred_1, yend = pred_1, colour = 'salmon') +
+  geom_segment(x = 8, xend = 8, y = 0, yend = pred_1, colour = 'salmon') +
+  annotate('text', x = 0.5, y = pred_1 + 100, label = round(pred_1, 1))
 ```
 
 
@@ -361,7 +430,55 @@ depende de qué tan bien estimemos $f(X)$ con $\hat{f}(X)$
 - El error aleatorio $\epsilon$, asociado a  **error irreducible**.
 
 Cualquiera de estas dos cantidades pueden hacer que nuestras predicciones no sean
-precisas. Para cuantificar nuestro modelo $\hat{f}(X)$, sin embargo, preferimos
+precisas. 
+
+```{block, type='comentario'}
+En aprendizaje supervisado, nuestro objetivo es reducir
+el error reducible tanto como sea posible (obtener la mejor
+estimación de $f$). No podemos hacer nada acerca
+del error irreducible, pues este se debe a aleatoriedad en el fenómeno o 
+a variables que no conocemos.
+```
+
+## Cuantificación de error o precisión
+
+El elemento faltante para definir la tarea de aprendizaje supervisado es 
+qué significa aproximar *bien* a $f$, o tener predicciones precisas. Para
+esto definimos una **función de pérdida**:
+
+$$L(Y, \hat{f}(X)),$$
+
+que nos dice cuánto nos cuesta hacer la predicción $\hat{f}(X)$ cuando el
+verdadero valor es $Y$ y las variables de entrada son $X$. 
+Una opción conveniente para problemas de regresión
+es la pérdida cuadrática:
+
+$$L(Y, \hat{f}(X)) =  (Y - \hat{f}(X))^2$$
+
+Y buscamos reducir el valor promedio de 
+
+
+
+## Tarea de aprendizaje supervisado
+
+Ahora tenemos los elementos para definir con precisión el problema
+de aprendizaje supervisado. 
+
+Supongamos que tenemos un conjunto de datos *etiquetados*
+$${\mathcal L} = \{ (x_i,y_i) \}_{i=1}^N$$
+
+que llamamos **conjunto de entrenamiento**.
+Buscamos definir un algoritmo que asigne a este conjunto de entrenamiento una
+función
+
+
+
+
+## Cuantificación del error
+
+Ahora estamos listos para 
+
+Para cuantificar nuestro modelo $\hat{f}(X)$, sin embargo, preferimos
 calcular una medida de ajuste general, por ejemplo, el error cuadrático medio,
 que está dado por:
 
@@ -374,12 +491,6 @@ si $\epsilon$ varía mucho, entonces en promedio vamos a hacer predicciones mala
 Por otra parte, dice que si nuestra estimación de $f$ es pobre, entonces el error
 de predicción también sufre.
 
-```{block, type='comentario'}
-En aprendizaje supervisado, nuestro objetivo es reducir
-el error reducible tanto como sea posible. No podemos hacer nada acerca
-del error irreducible, pues este se debe a aleatoriedad en el fenómeno o 
-a variables que no conocemos.
-```
 
 
 
