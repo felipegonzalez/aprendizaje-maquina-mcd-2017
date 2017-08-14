@@ -25,7 +25,7 @@
 <meta name="author" content="Felipe González">
 
 
-<meta name="date" content="2017-08-13">
+<meta name="date" content="2017-08-14">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -583,11 +583,9 @@ df_mods</code></pre></div>
 <p>Sin embargo, consideremos que tenemos una nueva muestra (de prueba).</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">218052272</span>)
 x_<span class="dv">0</span> &lt;-<span class="st"> </span><span class="kw">sample</span>(<span class="dv">0</span><span class="op">:</span><span class="dv">13</span>, <span class="dv">100</span>, <span class="dt">replace =</span> T)
-error &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span class="kw">length</span>(x), <span class="dv">0</span>, <span class="dv">500</span>)
-y_<span class="dv">0</span> &lt;-<span class="st"> </span><span class="kw">f</span>(x_<span class="dv">0</span>) <span class="op">+</span><span class="st"> </span>error</code></pre></div>
-<pre><code>## Warning in f(x_0) + error: longer object length is not a multiple of
-## shorter object length</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">datos_prueba &lt;-<span class="st"> </span><span class="kw">data_frame</span>(<span class="dt">x =</span> x_<span class="dv">0</span>, <span class="dt">y =</span> y_<span class="dv">0</span>)
+error &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span class="kw">length</span>(x_<span class="dv">0</span>), <span class="dv">0</span>, <span class="dv">500</span>)
+y_<span class="dv">0</span> &lt;-<span class="st"> </span><span class="kw">f</span>(x_<span class="dv">0</span>) <span class="op">+</span><span class="st"> </span>error
+datos_prueba &lt;-<span class="st"> </span><span class="kw">data_frame</span>(<span class="dt">x =</span> x_<span class="dv">0</span>, <span class="dt">y =</span> y_<span class="dv">0</span>)
 datos_prueba</code></pre></div>
 <pre><code>## # A tibble: 100 x 2
 ##        x         y
@@ -610,9 +608,9 @@ df_mods</code></pre></div>
 <pre><code>## # A tibble: 3 x 4
 ##   nombre      modelo error_entrena error_prueba
 ##    &lt;chr&gt;      &lt;list&gt;         &lt;dbl&gt;        &lt;dbl&gt;
-## 1  recta    &lt;S3: lm&gt;           782          738
-## 2   rojo &lt;S3: loess&gt;           189          620
-## 3   gris &lt;S3: loess&gt;           389          512</code></pre>
+## 1  recta    &lt;S3: lm&gt;           782          801
+## 2   rojo &lt;S3: loess&gt;           189          628
+## 3   gris &lt;S3: loess&gt;           389          520</code></pre>
 </div>
 <div id="observaciones" class="section level3">
 <h3><span class="header-section-number">1.5.1</span> Observaciones</h3>

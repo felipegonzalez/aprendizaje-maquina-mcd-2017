@@ -795,16 +795,8 @@ Sin embargo, consideremos que tenemos una nueva muestra (de prueba).
 ```r
 set.seed(218052272)
 x_0 <- sample(0:13, 100, replace = T)
-error <- rnorm(length(x), 0, 500)
+error <- rnorm(length(x_0), 0, 500)
 y_0 <- f(x_0) + error
-```
-
-```
-## Warning in f(x_0) + error: longer object length is not a multiple of
-## shorter object length
-```
-
-```r
 datos_prueba <- data_frame(x = x_0, y = y_0)
 datos_prueba
 ```
@@ -838,9 +830,9 @@ df_mods
 ## # A tibble: 3 x 4
 ##   nombre      modelo error_entrena error_prueba
 ##    <chr>      <list>         <dbl>        <dbl>
-## 1  recta    <S3: lm>           782          738
-## 2   rojo <S3: loess>           189          620
-## 3   gris <S3: loess>           389          512
+## 1  recta    <S3: lm>           782          801
+## 2   rojo <S3: loess>           189          628
+## 3   gris <S3: loess>           389          520
 ```
 
 
