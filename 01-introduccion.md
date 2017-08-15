@@ -1040,7 +1040,7 @@ datos (aprendizaje no supervisado).
 
 - En aprendizaje supervisado, el esquema general es: 
   - un algoritmo aprende de una
-muestra de entrenamiento ${\mathcal L}$, que es generada por el proceso generador de datos que nos interesa. Eso quiere decir que produce una función $hat{f}$ (a partir de ${\matchal L}$) que nos sirve para hacer predicciones $x \to \hat{f}(x)$ de $y$
+muestra de entrenamiento ${\mathcal L}$, que es generada por el proceso generador de datos que nos interesa. Eso quiere decir que produce una función $\hat{f}$ (a partir de ${\mathcal L}$) que nos sirve para hacer predicciones $x \to \hat{f}(x)$ de $y$
   - El error de predicción del algoritmo es $Err$, que mide en promedio qué tan lejos están las predicciones de valores reales.
   - Para estimar esta cantidad usamos una muestra de prueba ${\mathcal T}$, que
   es independiente de ${\mathcal L}$.
