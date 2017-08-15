@@ -300,14 +300,47 @@ Las mismas consideraciones acerca del tamaño de paso $\eta$ aplican en
 el problema multivariado.
 
 ```{r}
-h <- function(z) {
-  z[1]^2 + z[2]^2 - z[1] * z[2]
+h <- function(z_1, z_2) {
+  z_1^2 + z_2^2 - z_1 * z_2
 }
 grid_graf <- expand.grid(z_1 = seq(-3, 3, 0.1), z_2 = seq(-3,
 3, 0.1))
-#grid_graf <- grid_graf %>%  mutate(val = h(c(z_1,z_2)))
-#ggplot(grid_graf, aes(x = z_1, y = z_2, z = val)) + geom_contour(binwidth = 1.5,
-#aes(colour = ..level..))
+grid_graf <- grid_graf %>%  mutate(val = h(z_1,z_2))
+ggplot(grid_graf, aes(x = z_1, y = z_2, z = val)) + 
+  geom_contour(binwidth = 1.5, aes(colour = ..level..))
+```
+
+El gradiente está dado por
+
+```{r}
+h_grad <- function(z_1,z_2){
+  c(2*z_1 - z_2, 2*z_2 - z_1)
+}
+```
+
+Podemos graficar la dirección de máximo descenso para diversos puntos. Estas
+direcciones son ortogonales a la curva de nivel que pasa por cada uno de los
+puntos:
+
+```{r}
+grad.1 <- h_grad(0,-2)
+grad.2 <- h_grad(1,1)
+eta <- 0.2
+#library(grid)
+ggplot(grid_graf, aes(x=z_1, y=z_2, z=val)) +
+  geom_contour(binwidth=1.5) +
+  geom_segment(aes(x=0.0, xend=0.0-eta*grad.1[1], y=-2,
+     yend=-2-eta*grad.1[2]),
+    arrow = arrow(length = unit(0.2,"cm")))+ 
+  geom_segment(aes(x=1, xend=1-eta*grad.2[1], y=1,
+     yend=1-eta*grad.2[2]),
+    arrow = arrow(length = unit(0.2,"cm")))+ coord_fixed(ratio = 1)
+```
+
+Ya aplicamos descenso en gradiente:
+
+```{r}
+
 ```
 
 #### Ejemplo
