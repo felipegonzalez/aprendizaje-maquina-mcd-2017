@@ -38,7 +38,8 @@ Por ejemplo, después de un análisis estimamos que
 Entonces haríamos predicciones con
 $$\hat{f}(peatones, coches) = 1000000 +  4\,peatones + 3\, coches$$
 
-El modelo lineal es más flexible de lo que parece en una primera aproximación.
+El modelo lineal es más flexible de lo que parece en una primera aproximación, porque
+tenemos libertad para construir las variables de entrada a partir de nuestros datos.
 Por ejemplo, si tenemos una tercera variable 
 $estacionamiento$ que vale 1 si hay un estacionamiento cerca o 0 si no lo hay, podríamos
 definir las variables
@@ -68,6 +69,131 @@ y podríamos obtener después de nuestra análisis las estimaciones
 
 $$\hat{f} (X_1,X_2,X_3,X_4) = 
 800000 + 4\, X_1 + 1.5 \,X_2 + 400000\, X_3 +3\, X_4$$
+
+## Aprendizaje de coeficientes (ajuste)
+
+En el ejemplo anterior, los coeficientes fueron calculados (o estimados) usando
+experiencia, argumentos teóricos, o quizá otras fuentes de datos (como estudios
+o encuestas, conteos, etc.) 
+
+Ahora quisiéramos construir un algoritmo para
+aprender estos coeficientes del modelo
+
+$$f_\beta (X_1) = \beta_0 + \beta_1 X_1 + \cdots \beta_p X_p$$
+a partir de una muestra de entrenamiento
+
+$${\mathcal L}=\{ (x^{(1)},y^{(1)}),(x^{(2)},y^{(2)}), \ldots, (x^{(N)}, y^{(N)}) \}$$
+
+El criterio de ajuste (algoritmo de aprendizaje) más usual para regresión 
+lineal es el de **mínimos cuadrados**. 
+
+
+
+Construimos las predicciones (ajustados) para la muestra de entrenamiento:
+$$\hat{y}^{(i)} =  f_\beta (x^{(i)}) = \beta_0 + \beta_1 x_1^{(i)}+ \cdots + \beta_p x_p^{(i)}$$
+
+Y consideramos las diferencias de los ajustados con los valores observados:
+
+$$e^{(i)} = y^{(i)} - f_\beta (x^{(i)})$$
+
+La idea entonces es minimizar la suma de los residuales al cuadrado, para
+intentar que la función ajustada pase lo más cercana a los puntos de entrenamiento 
+que sea posible. Si
+
+$$RSS(\beta) = \sum_{i=1}^N (y^{(i)} - f_\beta(x^{(i)}))^2$$
+Queremos resolver
+
+```{block, type = 'comentario'}
+**Mínimos cuadrados**
+
+$$\min_{\beta} RSS(\beta) = \min_{\beta}\sum_{i=1}^N (y^{(i)} - f_\beta(x^{(i)}))^2$$
+```
+
+#### Ejemplo
+
+Consideremos 
+
+```{r, warning = FALSE, message = FALSE, fig.width=4,fig.asp=0.7}
+library(readr)
+library(dplyr)
+library(knitr)
+prostata <- read_csv('datos/prostate.csv') %>% select(lcavol, lpsa, train)
+kable(head(prostata), format = 'html')
+prostata_entrena <- filter(prostata, train)
+ggplot(prostata_entrena, aes(x = lcavol, y = lpsa)) + geom_point()
+```
+
+En este caso, buscamos ajustar el modelo (tenemos una sola entrada)
+$f_{\beta} (X_1) = \beta_0 + \beta_1 X_1$,
+que es una recta. Los cálculos serían como sigue:
+
+```{r}
+rss_calc <- function(datos){
+  y <- datos$lpsa
+  x <- datos$lcavol
+  fun_out <- function(beta){
+    y_hat <- beta[1] + beta[2]*x
+    e <- (y - y_hat)
+    rss <- sum(e^2)
+    rss
+  }
+  fun_out
+}
+```
+
+Nuestra función rss es entonces:
+
+```{r}
+rss <- rss_calc(prostata_entrena)
+```
+
+Por ejemplo, si consideramos $(\beta_0, \beta_1) = (1, 1)$, obtenemos
+
+```{r}
+beta <- c(0,1.5)
+rss(beta)
+```
+Que corresponde a la recta
+
+```{r, fig.width=4,fig.asp=0.7}
+ggplot(prostata_entrena, aes(x = lcavol, y = lpsa)) + geom_point() +
+  geom_abline(slope = beta[2], intercept = beta[1], col ='red')
+```
+
+Podemos comparar con  $(\beta_0, \beta_1) = (1, 1)$, obtenemos
+
+```{r,  fig.width=4,fig.asp=0.7}
+beta <- c(1,1)
+rss(beta)
+ggplot(prostata_entrena, aes(x = lcavol, y = lpsa)) + geom_point() +
+  geom_abline(slope = beta[2], intercept = beta[1], col ='red')
+```
+
+Ahora minimizamos. Podríamos hacer
+
+```{r,  fig.width=4,fig.asp=0.7}
+res_opt <- optim(c(0,0), rss, method = 'BFGS')
+beta_hat <- res_opt$par
+beta_hat
+res_opt$convergence
+```
+
+```{r}
+ggplot(prostata_entrena, aes(x = lcavol, y = lpsa)) + geom_point() +
+  geom_abline(slope = 1, intercept = 1, col ='red') +
+  geom_abline(slope = beta_hat[2], intercept = beta_hat[1]) 
+  
+```
+
+
+
+## Descenso en gradiente
+
+
+## Descenso en gradiente para regresión simple
+
+## Descenso en gradiente para regresión múltiple
+
 
 
 
