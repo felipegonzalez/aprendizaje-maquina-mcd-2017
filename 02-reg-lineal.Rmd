@@ -189,6 +189,129 @@ ggplot(prostata_entrena, aes(x = lcavol, y = lpsa)) + geom_point() +
 
 ## Descenso en gradiente
 
+Aunque el problema de mínimos cuadrados se puede resolver analíticamente, proponemos
+un método numérico básico que es efectivo y puede escalarse a problemas grandes
+de manera relativamente simple: descenso en gradiente, o descenso máximo.
+
+Supongamos que una función $h(x)$ es convexa y tiene un mínimo. La idea
+de descenso en gradiente es comenzar con un candidato inicial $z_0$ y calcular
+la derivada en $z^{(0)}$. Si $h(z^{(0)})<0$, la función es creciente en $z^{(0)}$ y nos
+movemos ligeramente 
+a la izquierda para obtener un nuevo candidato $z^{(1)}$. si $h(z^{(0)})<0$, la
+función es decreciente en $z^{(0)}$ y nos
+movemos ligeramente a la derecha  para obtener un nuevo candidato $z^{(1)}$. Iteramos este
+proceso hasta que la derivada es cercana a cero (estamos cerca del óptimo).
+
+Si $\eta>0$ es una cantidad chica, podemos escribir
+
+$$z^{(1)} = z^{(0)} + \eta \,h'(z^{(0)}).$$
+
+Nótese que cuando la derivada tiene magnitud alta, el movimiento de $z^{(0)}$ a $z^{(1)}$
+es más grande, y siempre nos movemos una fracción de la derivada. En general hacemos
+$$z^{(j+1)} = z^{(j)} + \eta\,h'(z^{(j)})$$
+para obtener una sucesión $z^{(0)},z^{(1)},\ldots$. Esperamos a que $z^{(j)}$ converja
+para terminar la iteración.
+
+
+
+#### Ejemplo
+
+Si tenemos
+```{r}
+ h <- function(x) {
+x^2 + (x - 2)^2 - log(x^2 + 1)
+ }
+```
+
+Calculamos (a mano):
+```{r}
+ h_deriv <- function(x) {
+  2 * x + 2 * (x - 2) - 2*x/(x^2 + 1)
+ }
+```
+
+Ahora iteramos con $\eta = 0.1$ y valor inicial $z_0=5$
+```{r}
+z_0 <- 5
+eta <- 0.4
+descenso <- function(h, h_deriv){
+  fun <- function(n, z_0, eta){
+    z <- numeric(n)
+    z[1] <- z_0
+    for(i in 1:(n-1)){
+      z[i+1] <- z[i] - eta * h_deriv(z[i])
+    }
+    z
+  }
+  fun
+}
+descenso_fun <- descenso(h, h_deriv) 
+z <- descenso_fun(20, 5, 0.1)
+z
+```
+
+Y vemos que estamos cerca de la convergencia.
+
+```{r, fig.width=5}
+curve(h, -3, 6)
+points(z, h(z))
+text(z[1:6], h(z[1:6]), pos = 3)
+```
+
+
+
+### Selección de tamaño de paso $\eta$
+
+Si hacemos $\eta$ muy chico, el algoritmo puede tardar mucho en
+converger:
+```{r, fig.width=4}
+z <- descenso_fun(20, 5, 0.01)
+curve(h, -3, 6)
+points(z, h(z))
+text(z[1:6], h(z[1:6]), pos = 3)
+```
+
+Si hacemos $\eta$ muy grande, el algoritmo puede divergir:
+
+```{r, fig.width=4}
+z <- descenso_fun(20, 5, 1.5)
+z
+```
+
+```{block, type='comentario'}
+Es necesario ajustar el tamaño de paso para cada problema particular. Si la 
+convergencia es muy lenta, podemos incrementarlo. Si las iteraciones divergen,
+podemos disminuirlo
+```
+
+### Funciones de varias variables
+Si ahora $h(z)$ es una función de $p$ variables, podemos intentar
+la misma idea usando el gradiente. Por cálculo sabemos que el gradiente
+apunta en la dirección de máximo crecimiento local. El gradiente es
+el vector columna con las derivadas parciales de $h$:
+
+$$\nabla h(z) = \left( \frac{\partial h}{\partial z_1}, \frac{\partial h}{\partial z_2}, \ldots,    \frac{\partial h}{\partial z_p} \right)^t$$
+Y el paso de iteración, dado un valor inicial $z_0$ y un tamaño de paso
+$\eta >0$ es
+
+$$z^{(i+1)} = z^{(i)} - \eta \nabla h(z^{(i)})$$
+
+Las mismas consideraciones acerca del tamaño de paso $\eta$ aplican en
+el problema multivariado.
+
+```{r}
+h <- function(z) {
+  z[1]^2 + z[2]^2 - z[1] * z[2]
+}
+grid_graf <- expand.grid(z_1 = seq(-3, 3, 0.1), z_2 = seq(-3,
+3, 0.1))
+#grid_graf <- grid_graf %>%  mutate(val = h(c(z_1,z_2)))
+#ggplot(grid_graf, aes(x = z_1, y = z_2, z = val)) + geom_contour(binwidth = 1.5,
+#aes(colour = ..level..))
+```
+
+#### Ejemplo
+
 
 ## Descenso en gradiente para regresión simple
 
