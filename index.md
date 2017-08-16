@@ -53,5 +53,9 @@ description: "Notas y material para el curso de aprendizaje de máquina 2017 (IT
 - Pattern Recognition and Machine Learning
 - The Elements of Statistical Learning
 
+### Otros materiales {-}
+
+- Statistical Modeling: The Two Cultures [@breiman2001]
+
 
 
