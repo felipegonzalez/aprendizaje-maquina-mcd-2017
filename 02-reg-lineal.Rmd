@@ -135,7 +135,7 @@ rss_calc <- function(datos){
     y_hat <- beta[1] + beta[2]*x
     e <- (y - y_hat)
     rss <- sum(e^2)
-    rss
+    0.5*rss
   }
   fun_out
 }
@@ -348,10 +348,90 @@ des_h(20, c(1,1), 0.1)
 ```
 
 
-## Descenso en gradiente para regresión simple
+## Descenso en gradiente para regresión lineal
 
-## Descenso en gradiente para regresión múltiple
+Vamos a escribir ahora el algoritmo de descenso en gradiente para regresión lineal.
+Igual que en los ejemplos anteriores, tenemos que precalcular el gradiente. Una
+vez que esto esté terminado, escribir la iteración es fácil.
 
+Recordamos que queremos minimizar (dividiendo entre dos para simplificar más adelante)
+$$RSS(\beta) = \frac{1}{2}\sum_{i=1}^N (y^{(i)} - f_\beta(x^{(i)}))^2$$
 
+La derivada de la suma es la suma de las derivadas, así nos concentramos
+en derivar uno de los términos
+
+$$  \frac{1}{2}(y^{(i)} - f_\beta(x^{(i)}))^2 $$
+Usamos la regla de la cadena para obtener
+$$ \frac{1}{2}\frac{\partial}{\partial \beta_j} (y^{(i)} - f_\beta(x^{(i)}))^2 =
+-(y^{(i)} - f_\beta(x^{(i)})) \frac{\partial f_\beta(x^{(i)})}{\partial \beta_j}$$
+
+Tenemos dos casos
+
+$$\frac{\partial f_\beta(x^{(i)})}{\partial \beta_0} = 1$$
+y  si $j=1,2,\ldots, p$ entonces
+
+$$\frac{\partial f_\beta(x^{(i)})}{\partial \beta_j} = x_j^{(i)}$$
+
+```{block , type ='comentario'}
+
+De modo que
+$$\frac{\partial f_\beta(x^{(i)})}{\partial \beta_0} = -(y^{(i)} - f_\beta(x^{(i)}))$$
+y 
+
+$$\frac{\partial f_\beta(x^{(i)})}{\partial \beta_j} = - x_j^{(i)}(y^{(i)} - f_\beta(x^{(i)}))$$
+```
+
+Y sumando todos los términos (uno para cada caso de entrenamiento):
+
+$$\frac{\partial RSS(\beta)}{\partial \beta_0} = - \sum_{i=1}^N e^{(i)} $$
+$$\frac{\partial RSS(\beta)}{\partial \beta_j} = - \sum_{i=1}^N x_j^{(i)}e^{(i)} $$
+
+para $j=1,2,\ldots, p$.
+
+Podemos implementar ahora estos cálculos:
+
+```{r}
+grad_calc <- function(x_ent, y_ent){
+  salida_grad <- function(beta){
+    f_beta <- as.matrix(cbind(1, x_ent)) %*% beta
+    e <- y_ent - f_beta
+    grad_out <- -apply(t(cbind(1,x_ent)) %*% e, 1, sum)
+    names(grad_out)[1] <- 'Intercept'
+    grad_out
+  }
+  salida_grad
+}
+grad <- grad_calc(prostata_entrena[, 1, drop = FALSE], prostata_entrena$lpsa)
+grad(c(0,1))
+grad(c(1,1))
+```
+
+Podemos checar nuestro cálculo del gradiente:
+```{r}
+delta <- 0.001
+(rss(c(1 + delta,1)) - rss(c(1,1)))/delta
+(rss(c(1,1+delta)) - rss(c(1,1)))/delta
+```
+
+Y ahora iteramos
+
+```{r}
+descenso_prost <- descenso(rss, grad)
+iteraciones <- descenso_prost(20, c(0,0), 0.005)
+iteraciones
+```
+
+Y checamos que efectivamente el error total de entrenamiento decrece
+```{r}
+apply(iteraciones, 1, rss)
+```
+
+## Normalización de entradas
+
+## Interpretación de modelos lineales
+
+## Solución analítica
+
+## ¿Por qué el modelo lineal funciona bien (muchas veces)?
 
 
