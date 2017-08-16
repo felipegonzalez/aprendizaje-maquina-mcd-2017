@@ -236,10 +236,10 @@ z_0 <- 5
 eta <- 0.4
 descenso <- function(h, h_deriv){
   fun <- function(n, z_0, eta){
-    z <- numeric(n)
-    z[1] <- z_0
+    z <- matrix(0,n, length(z_0))
+    z[1, ] <- z_0
     for(i in 1:(n-1)){
-      z[i+1] <- z[i] - eta * h_deriv(z[i])
+      z[i+1, ] <- z[i, ] - eta * h_deriv(z[i, ])
     }
     z
   }
@@ -254,7 +254,7 @@ Y vemos que estamos cerca de la convergencia.
 
 ```{r, fig.width=5}
 curve(h, -3, 6)
-points(z, h(z))
+points(z[,1], h(z))
 text(z[1:6], h(z[1:6]), pos = 3)
 ```
 
@@ -300,21 +300,22 @@ Las mismas consideraciones acerca del tamaño de paso $\eta$ aplican en
 el problema multivariado.
 
 ```{r}
-h <- function(z_1, z_2) {
-  z_1^2 + z_2^2 - z_1 * z_2
+h <- function(z) {
+  z[1]^2 + z[2]^2 - z[1] * z[2]
 }
-grid_graf <- expand.grid(z_1 = seq(-3, 3, 0.1), z_2 = seq(-3,
-3, 0.1))
-grid_graf <- grid_graf %>%  mutate(val = h(z_1,z_2))
-ggplot(grid_graf, aes(x = z_1, y = z_2, z = val)) + 
+h_gr <- function(z_1,z_2) apply(cbind(z_1, z_2), 1, h)
+grid_graf <- expand.grid(z_1 = seq(-3, 3, 0.1), z_2 = seq(-3, 3, 0.1))
+grid_graf <- grid_graf %>%  mutate( val = apply(cbind(z_1,z_2), 1, h))
+gr_contour <- ggplot(grid_graf, aes(x = z_1, y = z_2, z = val)) + 
   geom_contour(binwidth = 1.5, aes(colour = ..level..))
+gr_contour
 ```
 
 El gradiente está dado por
 
 ```{r}
-h_grad <- function(z_1,z_2){
-  c(2*z_1 - z_2, 2*z_2 - z_1)
+h_grad <- function(z){
+  c(2*z[1] - z[2], 2*z[2] - z[1])
 }
 ```
 
@@ -323,27 +324,28 @@ direcciones son ortogonales a la curva de nivel que pasa por cada uno de los
 puntos:
 
 ```{r}
-grad.1 <- h_grad(0,-2)
-grad.2 <- h_grad(1,1)
+grad_1 <- h_grad(c(0,-2))
+grad_2 <- h_grad(c(1,1))
 eta <- 0.2
 #library(grid)
-ggplot(grid_graf, aes(x=z_1, y=z_2, z=val)) +
-  geom_contour(binwidth=1.5) +
-  geom_segment(aes(x=0.0, xend=0.0-eta*grad.1[1], y=-2,
-     yend=-2-eta*grad.1[2]),
+gr_contour +
+  geom_segment(aes(x=0.0, xend=0.0-eta*grad_1[1], y=-2,
+     yend=-2-eta*grad_1[2]),
     arrow = arrow(length = unit(0.2,"cm")))+ 
-  geom_segment(aes(x=1, xend=1-eta*grad.2[1], y=1,
-     yend=1-eta*grad.2[2]),
+  geom_segment(aes(x=1, xend=1-eta*grad_2[1], y=1,
+     yend=1-eta*grad_2[2]),
     arrow = arrow(length = unit(0.2,"cm")))+ coord_fixed(ratio = 1)
 ```
 
-Ya aplicamos descenso en gradiente:
+Y aplicamos descenso en gradiente:
 
 ```{r}
-
+des_h <- descenso(h, h_grad)
+des_h(20, c(1,1), 0.1)
+ ggplot(data= grid_graf) + 
+  geom_contour(binwidth = 1.5, aes(x = z_1, y = z_2, z = val, colour = ..level..)) + 
+   geom_point(data = data.frame(des_h(20, c(3,1), 0.3)), aes(x=X1, y=X2), colour = 'red')
 ```
-
-#### Ejemplo
 
 
 ## Descenso en gradiente para regresión simple
