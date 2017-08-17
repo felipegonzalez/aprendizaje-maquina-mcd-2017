@@ -178,7 +178,7 @@ beta_hat
 res_opt$convergence
 ```
 
-```{r}
+```{r, fig.width=4,fig.asp=0.}
 ggplot(prostata_entrena, aes(x = lcavol, y = lpsa)) + geom_point() +
   geom_abline(slope = 1, intercept = 1, col ='red') +
   geom_abline(slope = beta_hat[2], intercept = beta_hat[1]) 
@@ -426,9 +426,77 @@ Y checamos que efectivamente el error total de entrenamiento decrece
 apply(iteraciones, 1, rss)
 ```
 
+
+
 ## Normalización de entradas
 
+La convergencia de descenso en gradiente (y también el desempeño numérico
+para otros algoritmos) puede dificultarse cuando las escalas tienen escalas
+muy diferentes. En este ejemplo simple, una variable tiene desviación estándar
+10 y otra 1:
+
+```{r}
+x2 <- rnorm(100, 0, 1)
+x1 <- rnorm(100, 0, 10) + 5 * x2
+y <- 0.1 * x1 + x2 + rnorm(100, 0, 1) 
+dat <- data_frame(x1, x2,  y)
+rss <- function(beta)  mean((as.matrix(dat[, 1:2]) %*% beta - y)^2) 
+grid_beta <- expand.grid(beta1 = seq(-10, 10, 0.5), beta2 = seq(-10, 10, 0.5))
+rss_1 <- apply(grid_beta, 1, rss) 
+dat_x <- data.frame(grid_beta, rss_1)
+ggplot(dat_x, aes(x = beta1, y = beta2, z = rss_1)) + geom_contour()
+```
+
+En algunas direcciones el gradiente es muy grande, y en otras chico. 
+Esto implica que la convergencia puede ser muy lenta en algunas direcciones,
+puede diverger en otras, 
+y que hay que ajustar el paso h > 0 con cuidado, 
+dependiendo de dónde comiencen las iteraciones.
+
+Una normalización usual es con la media y desviación estándar, donde hacemos,
+para cada variable de entrada $j=1,2,\ldots, p$
+$$ x_j^{(i)} = \frac{ x_j^{(i)} - \bar{x}_j}{s_j}$$
+donde
+$$\bar{x}_j = \frac{1}{N} \sum_{i=1}^N x_j^{(i)}$$
+$$s_j = \frac{1}{N-1}\sum_{i=1}^N (x_j^{(i)}- \bar{x}_j )^2$$
+es decir, centramos yn ormalizamos por columna. Otra opción común es restar
+el mínimo y dividir entre la diferencia del máximo y el mínimo, de modo
+que las variables resultantes toman valores en $[0,1]$.
+
+Entonces escalamos antes de ajustar:
+
+```{r}
+x1_s = (x1 - mean(x1))/sd(x1)
+x2_s = (x2 - mean(x2))/sd(x2)
+dat <- data_frame(x1_s, x2_s,  y)
+rss <- function(beta)  mean((as.matrix(dat[, 1:2]) %*% beta - y)^2) 
+grid_beta <- expand.grid(beta1 = seq(-10, 10, 0.5), beta2 = seq(-10, 10, 0.5))
+rss_1 <- apply(grid_beta, 1, rss) 
+dat_x <- data.frame(grid_beta, rss_1)
+ggplot(dat_x, aes(x = beta1, y = beta2, z = rss_1)) + geom_contour()
+```
+
+Nótese que los coeficientes ajustados serán diferentes a los del caso no
+normalizado.
+
+```{block, type = 'comment'}
+Cuando normalizamos antes de ajustar el modelo, las predicciones deben
+hacerse con entradas normalizados. La normalización se hace con los mismos
+valores que se usaron en el entrenamiento (y **no** recalculando medias
+y desviaciones estándar con el conjunto de prueba).
+
+#### Ejercicio.
+
+```
+
 ## Interpretación de modelos lineales
+
+Muchas veces se considera que la facilidad de interpretación es una fortaleza
+del modelo lineal. Esto es en parte cierto, pero hay algunas consideraciones
+importantes.
+
+
+
 
 ## Solución analítica
 
