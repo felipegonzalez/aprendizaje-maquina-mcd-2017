@@ -651,10 +651,92 @@ entrenamiento (independientemente del tamaño) sufre fuertemente por uno o ambas
 
 
 Ejemplo
- Consideremos que la salida Y es determinística Y = e i=1 i .
-Y supongamos que vamos a usar 1-vecino más cercano para hacer predicciones, con una muestra de entrenamiento de 1000 casos.
-Generamos xi‘s uniformes en [ 1,1], para p = 2, y calculamos la respuesta Y para cada caso:
+ Consideremos que la salida Y es determinística $Y = e^{-8\sum_{j=1}^p x_j^2}$.
+Vamos a usar 1-vecino más cercano para hacer predicciones, c
+on una muestra de entrenamiento de 1000 casos.
+Generamos $x^{i}‘s uniformes en $[ 1,1]$, para $p = 2$, y calculamos la respuesta 
+$Y$ para cada caso:
 
 ```{r}
+fun_exp <- function(x) exp(-8*sum(x^2))
+x_1 <- runif(1000, -1, 1)
+x_2 <- runif(1000, -1, 1)
+dat <- data_frame(x_1 = x_1, x_2 = x_2)
+dat$y <- apply(dat, 1, fun_exp)
+ggplot(dat, aes(x = x_1, y = x_2, colour = y)) + geom_point()
+```
+
+La mejor predicción en $x_0 = (0,0)$ es $f((0,0)) = 1$. Eñ vecino más
+cercano al origen es
+```{r}
+dist_origen <- apply(dat, 1, function(x) sqrt(sum(head(x, -1)^2)))
+mas_cercano_indice <- which.min(dist_origen)
+mas_cercano <- dat[mas_cercano_indice, ] 
+mas_cercano
 
 ```
+Nuestra predicción es entonces $\hat{f}(0)=$ `r mas_cercano$y`, que
+es bastante cercano al valor verdadero (1).
+
+Ahora intentamos hacer lo mismo para dimensión $p=8$.
+
+
+```{r}
+dat_lista <- lapply(1:8, function(i) runif(1000, -1, 1))
+dat <- Reduce(cbind, dat_lista) %>% data.frame
+dat$y <- apply(dat, 1, fun_exp)
+dist_origen <- apply(dat, 1, function(x) sqrt(sum(head(x, -1)^2)))
+mas_cercano_indice <- which.min(dist_origen)
+mas_cercano <- dat[mas_cercano_indice, ] 
+mas_cercano
+```
+
+Y el resultado es un desastre. Nuestra predicción es
+```{r}
+mas_cercano$y
+```
+Necesitariamos una muestra de alrededor de  un millón de casos
+para obtener resultados no tan malos (pruébalo).
+
+¿Qué es lo que está pasando? La razón es que en dimensiones altas, 
+los puntos de la muestra de entrenamiento están muy lejos 
+unos de otros, y están cerca de la frontera, 
+incluso para tamaños de muestra relativamente grandes como n = 1000.
+Cuando la dimensión crece, la situación empeora exponencialmente.
+
+```{block, type = 'comentario'}
+En dimensiones altas, todos los conjuntos de entrenamiento factibles
+se distribuyen de manera rala en el espacio de entradas.
+```
+
+Ahora intentamos algo similar con una función que es razonable aproximar
+con una función lineal:
+
+```{r}
+fun_cubica <- function(x) 0.5 * (1 + x[1])^3
+set.seed(111)
+sims_1 <- lapply(1:40, function(i) runif(1000, -1, 1) )
+dat <- data.frame(Reduce(cbind, sims_1))
+dat$y <- apply(dat, 1, fun_cubica)
+dist_origen <- apply(dat[, 1:40], 1, function(x) sqrt(sum(x^2)))
+mas_cercano_indice <- which.min(dist_origen)
+mas_cercano$y
+```
+
+Este no es un resultado muy bueno. Sin embargo,
+
+```{r}
+mod_lineal <- lm(y ~ ., data = dat)
+origen <- data.frame(matrix(rep(0,40), 1, 40))
+names(origen) <- names(dat)[1:40]
+predict(mod_lineal, newdata = origen)
+```
+
+Donde podemos ver que típicamente la predicción de regresión
+es mucho mejor que la de 1 vecino más cercano. Esto es porque el modelo **explota la estructura aproximadamente lineal del problema.**
+
+Lo que sucede más específicamente es que en regresión lineal
+utilizamos **todos** los datos para hacer nuestra estimación en cada
+predicción. Si la estructura del problema es aproximadamente lineal, 
+entonces regresión lineal explota la estructura para hacer *pooling*
+de toda la infromación para construir predicción con sesgo y varianza bajas.
