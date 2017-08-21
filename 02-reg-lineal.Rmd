@@ -338,10 +338,11 @@ Y aplicamos descenso en gradiente:
 
 ```{r}
 des_h <- descenso(h, h_grad)
-des_h(20, c(1,1), 0.1)
+inicial <- c(3, 1)
+des_h(20, inicial , 0.01)
  ggplot(data= grid_graf) + 
   geom_contour(binwidth = 1.5, aes(x = z_1, y = z_2, z = val, colour = ..level..)) + 
-   geom_point(data = data.frame(des_h(20, c(3,1), 0.3)), aes(x=X1, y=X2), colour = 'red')
+   geom_point(data = data.frame(des_h(20, inicial, 0.3)), aes(x=X1, y=X2), colour = 'red')
 ```
 
 
@@ -362,33 +363,55 @@ Usamos la regla de la cadena para obtener
 $$ \frac{1}{2}\frac{\partial}{\partial \beta_j} (y^{(i)} - f_\beta(x^{(i)}))^2 =
 -(y^{(i)} - f_\beta(x^{(i)})) \frac{\partial f_\beta(x^{(i)})}{\partial \beta_j}$$
 
-Tenemos dos casos
+Ahora recordamos que
+$$f_{\beta} (x) = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \cdots + \beta_p x_p$$
+
+Y vemos que tenemos dos casos. Si $j=0$,
 
 $$\frac{\partial f_\beta(x^{(i)})}{\partial \beta_0} = 1$$
 y  si $j=1,2,\ldots, p$ entonces
 
 $$\frac{\partial f_\beta(x^{(i)})}{\partial \beta_j} = x_j^{(i)}$$
 
-```{block , type ='comentario'}
+Entonces:
 
-De modo que
 $$\frac{\partial f_\beta(x^{(i)})}{\partial \beta_0} = -(y^{(i)} - f_\beta(x^{(i)}))$$
 y 
 
 $$\frac{\partial f_\beta(x^{(i)})}{\partial \beta_j} = - x_j^{(i)}(y^{(i)} - f_\beta(x^{(i)}))$$
-```
+
 
 Y sumando todos los términos (uno para cada caso de entrenamiento):
 
-$$\frac{\partial RSS(\beta)}{\partial \beta_0} = - \sum_{i=1}^N e^{(i)} $$
-$$\frac{\partial RSS(\beta)}{\partial \beta_j} = - \sum_{i=1}^N x_j^{(i)}e^{(i)} $$
 
-para $j=1,2,\ldots, p$. Nótese que cada punto de entrenamiento contribuye
+
+**Gradiente para regresión lineal**
+
+Sea $e^{(i)} =  y_{(i)} - f_{\beta} (x^{(i)})$. Entonces
+
+\begin{equation}
+  \frac{\partial RSS(\beta)}{\partial \beta_0} = - \sum_{i=1}^N e^{(i)} 
+  (\#eq:grad1)
+\end{equation}
+
+
+\begin{equation}
+  \frac{\partial RSS(\beta)}{\partial \beta_j} = - \sum_{i=1}^N x_j^{(i)}e^{(i)} 
+  (\#eq:grad2)
+\end{equation}
+para $j=1,2,\ldots, p$. 
+
+
+
+Nótese que cada punto de entrenamiento contribuye
 al cálculo del gradiente - la contribución es la dirección de descenso de error
 para ese punto particular de entrenamiento. Nos movemos entonces en una dirección
 promedio, para intentar hacer el error total lo más chico posible.
 
-Podemos implementar ahora estos cálculos:
+Podemos implementar ahora estos cálculos. Aunque podríamos escribir
+ciclos para hacer estos cálculos, es mejor hacer los cálculos 
+en forma matricial, de manera que aprovechamos rutinas de álgebra lineal
+eficiente. El cálculo del gradiente es como sigue:
 
 ```{r}
 grad_calc <- function(x_ent, y_ent){
@@ -413,11 +436,12 @@ delta <- 0.001
 (rss(c(1,1+delta)) - rss(c(1,1)))/delta
 ```
 
-Y ahora iteramos
+
+Y ahora iteramos para obtener
 
 ```{r}
 descenso_prost <- descenso(rss, grad)
-iteraciones <- descenso_prost(20, c(0,0), 0.005)
+iteraciones <- descenso_prost(30, c(0,0), 0.005)
 iteraciones
 ```
 
@@ -425,6 +449,33 @@ Y checamos que efectivamente el error total de entrenamiento decrece
 ```{r}
 apply(iteraciones, 1, rss)
 ```
+
+
+
+
+#### Notación y forma matricial {-}
+
+Usando la notación de la clase anterior (agregando una columna de unos al principio):
+
+$$\underline{X} =  \left ( \begin{array}{ccccc}
+1 & x_1^{(1)} & x_2^{(1)} & \ldots  & x_p^{(1)} \\
+1 & x_1^{(2)} & x_2^{(2)} & \ldots  & x_p^{(2)}\\
+1& \vdots & \vdots &   &  \vdots \\
+1 & x_1^{(N)} & x_2^{(N)} & \ldots  & x_p^{(N)} \\
+ \end{array} \right)$$
+
+y $$\underline{y} =(y^{(1)},y^{(2)}, \ldots, y^{(N)})^t.$$
+
+Como
+$$\underline{e} = \underline{y} - \underline{X}\beta$$
+
+tenemos entonces (de las fórmulas \@ref(eq:grad1) y \@ref(eq:grad1)):
+\begin{equation}
+\nabla RSS(\beta) =   \underline{X}^t(\underline{X}\beta - \underline{y}) =  -\underline{X}^t \underline{e}
+(\#eq:gradmat)
+\end{equation}
+
+
 
 
 
@@ -450,7 +501,7 @@ ggplot(dat_x, aes(x = beta1, y = beta2, z = rss_1)) + geom_contour()
 En algunas direcciones el gradiente es muy grande, y en otras chico. 
 Esto implica que la convergencia puede ser muy lenta en algunas direcciones,
 puede diverger en otras, 
-y que hay que ajustar el paso h > 0 con cuidado, 
+y que hay que ajustar el paso $\eta > 0$ con cuidado, 
 dependiendo de dónde comiencen las iteraciones.
 
 Una normalización usual es con la media y desviación estándar, donde hacemos,
@@ -485,9 +536,11 @@ hacerse con entradas normalizadas. La normalización se hace con los mismos
 valores que se usaron en el entrenamiento (y **no** recalculando medias
 y desviaciones estándar con el conjunto de prueba).
 
-#### Ejercicio.
 
 ```
+
+
+
 
 ## Interpretación de modelos lineales
 
@@ -593,7 +646,31 @@ En general, la recomendación es que las interpretaciones causales deben conside
 como preliminares (o *sugerencias*), y se requiere más análisis y consideraciones
 antes de poder tener interpretaciones causales sólidas. 
 
+#### Ejercicio.
+
+
+
 ## Solución analítica
+
+El problema de mínimos cuadrados tiene una solución de forma cerrada. A partir
+del gradiente \@ref(eq:gradmat), podemos igual a cero y resolver (chécalo) para
+obtener:
+
+\begin{equation*}
+\hat{\beta} = \left (\underline{X}\underline{X}^t \right)^{-1}
+\underline{X}^t\underline{y}
+\end{equation*}
+
+Paquetes como *lm* de R usan como base esta expresión, pero los cálculos se
+hacen mediante descomposiciones matriciales para más estabilidad (productos
+de matrices e inversiones). Aunque es posible escalar y/o paralelizar estos
+cálculos matriciales para problemas grandes, los procedimientos son más
+delicados. Nuestro enfoque de descenso máximo tiene la ventaja de que
+es fácil de entender, usar, aplicar a otros problemas con éxito,
+y además puede escalarse trivialmente, como veremos
+más adelante (por ejemplo, descenso estocástico). ¡Aunque siempre que se pueda
+es buena idea usar *lm*!
+
 
 ## ¿Por qué el modelo lineal funciona bien (muchas veces)?
 
@@ -619,7 +696,7 @@ que consiste en hacer aproximaciones locales directas de $f(X)$.
 Sea ${\mathcal L}$  un conjunto de entrenamiento. Para $k$ entera fija, y 
 $x_0$ una entrada donde queremos predecir, definimos a $N_k(x_0)$ como el conjunto de los $k$ elementos
 de ${\mathcal L}$ que tienen $x^{(i)}$ más cercana a $x_0$. Hacemos la predicción
-$$\hat{f}(x_0) = \frac{1}{k}\sum_{(x^{(i)}, y^{(i)}) \in N_k(x_0)} y^{(i)}$$
+$$\hat{f}(x_0) = \frac{1}{k}\sum_{x^{(i)} \in N_k(x_0)} y^{(i)}$$
 
 Es decir, promediamos las $k$ $y$'s con $x$'s más cercanas a donde queremos predecir.
 
