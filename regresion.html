@@ -7,7 +7,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Aprendizaje de máquina</title>
   <meta name="description" content="Notas y material para el curso de aprendizaje de máquina 2017 (ITAM)">
-  <meta name="generator" content="bookdown 0.4.3 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown 0.5 and GitBook 2.6.7">
 
   <meta property="og:title" content="Aprendizaje de máquina" />
   <meta property="og:type" content="book" />
@@ -25,7 +25,7 @@
 <meta name="author" content="Felipe González">
 
 
-<meta name="date" content="2017-08-16">
+<meta name="date" content="2017-08-21">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -138,7 +138,9 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="2.5" data-path="regresion.html"><a href="regresion.html#normalizacion-de-entradas"><i class="fa fa-check"></i><b>2.5</b> Normalización de entradas</a></li>
 <li class="chapter" data-level="2.6" data-path="regresion.html"><a href="regresion.html#interpretacion-de-modelos-lineales"><i class="fa fa-check"></i><b>2.6</b> Interpretación de modelos lineales</a></li>
 <li class="chapter" data-level="2.7" data-path="regresion.html"><a href="regresion.html#solucion-analitica"><i class="fa fa-check"></i><b>2.7</b> Solución analítica</a></li>
-<li class="chapter" data-level="2.8" data-path="regresion.html"><a href="regresion.html#por-que-el-modelo-lineal-funciona-bien-muchas-veces"><i class="fa fa-check"></i><b>2.8</b> ¿Por qué el modelo lineal funciona bien (muchas veces)?</a></li>
+<li class="chapter" data-level="2.8" data-path="regresion.html"><a href="regresion.html#por-que-el-modelo-lineal-funciona-bien-muchas-veces"><i class="fa fa-check"></i><b>2.8</b> ¿Por qué el modelo lineal funciona bien (muchas veces)?</a><ul>
+<li class="chapter" data-level="2.8.1" data-path="regresion.html"><a href="regresion.html#k-vecinos-mas-cercanos"><i class="fa fa-check"></i><b>2.8.1</b> k vecinos más cercanos</a></li>
+</ul></li>
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Publicado con bookdown</a></li>
@@ -169,7 +171,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p><span class="math display">\[\hat{f}(X) = \hat{\beta}_0 + \hat{\beta}_1 X_1 + \hat{\beta}_2 X_2 \cdots + \hat{\beta} X_p\]</span> y usaremos esta función <span class="math inline">\(\hat{f}\)</span> para hacer predicciones <span class="math inline">\(\hat{Y} =\hat{f}(X)\)</span>.</p>
 <div id="ejemplos" class="section level4">
 <h4><span class="header-section-number">2.1.0.1</span> Ejemplos</h4>
-<p>Queremos predecir las ventas futuras anuales <span class="math inline">\(Y\)</span> de un supermercado que se va a construir en un lugar dado. Las variables que describen el lugar son <span class="math inline">\(X_1 = trafico\_coches\)</span>, <span class="math inline">\(X_2=trafico\_peatones\)</span>. En una aproximación simple, podemos suponer que la tienda va a capturar una fracción de esos tráficos que se van a convertir en ventas. Quisieramos predecir con una función de la forma <span class="math display">\[f_\beta (coches, peatones) = \beta_0 + \beta_1\, coches + \beta_2\, peatones.\]</span> Por ejemplo, después de un análisis estimamos que</p>
+<p>Queremos predecir las ventas futuras anuales <span class="math inline">\(Y\)</span> de un supermercado que se va a construir en un lugar dado. Las variables que describen el lugar son <span class="math inline">\(X_1 = trafico\_coches\)</span>, <span class="math inline">\(X_2=trafico\_peatones\)</span>. En una aproximación simple, podemos suponer que la tienda va a capturar una fracción de esos tráficos que se van a convertir en ventas. Quisieramos predecir con una función de la forma <span class="math display">\[f_\beta (peatones, coches) = \beta_0 + \beta_1\, peatones + \beta_2\, coches.\]</span> Por ejemplo, después de un análisis estimamos que</p>
 <ul>
 <li><span class="math inline">\(\hat{\beta}_0 = 1000000\)</span> (ventas base)</li>
 <li><span class="math inline">\(\hat{\beta}_1 = (200)*0.02 = 4\)</span></li>
@@ -191,11 +193,11 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li><span class="math inline">\(\hat{\beta}_1 = 4\)</span></li>
 <li><span class="math inline">\(\hat{\beta}_2 = (300)*0.005 = 1.5\)</span></li>
 <li><span class="math inline">\(\hat{\beta}_3 = 400000\)</span></li>
-<li><span class="math inline">\(\hat{\beta}_4 = (300)*0.01 = 3\)</span></li>
+<li><span class="math inline">\(\hat{\beta}_4 = (300)*0.02 = 6\)</span></li>
 </ul>
 <p>y entonces haríamos predicciones con el modelo</p>
 <p><span class="math display">\[\hat{f} (X_1,X_2,X_3,X_4) = 
-800000 + 4\, X_1 + 1.5 \,X_2 + 400000\, X_3 +3\, X_4\]</span></p>
+800000 + 4\, X_1 + 1.5 \,X_2 + 400000\, X_3 +6\, X_4\]</span></p>
 </div>
 </div>
 <div id="aprendizaje-de-coeficientes-ajuste" class="section level2">
@@ -351,27 +353,23 @@ beta_hat</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(prostata_entrena, <span class="kw">aes</span>(<span class="dt">x =</span> lcavol, <span class="dt">y =</span> lpsa)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_abline</span>(<span class="dt">slope =</span> <span class="dv">1</span>, <span class="dt">intercept =</span> <span class="dv">1</span>, <span class="dt">col =</span><span class="st">&#39;red&#39;</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_abline</span>(<span class="dt">slope =</span> beta_hat[<span class="dv">2</span>], <span class="dt">intercept =</span> beta_hat[<span class="dv">1</span>]) </code></pre></div>
-<p><img src="02-reg-lineal_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<p><img src="02-reg-lineal_files/figure-html/unnamed-chunk-10-1.png" width="384" /></p>
 </div>
 </div>
 <div id="descenso-en-gradiente" class="section level2">
 <h2><span class="header-section-number">2.3</span> Descenso en gradiente</h2>
 <p>Aunque el problema de mínimos cuadrados se puede resolver analíticamente, proponemos un método numérico básico que es efectivo y puede escalarse a problemas grandes de manera relativamente simple: descenso en gradiente, o descenso máximo.</p>
-<p>Supongamos que una función <span class="math inline">\(h(x)\)</span> es convexa y tiene un mínimo. La idea de descenso en gradiente es comenzar con un candidato inicial <span class="math inline">\(z_0\)</span> y calcular la derivada en <span class="math inline">\(z^{(0)}\)</span>. Si <span class="math inline">\(h(z^{(0)})&lt;0\)</span>, la función es creciente en <span class="math inline">\(z^{(0)}\)</span> y nos movemos ligeramente a la izquierda para obtener un nuevo candidato <span class="math inline">\(z^{(1)}\)</span>. si <span class="math inline">\(h(z^{(0)})&lt;0\)</span>, la función es decreciente en <span class="math inline">\(z^{(0)}\)</span> y nos movemos ligeramente a la derecha para obtener un nuevo candidato <span class="math inline">\(z^{(1)}\)</span>. Iteramos este proceso hasta que la derivada es cercana a cero (estamos cerca del óptimo).</p>
+<p>Supongamos que una función <span class="math inline">\(h(x)\)</span> es convexa y tiene un mínimo. La idea de descenso en gradiente es comenzar con un candidato inicial <span class="math inline">\(z_0\)</span> y calcular la derivada en <span class="math inline">\(z^{(0)}\)</span>. Si <span class="math inline">\(h(z^{(0)})&gt;0\)</span>, la función es creciente en <span class="math inline">\(z^{(0)}\)</span> y nos movemos ligeramente a la izquierda para obtener un nuevo candidato <span class="math inline">\(z^{(1)}\)</span>. si <span class="math inline">\(h(z^{(0)})&lt;0\)</span>, la función es decreciente en <span class="math inline">\(z^{(0)}\)</span> y nos movemos ligeramente a la derecha para obtener un nuevo candidato <span class="math inline">\(z^{(1)}\)</span>. Iteramos este proceso hasta que la derivada es cercana a cero (estamos cerca del óptimo).</p>
 <p>Si <span class="math inline">\(\eta&gt;0\)</span> es una cantidad chica, podemos escribir</p>
 <p><span class="math display">\[z^{(1)} = z^{(0)} + \eta \,h&#39;(z^{(0)}).\]</span></p>
 <p>Nótese que cuando la derivada tiene magnitud alta, el movimiento de <span class="math inline">\(z^{(0)}\)</span> a <span class="math inline">\(z^{(1)}\)</span> es más grande, y siempre nos movemos una fracción de la derivada. En general hacemos <span class="math display">\[z^{(j+1)} = z^{(j)} + \eta\,h&#39;(z^{(j)})\]</span> para obtener una sucesión <span class="math inline">\(z^{(0)},z^{(1)},\ldots\)</span>. Esperamos a que <span class="math inline">\(z^{(j)}\)</span> converja para terminar la iteración.</p>
 <div id="ejemplo-4" class="section level4">
 <h4><span class="header-section-number">2.3.0.1</span> Ejemplo</h4>
 <p>Si tenemos</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"> h &lt;-<span class="st"> </span><span class="cf">function</span>(x) {
-x<span class="op">^</span><span class="dv">2</span> <span class="op">+</span><span class="st"> </span>(x <span class="op">-</span><span class="st"> </span><span class="dv">2</span>)<span class="op">^</span><span class="dv">2</span> <span class="op">-</span><span class="st"> </span><span class="kw">log</span>(x<span class="op">^</span><span class="dv">2</span> <span class="op">+</span><span class="st"> </span><span class="dv">1</span>)
- }</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">h &lt;-<span class="st"> </span><span class="cf">function</span>(x) x<span class="op">^</span><span class="dv">2</span> <span class="op">+</span><span class="st"> </span>(x <span class="op">-</span><span class="st"> </span><span class="dv">2</span>)<span class="op">^</span><span class="dv">2</span> <span class="op">-</span><span class="st"> </span><span class="kw">log</span>(x<span class="op">^</span><span class="dv">2</span> <span class="op">+</span><span class="st"> </span><span class="dv">1</span>)</code></pre></div>
 <p>Calculamos (a mano):</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"> h_deriv &lt;-<span class="st"> </span><span class="cf">function</span>(x) {
-  <span class="dv">2</span> <span class="op">*</span><span class="st"> </span>x <span class="op">+</span><span class="st"> </span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span>(x <span class="op">-</span><span class="st"> </span><span class="dv">2</span>) <span class="op">-</span><span class="st"> </span><span class="dv">2</span><span class="op">*</span>x<span class="op">/</span>(x<span class="op">^</span><span class="dv">2</span> <span class="op">+</span><span class="st"> </span><span class="dv">1</span>)
- }</code></pre></div>
-<p>Ahora iteramos con <span class="math inline">\(\eta = 0.1\)</span> y valor inicial <span class="math inline">\(z_0=5\)</span></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"> h_deriv &lt;-<span class="st"> </span><span class="cf">function</span>(x) <span class="dv">2</span> <span class="op">*</span><span class="st"> </span>x <span class="op">+</span><span class="st"> </span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span>(x <span class="op">-</span><span class="st"> </span><span class="dv">2</span>) <span class="op">-</span><span class="st"> </span><span class="dv">2</span><span class="op">*</span>x<span class="op">/</span>(x<span class="op">^</span><span class="dv">2</span> <span class="op">+</span><span class="st"> </span><span class="dv">1</span>)</code></pre></div>
+<p>Ahora iteramos con <span class="math inline">\(\eta = 0.4\)</span> y valor inicial <span class="math inline">\(z_0=5\)</span></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">z_<span class="dv">0</span> &lt;-<span class="st"> </span><span class="dv">5</span>
 eta &lt;-<span class="st"> </span><span class="fl">0.4</span>
 descenso &lt;-<span class="st"> </span><span class="cf">function</span>(h, h_deriv){
@@ -488,31 +486,32 @@ gr_contour <span class="op">+</span>
 <p><img src="02-reg-lineal_files/figure-html/unnamed-chunk-20-1.png" width="672" /></p>
 <p>Y aplicamos descenso en gradiente:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">des_h &lt;-<span class="st"> </span><span class="kw">descenso</span>(h, h_grad)
-<span class="kw">des_h</span>(<span class="dv">20</span>, <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">1</span>), <span class="fl">0.1</span>)</code></pre></div>
-<pre><code>##            [,1]      [,2]
-##  [1,] 1.0000000 1.0000000
-##  [2,] 0.9000000 0.9000000
-##  [3,] 0.8100000 0.8100000
-##  [4,] 0.7290000 0.7290000
-##  [5,] 0.6561000 0.6561000
-##  [6,] 0.5904900 0.5904900
-##  [7,] 0.5314410 0.5314410
-##  [8,] 0.4782969 0.4782969
-##  [9,] 0.4304672 0.4304672
-## [10,] 0.3874205 0.3874205
-## [11,] 0.3486784 0.3486784
-## [12,] 0.3138106 0.3138106
-## [13,] 0.2824295 0.2824295
-## [14,] 0.2541866 0.2541866
-## [15,] 0.2287679 0.2287679
-## [16,] 0.2058911 0.2058911
-## [17,] 0.1853020 0.1853020
-## [18,] 0.1667718 0.1667718
-## [19,] 0.1500946 0.1500946
-## [20,] 0.1350852 0.1350852</code></pre>
+inicial &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">1</span>)
+<span class="kw">des_h</span>(<span class="dv">20</span>, inicial , <span class="fl">0.01</span>)</code></pre></div>
+<pre><code>##           [,1]     [,2]
+##  [1,] 3.000000 1.000000
+##  [2,] 2.950000 1.010000
+##  [3,] 2.901100 1.019300
+##  [4,] 2.853271 1.027925
+##  [5,] 2.806485 1.035899
+##  [6,] 2.760714 1.043246
+##  [7,] 2.715932 1.049988
+##  [8,] 2.672114 1.056148
+##  [9,] 2.629233 1.061746
+## [10,] 2.587266 1.066803
+## [11,] 2.546188 1.071340
+## [12,] 2.505978 1.075375
+## [13,] 2.466612 1.078927
+## [14,] 2.428069 1.082015
+## [15,] 2.390328 1.084655
+## [16,] 2.353368 1.086866
+## [17,] 2.317169 1.088662
+## [18,] 2.281712 1.090060
+## [19,] 2.246979 1.091076
+## [20,] 2.212950 1.091725</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"> <span class="kw">ggplot</span>(<span class="dt">data=</span> grid_graf) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">geom_contour</span>(<span class="dt">binwidth =</span> <span class="fl">1.5</span>, <span class="kw">aes</span>(<span class="dt">x =</span> z_<span class="dv">1</span>, <span class="dt">y =</span> z_<span class="dv">2</span>, <span class="dt">z =</span> val, <span class="dt">colour =</span> ..level..)) <span class="op">+</span><span class="st"> </span>
-<span class="st">   </span><span class="kw">geom_point</span>(<span class="dt">data =</span> <span class="kw">data.frame</span>(<span class="kw">des_h</span>(<span class="dv">20</span>, <span class="kw">c</span>(<span class="dv">3</span>,<span class="dv">1</span>), <span class="fl">0.3</span>)), <span class="kw">aes</span>(<span class="dt">x=</span>X1, <span class="dt">y=</span>X2), <span class="dt">colour =</span> <span class="st">&#39;red&#39;</span>)</code></pre></div>
+<span class="st">   </span><span class="kw">geom_point</span>(<span class="dt">data =</span> <span class="kw">data.frame</span>(<span class="kw">des_h</span>(<span class="dv">20</span>, inicial, <span class="fl">0.3</span>)), <span class="kw">aes</span>(<span class="dt">x=</span>X1, <span class="dt">y=</span>X2), <span class="dt">colour =</span> <span class="st">&#39;red&#39;</span>)</code></pre></div>
 <p><img src="02-reg-lineal_files/figure-html/unnamed-chunk-21-1.png" width="672" /></p>
 </div>
 </div>
@@ -523,21 +522,27 @@ gr_contour <span class="op">+</span>
 <p>La derivada de la suma es la suma de las derivadas, así nos concentramos en derivar uno de los términos</p>
 <p><span class="math display">\[  \frac{1}{2}(y^{(i)} - f_\beta(x^{(i)}))^2 \]</span> Usamos la regla de la cadena para obtener <span class="math display">\[ \frac{1}{2}\frac{\partial}{\partial \beta_j} (y^{(i)} - f_\beta(x^{(i)}))^2 =
 -(y^{(i)} - f_\beta(x^{(i)})) \frac{\partial f_\beta(x^{(i)})}{\partial \beta_j}\]</span></p>
-<p>Tenemos dos casos</p>
+<p>Ahora recordamos que <span class="math display">\[f_{\beta} (x) = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \cdots + \beta_p x_p\]</span></p>
+<p>Y vemos que tenemos dos casos. Si <span class="math inline">\(j=0\)</span>,</p>
 <p><span class="math display">\[\frac{\partial f_\beta(x^{(i)})}{\partial \beta_0} = 1\]</span> y si <span class="math inline">\(j=1,2,\ldots, p\)</span> entonces</p>
 <p><span class="math display">\[\frac{\partial f_\beta(x^{(i)})}{\partial \beta_j} = x_j^{(i)}\]</span></p>
-<div class="comentario">
-<p>
-De modo que <br /><span class="math display"><span class="math display">\[\frac{\partial f_\beta(x^{(i)})}{\partial \beta_0} = -(y^{(i)} - f_\beta(x^{(i)}))\]</span></span><br /> y
-</p>
-<p>
-<br /><span class="math display"><span class="math display">\[\frac{\partial f_\beta(x^{(i)})}{\partial \beta_j} = - x_j^{(i)}(y^{(i)} - f_\beta(x^{(i)}))\]</span></span><br />
-</p>
-</div>
+<p>Entonces:</p>
+<p><span class="math display">\[\frac{\partial f_\beta(x^{(i)})}{\partial \beta_0} = -(y^{(i)} - f_\beta(x^{(i)}))\]</span> y</p>
+<p><span class="math display">\[\frac{\partial f_\beta(x^{(i)})}{\partial \beta_j} = - x_j^{(i)}(y^{(i)} - f_\beta(x^{(i)}))\]</span></p>
 <p>Y sumando todos los términos (uno para cada caso de entrenamiento):</p>
-<p><span class="math display">\[\frac{\partial RSS(\beta)}{\partial \beta_0} = - \sum_{i=1}^N e^{(i)} \]</span> <span class="math display">\[\frac{\partial RSS(\beta)}{\partial \beta_j} = - \sum_{i=1}^N x_j^{(i)}e^{(i)} \]</span></p>
+<p><strong>Gradiente para regresión lineal</strong></p>
+<p>Sea <span class="math inline">\(e^{(i)} = y_{(i)} - f_{\beta} (x^{(i)})\)</span>. Entonces</p>
+<span class="math display" id="eq:grad1">\[\begin{equation}
+  \frac{\partial RSS(\beta)}{\partial \beta_0} = - \sum_{i=1}^N e^{(i)} 
+  \tag{2.1}
+\end{equation}\]</span>
+<span class="math display" id="eq:grad2">\[\begin{equation}
+  \frac{\partial RSS(\beta)}{\partial \beta_j} = - \sum_{i=1}^N x_j^{(i)}e^{(i)} 
+  \tag{2.2}
+\end{equation}\]</span>
 <p>para <span class="math inline">\(j=1,2,\ldots, p\)</span>.</p>
-<p>Podemos implementar ahora estos cálculos:</p>
+<p>Nótese que cada punto de entrenamiento contribuye al cálculo del gradiente - la contribución es la dirección de descenso de error para ese punto particular de entrenamiento. Nos movemos entonces en una dirección promedio, para intentar hacer el error total lo más chico posible.</p>
+<p>Podemos implementar ahora estos cálculos. Aunque podríamos escribir ciclos para hacer estos cálculos, es mejor hacer los cálculos en forma matricial, de manera que aprovechamos rutinas de álgebra lineal eficiente. El cálculo del gradiente es como sigue:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">grad_calc &lt;-<span class="st"> </span><span class="cf">function</span>(x_ent, y_ent){
   salida_grad &lt;-<span class="st"> </span><span class="cf">function</span>(beta){
     f_beta &lt;-<span class="st"> </span><span class="kw">as.matrix</span>(<span class="kw">cbind</span>(<span class="dv">1</span>, x_ent)) <span class="op">%*%</span><span class="st"> </span>beta
@@ -561,9 +566,9 @@ grad &lt;-<span class="st"> </span><span class="kw">grad_calc</span>(prostata_en
 <pre><code>## [1] -9.269687</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">(<span class="kw">rss</span>(<span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">1</span><span class="op">+</span>delta)) <span class="op">-</span><span class="st"> </span><span class="kw">rss</span>(<span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">1</span>)))<span class="op">/</span>delta</code></pre></div>
 <pre><code>## [1] 17.17331</code></pre>
-<p>Y ahora iteramos</p>
+<p>Y ahora iteramos para obtener</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">descenso_prost &lt;-<span class="st"> </span><span class="kw">descenso</span>(rss, grad)
-iteraciones &lt;-<span class="st"> </span><span class="kw">descenso_prost</span>(<span class="dv">20</span>, <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">0</span>), <span class="fl">0.005</span>)
+iteraciones &lt;-<span class="st"> </span><span class="kw">descenso_prost</span>(<span class="dv">30</span>, <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">0</span>), <span class="fl">0.005</span>)
 iteraciones</code></pre></div>
 <pre><code>##            [,1]      [,2]
 ##  [1,] 0.0000000 0.0000000
@@ -585,24 +590,295 @@ iteraciones</code></pre></div>
 ## [17,] 1.4151098 0.7592518
 ## [18,] 1.4284979 0.7530844
 ## [19,] 1.4401148 0.7477329
-## [20,] 1.4501947 0.7430895</code></pre>
+## [20,] 1.4501947 0.7430895
+## [21,] 1.4589411 0.7390604
+## [22,] 1.4665303 0.7355643
+## [23,] 1.4731155 0.7325308
+## [24,] 1.4788295 0.7298986
+## [25,] 1.4837875 0.7276146
+## [26,] 1.4880895 0.7256328
+## [27,] 1.4918224 0.7239132
+## [28,] 1.4950614 0.7224211
+## [29,] 1.4978719 0.7211265
+## [30,] 1.5003106 0.7200031</code></pre>
 <p>Y checamos que efectivamente el error total de entrenamiento decrece</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">apply</span>(iteraciones, <span class="dv">1</span>, rss)</code></pre></div>
 <pre><code>##  [1] 249.60960  51.70986  32.49921  28.96515  27.22475  25.99191  25.07023
 ##  [8]  24.37684  23.85483  23.46181  23.16591  22.94312  22.77538  22.64910
-## [15]  22.55401  22.48242  22.42852  22.38794  22.35739  22.33438</code></pre>
+## [15]  22.55401  22.48242  22.42852  22.38794  22.35739  22.33438  22.31706
+## [22]  22.30402  22.29421  22.28681  22.28125  22.27706  22.27390  22.27153
+## [29]  22.26974  22.26839</code></pre>
+<div id="notacion-y-forma-matricial" class="section level4 unnumbered">
+<h4>Notación y forma matricial</h4>
+<p>Usando la notación de la clase anterior (agregando una columna de unos al principio):</p>
+<p><span class="math display">\[\underline{X} =  \left ( \begin{array}{ccccc}
+1 &amp; x_1^{(1)} &amp; x_2^{(1)} &amp; \ldots  &amp; x_p^{(1)} \\
+1 &amp; x_1^{(2)} &amp; x_2^{(2)} &amp; \ldots  &amp; x_p^{(2)}\\
+1&amp; \vdots &amp; \vdots &amp;   &amp;  \vdots \\
+1 &amp; x_1^{(N)} &amp; x_2^{(N)} &amp; \ldots  &amp; x_p^{(N)} \\
+ \end{array} \right)\]</span></p>
+<p>y <span class="math display">\[\underline{y} =(y^{(1)},y^{(2)}, \ldots, y^{(N)})^t.\]</span></p>
+<p>Como <span class="math display">\[\underline{e} = \underline{y} - \underline{X}\beta\]</span></p>
+tenemos entonces (de las fórmulas <a href="regresion.html#eq:grad1">(2.1)</a> y <a href="regresion.html#eq:grad1">(2.1)</a>):
+<span class="math display" id="eq:gradmat">\[\begin{equation}
+\nabla RSS(\beta) =   \underline{X}^t(\underline{X}\beta - \underline{y}) =  -\underline{X}^t \underline{e}
+\tag{2.3}
+\end{equation}\]</span>
+</div>
 </div>
 <div id="normalizacion-de-entradas" class="section level2">
 <h2><span class="header-section-number">2.5</span> Normalización de entradas</h2>
+<p>La convergencia de descenso en gradiente (y también el desempeño numérico para otros algoritmos) puede dificultarse cuando las escalas tienen escalas muy diferentes. En este ejemplo simple, una variable tiene desviación estándar 10 y otra 1:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x2 &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">100</span>, <span class="dv">0</span>, <span class="dv">1</span>)
+x1 &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">100</span>, <span class="dv">0</span>, <span class="dv">10</span>) <span class="op">+</span><span class="st"> </span><span class="dv">5</span> <span class="op">*</span><span class="st"> </span>x2
+y &lt;-<span class="st"> </span><span class="fl">0.1</span> <span class="op">*</span><span class="st"> </span>x1 <span class="op">+</span><span class="st"> </span>x2 <span class="op">+</span><span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">100</span>, <span class="dv">0</span>, <span class="dv">1</span>) 
+dat &lt;-<span class="st"> </span><span class="kw">data_frame</span>(x1, x2,  y)
+rss &lt;-<span class="st"> </span><span class="cf">function</span>(beta)  <span class="kw">mean</span>((<span class="kw">as.matrix</span>(dat[, <span class="dv">1</span><span class="op">:</span><span class="dv">2</span>]) <span class="op">%*%</span><span class="st"> </span>beta <span class="op">-</span><span class="st"> </span>y)<span class="op">^</span><span class="dv">2</span>) 
+grid_beta &lt;-<span class="st"> </span><span class="kw">expand.grid</span>(<span class="dt">beta1 =</span> <span class="kw">seq</span>(<span class="op">-</span><span class="dv">10</span>, <span class="dv">10</span>, <span class="fl">0.5</span>), <span class="dt">beta2 =</span> <span class="kw">seq</span>(<span class="op">-</span><span class="dv">10</span>, <span class="dv">10</span>, <span class="fl">0.5</span>))
+rss_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">apply</span>(grid_beta, <span class="dv">1</span>, rss) 
+dat_x &lt;-<span class="st"> </span><span class="kw">data.frame</span>(grid_beta, rss_<span class="dv">1</span>)
+<span class="kw">ggplot</span>(dat_x, <span class="kw">aes</span>(<span class="dt">x =</span> beta1, <span class="dt">y =</span> beta2, <span class="dt">z =</span> rss_<span class="dv">1</span>)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_contour</span>()</code></pre></div>
+<p><img src="02-reg-lineal_files/figure-html/unnamed-chunk-26-1.png" width="672" /></p>
+<p>En algunas direcciones el gradiente es muy grande, y en otras chico. Esto implica que la convergencia puede ser muy lenta en algunas direcciones, puede diverger en otras, y que hay que ajustar el paso <span class="math inline">\(\eta &gt; 0\)</span> con cuidado, dependiendo de dónde comiencen las iteraciones.</p>
+<p>Una normalización usual es con la media y desviación estándar, donde hacemos, para cada variable de entrada <span class="math inline">\(j=1,2,\ldots, p\)</span> <span class="math display">\[ x_j^{(i)} = \frac{ x_j^{(i)} - \bar{x}_j}{s_j}\]</span> donde <span class="math display">\[\bar{x}_j = \frac{1}{N} \sum_{i=1}^N x_j^{(i)}\]</span> <span class="math display">\[s_j = \frac{1}{N-1}\sum_{i=1}^N (x_j^{(i)}- \bar{x}_j )^2\]</span> es decir, centramos y normalizamos por columna. Otra opción común es restar el mínimo y dividir entre la diferencia del máximo y el mínimo, de modo que las variables resultantes toman valores en <span class="math inline">\([0,1]\)</span>.</p>
+<p>Entonces escalamos antes de ajustar:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x1_s =<span class="st"> </span>(x1 <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(x1))<span class="op">/</span><span class="kw">sd</span>(x1)
+x2_s =<span class="st"> </span>(x2 <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(x2))<span class="op">/</span><span class="kw">sd</span>(x2)
+dat &lt;-<span class="st"> </span><span class="kw">data_frame</span>(x1_s, x2_s,  y)
+rss &lt;-<span class="st"> </span><span class="cf">function</span>(beta)  <span class="kw">mean</span>((<span class="kw">as.matrix</span>(dat[, <span class="dv">1</span><span class="op">:</span><span class="dv">2</span>]) <span class="op">%*%</span><span class="st"> </span>beta <span class="op">-</span><span class="st"> </span>y)<span class="op">^</span><span class="dv">2</span>) 
+grid_beta &lt;-<span class="st"> </span><span class="kw">expand.grid</span>(<span class="dt">beta1 =</span> <span class="kw">seq</span>(<span class="op">-</span><span class="dv">10</span>, <span class="dv">10</span>, <span class="fl">0.5</span>), <span class="dt">beta2 =</span> <span class="kw">seq</span>(<span class="op">-</span><span class="dv">10</span>, <span class="dv">10</span>, <span class="fl">0.5</span>))
+rss_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">apply</span>(grid_beta, <span class="dv">1</span>, rss) 
+dat_x &lt;-<span class="st"> </span><span class="kw">data.frame</span>(grid_beta, rss_<span class="dv">1</span>)
+<span class="kw">ggplot</span>(dat_x, <span class="kw">aes</span>(<span class="dt">x =</span> beta1, <span class="dt">y =</span> beta2, <span class="dt">z =</span> rss_<span class="dv">1</span>)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_contour</span>()</code></pre></div>
+<p><img src="02-reg-lineal_files/figure-html/unnamed-chunk-27-1.png" width="672" /></p>
+<p>Nótese que los coeficientes ajustados serán diferentes a los del caso no normalizado.</p>
+<div class="comment">
+<p>
+Cuando normalizamos antes de ajustar el modelo, las predicciones deben hacerse con entradas normalizadas. La normalización se hace con los mismos valores que se usaron en el entrenamiento (y <strong>no</strong> recalculando medias y desviaciones estándar con el conjunto de prueba).
+</p>
+</div>
 </div>
 <div id="interpretacion-de-modelos-lineales" class="section level2">
 <h2><span class="header-section-number">2.6</span> Interpretación de modelos lineales</h2>
+<p>Muchas veces se considera que la facilidad de interpretación es una fortaleza del modelo lineal. Esto es en parte cierto, pero hay algunas consideraciones importantes que debemos tomar en cuenta.</p>
+<p>La interpretación más sólida es la de las predicciones: podemos decir por qué una predicción es alta o baja.</p>
+<p>Consideremos el ejemplo de cáncer de prostata, por ejemplo:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(tidyr)
+prostate_completo &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="dt">file =</span> <span class="st">&#39;datos/prostate.csv&#39;</span>)
+pr_entrena &lt;-<span class="st"> </span><span class="kw">filter</span>(prostate_completo, train) 
+pr_entrena &lt;-<span class="st"> </span>pr_entrena <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">id =</span> <span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(pr_entrena))
+<span class="co">#normalizamos</span>
+pr_entrena_s &lt;-<span class="st"> </span>
+<span class="st">  </span>pr_entrena <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">select</span>(id, lcavol, age, lpsa) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">gather</span>(variable, valor, lcavol<span class="op">:</span>age) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">group_by</span>(variable) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">media =</span> <span class="kw">mean</span>(valor), <span class="dt">desv =</span> <span class="kw">sd</span>(valor)) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">valor_s =</span> (valor <span class="op">-</span><span class="st"> </span>media)<span class="op">/</span>desv) 
+
+pr_modelo &lt;-<span class="st"> </span>pr_entrena_s <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(id, lpsa, variable, valor_s) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">spread</span>(variable, valor_s)
+
+mod_pr &lt;-<span class="st"> </span><span class="kw">lm</span>( lpsa <span class="op">~</span><span class="st"> </span>lcavol  <span class="op">+</span><span class="st"> </span>age , <span class="dt">data =</span> pr_modelo )
+<span class="kw">round</span>(<span class="kw">coefficients</span>(mod_pr), <span class="dv">2</span>)</code></pre></div>
+<pre><code>## (Intercept)      lcavol         age 
+##        2.45        0.88        0.02</code></pre>
+<p>y observamos el rango de <span class="math inline">\(lpsa\)</span>:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">round</span>(<span class="kw">summary</span>(pr_modelo<span class="op">$</span>lpsa), <span class="dv">2</span>)</code></pre></div>
+<pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##   -0.43    1.67    2.57    2.45    3.37    5.48</code></pre>
+<p>Ahora podemos interpretar el predictor:</p>
+<ul>
+<li>Cuando las variables lcavol y age están en sus media, la predicción de lpsa es 2.5</li>
+<li>Si lcavol sube 1 desviación estándar por encima de la media, el predictor de lpsa sube alrededor de 0.9 unidades (de un rango de alrededor de 6 unidades)</li>
+<li>Si age sube 1 desviación estándar por encima de su media, el predictor de lpsa sube 0.02, lo cual es un movimiento muy chico considerando la variación de lpsa.</li>
+</ul>
+<p>Así podemos explicar cada predicción - considerando qué variables aportan positiva y cuáles negativamente a la predicción. <strong>El camino más seguro es limitarse a hacer este tipo de análisis de las predicciones</strong>. Hablamos de entender la estructura predictiva del problema con los datos que tenemos - y no intentamos ir hacia la explicación del fenómeno.</p>
+<p>Cualquier otra interpretación requiere mucho más cuidados, y requiere una revisión de la especificación correcta del modelo. Parte de estos cuidados se estudian en un curso de regresión desde el punto de vista estadístico, por ejemplo:</p>
+<ul>
+<li><p>Variación muestral. Es necesario considerar la variación en nuestras estimaciones de los coeficientes para poder concluir acerca de su relación con el fenómeno (tratable desde punto de vista estadístico, pero hay que checar supuestos). Quizá el error de estimación del coeficiente de lcavol es 2 veces su magnitud - difícilmente podemos concluir algo acerca la relación de lcavol.</p></li>
+<li><p>Efectos no lineales: si la estructura del problema es altamente no lineal, los coeficientes de un modelo lineal no tienen una interpretación clara en relación al fenómeno. Esto también es parcialmente tratable con diagnósticos.</p></li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">2112</span>)
+x &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">20</span>)
+y &lt;-<span class="st"> </span>x<span class="op">^</span><span class="dv">2</span>
+<span class="kw">summary</span>(<span class="kw">lm</span>(y <span class="op">~</span>x))</code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = y ~ x)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -0.7462 -0.5022 -0.3313  0.3435  1.6273 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  0.85344    0.17570   4.857 0.000127 ***
+## x            0.04117    0.18890   0.218 0.829929    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.7484 on 18 degrees of freedom
+## Multiple R-squared:  0.002632,   Adjusted R-squared:  -0.05278 
+## F-statistic: 0.0475 on 1 and 18 DF,  p-value: 0.8299</code></pre>
+<p>Otros cuidados adicionales se requieren si queremos hacer afirmaciones causales:</p>
+<ul>
+<li>Variables omitidas: si faltan algunas variables cruciales en el fenómeno que nos interesa, puede ser muy difícil interpretar el resto de los coeficientes en términos del fenómeno</li>
+</ul>
+<div id="ejemplo-5" class="section level4 unnumbered">
+<h4>Ejemplo:</h4>
+<ul>
+<li>Supongamos que queremos predecir cuánto van a gastar en televisiones samsung ciertas personas que llegan a Amazon. Una variable de entrada es el número de anuncios de televisiones Samsung que recibieron antes de llegar a Amazon. El coeficiente de esta variable es alto (significativo, etc.), así que concluimos que el anuncio causa compras de televisiones Samsung.</li>
+</ul>
+<p>¿Qué está mal aquí? El modelo no está mal, sino la interpretación. Cuando las personas están investigando acerca de televisiones, recibe anuncios. La razón es que esta variable nos puede indicar más bien quién está en proceso de compra de una televisión samsung (reciben anuncios) y quién no (no hacen búsquedas relevantes, así que no reciben anuncios). El modelo está mal especificado porque no consideramos que hay otra variable importante, que es el interés de la persona en compra de TVs Samsung.</p>
+<p>En general, la recomendación es que las interpretaciones causales deben considerarse como preliminares (o <em>sugerencias</em>), y se requiere más análisis y consideraciones antes de poder tener interpretaciones causales sólidas.</p>
+</div>
+<div id="ejercicio." class="section level4">
+<h4><span class="header-section-number">2.6.0.1</span> Ejercicio.</h4>
+</div>
 </div>
 <div id="solucion-analitica" class="section level2">
 <h2><span class="header-section-number">2.7</span> Solución analítica</h2>
+<p>El problema de mínimos cuadrados tiene una solución de forma cerrada. A partir del gradiente <a href="regresion.html#eq:gradmat">(2.3)</a>, podemos igual a cero y resolver (chécalo) para obtener:</p>
+<span class="math display">\[\begin{equation*}
+\hat{\beta} = \left (\underline{X}\underline{X}^t \right)^{-1}
+\underline{X}^t\underline{y}
+\end{equation*}\]</span>
+<p>Paquetes como <em>lm</em> de R usan como base esta expresión, pero los cálculos se hacen mediante descomposiciones matriciales para más estabilidad (productos de matrices e inversiones). Aunque es posible escalar y/o paralelizar estos cálculos matriciales para problemas grandes, los procedimientos son más delicados. Nuestro enfoque de descenso máximo tiene la ventaja de que es fácil de entender, usar, aplicar a otros problemas con éxito, y además puede escalarse trivialmente, como veremos más adelante (por ejemplo, descenso estocástico). ¡Aunque siempre que se pueda es buena idea usar <em>lm</em>!</p>
 </div>
 <div id="por-que-el-modelo-lineal-funciona-bien-muchas-veces" class="section level2">
 <h2><span class="header-section-number">2.8</span> ¿Por qué el modelo lineal funciona bien (muchas veces)?</h2>
+<p>Regresión lineal es un método muy simple, y parecería que debería haber métodos más avanzados que lo superen fácilmente.</p>
+<p>Para empezar, es poco creíble que el modelo <span class="math display">\[f(X) = b_0 + b_1X_1 + \cdots b_p X_p\]</span> se cumple exactamente para el fenómeno que estamos tratando. Pero regresión lineal muchas veces supera a métodos s que intentan construir predictores más complejos. Una de las primeras razones es que podemos ver la aproximación lineal como una aproximación de primer orden a la verdadera <span class="math inline">\(f(X)\)</span>, y muchas veces eso es suficiente para producir predicciones razonables.</p>
+<p>Adicionalmente, otras veces sólo tenemos suficientes datos para hacer una aproximación de primer orden, aún cuando la verdadera <span class="math inline">\(f(X)\)</span> no sea lineal, y resulta que esta aproximación da buenos resultados. Esto es particularmente cierto en problemas de dimensión alta, como veremos a continuación.</p>
+<div id="k-vecinos-mas-cercanos" class="section level3">
+<h3><span class="header-section-number">2.8.1</span> k vecinos más cercanos</h3>
+<p>Un método popular, con buen desempeño en varios ejemplos, es el de k-vecinos más cercanos, que consiste en hacer aproximaciones locales directas de <span class="math inline">\(f(X)\)</span>. Sea <span class="math inline">\({\mathcal L}\)</span> un conjunto de entrenamiento. Para <span class="math inline">\(k\)</span> entera fija, y <span class="math inline">\(x_0\)</span> una entrada donde queremos predecir, definimos a <span class="math inline">\(N_k(x_0)\)</span> como el conjunto de los <span class="math inline">\(k\)</span> elementos de <span class="math inline">\({\mathcal L}\)</span> que tienen <span class="math inline">\(x^{(i)}\)</span> más cercana a <span class="math inline">\(x_0\)</span>. Hacemos la predicción <span class="math display">\[\hat{f}(x_0) = \frac{1}{k}\sum_{x^{(i)} \in N_k(x_0)} y^{(i)}\]</span></p>
+<p>Es decir, promediamos las <span class="math inline">\(k\)</span> <span class="math inline">\(y\)</span>’s con <span class="math inline">\(x\)</span>’s más cercanas a donde queremos predecir.</p>
+<div id="ejemplo-6" class="section level4 unnumbered">
+<h4>Ejemplo</h4>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(ISLR)
+datos &lt;-<span class="st"> </span>Auto[, <span class="kw">c</span>(<span class="st">&#39;name&#39;</span>, <span class="st">&#39;weight&#39;</span>,<span class="st">&#39;year&#39;</span>, <span class="st">&#39;mpg&#39;</span>)]
+datos<span class="op">$</span>peso_kg &lt;-<span class="st"> </span>datos<span class="op">$</span>weight<span class="op">*</span><span class="fl">0.45359237</span>
+datos<span class="op">$</span>rendimiento_kpl &lt;-<span class="st"> </span>datos<span class="op">$</span>mpg<span class="op">*</span>(<span class="fl">1.609344</span><span class="op">/</span><span class="fl">3.78541178</span>)
+<span class="kw">nrow</span>(datos)</code></pre></div>
+<pre><code>## [1] 392</code></pre>
+<p>Vamos a separa en muestra de entrenamiento y de prueba estos datos. Podemos hacerlo como sigue (2/3 para entrenamiento aproximadamente en este caso, así obtenemos alrededor de 100 casos para prueba):</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">213</span>)
+datos<span class="op">$</span>muestra_unif &lt;-<span class="st"> </span><span class="kw">runif</span>(<span class="kw">nrow</span>(datos), <span class="dv">0</span>, <span class="dv">1</span>)
+datos_entrena &lt;-<span class="st"> </span><span class="kw">filter</span>(datos, muestra_unif <span class="op">&gt;</span><span class="st"> </span><span class="dv">1</span><span class="op">/</span><span class="dv">3</span>)
+datos_prueba &lt;-<span class="st"> </span><span class="kw">filter</span>(datos, muestra_unif <span class="op">&lt;=</span><span class="st"> </span><span class="dv">1</span><span class="op">/</span><span class="dv">3</span>)
+<span class="kw">nrow</span>(datos_entrena)</code></pre></div>
+<pre><code>## [1] 274</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">nrow</span>(datos_prueba)</code></pre></div>
+<pre><code>## [1] 118</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(datos_entrena, <span class="kw">aes</span>(<span class="dt">x =</span> peso_kg, <span class="dt">y =</span> rendimiento_kpl)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_point</span>()</code></pre></div>
+<p><img src="02-reg-lineal_files/figure-html/unnamed-chunk-34-1.png" width="672" /></p>
+<p>Consideremos un modelo de <span class="math inline">\(k=15\)</span> vecinos más cercanos. La función de predicción ajustada es entonces:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(kknn)
+<span class="co"># nótese que no normalizamos entradas - esto también es importante</span>
+<span class="co"># hacer cuando hacemos vecinos más cercanos, pues en otro caso</span>
+<span class="co"># las variables con escalas más grandes dominan el cálculo</span>
+mod_15vmc &lt;-<span class="st"> </span><span class="kw">kknn</span>(rendimiento_kpl <span class="op">~</span><span class="st"> </span>peso_kg, <span class="dt">train =</span> datos_entrena,
+                  <span class="dt">test =</span> <span class="kw">data_frame</span>(<span class="dt">peso_kg=</span><span class="kw">seq</span>(<span class="dv">700</span>,<span class="dv">2200</span>, <span class="dt">by =</span> <span class="dv">10</span>)), 
+                  <span class="dt">k=</span><span class="dv">15</span>)
+dat_graf &lt;-<span class="st"> </span><span class="kw">data_frame</span>(<span class="dt">peso_kg =</span> <span class="kw">seq</span>(<span class="dv">700</span>,<span class="dv">2200</span>, <span class="dt">by =</span> <span class="dv">10</span>), 
+                       <span class="dt">rendimiento_kpl =</span> <span class="kw">predict</span>(mod_15vmc))
+<span class="kw">ggplot</span>(datos_entrena, <span class="kw">aes</span>(<span class="dt">x =</span> peso_kg, <span class="dt">y =</span> rendimiento_kpl)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">alpha=</span><span class="fl">0.6</span>) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">data=</span>dat_graf, <span class="dt">col=</span><span class="st">&#39;red&#39;</span>, <span class="dt">size =</span> <span class="fl">1.2</span>)</code></pre></div>
+<p><img src="02-reg-lineal_files/figure-html/unnamed-chunk-35-1.png" width="672" /></p>
+<p>Y para <span class="math inline">\(k=5\)</span> vecinos más cercanos:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mod_5vmc &lt;-<span class="st"> </span><span class="kw">kknn</span>(rendimiento_kpl <span class="op">~</span><span class="st"> </span>peso_kg, <span class="dt">train =</span> datos_entrena,
+                  <span class="dt">test =</span> <span class="kw">data_frame</span>(<span class="dt">peso_kg=</span><span class="kw">seq</span>(<span class="dv">700</span>,<span class="dv">2200</span>, <span class="dt">by =</span> <span class="dv">10</span>)), 
+                  <span class="dt">k =</span> <span class="dv">5</span>)
+dat_graf &lt;-<span class="st"> </span><span class="kw">data_frame</span>(<span class="dt">peso_kg =</span> <span class="kw">seq</span>(<span class="dv">700</span>,<span class="dv">2200</span>, <span class="dt">by =</span> <span class="dv">10</span>), 
+                       <span class="dt">rendimiento_kpl =</span> <span class="kw">predict</span>(mod_5vmc))
+<span class="kw">ggplot</span>(datos_entrena, <span class="kw">aes</span>(<span class="dt">x =</span> peso_kg, <span class="dt">y =</span> rendimiento_kpl)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">alpha=</span><span class="fl">0.6</span>) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">data=</span>dat_graf, <span class="dt">col=</span><span class="st">&#39;red&#39;</span>, <span class="dt">size =</span> <span class="fl">1.2</span>)</code></pre></div>
+<p><img src="02-reg-lineal_files/figure-html/unnamed-chunk-36-1.png" width="672" /></p>
+<p>En nuestro caso, los errores de prueba son</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mod_3vmc &lt;-<span class="st"> </span><span class="kw">kknn</span>(rendimiento_kpl <span class="op">~</span><span class="st"> </span>peso_kg, <span class="dt">train =</span> datos_entrena,
+                  <span class="dt">test =</span> datos_prueba, 
+                  <span class="dt">k =</span> <span class="dv">3</span>)
+mod_15vmc &lt;-<span class="st"> </span><span class="kw">kknn</span>(rendimiento_kpl <span class="op">~</span><span class="st"> </span>peso_kg, <span class="dt">train =</span> datos_entrena,
+                  <span class="dt">test =</span> datos_prueba, 
+                  <span class="dt">k =</span> <span class="dv">15</span>)
+(<span class="kw">mean</span>((datos_prueba<span class="op">$</span>rendimiento_kpl<span class="op">-</span><span class="kw">predict</span>(mod_3vmc))<span class="op">^</span><span class="dv">2</span>))</code></pre></div>
+<pre><code>## [1] 3.346934</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">(<span class="kw">mean</span>((datos_prueba<span class="op">$</span>rendimiento_kpl<span class="op">-</span><span class="kw">predict</span>(mod_15vmc))<span class="op">^</span><span class="dv">2</span>))</code></pre></div>
+<pre><code>## [1] 2.697658</code></pre>
+<p>Pregunta: ¿Cómo escogerías una <span class="math inline">\(k\)</span> adecuada para este problema? Recuerda que adecuada significa que se reduzca a mínimo posible el error de predicción. Como ejercicio, compara los modelos con <span class="math inline">\(k = 2, 25, 200\)</span> utilizando una muestra de prueba. ¿Cuál se desempeña mejor? Da las razones de el mejor o peor desempeño: recuerda que el desempeño en predicción puede sufrir porque la función estimada no es suficiente flexible para capturar patrones importantes, pero también porque parte del ruido se incorpora en la predicción.</p>
+<p>Por los ejemplos anteriores, vemos que k-vecinos más cercanos puede considerarse como un aproximador universal, que puede adaptarse a cualquier patrón importante que haya en los datos. Entonces, ¿cuál es la razón de utilizar otros métodos como regresión? ¿Por qué el desempeño de regresión sería superior?</p>
+</div>
+<div id="la-maldicion-de-la-dimensionalidad" class="section level4 unnumbered">
+<h4>La maldición de la dimensionalidad</h4>
+<p>El método de k-vecinos más cercanos funciona mejor cuando hay muchas <span class="math inline">\(x\)</span> cercanas a <span class="math inline">\(x0\)</span>, de forma que el promedio sea estable (muchas <span class="math inline">\(x\)</span>), y extrapolemos poco (<span class="math inline">\(x\)</span> cercanas). Cuando <span class="math inline">\(k\)</span> es muy chica, nuestras estimaciones son ruidosas, y cuando <span class="math inline">\(k\)</span> es grande y los vecinos están lejos, entonces estamos sesgando la estimación local con datos lejanos a nuestra región de interés.</p>
+<p>El problema es que en dimensión alta, casi cualquier conjunto de entrenamiento (independientemente del tamaño) sufre fuertemente por uno o ambas dificultades del problema.</p>
+</div>
+<div id="ejemplo-7" class="section level4 unnumbered">
+<h4>Ejemplo</h4>
+<p>Consideremos que la salida Y es determinística <span class="math inline">\(Y = e^{-8\sum_{j=1}^p x_j^2}\)</span>. Vamos a usar 1-vecino más cercano para hacer predicciones, c on una muestra de entrenamiento de 1000 casos. Generamos $x^{i}‘s uniformes en <span class="math inline">\([ 1,1]\)</span>, para <span class="math inline">\(p = 2\)</span>, y calculamos la respuesta <span class="math inline">\(Y\)</span> para cada caso:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fun_exp &lt;-<span class="st"> </span><span class="cf">function</span>(x) <span class="kw">exp</span>(<span class="op">-</span><span class="dv">8</span><span class="op">*</span><span class="kw">sum</span>(x<span class="op">^</span><span class="dv">2</span>))
+x_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">runif</span>(<span class="dv">1000</span>, <span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>)
+x_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">runif</span>(<span class="dv">1000</span>, <span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>)
+dat &lt;-<span class="st"> </span><span class="kw">data_frame</span>(<span class="dt">x_1 =</span> x_<span class="dv">1</span>, <span class="dt">x_2 =</span> x_<span class="dv">2</span>)
+dat<span class="op">$</span>y &lt;-<span class="st"> </span><span class="kw">apply</span>(dat, <span class="dv">1</span>, fun_exp)
+<span class="kw">ggplot</span>(dat, <span class="kw">aes</span>(<span class="dt">x =</span> x_<span class="dv">1</span>, <span class="dt">y =</span> x_<span class="dv">2</span>, <span class="dt">colour =</span> y)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>()</code></pre></div>
+<p><img src="02-reg-lineal_files/figure-html/unnamed-chunk-38-1.png" width="672" /></p>
+<p>La mejor predicción en <span class="math inline">\(x_0 = (0,0)\)</span> es <span class="math inline">\(f((0,0)) = 1\)</span>. Eñ vecino más cercano al origen es</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dist_origen &lt;-<span class="st"> </span><span class="kw">apply</span>(dat, <span class="dv">1</span>, <span class="cf">function</span>(x) <span class="kw">sqrt</span>(<span class="kw">sum</span>(<span class="kw">head</span>(x, <span class="op">-</span><span class="dv">1</span>)<span class="op">^</span><span class="dv">2</span>)))
+mas_cercano_indice &lt;-<span class="st"> </span><span class="kw">which.min</span>(dist_origen)
+mas_cercano &lt;-<span class="st"> </span>dat[mas_cercano_indice, ] 
+mas_cercano</code></pre></div>
+<pre><code>## # A tibble: 1 x 3
+##          x_1        x_2         y
+##        &lt;dbl&gt;      &lt;dbl&gt;     &lt;dbl&gt;
+## 1 0.03268542 0.01006107 0.9906871</code></pre>
+<p>Nuestra predicción es entonces <span class="math inline">\(\hat{f}(0)=\)</span> 0.9906871, que es bastante cercano al valor verdadero (1).</p>
+<p>Ahora intentamos hacer lo mismo para dimensión <span class="math inline">\(p=8\)</span>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dat_lista &lt;-<span class="st"> </span><span class="kw">lapply</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">8</span>, <span class="cf">function</span>(i) <span class="kw">runif</span>(<span class="dv">1000</span>, <span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>))
+dat &lt;-<span class="st"> </span><span class="kw">Reduce</span>(cbind, dat_lista) <span class="op">%&gt;%</span><span class="st"> </span>data.frame
+dat<span class="op">$</span>y &lt;-<span class="st"> </span><span class="kw">apply</span>(dat, <span class="dv">1</span>, fun_exp)
+dist_origen &lt;-<span class="st"> </span><span class="kw">apply</span>(dat, <span class="dv">1</span>, <span class="cf">function</span>(x) <span class="kw">sqrt</span>(<span class="kw">sum</span>(<span class="kw">head</span>(x, <span class="op">-</span><span class="dv">1</span>)<span class="op">^</span><span class="dv">2</span>)))
+mas_cercano_indice &lt;-<span class="st"> </span><span class="kw">which.min</span>(dist_origen)
+mas_cercano &lt;-<span class="st"> </span>dat[mas_cercano_indice, ] 
+mas_cercano</code></pre></div>
+<pre><code>##          init        V2        V3        V4        V5         V6
+## 239 0.1612183 0.4117209 0.2546389 -0.226929 0.0774977 0.03897632
+##             V7        V8          y
+## 239 -0.4959736 0.0382697 0.01073141</code></pre>
+<p>Y el resultado es un desastre. Nuestra predicción es</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mas_cercano<span class="op">$</span>y</code></pre></div>
+<pre><code>## [1] 0.01073141</code></pre>
+<p>Necesitariamos una muestra de alrededor de un millón de casos para obtener resultados no tan malos (pruébalo).</p>
+<p>¿Qué es lo que está pasando? La razón es que en dimensiones altas, los puntos de la muestra de entrenamiento están muy lejos unos de otros, y están cerca de la frontera, incluso para tamaños de muestra relativamente grandes como n = 1000. Cuando la dimensión crece, la situación empeora exponencialmente.</p>
+<div class="comentario">
+<p>
+En dimensiones altas, todos los conjuntos de entrenamiento factibles se distribuyen de manera rala en el espacio de entradas.
+</p>
+</div>
+<p>Ahora intentamos algo similar con una función que es razonable aproximar con una función lineal:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fun_cubica &lt;-<span class="st"> </span><span class="cf">function</span>(x) <span class="fl">0.5</span> <span class="op">*</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">+</span><span class="st"> </span>x[<span class="dv">1</span>])<span class="op">^</span><span class="dv">3</span>
+<span class="kw">set.seed</span>(<span class="dv">111</span>)
+sims_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">lapply</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">40</span>, <span class="cf">function</span>(i) <span class="kw">runif</span>(<span class="dv">1000</span>, <span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>) )
+dat &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="kw">Reduce</span>(cbind, sims_<span class="dv">1</span>))
+dat<span class="op">$</span>y &lt;-<span class="st"> </span><span class="kw">apply</span>(dat, <span class="dv">1</span>, fun_cubica)
+dist_origen &lt;-<span class="st"> </span><span class="kw">apply</span>(dat[, <span class="dv">1</span><span class="op">:</span><span class="dv">40</span>], <span class="dv">1</span>, <span class="cf">function</span>(x) <span class="kw">sqrt</span>(<span class="kw">sum</span>(x<span class="op">^</span><span class="dv">2</span>)))
+mas_cercano_indice &lt;-<span class="st"> </span><span class="kw">which.min</span>(dist_origen)
+mas_cercano<span class="op">$</span>y</code></pre></div>
+<pre><code>## [1] 0.01073141</code></pre>
+<p>Este no es un resultado muy bueno. Sin embargo,</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mod_lineal &lt;-<span class="st"> </span><span class="kw">lm</span>(y <span class="op">~</span><span class="st"> </span>., <span class="dt">data =</span> dat)
+origen &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="kw">matrix</span>(<span class="kw">rep</span>(<span class="dv">0</span>,<span class="dv">40</span>), <span class="dv">1</span>, <span class="dv">40</span>))
+<span class="kw">names</span>(origen) &lt;-<span class="st"> </span><span class="kw">names</span>(dat)[<span class="dv">1</span><span class="op">:</span><span class="dv">40</span>]
+<span class="kw">predict</span>(mod_lineal, <span class="dt">newdata =</span> origen)</code></pre></div>
+<pre><code>##         1 
+## 0.9706047</code></pre>
+<p>Donde podemos ver que típicamente la predicción de regresión es mucho mejor que la de 1 vecino más cercano. Esto es porque el modelo <strong>explota la estructura aproximadamente lineal del problema.</strong></p>
+<p>Lo que sucede más específicamente es que en regresión lineal utilizamos <strong>todos</strong> los datos para hacer nuestra estimación en cada predicción. Si la estructura del problema es aproximadamente lineal, entonces regresión lineal explota la estructura para hacer <em>pooling</em> de toda la infromación para construir predicción con sesgo y varianza bajas.</p>
 
 <div id="refs" class="references">
 <div>
@@ -613,6 +889,8 @@ iteraciones</code></pre></div>
 </div>
 <div>
 <p>Ng, Andrew. 2017. “Machine Learning.” <a href="https://www.coursera.org/learn/machine-learning" class="uri">https://www.coursera.org/learn/machine-learning</a>.</p>
+</div>
+</div>
 </div>
 </div>
 </div>
