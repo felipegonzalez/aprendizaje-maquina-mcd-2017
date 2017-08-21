@@ -1257,3 +1257,27 @@ utilizamos **todos** los datos para hacer nuestra estimación en cada
 predicción. Si la estructura del problema es aproximadamente lineal, 
 entonces regresión lineal explota la estructura para hacer *pooling*
 de toda la infromación para construir predicción con sesgo y varianza bajas.
+
+## Tarea {-}
+
+Para este ejemplo usaremos los datos de https://archive.ics.uci.edu/ml/machine-learning-databases/housing/.
+El objetivo es predecir el valor mediano de las viviendas en áreas del censo
+de Estados Unidos, utilizando variables relacionadas con criminalidad, ambiente,
+tipo de viviendas, etc.
+
+- Separa la muestra en dos partes: unos 400 para entrenamiento
+y el resto para prueba.
+- Describe las variables en la muestra de prueba (rango, media, mediana, por ejemplo). 
+- Construye un modelo lineal para predecir MEDV en términos de las otras
+variables. Utiliza descenso en gradiente para estimar los coeficientes con los
+predictores estandarizados. Verifica tus resultados con la función *lm*. 
+- Evalúa el error de entrenamiento $\overline{err}$ de tu modelo, y evalúa
+después la estimación del error de predicción $\hat{Err}$ con la muestra de prueba.
+Utiliza la raíz del la media de los errores al cuadrado.
+- (Adicional) Construye un modelo de 1,5,20 y 50 
+vecinos más cercanos, y evalúa su desempeño. ¿Cuál es la mejor $k$ para reducir 
+el error de prueba?
+
+
+
+

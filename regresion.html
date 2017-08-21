@@ -141,6 +141,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="2.8" data-path="regresion.html"><a href="regresion.html#por-que-el-modelo-lineal-funciona-bien-muchas-veces"><i class="fa fa-check"></i><b>2.8</b> ¿Por qué el modelo lineal funciona bien (muchas veces)?</a><ul>
 <li class="chapter" data-level="2.8.1" data-path="regresion.html"><a href="regresion.html#k-vecinos-mas-cercanos"><i class="fa fa-check"></i><b>2.8.1</b> k vecinos más cercanos</a></li>
 </ul></li>
+<li class="chapter" data-level="" data-path="regresion.html"><a href="regresion.html#tarea-1"><i class="fa fa-check"></i>Tarea</a></li>
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Publicado con bookdown</a></li>
@@ -893,6 +894,19 @@ origen &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span cl
 ## 0.9706047</code></pre>
 <p>Donde podemos ver que típicamente la predicción de regresión es mucho mejor que la de 1 vecino más cercano. Esto es porque el modelo <strong>explota la estructura aproximadamente lineal del problema.</strong></p>
 <p>Lo que sucede más específicamente es que en regresión lineal utilizamos <strong>todos</strong> los datos para hacer nuestra estimación en cada predicción. Si la estructura del problema es aproximadamente lineal, entonces regresión lineal explota la estructura para hacer <em>pooling</em> de toda la infromación para construir predicción con sesgo y varianza bajas.</p>
+</div>
+</div>
+</div>
+<div id="tarea-1" class="section level2 unnumbered">
+<h2>Tarea</h2>
+<p>Para este ejemplo usaremos los datos de <a href="https://archive.ics.uci.edu/ml/machine-learning-databases/housing/" class="uri">https://archive.ics.uci.edu/ml/machine-learning-databases/housing/</a>. El objetivo es predecir el valor mediano de las viviendas en áreas del censo de Estados Unidos, utilizando variables relacionadas con criminalidad, ambiente, tipo de viviendas, etc.</p>
+<ul>
+<li>Separa la muestra en dos partes: unos 400 para entrenamiento y el resto para prueba.</li>
+<li>Describe las variables en la muestra de prueba (rango, media, mediana, por ejemplo).</li>
+<li>Construye un modelo lineal para predecir MEDV en términos de las otras variables. Utiliza descenso en gradiente para estimar los coeficientes con los predictores estandarizados. Verifica tus resultados con la función <em>lm</em>.</li>
+<li>Evalúa el error de entrenamiento <span class="math inline">\(\overline{err}\)</span> de tu modelo, y evalúa después la estimación del error de predicción <span class="math inline">\(\hat{Err}\)</span> con la muestra de prueba. Utiliza la raíz del la media de los errores al cuadrado.</li>
+<li>(Adicional) Construye un modelo de 1,5,20 y 50 vecinos más cercanos, y evalúa su desempeño. ¿Cuál es la mejor <span class="math inline">\(k\)</span> para reducir el error de prueba?</li>
+</ul>
 
 <div id="refs" class="references">
 <div>
@@ -903,8 +917,6 @@ origen &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span cl
 </div>
 <div>
 <p>Ng, Andrew. 2017. “Machine Learning.” <a href="https://www.coursera.org/learn/machine-learning" class="uri">https://www.coursera.org/learn/machine-learning</a>.</p>
-</div>
-</div>
 </div>
 </div>
 </div>
