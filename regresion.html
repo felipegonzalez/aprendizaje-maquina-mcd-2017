@@ -172,7 +172,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p><span class="math display">\[\hat{f}(X) = \hat{\beta}_0 + \hat{\beta}_1 X_1 + \hat{\beta}_2 X_2 \cdots + \hat{\beta} X_p\]</span> y usaremos esta función <span class="math inline">\(\hat{f}\)</span> para hacer predicciones <span class="math inline">\(\hat{Y} =\hat{f}(X)\)</span>.</p>
 <div id="ejemplos" class="section level4">
 <h4><span class="header-section-number">2.1.0.1</span> Ejemplos</h4>
-<p>Queremos predecir las ventas futuras anuales <span class="math inline">\(Y\)</span> de un supermercado que se va a construir en un lugar dado. Las variables que describen el lugar son <span class="math inline">\(X_1 = trafico\_coches\)</span>, <span class="math inline">\(X_2=trafico\_peatones\)</span>. En una aproximación simple, podemos suponer que la tienda va a capturar una fracción de esos tráficos que se van a convertir en ventas. Quisieramos predecir con una función de la forma <span class="math display">\[f_\beta (peatones, coches) = \beta_0 + \beta_1\, peatones + \beta_2\, coches.\]</span> Por ejemplo, después de un análisis estimamos que</p>
+<p>Queremos predecir las ventas futuras anuales <span class="math inline">\(Y\)</span> de un supermercado que se va a construir en un lugar dado. Las variables que describen el lugar son <span class="math inline">\(X_1 = trafico\_peatones\)</span>, <span class="math inline">\(X_2=trafico\_coches\)</span>. En una aproximación simple, podemos suponer que la tienda va a capturar una fracción de esos tráficos que se van a convertir en ventas. Quisieramos predecir con una función de la forma <span class="math display">\[f_\beta (peatones, coches) = \beta_0 + \beta_1\, peatones + \beta_2\, coches.\]</span> Por ejemplo, después de un análisis estimamos que</p>
 <ul>
 <li><span class="math inline">\(\hat{\beta}_0 = 1000000\)</span> (ventas base)</li>
 <li><span class="math inline">\(\hat{\beta}_1 = (200)*0.02 = 4\)</span></li>
@@ -329,7 +329,7 @@ TRUE
 }</code></pre></div>
 <p>Nuestra función rss es entonces:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">rss &lt;-<span class="st"> </span><span class="kw">rss_calc</span>(prostata_entrena)</code></pre></div>
-<p>Por ejemplo, si consideramos <span class="math inline">\((\beta_0, \beta_1) = (1, 1)\)</span>, obtenemos</p>
+<p>Por ejemplo, si consideramos <span class="math inline">\((\beta_0, \beta_1) = (0, 1.5)\)</span>, obtenemos</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">beta &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">0</span>,<span class="fl">1.5</span>)
 <span class="kw">rss</span>(beta)</code></pre></div>
 <pre><code>## [1] 61.63861</code></pre>
@@ -362,8 +362,8 @@ beta_hat</code></pre></div>
 <p>Aunque el problema de mínimos cuadrados se puede resolver analíticamente, proponemos un método numérico básico que es efectivo y puede escalarse a problemas grandes de manera relativamente simple: descenso en gradiente, o descenso máximo.</p>
 <p>Supongamos que una función <span class="math inline">\(h(x)\)</span> es convexa y tiene un mínimo. La idea de descenso en gradiente es comenzar con un candidato inicial <span class="math inline">\(z_0\)</span> y calcular la derivada en <span class="math inline">\(z^{(0)}\)</span>. Si <span class="math inline">\(h(z^{(0)})&gt;0\)</span>, la función es creciente en <span class="math inline">\(z^{(0)}\)</span> y nos movemos ligeramente a la izquierda para obtener un nuevo candidato <span class="math inline">\(z^{(1)}\)</span>. si <span class="math inline">\(h(z^{(0)})&lt;0\)</span>, la función es decreciente en <span class="math inline">\(z^{(0)}\)</span> y nos movemos ligeramente a la derecha para obtener un nuevo candidato <span class="math inline">\(z^{(1)}\)</span>. Iteramos este proceso hasta que la derivada es cercana a cero (estamos cerca del óptimo).</p>
 <p>Si <span class="math inline">\(\eta&gt;0\)</span> es una cantidad chica, podemos escribir</p>
-<p><span class="math display">\[z^{(1)} = z^{(0)} + \eta \,h&#39;(z^{(0)}).\]</span></p>
-<p>Nótese que cuando la derivada tiene magnitud alta, el movimiento de <span class="math inline">\(z^{(0)}\)</span> a <span class="math inline">\(z^{(1)}\)</span> es más grande, y siempre nos movemos una fracción de la derivada. En general hacemos <span class="math display">\[z^{(j+1)} = z^{(j)} + \eta\,h&#39;(z^{(j)})\]</span> para obtener una sucesión <span class="math inline">\(z^{(0)},z^{(1)},\ldots\)</span>. Esperamos a que <span class="math inline">\(z^{(j)}\)</span> converja para terminar la iteración.</p>
+<p><span class="math display">\[z^{(1)} = z^{(0)} - \eta \,h&#39;(z^{(0)}).\]</span></p>
+<p>Nótese que cuando la derivada tiene magnitud alta, el movimiento de <span class="math inline">\(z^{(0)}\)</span> a <span class="math inline">\(z^{(1)}\)</span> es más grande, y siempre nos movemos una fracción de la derivada. En general hacemos <span class="math display">\[z^{(j+1)} = z^{(j)} - \eta\,h&#39;(z^{(j)})\]</span> para obtener una sucesión <span class="math inline">\(z^{(0)},z^{(1)},\ldots\)</span>. Esperamos a que <span class="math inline">\(z^{(j)}\)</span> converja para terminar la iteración.</p>
 <div id="ejemplo-4" class="section level4">
 <h4><span class="header-section-number">2.3.0.1</span> Ejemplo</h4>
 <p>Si tenemos</p>
