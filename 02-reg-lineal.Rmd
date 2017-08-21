@@ -223,27 +223,22 @@ h <- function(x) x^2 + (x - 2)^2 - log(x^2 + 1)
 
 Calculamos (a mano):
 ```{r}
- h_deriv <- function(x) 2 * x + 2 * (x - 2) - 2*x/(x^2 + 1)
-
+h_deriv <- function(x) 2 * x + 2 * (x - 2) - 2*x/(x^2 + 1)
 ```
 
 Ahora iteramos con $\eta = 0.4$ y valor inicial $z_0=5$
 ```{r}
 z_0 <- 5
 eta <- 0.4
-descenso <- function(h, h_deriv){
-  fun <- function(n, z_0, eta){
-    z <- matrix(0,n, length(z_0))
-    z[1, ] <- z_0
-    for(i in 1:(n-1)){
-      z[i+1, ] <- z[i, ] - eta * h_deriv(z[i, ])
-    }
-    z
+descenso <- function(n, z_0, eta, h_deriv){
+  z <- matrix(0,n, length(z_0))
+  z[1, ] <- z_0
+  for(i in 1:(n-1)){
+    z[i+1, ] <- z[i, ] - eta * h_deriv(z[i, ])
   }
-  fun
+  z
 }
-descenso_fun <- descenso(h, h_deriv) 
-z <- descenso_fun(20, 5, 0.1)
+z <- descenso(20, 5, 0.1, h_deriv)
 z
 ```
 
@@ -261,8 +256,8 @@ text(z[1:6], h(z[1:6]), pos = 3)
 
 Si hacemos $\eta$ muy chico, el algoritmo puede tardar mucho en
 converger:
-```{r, fig.width=4}
-z <- descenso_fun(20, 5, 0.01)
+```{r, fig.width=5, fig.asp=0.7}
+z <- descenso(20, 5, 0.01, h_deriv)
 curve(h, -3, 6)
 points(z, h(z))
 text(z[1:6], h(z[1:6]), pos = 3)
@@ -271,7 +266,7 @@ text(z[1:6], h(z[1:6]), pos = 3)
 Si hacemos $\eta$ muy grande, el algoritmo puede divergir:
 
 ```{r, fig.width=4}
-z <- descenso_fun(20, 5, 1.5)
+z <- descenso(20, 5, 1.5, h_deriv)
 z
 ```
 
@@ -296,7 +291,7 @@ $$z^{(i+1)} = z^{(i)} - \eta \nabla h(z^{(i)})$$
 Las mismas consideraciones acerca del tamaño de paso $\eta$ aplican en
 el problema multivariado.
 
-```{r}
+```{r, fig.width=4, fig.asp=0.7}
 h <- function(z) {
   z[1]^2 + z[2]^2 - z[1] * z[2]
 }
@@ -320,11 +315,10 @@ Podemos graficar la dirección de máximo descenso para diversos puntos. Estas
 direcciones son ortogonales a la curva de nivel que pasa por cada uno de los
 puntos:
 
-```{r}
+```{r, fig.width=4, fig.asp=0.7}
 grad_1 <- h_grad(c(0,-2))
 grad_2 <- h_grad(c(1,1))
 eta <- 0.2
-#library(grid)
 gr_contour +
   geom_segment(aes(x=0.0, xend=0.0-eta*grad_1[1], y=-2,
      yend=-2-eta*grad_1[2]),
@@ -336,13 +330,13 @@ gr_contour +
 
 Y aplicamos descenso en gradiente:
 
-```{r}
-des_h <- descenso(h, h_grad)
+```{r, fig.width=4, fig.asp=0.7}
 inicial <- c(3, 1)
-des_h(20, inicial , 0.01)
+iteraciones <- descenso(20, inicial , 0.1, h_grad)
+iteraciones
  ggplot(data= grid_graf) + 
   geom_contour(binwidth = 1.5, aes(x = z_1, y = z_2, z = val, colour = ..level..)) + 
-   geom_point(data = data.frame(des_h(20, inicial, 0.3)), aes(x=X1, y=X2), colour = 'red')
+   geom_point(data = data.frame(iteraciones), aes(x=X1, y=X2), colour = 'red')
 ```
 
 
@@ -440,8 +434,7 @@ delta <- 0.001
 Y ahora iteramos para obtener
 
 ```{r}
-descenso_prost <- descenso(rss, grad)
-iteraciones <- descenso_prost(30, c(0,0), 0.005)
+iteraciones <- descenso(30, c(0,0), 0.005, grad)
 iteraciones
 ```
 
@@ -469,7 +462,7 @@ y $$\underline{y} =(y^{(1)},y^{(2)}, \ldots, y^{(N)})^t.$$
 Como
 $$\underline{e} = \underline{y} - \underline{X}\beta$$
 
-tenemos entonces (de las fórmulas \@ref(eq:grad1) y \@ref(eq:grad1)):
+tenemos entonces (de las fórmulas \@ref(eq:grad1) y \@ref(eq:grad2)):
 \begin{equation}
 \nabla RSS(\beta) =   \underline{X}^t(\underline{X}\beta - \underline{y}) =  -\underline{X}^t \underline{e}
 (\#eq:gradmat)
@@ -514,6 +507,8 @@ es decir, centramos y normalizamos por columna. Otra opción común es restar
 el mínimo y dividir entre la diferencia del máximo y el mínimo, de modo
 que las variables resultantes toman valores en $[0,1]$.
 
+
+
 Entonces escalamos antes de ajustar:
 
 ```{r}
@@ -531,13 +526,18 @@ Nótese que los coeficientes ajustados serán diferentes a los del caso no
 normalizado.
 
 ```{block, type = 'comment'}
+
 Cuando normalizamos antes de ajustar el modelo, las predicciones deben
 hacerse con entradas normalizadas. La normalización se hace con los mismos
 valores que se usaron en el entrenamiento (y **no** recalculando medias
 y desviaciones estándar con el conjunto de prueba).
 
-
+En cuanto a la forma funcional del predictor $f$, el problema
+con entradas normalizadas es equivalente al de las entradas no normalizadas. Asegúrate
+de esto escribiendo cómo correponden los coeficientes de cada modelo normalizado
+con los coeficientes del modelo no normalizado.
 ```
+
 
 
 
@@ -646,7 +646,19 @@ En general, la recomendación es que las interpretaciones causales deben conside
 como preliminares (o *sugerencias*), y se requiere más análisis y consideraciones
 antes de poder tener interpretaciones causales sólidas. 
 
-#### Ejercicio.
+#### Ejercicio {-}
+
+En el siguiente ejercicio intentamos predecir el porcentaje de grasa corporal 
+(una medición relativamente cara) usando mediciones de varias partes del cuerpo,
+edad, peso y estatura. Ver script *bodyfat_ejercicio.R*
+
+```{r, warning = FALSE, message = FALSE}
+library(tidyr)
+dat_grasa <- read_csv(file = 'datos/bodyfat.csv')
+head(dat_grasa)
+nrow(dat_grasa)
+```
+
 
 
 
