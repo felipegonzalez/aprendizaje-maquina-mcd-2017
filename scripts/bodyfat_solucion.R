@@ -57,7 +57,7 @@ grad_calc <- function(x, y){
       f_beta <- as.matrix(cbind(1, x)) %*% beta
       e <- y - f_beta
       gradiente <- -apply(t(cbind(1,x)) %*% e, 1, sum)
-      names(grad_out)[1] <- 'Intercept'
+      names(gradiente)[1] <- 'Intercept'
       gradiente
     }
    grad_fun
