@@ -25,7 +25,7 @@ y usaremos esta función $\hat{f}$ para hacer predicciones $\hat{Y} =\hat{f}(X)$
 #### Ejemplos
 Queremos predecir las ventas futuras anuales $Y$ de un supermercado que se va a construir
 en un lugar dado. Las variables que describen el lugar son
-$X_1 = trafico\_coches$, $X_2=trafico\_peatones$. En una aproximación simple,
+$X_1 = trafico\_peatones$, $X_2=trafico\_coches$. En una aproximación simple,
 podemos suponer que la tienda va a capturar una fracción de esos tráficos que
 se van a convertir en ventas. Quisieramos predecir con una función de la forma
 $$f_\beta (peatones, coches) = \beta_0 + \beta_1\, peatones + \beta_2\, coches.$$
@@ -147,7 +147,7 @@ Nuestra función rss es entonces:
 rss <- rss_calc(prostata_entrena)
 ```
 
-Por ejemplo, si consideramos $(\beta_0, \beta_1) = (1, 1)$, obtenemos
+Por ejemplo, si consideramos $(\beta_0, \beta_1) = (0, 1.5)$, obtenemos
 
 ```{r}
 beta <- c(0,1.5)
@@ -204,11 +204,11 @@ proceso hasta que la derivada es cercana a cero (estamos cerca del óptimo).
 
 Si $\eta>0$ es una cantidad chica, podemos escribir
 
-$$z^{(1)} = z^{(0)} + \eta \,h'(z^{(0)}).$$
+$$z^{(1)} = z^{(0)} - \eta \,h'(z^{(0)}).$$
 
 Nótese que cuando la derivada tiene magnitud alta, el movimiento de $z^{(0)}$ a $z^{(1)}$
 es más grande, y siempre nos movemos una fracción de la derivada. En general hacemos
-$$z^{(j+1)} = z^{(j)} + \eta\,h'(z^{(j)})$$
+$$z^{(j+1)} = z^{(j)} - \eta\,h'(z^{(j)})$$
 para obtener una sucesión $z^{(0)},z^{(1)},\ldots$. Esperamos a que $z^{(j)}$ converja
 para terminar la iteración.
 
