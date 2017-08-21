@@ -123,7 +123,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="1.5.1" data-path="introduccion.html"><a href="introduccion.html#observaciones"><i class="fa fa-check"></i><b>1.5.1</b> Observaciones</a></li>
 </ul></li>
 <li class="chapter" data-level="1.6" data-path="introduccion.html"><a href="introduccion.html#por-que-tenemos-errores"><i class="fa fa-check"></i><b>1.6</b> ¿Por qué tenemos errores?</a></li>
-<li class="chapter" data-level="1.7" data-path="introduccion.html"><a href="introduccion.html#como-estimar-f"><i class="fa fa-check"></i><b>1.7</b> ¿Cómo estimar <span class="math inline">\(f\)</span>?</a></li>
+<li class="chapter" data-level="1.7" data-path="introduccion.html"><a href="introduccion.html#como-estimar-f"><i class="fa fa-check"></i><b>1.7</b> ¿Cómo estimar f?</a></li>
 <li class="chapter" data-level="1.8" data-path="introduccion.html"><a href="introduccion.html#resumen"><i class="fa fa-check"></i><b>1.8</b> Resumen</a></li>
 <li class="chapter" data-level="1.9" data-path="introduccion.html"><a href="introduccion.html#tarea"><i class="fa fa-check"></i><b>1.9</b> Tarea</a></li>
 </ul></li>
@@ -368,23 +368,19 @@ beta_hat</code></pre></div>
 <p>Si tenemos</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">h &lt;-<span class="st"> </span><span class="cf">function</span>(x) x<span class="op">^</span><span class="dv">2</span> <span class="op">+</span><span class="st"> </span>(x <span class="op">-</span><span class="st"> </span><span class="dv">2</span>)<span class="op">^</span><span class="dv">2</span> <span class="op">-</span><span class="st"> </span><span class="kw">log</span>(x<span class="op">^</span><span class="dv">2</span> <span class="op">+</span><span class="st"> </span><span class="dv">1</span>)</code></pre></div>
 <p>Calculamos (a mano):</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"> h_deriv &lt;-<span class="st"> </span><span class="cf">function</span>(x) <span class="dv">2</span> <span class="op">*</span><span class="st"> </span>x <span class="op">+</span><span class="st"> </span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span>(x <span class="op">-</span><span class="st"> </span><span class="dv">2</span>) <span class="op">-</span><span class="st"> </span><span class="dv">2</span><span class="op">*</span>x<span class="op">/</span>(x<span class="op">^</span><span class="dv">2</span> <span class="op">+</span><span class="st"> </span><span class="dv">1</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">h_deriv &lt;-<span class="st"> </span><span class="cf">function</span>(x) <span class="dv">2</span> <span class="op">*</span><span class="st"> </span>x <span class="op">+</span><span class="st"> </span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span>(x <span class="op">-</span><span class="st"> </span><span class="dv">2</span>) <span class="op">-</span><span class="st"> </span><span class="dv">2</span><span class="op">*</span>x<span class="op">/</span>(x<span class="op">^</span><span class="dv">2</span> <span class="op">+</span><span class="st"> </span><span class="dv">1</span>)</code></pre></div>
 <p>Ahora iteramos con <span class="math inline">\(\eta = 0.4\)</span> y valor inicial <span class="math inline">\(z_0=5\)</span></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">z_<span class="dv">0</span> &lt;-<span class="st"> </span><span class="dv">5</span>
 eta &lt;-<span class="st"> </span><span class="fl">0.4</span>
-descenso &lt;-<span class="st"> </span><span class="cf">function</span>(h, h_deriv){
-  fun &lt;-<span class="st"> </span><span class="cf">function</span>(n, z_<span class="dv">0</span>, eta){
-    z &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="dv">0</span>,n, <span class="kw">length</span>(z_<span class="dv">0</span>))
-    z[<span class="dv">1</span>, ] &lt;-<span class="st"> </span>z_<span class="dv">0</span>
-    <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>(n<span class="op">-</span><span class="dv">1</span>)){
-      z[i<span class="op">+</span><span class="dv">1</span>, ] &lt;-<span class="st"> </span>z[i, ] <span class="op">-</span><span class="st"> </span>eta <span class="op">*</span><span class="st"> </span><span class="kw">h_deriv</span>(z[i, ])
-    }
-    z
+descenso &lt;-<span class="st"> </span><span class="cf">function</span>(n, z_<span class="dv">0</span>, eta, h_deriv){
+  z &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="dv">0</span>,n, <span class="kw">length</span>(z_<span class="dv">0</span>))
+  z[<span class="dv">1</span>, ] &lt;-<span class="st"> </span>z_<span class="dv">0</span>
+  <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>(n<span class="op">-</span><span class="dv">1</span>)){
+    z[i<span class="op">+</span><span class="dv">1</span>, ] &lt;-<span class="st"> </span>z[i, ] <span class="op">-</span><span class="st"> </span>eta <span class="op">*</span><span class="st"> </span><span class="kw">h_deriv</span>(z[i, ])
   }
-  fun
+  z
 }
-descenso_fun &lt;-<span class="st"> </span><span class="kw">descenso</span>(h, h_deriv) 
-z &lt;-<span class="st"> </span><span class="kw">descenso_fun</span>(<span class="dv">20</span>, <span class="dv">5</span>, <span class="fl">0.1</span>)
+z &lt;-<span class="st"> </span><span class="kw">descenso</span>(<span class="dv">20</span>, <span class="dv">5</span>, <span class="fl">0.1</span>, h_deriv)
 z</code></pre></div>
 <pre><code>##           [,1]
 ##  [1,] 5.000000
@@ -416,13 +412,13 @@ z</code></pre></div>
 <div id="seleccion-de-tamano-de-paso-eta" class="section level3">
 <h3><span class="header-section-number">2.3.1</span> Selección de tamaño de paso <span class="math inline">\(\eta\)</span></h3>
 <p>Si hacemos <span class="math inline">\(\eta\)</span> muy chico, el algoritmo puede tardar mucho en converger:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">z &lt;-<span class="st"> </span><span class="kw">descenso_fun</span>(<span class="dv">20</span>, <span class="dv">5</span>, <span class="fl">0.01</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">z &lt;-<span class="st"> </span><span class="kw">descenso</span>(<span class="dv">20</span>, <span class="dv">5</span>, <span class="fl">0.01</span>, h_deriv)
 <span class="kw">curve</span>(h, <span class="op">-</span><span class="dv">3</span>, <span class="dv">6</span>)
 <span class="kw">points</span>(z, <span class="kw">h</span>(z))
 <span class="kw">text</span>(z[<span class="dv">1</span><span class="op">:</span><span class="dv">6</span>], <span class="kw">h</span>(z[<span class="dv">1</span><span class="op">:</span><span class="dv">6</span>]), <span class="dt">pos =</span> <span class="dv">3</span>)</code></pre></div>
-<p><img src="02-reg-lineal_files/figure-html/unnamed-chunk-15-1.png" width="384" /></p>
+<p><img src="02-reg-lineal_files/figure-html/unnamed-chunk-15-1.png" width="480" /></p>
 <p>Si hacemos <span class="math inline">\(\eta\)</span> muy grande, el algoritmo puede divergir:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">z &lt;-<span class="st"> </span><span class="kw">descenso_fun</span>(<span class="dv">20</span>, <span class="dv">5</span>, <span class="fl">1.5</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">z &lt;-<span class="st"> </span><span class="kw">descenso</span>(<span class="dv">20</span>, <span class="dv">5</span>, <span class="fl">1.5</span>, h_deriv)
 z</code></pre></div>
 <pre><code>##                [,1]
 ##  [1,]  5.000000e+00
@@ -466,7 +462,7 @@ grid_graf &lt;-<span class="st"> </span>grid_graf <span class="op">%&gt;%</span>
 gr_contour &lt;-<span class="st"> </span><span class="kw">ggplot</span>(grid_graf, <span class="kw">aes</span>(<span class="dt">x =</span> z_<span class="dv">1</span>, <span class="dt">y =</span> z_<span class="dv">2</span>, <span class="dt">z =</span> val)) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">geom_contour</span>(<span class="dt">binwidth =</span> <span class="fl">1.5</span>, <span class="kw">aes</span>(<span class="dt">colour =</span> ..level..))
 gr_contour</code></pre></div>
-<p><img src="02-reg-lineal_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
+<p><img src="02-reg-lineal_files/figure-html/unnamed-chunk-18-1.png" width="384" /></p>
 <p>El gradiente está dado por</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">h_grad &lt;-<span class="st"> </span><span class="cf">function</span>(z){
   <span class="kw">c</span>(<span class="dv">2</span><span class="op">*</span>z[<span class="dv">1</span>] <span class="op">-</span><span class="st"> </span>z[<span class="dv">2</span>], <span class="dv">2</span><span class="op">*</span>z[<span class="dv">2</span>] <span class="op">-</span><span class="st"> </span>z[<span class="dv">1</span>])
@@ -475,7 +471,6 @@ gr_contour</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">grad_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">h_grad</span>(<span class="kw">c</span>(<span class="dv">0</span>,<span class="op">-</span><span class="dv">2</span>))
 grad_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">h_grad</span>(<span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">1</span>))
 eta &lt;-<span class="st"> </span><span class="fl">0.2</span>
-<span class="co">#library(grid)</span>
 gr_contour <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_segment</span>(<span class="kw">aes</span>(<span class="dt">x=</span><span class="fl">0.0</span>, <span class="dt">xend=</span><span class="fl">0.0</span><span class="op">-</span>eta<span class="op">*</span>grad_<span class="dv">1</span>[<span class="dv">1</span>], <span class="dt">y=</span><span class="op">-</span><span class="dv">2</span>,
      <span class="dt">yend=</span><span class="op">-</span><span class="dv">2</span><span class="op">-</span>eta<span class="op">*</span>grad_<span class="dv">1</span>[<span class="dv">2</span>]),
@@ -483,36 +478,36 @@ gr_contour <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_segment</span>(<span class="kw">aes</span>(<span class="dt">x=</span><span class="dv">1</span>, <span class="dt">xend=</span><span class="dv">1</span><span class="op">-</span>eta<span class="op">*</span>grad_<span class="dv">2</span>[<span class="dv">1</span>], <span class="dt">y=</span><span class="dv">1</span>,
      <span class="dt">yend=</span><span class="dv">1</span><span class="op">-</span>eta<span class="op">*</span>grad_<span class="dv">2</span>[<span class="dv">2</span>]),
     <span class="dt">arrow =</span> <span class="kw">arrow</span>(<span class="dt">length =</span> <span class="kw">unit</span>(<span class="fl">0.2</span>,<span class="st">&quot;cm&quot;</span>)))<span class="op">+</span><span class="st"> </span><span class="kw">coord_fixed</span>(<span class="dt">ratio =</span> <span class="dv">1</span>)</code></pre></div>
-<p><img src="02-reg-lineal_files/figure-html/unnamed-chunk-20-1.png" width="672" /></p>
+<p><img src="02-reg-lineal_files/figure-html/unnamed-chunk-20-1.png" width="384" /></p>
 <p>Y aplicamos descenso en gradiente:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">des_h &lt;-<span class="st"> </span><span class="kw">descenso</span>(h, h_grad)
-inicial &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">1</span>)
-<span class="kw">des_h</span>(<span class="dv">20</span>, inicial , <span class="fl">0.01</span>)</code></pre></div>
-<pre><code>##           [,1]     [,2]
-##  [1,] 3.000000 1.000000
-##  [2,] 2.950000 1.010000
-##  [3,] 2.901100 1.019300
-##  [4,] 2.853271 1.027925
-##  [5,] 2.806485 1.035899
-##  [6,] 2.760714 1.043246
-##  [7,] 2.715932 1.049988
-##  [8,] 2.672114 1.056148
-##  [9,] 2.629233 1.061746
-## [10,] 2.587266 1.066803
-## [11,] 2.546188 1.071340
-## [12,] 2.505978 1.075375
-## [13,] 2.466612 1.078927
-## [14,] 2.428069 1.082015
-## [15,] 2.390328 1.084655
-## [16,] 2.353368 1.086866
-## [17,] 2.317169 1.088662
-## [18,] 2.281712 1.090060
-## [19,] 2.246979 1.091076
-## [20,] 2.212950 1.091725</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">inicial &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">1</span>)
+iteraciones &lt;-<span class="st"> </span><span class="kw">descenso</span>(<span class="dv">20</span>, inicial , <span class="fl">0.1</span>, h_grad)
+iteraciones</code></pre></div>
+<pre><code>##            [,1]      [,2]
+##  [1,] 3.0000000 1.0000000
+##  [2,] 2.5000000 1.1000000
+##  [3,] 2.1100000 1.1300000
+##  [4,] 1.8010000 1.1150000
+##  [5,] 1.5523000 1.0721000
+##  [6,] 1.3490500 1.0129100
+##  [7,] 1.1805310 0.9452330
+##  [8,] 1.0389481 0.8742395
+##  [9,] 0.9185824 0.8032864
+## [10,] 0.8151946 0.7344874
+## [11,] 0.7256044 0.6691094
+## [12,] 0.6473945 0.6078479
+## [13,] 0.5787004 0.5510178
+## [14,] 0.5180621 0.4986843
+## [15,] 0.4643181 0.4507536
+## [16,] 0.4165298 0.4070347
+## [17,] 0.3739273 0.3672807
+## [18,] 0.3358699 0.3312173
+## [19,] 0.3018177 0.2985609
+## [20,] 0.2713102 0.2690305</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"> <span class="kw">ggplot</span>(<span class="dt">data=</span> grid_graf) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">geom_contour</span>(<span class="dt">binwidth =</span> <span class="fl">1.5</span>, <span class="kw">aes</span>(<span class="dt">x =</span> z_<span class="dv">1</span>, <span class="dt">y =</span> z_<span class="dv">2</span>, <span class="dt">z =</span> val, <span class="dt">colour =</span> ..level..)) <span class="op">+</span><span class="st"> </span>
-<span class="st">   </span><span class="kw">geom_point</span>(<span class="dt">data =</span> <span class="kw">data.frame</span>(<span class="kw">des_h</span>(<span class="dv">20</span>, inicial, <span class="fl">0.3</span>)), <span class="kw">aes</span>(<span class="dt">x=</span>X1, <span class="dt">y=</span>X2), <span class="dt">colour =</span> <span class="st">&#39;red&#39;</span>)</code></pre></div>
-<p><img src="02-reg-lineal_files/figure-html/unnamed-chunk-21-1.png" width="672" /></p>
+<span class="st">   </span><span class="kw">geom_point</span>(<span class="dt">data =</span> <span class="kw">data.frame</span>(iteraciones), <span class="kw">aes</span>(<span class="dt">x=</span>X1, <span class="dt">y=</span>X2), <span class="dt">colour =</span> <span class="st">&#39;red&#39;</span>)</code></pre></div>
+<p><img src="02-reg-lineal_files/figure-html/unnamed-chunk-21-1.png" width="384" /></p>
 </div>
 </div>
 <div id="descenso-en-gradiente-para-regresion-lineal" class="section level2">
@@ -567,8 +562,7 @@ grad &lt;-<span class="st"> </span><span class="kw">grad_calc</span>(prostata_en
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">(<span class="kw">rss</span>(<span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">1</span><span class="op">+</span>delta)) <span class="op">-</span><span class="st"> </span><span class="kw">rss</span>(<span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">1</span>)))<span class="op">/</span>delta</code></pre></div>
 <pre><code>## [1] 17.17331</code></pre>
 <p>Y ahora iteramos para obtener</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">descenso_prost &lt;-<span class="st"> </span><span class="kw">descenso</span>(rss, grad)
-iteraciones &lt;-<span class="st"> </span><span class="kw">descenso_prost</span>(<span class="dv">30</span>, <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">0</span>), <span class="fl">0.005</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">iteraciones &lt;-<span class="st"> </span><span class="kw">descenso</span>(<span class="dv">30</span>, <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">0</span>), <span class="fl">0.005</span>, grad)
 iteraciones</code></pre></div>
 <pre><code>##            [,1]      [,2]
 ##  [1,] 0.0000000 0.0000000
@@ -619,7 +613,7 @@ iteraciones</code></pre></div>
  \end{array} \right)\]</span></p>
 <p>y <span class="math display">\[\underline{y} =(y^{(1)},y^{(2)}, \ldots, y^{(N)})^t.\]</span></p>
 <p>Como <span class="math display">\[\underline{e} = \underline{y} - \underline{X}\beta\]</span></p>
-tenemos entonces (de las fórmulas <a href="regresion.html#eq:grad1">(2.1)</a> y <a href="regresion.html#eq:grad1">(2.1)</a>):
+tenemos entonces (de las fórmulas <a href="regresion.html#eq:grad1">(2.1)</a> y <a href="regresion.html#eq:grad2">(2.2)</a>):
 <span class="math display" id="eq:gradmat">\[\begin{equation}
 \nabla RSS(\beta) =   \underline{X}^t(\underline{X}\beta - \underline{y}) =  -\underline{X}^t \underline{e}
 \tag{2.3}
@@ -655,6 +649,9 @@ dat_x &lt;-<span class="st"> </span><span class="kw">data.frame</span>(grid_beta
 <div class="comment">
 <p>
 Cuando normalizamos antes de ajustar el modelo, las predicciones deben hacerse con entradas normalizadas. La normalización se hace con los mismos valores que se usaron en el entrenamiento (y <strong>no</strong> recalculando medias y desviaciones estándar con el conjunto de prueba).
+</p>
+<p>
+En cuanto a la forma funcional del predictor <span class="math inline"><em>f</em></span>, el problema con entradas normalizadas es equivalente al de las entradas no normalizadas. Asegúrate de esto escribiendo cómo correponden los coeficientes de cada modelo normalizado con los coeficientes del modelo no normalizado.
 </p>
 </div>
 </div>
@@ -733,8 +730,25 @@ y &lt;-<span class="st"> </span>x<span class="op">^</span><span class="dv">2</sp
 <p>¿Qué está mal aquí? El modelo no está mal, sino la interpretación. Cuando las personas están investigando acerca de televisiones, recibe anuncios. La razón es que esta variable nos puede indicar más bien quién está en proceso de compra de una televisión samsung (reciben anuncios) y quién no (no hacen búsquedas relevantes, así que no reciben anuncios). El modelo está mal especificado porque no consideramos que hay otra variable importante, que es el interés de la persona en compra de TVs Samsung.</p>
 <p>En general, la recomendación es que las interpretaciones causales deben considerarse como preliminares (o <em>sugerencias</em>), y se requiere más análisis y consideraciones antes de poder tener interpretaciones causales sólidas.</p>
 </div>
-<div id="ejercicio." class="section level4">
-<h4><span class="header-section-number">2.6.0.1</span> Ejercicio.</h4>
+<div id="ejercicio" class="section level4 unnumbered">
+<h4>Ejercicio</h4>
+<p>En el siguiente ejercicio intentamos predecir el porcentaje de grasa corporal (una medición relativamente cara) usando mediciones de varias partes del cuerpo, edad, peso y estatura. Ver script <em>bodyfat_ejercicio.R</em></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(tidyr)
+dat_grasa &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="dt">file =</span> <span class="st">&#39;datos/bodyfat.csv&#39;</span>)
+<span class="kw">head</span>(dat_grasa)</code></pre></div>
+<pre><code>## # A tibble: 6 x 14
+##   grasacorp  edad   peso estatura cuello pecho abdomen cadera muslo
+##       &lt;dbl&gt; &lt;int&gt;  &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;
+## 1      12.3    23 154.25    67.75   36.2  93.1    85.2   94.5  59.0
+## 2       6.1    22 173.25    72.25   38.5  93.6    83.0   98.7  58.7
+## 3      25.3    22 154.00    66.25   34.0  95.8    87.9   99.2  59.6
+## 4      10.4    26 184.75    72.25   37.4 101.8    86.4  101.2  60.1
+## 5      28.7    24 184.25    71.25   34.4  97.3   100.0  101.9  63.2
+## 6      20.9    24 210.25    74.75   39.0 104.5    94.4  107.8  66.0
+## # ... with 5 more variables: rodilla &lt;dbl&gt;, tobillo &lt;dbl&gt;, biceps &lt;dbl&gt;,
+## #   antebrazo &lt;dbl&gt;, muñeca &lt;dbl&gt;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">nrow</span>(dat_grasa)</code></pre></div>
+<pre><code>## [1] 252</code></pre>
 </div>
 </div>
 <div id="solucion-analitica" class="section level2">
@@ -774,7 +788,7 @@ datos_prueba &lt;-<span class="st"> </span><span class="kw">filter</span>(datos,
 <pre><code>## [1] 118</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(datos_entrena, <span class="kw">aes</span>(<span class="dt">x =</span> peso_kg, <span class="dt">y =</span> rendimiento_kpl)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_point</span>()</code></pre></div>
-<p><img src="02-reg-lineal_files/figure-html/unnamed-chunk-34-1.png" width="672" /></p>
+<p><img src="02-reg-lineal_files/figure-html/unnamed-chunk-35-1.png" width="672" /></p>
 <p>Consideremos un modelo de <span class="math inline">\(k=15\)</span> vecinos más cercanos. La función de predicción ajustada es entonces:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(kknn)
 <span class="co"># nótese que no normalizamos entradas - esto también es importante</span>
@@ -788,7 +802,7 @@ dat_graf &lt;-<span class="st"> </span><span class="kw">data_frame</span>(<span 
 <span class="kw">ggplot</span>(datos_entrena, <span class="kw">aes</span>(<span class="dt">x =</span> peso_kg, <span class="dt">y =</span> rendimiento_kpl)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">alpha=</span><span class="fl">0.6</span>) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">data=</span>dat_graf, <span class="dt">col=</span><span class="st">&#39;red&#39;</span>, <span class="dt">size =</span> <span class="fl">1.2</span>)</code></pre></div>
-<p><img src="02-reg-lineal_files/figure-html/unnamed-chunk-35-1.png" width="672" /></p>
+<p><img src="02-reg-lineal_files/figure-html/unnamed-chunk-36-1.png" width="672" /></p>
 <p>Y para <span class="math inline">\(k=5\)</span> vecinos más cercanos:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mod_5vmc &lt;-<span class="st"> </span><span class="kw">kknn</span>(rendimiento_kpl <span class="op">~</span><span class="st"> </span>peso_kg, <span class="dt">train =</span> datos_entrena,
                   <span class="dt">test =</span> <span class="kw">data_frame</span>(<span class="dt">peso_kg=</span><span class="kw">seq</span>(<span class="dv">700</span>,<span class="dv">2200</span>, <span class="dt">by =</span> <span class="dv">10</span>)), 
@@ -798,7 +812,7 @@ dat_graf &lt;-<span class="st"> </span><span class="kw">data_frame</span>(<span 
 <span class="kw">ggplot</span>(datos_entrena, <span class="kw">aes</span>(<span class="dt">x =</span> peso_kg, <span class="dt">y =</span> rendimiento_kpl)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">alpha=</span><span class="fl">0.6</span>) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">data=</span>dat_graf, <span class="dt">col=</span><span class="st">&#39;red&#39;</span>, <span class="dt">size =</span> <span class="fl">1.2</span>)</code></pre></div>
-<p><img src="02-reg-lineal_files/figure-html/unnamed-chunk-36-1.png" width="672" /></p>
+<p><img src="02-reg-lineal_files/figure-html/unnamed-chunk-37-1.png" width="672" /></p>
 <p>En nuestro caso, los errores de prueba son</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mod_3vmc &lt;-<span class="st"> </span><span class="kw">kknn</span>(rendimiento_kpl <span class="op">~</span><span class="st"> </span>peso_kg, <span class="dt">train =</span> datos_entrena,
                   <span class="dt">test =</span> datos_prueba, 
@@ -827,7 +841,7 @@ x_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">runif
 dat &lt;-<span class="st"> </span><span class="kw">data_frame</span>(<span class="dt">x_1 =</span> x_<span class="dv">1</span>, <span class="dt">x_2 =</span> x_<span class="dv">2</span>)
 dat<span class="op">$</span>y &lt;-<span class="st"> </span><span class="kw">apply</span>(dat, <span class="dv">1</span>, fun_exp)
 <span class="kw">ggplot</span>(dat, <span class="kw">aes</span>(<span class="dt">x =</span> x_<span class="dv">1</span>, <span class="dt">y =</span> x_<span class="dv">2</span>, <span class="dt">colour =</span> y)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>()</code></pre></div>
-<p><img src="02-reg-lineal_files/figure-html/unnamed-chunk-38-1.png" width="672" /></p>
+<p><img src="02-reg-lineal_files/figure-html/unnamed-chunk-39-1.png" width="672" /></p>
 <p>La mejor predicción en <span class="math inline">\(x_0 = (0,0)\)</span> es <span class="math inline">\(f((0,0)) = 1\)</span>. Eñ vecino más cercano al origen es</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dist_origen &lt;-<span class="st"> </span><span class="kw">apply</span>(dat, <span class="dv">1</span>, <span class="cf">function</span>(x) <span class="kw">sqrt</span>(<span class="kw">sum</span>(<span class="kw">head</span>(x, <span class="op">-</span><span class="dv">1</span>)<span class="op">^</span><span class="dv">2</span>)))
 mas_cercano_indice &lt;-<span class="st"> </span><span class="kw">which.min</span>(dist_origen)

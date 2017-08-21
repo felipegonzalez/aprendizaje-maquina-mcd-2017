@@ -302,7 +302,7 @@ h <- function(x) x^2 + (x - 2)^2 - log(x^2 + 1)
 Calculamos (a mano):
 
 ```r
- h_deriv <- function(x) 2 * x + 2 * (x - 2) - 2*x/(x^2 + 1)
+h_deriv <- function(x) 2 * x + 2 * (x - 2) - 2*x/(x^2 + 1)
 ```
 
 Ahora iteramos con $\eta = 0.4$ y valor inicial $z_0=5$
@@ -310,19 +310,15 @@ Ahora iteramos con $\eta = 0.4$ y valor inicial $z_0=5$
 ```r
 z_0 <- 5
 eta <- 0.4
-descenso <- function(h, h_deriv){
-  fun <- function(n, z_0, eta){
-    z <- matrix(0,n, length(z_0))
-    z[1, ] <- z_0
-    for(i in 1:(n-1)){
-      z[i+1, ] <- z[i, ] - eta * h_deriv(z[i, ])
-    }
-    z
+descenso <- function(n, z_0, eta, h_deriv){
+  z <- matrix(0,n, length(z_0))
+  z[1, ] <- z_0
+  for(i in 1:(n-1)){
+    z[i+1, ] <- z[i, ] - eta * h_deriv(z[i, ])
   }
-  fun
+  z
 }
-descenso_fun <- descenso(h, h_deriv) 
-z <- descenso_fun(20, 5, 0.1)
+z <- descenso(20, 5, 0.1, h_deriv)
 z
 ```
 
@@ -369,19 +365,19 @@ Si hacemos $\eta$ muy chico, el algoritmo puede tardar mucho en
 converger:
 
 ```r
-z <- descenso_fun(20, 5, 0.01)
+z <- descenso(20, 5, 0.01, h_deriv)
 curve(h, -3, 6)
 points(z, h(z))
 text(z[1:6], h(z[1:6]), pos = 3)
 ```
 
-<img src="02-reg-lineal_files/figure-html/unnamed-chunk-15-1.png" width="384" />
+<img src="02-reg-lineal_files/figure-html/unnamed-chunk-15-1.png" width="480" />
 
 Si hacemos $\eta$ muy grande, el algoritmo puede divergir:
 
 
 ```r
-z <- descenso_fun(20, 5, 1.5)
+z <- descenso(20, 5, 1.5, h_deriv)
 z
 ```
 
@@ -441,7 +437,7 @@ gr_contour <- ggplot(grid_graf, aes(x = z_1, y = z_2, z = val)) +
 gr_contour
 ```
 
-<img src="02-reg-lineal_files/figure-html/unnamed-chunk-18-1.png" width="672" />
+<img src="02-reg-lineal_files/figure-html/unnamed-chunk-18-1.png" width="384" />
 
 El gradiente está dado por
 
@@ -461,7 +457,6 @@ puntos:
 grad_1 <- h_grad(c(0,-2))
 grad_2 <- h_grad(c(1,1))
 eta <- 0.2
-#library(grid)
 gr_contour +
   geom_segment(aes(x=0.0, xend=0.0-eta*grad_1[1], y=-2,
      yend=-2-eta*grad_1[2]),
@@ -471,48 +466,48 @@ gr_contour +
     arrow = arrow(length = unit(0.2,"cm")))+ coord_fixed(ratio = 1)
 ```
 
-<img src="02-reg-lineal_files/figure-html/unnamed-chunk-20-1.png" width="672" />
+<img src="02-reg-lineal_files/figure-html/unnamed-chunk-20-1.png" width="384" />
 
 Y aplicamos descenso en gradiente:
 
 
 ```r
-des_h <- descenso(h, h_grad)
 inicial <- c(3, 1)
-des_h(20, inicial , 0.01)
+iteraciones <- descenso(20, inicial , 0.1, h_grad)
+iteraciones
 ```
 
 ```
-##           [,1]     [,2]
-##  [1,] 3.000000 1.000000
-##  [2,] 2.950000 1.010000
-##  [3,] 2.901100 1.019300
-##  [4,] 2.853271 1.027925
-##  [5,] 2.806485 1.035899
-##  [6,] 2.760714 1.043246
-##  [7,] 2.715932 1.049988
-##  [8,] 2.672114 1.056148
-##  [9,] 2.629233 1.061746
-## [10,] 2.587266 1.066803
-## [11,] 2.546188 1.071340
-## [12,] 2.505978 1.075375
-## [13,] 2.466612 1.078927
-## [14,] 2.428069 1.082015
-## [15,] 2.390328 1.084655
-## [16,] 2.353368 1.086866
-## [17,] 2.317169 1.088662
-## [18,] 2.281712 1.090060
-## [19,] 2.246979 1.091076
-## [20,] 2.212950 1.091725
+##            [,1]      [,2]
+##  [1,] 3.0000000 1.0000000
+##  [2,] 2.5000000 1.1000000
+##  [3,] 2.1100000 1.1300000
+##  [4,] 1.8010000 1.1150000
+##  [5,] 1.5523000 1.0721000
+##  [6,] 1.3490500 1.0129100
+##  [7,] 1.1805310 0.9452330
+##  [8,] 1.0389481 0.8742395
+##  [9,] 0.9185824 0.8032864
+## [10,] 0.8151946 0.7344874
+## [11,] 0.7256044 0.6691094
+## [12,] 0.6473945 0.6078479
+## [13,] 0.5787004 0.5510178
+## [14,] 0.5180621 0.4986843
+## [15,] 0.4643181 0.4507536
+## [16,] 0.4165298 0.4070347
+## [17,] 0.3739273 0.3672807
+## [18,] 0.3358699 0.3312173
+## [19,] 0.3018177 0.2985609
+## [20,] 0.2713102 0.2690305
 ```
 
 ```r
  ggplot(data= grid_graf) + 
   geom_contour(binwidth = 1.5, aes(x = z_1, y = z_2, z = val, colour = ..level..)) + 
-   geom_point(data = data.frame(des_h(20, inicial, 0.3)), aes(x=X1, y=X2), colour = 'red')
+   geom_point(data = data.frame(iteraciones), aes(x=X1, y=X2), colour = 'red')
 ```
 
-<img src="02-reg-lineal_files/figure-html/unnamed-chunk-21-1.png" width="672" />
+<img src="02-reg-lineal_files/figure-html/unnamed-chunk-21-1.png" width="384" />
 
 
 ## Descenso en gradiente para regresión lineal
@@ -636,8 +631,7 @@ Y ahora iteramos para obtener
 
 
 ```r
-descenso_prost <- descenso(rss, grad)
-iteraciones <- descenso_prost(30, c(0,0), 0.005)
+iteraciones <- descenso(30, c(0,0), 0.005, grad)
 iteraciones
 ```
 
@@ -708,7 +702,7 @@ y $$\underline{y} =(y^{(1)},y^{(2)}, \ldots, y^{(N)})^t.$$
 Como
 $$\underline{e} = \underline{y} - \underline{X}\beta$$
 
-tenemos entonces (de las fórmulas \@ref(eq:grad1) y \@ref(eq:grad1)):
+tenemos entonces (de las fórmulas \@ref(eq:grad1) y \@ref(eq:grad2)):
 \begin{equation}
 \nabla RSS(\beta) =   \underline{X}^t(\underline{X}\beta - \underline{y}) =  -\underline{X}^t \underline{e}
 (\#eq:gradmat)
@@ -756,6 +750,8 @@ es decir, centramos y normalizamos por columna. Otra opción común es restar
 el mínimo y dividir entre la diferencia del máximo y el mínimo, de modo
 que las variables resultantes toman valores en $[0,1]$.
 
+
+
 Entonces escalamos antes de ajustar:
 
 
@@ -777,7 +773,9 @@ normalizado.
 
 <div class="comment">
 <p>Cuando normalizamos antes de ajustar el modelo, las predicciones deben hacerse con entradas normalizadas. La normalización se hace con los mismos valores que se usaron en el entrenamiento (y <strong>no</strong> recalculando medias y desviaciones estándar con el conjunto de prueba).</p>
+<p>En cuanto a la forma funcional del predictor <span class="math inline"><em>f</em></span>, el problema con entradas normalizadas es equivalente al de las entradas no normalizadas. Asegúrate de esto escribiendo cómo correponden los coeficientes de cada modelo normalizado con los coeficientes del modelo no normalizado.</p>
 </div>
+
 
 
 
@@ -920,7 +918,41 @@ En general, la recomendación es que las interpretaciones causales deben conside
 como preliminares (o *sugerencias*), y se requiere más análisis y consideraciones
 antes de poder tener interpretaciones causales sólidas. 
 
-#### Ejercicio.
+#### Ejercicio {-}
+
+En el siguiente ejercicio intentamos predecir el porcentaje de grasa corporal 
+(una medición relativamente cara) usando mediciones de varias partes del cuerpo,
+edad, peso y estatura. Ver script *bodyfat_ejercicio.R*
+
+
+```r
+library(tidyr)
+dat_grasa <- read_csv(file = 'datos/bodyfat.csv')
+head(dat_grasa)
+```
+
+```
+## # A tibble: 6 x 14
+##   grasacorp  edad   peso estatura cuello pecho abdomen cadera muslo
+##       <dbl> <int>  <dbl>    <dbl>  <dbl> <dbl>   <dbl>  <dbl> <dbl>
+## 1      12.3    23 154.25    67.75   36.2  93.1    85.2   94.5  59.0
+## 2       6.1    22 173.25    72.25   38.5  93.6    83.0   98.7  58.7
+## 3      25.3    22 154.00    66.25   34.0  95.8    87.9   99.2  59.6
+## 4      10.4    26 184.75    72.25   37.4 101.8    86.4  101.2  60.1
+## 5      28.7    24 184.25    71.25   34.4  97.3   100.0  101.9  63.2
+## 6      20.9    24 210.25    74.75   39.0 104.5    94.4  107.8  66.0
+## # ... with 5 more variables: rodilla <dbl>, tobillo <dbl>, biceps <dbl>,
+## #   antebrazo <dbl>, muñeca <dbl>
+```
+
+```r
+nrow(dat_grasa)
+```
+
+```
+## [1] 252
+```
+
 
 
 
@@ -1021,7 +1053,7 @@ ggplot(datos_entrena, aes(x = peso_kg, y = rendimiento_kpl)) +
   geom_point()
 ```
 
-<img src="02-reg-lineal_files/figure-html/unnamed-chunk-34-1.png" width="672" />
+<img src="02-reg-lineal_files/figure-html/unnamed-chunk-35-1.png" width="672" />
 
 Consideremos un modelo de $k=15$ vecinos más cercanos. La función de predicción
 ajustada es entonces:
@@ -1042,7 +1074,7 @@ ggplot(datos_entrena, aes(x = peso_kg, y = rendimiento_kpl)) +
   geom_line(data=dat_graf, col='red', size = 1.2)
 ```
 
-<img src="02-reg-lineal_files/figure-html/unnamed-chunk-35-1.png" width="672" />
+<img src="02-reg-lineal_files/figure-html/unnamed-chunk-36-1.png" width="672" />
 
 Y para $k=5$ vecinos más cercanos:
 
@@ -1058,7 +1090,7 @@ ggplot(datos_entrena, aes(x = peso_kg, y = rendimiento_kpl)) +
   geom_line(data=dat_graf, col='red', size = 1.2)
 ```
 
-<img src="02-reg-lineal_files/figure-html/unnamed-chunk-36-1.png" width="672" />
+<img src="02-reg-lineal_files/figure-html/unnamed-chunk-37-1.png" width="672" />
 
 En nuestro caso, los errores de prueba son
 
@@ -1119,7 +1151,7 @@ dat$y <- apply(dat, 1, fun_exp)
 ggplot(dat, aes(x = x_1, y = x_2, colour = y)) + geom_point()
 ```
 
-<img src="02-reg-lineal_files/figure-html/unnamed-chunk-38-1.png" width="672" />
+<img src="02-reg-lineal_files/figure-html/unnamed-chunk-39-1.png" width="672" />
 
 La mejor predicción en $x_0 = (0,0)$ es $f((0,0)) = 1$. Eñ vecino más
 cercano al origen es
