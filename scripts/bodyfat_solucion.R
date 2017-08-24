@@ -88,7 +88,7 @@ grad <- grad_calc(x, y)
 #define z_0 y eta
 z_0 <- rep(0, 14) 
 eta <- 0.001
-n <- 200
+n <- 2000
 z <- descenso(n, z_0, eta, grad)
 
 ## grafica evolución de rss
@@ -98,7 +98,7 @@ plot(apply(z, 1, rss))
 beta <- z[n,]
 #calcula error de entrenamiento
 sqrt(rss(beta)/nrow(dat_e_norm))
-
+beta
 ## 4. Evalúa con muestra de prueba (observa que es el mismo código de arriba
 ## para normalizar)
 
