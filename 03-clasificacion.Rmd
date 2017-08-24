@@ -1,0 +1,167 @@
+# Problemas de clasificación y regresión logística {#clasificacion}
+
+```{r, include = FALSE}
+library(ggplot2)
+theme_set(theme_bw())
+cbbPalette <- c("#000000", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+```
+
+## El problema de clasificación
+
+Una variabla $G$ **categórica** o **cualitativa** toma valores que no
+son numéricos. Por ejemplo, si $G$ denota el estado del contrato de celular
+de un cliente dentro de un año, podríamos tener $G\in \{ activo, cancelado\}$.
+
+En un **problema de clasificación** buscamos predecir una variable respuesta
+categórica $G$ en función de otras variables de entrada
+$X=(X_1,X_2,\ldots, X_p)$.
+
+#### Ejemplos {-}
+- Predcir si un cliente cae en impago de una tarjeta de crédito, de forma
+que podemos tener $G=corriente$ o $G=impago$. Variables de entrada podrían
+ser $X_1=$ porcentaje de saldo usado, $X_2=$ atrasos en los úlltimos 3 meses,
+$X_3=$ edad, etc.
+
+En nuestro ejemplo de 
+reconocimiento de dígitos tenemos $G\in\{ 0,1,\ldots, 9\}$. Nótese
+que lso dígitos no se pueden considerar como valores numéricos (son etiquetas).
+Tenemos que las entradas $X_j$ para $j=1,2,\ldots, 256$ son valores de cada pixel
+(imágenes blanco y negro).
+
+En reconocimiento de imágenes quiza tenemos que $G$ pertenece a un conjunto
+que típicamente contiene miles de valores (manzana, árbol, pluma, perro, coche, persona,
+cara, etc.). Las $X_j$ son valores de pixeles de la imagen para tres canales
+(rojo, verde y azul). Si las imágenes son de 100x100, tendríamos 30,000 variables
+de entrada.
+
+
+### Comparación con regresión: ¿qué estimar en problemas de clasificación?
+
+
+En problemas de regresión, consideramos modelos de la forma $Y= f(X) + \epsilon$,
+y planteamos el problema de aprendizaje supervisado como uno donde el objetivo
+es estimar los mejor que podamos la función $f(X)$ mediante un estimador
+$\hat{f}(X)$ para poder hacer predicciones. En este caso:
+  
+  - $f(X)$ es la relación sistemática de $Y$ en función de $X$
+  - $\epsilon$ es ruido aleatorio (efectos de otras variables que no conocimos)
+
+No podemos usar un modelo así
+en clasificación pues $G$ no es numérica. Sin embargo, podemos pensar que $X$
+  nos da cierta información de la clase que puede ocurrir:
+  
+  - $P(G|X)$ es la probabilidad condicional de observar $G$ si tenemos $X$. Esto es la información sistemática de $G$ en función de $X$
+  - $G$, la clase observada, es una variable aleatoria 
+(depende de otras variables que no conocemos).
+
+En analogía con el problema de regresión, quisiéramos estimar las probabilidades condicionales $P(G|X)$ tan bien como podamos para predecir:
+
+```{block2, type='comentario'}
+En problemas de clasificación, nuestro problema se concentra en estimar la parte
+sistemática de la relación entre $G$ y $X$, que quiere decir que buscamos estimar
+las funciones
+$$p_g(x) = P(G=g|X=x)$$
+  para cada clase $g$ que $G$ puede tomar, y cada posible valor $x$ que las entradas
+$X$ pueden tomar
+```
+
+Normalmente codificamos las clases $g$ con una etiqueta numérica, de modo
+que $G\in\{1,2,\ldots, K\}$.
+
+### Ejemplo {-}
+(Impago de tarjetas de crédito) 
+Supongamos que $X=$ porcentaje del saldo usado, y $G\in\{1, 2\}$, donde
+$1$ corresponde al corriente y $2$ representa impago.
+ Las probabilidades condicionales de clase para la clase *al corriente* podrían
+ ser, por ejemplo:
+
+- $P(G=1|X = x) =0.98$  si $x < 15\%$
+- $P(G=1|X = x) = 0.98 - 0.01(x-15)$ si $x>=15\%$
+  
+
+```{r, fig.width = 4, fig.asp = 1 }
+p_1 <- function(x){
+  ifelse(x < 15, 0.98, 0.98 - 0.01*(x-15))
+}
+curve(p_1, 0,100, xlab = 'Porcentaje de saldo máximo usado', ylab = 'p_1(x)')
+```
+
+¿Por qué en este ejemplo no mostramos la función $p_2(x)$? 
+
+
+
+### k-vecinos más cercanos
+
+Podemos extender fácilmente k vecinos más cercanos para estimar
+las probabilidades de clase $p_g(x)$. La idea general es igual que en regresión:
+
+Supongamos que tenemos un conjunto de entrenamiento
+$${\mathcal L}=\{ (x^{(1)},g^{(1)}),(x^{(2)},g^{(2)}), \ldots, (x^{(N)}, g^{(N)}) \}$$
+
+La idea es que si queremos predecir en $x_0$, busquemos varios $k$ vecinos más cercanos
+a $x_0$, y estimamos entonces $p_g(x)$ como la **proporción** de casos tipo $g$ que
+hay entre los $k$ vecinos de $x_0$. Podemos escribir esto como:
+
+
+```{block2, type='comentario'}
+**k vecinos más cercanos para clasificación**
+
+Estimamos contando los elementos de cada clase entre los $k$ vecinos más cercanos:
+
+$$\hat{p_g}(x_0) = \frac{1}{k}\sum_{x^{(i)} \in N_k(x_0)} I( g^{(i)} = g)$$
+donde $N_k(x_0)$ es el conjunto de $k$ vecinos más cercanos en ${\mathcal L}$
+de $x_0$, y $I(g^{(i)}=g)=1$ cuando $g^{(i)}=g$, y cero en otro caso (indicadora).
+```
+
+
+
+### Ejemplo
+Consideremos datos de diabetes en mujeres Pima:
+
+A population of women who were at least 21 years old, of Pima Indian heritage and living near Phoenix, Arizona, was tested for diabetes according to World Health Organization criteria. The data were collected by the US National Institute of Diabetes and Digestive and Kidney Diseases. We used the 532 complete records after dropping the (mainly missing) data on serum insulin.
+
+- npreg number of pregnancies.
+- glu plasma glucose concentration in an oral glucose tolerance test.
+- bp diastolic blood pressure (mm Hg).
+- skin triceps skin fold thickness (mm).
+- bmi body mass index (weight in kg/(height in m)\^2).
+- ped diabetes pedigree function.
+- age age in years.
+- type Yes or No, for diabetic according to WHO criteria.
+
+```{r}
+library(dplyr)
+library(tidyr)
+library(kknn)
+diabetes_ent <- as_data_frame(MASS::Pima.tr)
+diabetes_pr <- as_data_frame(MASS::Pima.te)
+diabetes_ent
+
+```
+
+Intentaremos predecir diabetes dependiendo del BMI:
+
+```{r}
+library(ggplot2)
+ggplot(diabetes_ent, aes(x = bmi, y= as.numeric(type=='Yes'), colour = type)) +
+  geom_point()
+```
+
+Usamos $30$ vecinos más cercanos para estimar $p_g(x)$:
+
+
+```{r}
+graf_data <- data_frame(bmi = seq(20,45, 1))
+vmc_5 <- kknn(type ~ bmi, train = diabetes_ent,  k = 30,
+              test = graf_data, kernel = 'rectangular')
+graf_data$Yes <- vmc_5$prob[ ,"Yes"]
+graf_data$No <- vmc_5$prob[ ,"No"]
+graf_data <- graf_data %>% gather(type, prob, Yes:No)
+ggplot(diabetes_ent, aes(x = bmi, y= as.numeric(type=='Yes'), colour = type)) +
+  geom_point() + 
+  geom_line(data = filter(graf_data, type =='Yes') , 
+            aes(x=bmi, y = prob, colour=type, group = type)) +
+  ylab('Probabilidad diabetes')
+```
+
+
