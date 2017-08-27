@@ -820,7 +820,7 @@ devianza(iteraciones[200,])
 ```
 
 
-## Puntos adicionales
+## Observaciones adicionales
 
 #### Normalización {-}
 Igual que en regresión lineal, en regresión logística conviene normalizar
@@ -832,6 +832,10 @@ más sofisticados o nuevos en numerosos ejemplos. Las razones son similares:
 la rigidez de regresión logística es una fortaleza cuando la estructura
 lineal es una buena aproximación.
 
+#### Solución analítica
+El problema de regresión logística no tiene solución analítica. Paquetes
+como *glm* utilizan métodos numéricos (Newton-Raphson para regresión logística,
+por ejemplo).
 
 #### Interpretación de modelos logísticos
 **Todas** las precauciones que mencionamos en modelos lineales aplican
@@ -907,5 +911,71 @@ h(0.5+0.2) - h(0.5)
 Pero si la variable $x_2 = -1$, por ejemplo, el cambio en probabilidad es de
 ```{r}
 h(0.5+ 0.2 + 0.5*1) - h(0.5 + 0.5*1)
+```
+
+## Ejercicio: datos de diabetes
+
+Ya están divididos los datos en entrenamiento y prueba
+
+```{r, message=FALSE, warning=FALSE}
+diabetes_ent <- as_data_frame(MASS::Pima.tr)
+diabetes_pr <- as_data_frame(MASS::Pima.te)
+diabetes_ent
+diabetes_ent$id <- 1:nrow(diabetes_ent)
+diabetes_pr$id <- 1:nrow(diabetes_pr)
+```
+
+Normalizamos
+
+```{r, message=FALSE, warning=FALSE }
+library(dplyr)
+library(tidyr)
+datos_norm <- diabetes_ent %>% 
+  gather(variable, valor, npreg:age) %>%
+  group_by(variable) %>%
+  summarise(media = mean(valor), de = sd(valor))
+
+normalizar <- function(datos, datos_norm){
+  datos %>% 
+    gather(variable, valor, npreg:age) %>%
+    left_join(datos_norm) %>%
+    mutate(valor_s = (valor  - media)/de) %>%
+    select(id, type, variable, valor_s) %>%
+    spread(variable, valor_s)
+}
+
+diabetes_ent_s <- normalizar(diabetes_ent, datos_norm)
+diabetes_pr_s <- normalizar(diabetes_pr, datos_norm)
+```
+
+```{r}
+x_ent <- diabetes_ent_s %>% select(age:skin) %>% as.matrix
+p <- ncol(x_ent)
+y_ent <- diabetes_ent_s$type == 'Yes'
+grad <- grad_calc(x_ent, y_ent)
+iteraciones <- descenso(1000, rep(0,p+1), 0.001, h_deriv = grad)
+matplot(iteraciones)
+```
+
+```{r}
+diabetes_coef <- data_frame(variable = c('Intercept',colnames(x_ent)), coef = iteraciones[1000,])
+diabetes_coef
+```
+
+Ahora calculamos devianza de prueba y error de clasificación:
+
+```{r}
+x_prueba <- diabetes_pr_s %>% select(age:skin) %>% as.matrix
+y_prueba <- diabetes_pr_s$type == 'Yes'
+dev_prueba <- devianza_calc(x_prueba, y_prueba)
+dev_prueba(iteraciones[1000,])
+```
+
+Y para el error clasificación de prueba, necesitamos las probabilidades de clase ajustadas:
+```{r}
+beta <- iteraciones[1000, ]
+p_beta <- h(as.matrix(cbind(1, x_prueba)) %*% beta) 
+y_pred <- as.numeric(p_beta > 0.5)
+mean(y_prueba != y_pred)
 ```
 
