@@ -155,28 +155,28 @@ Vamos a generar unos datos con el modelo simple del ejemplo anterior:
 library(dplyr)
 library(tidyr)
 library(kknn)
-set.seed(192133)
+set.seed(1933)
 x <- pmin(rexp(500,1/30),100)
 probs <- p_1(x)
 g <- ifelse(rbinom(length(x), 1, probs)==1 ,1, 2)
-dat <- data_frame(x = x, p_1 = probs, g = factor(g))
-dat %>% select(x, g) 
+dat_ent <- data_frame(x = x, p_1 = probs, g = factor(g))
+dat_ent %>% select(x, g) 
 ```
 
 ```
 ## # A tibble: 500 x 2
 ##             x      g
 ##         <dbl> <fctr>
-##  1 20.0112971      1
-##  2  1.2461596      1
-##  3  0.4717593      1
-##  4 14.2580957      2
-##  5 36.0420104      1
-##  6  1.8943146      1
-##  7  6.4421154      1
-##  8  1.8521618      1
-##  9 30.9327078      1
-## 10 82.2771767      1
+##  1  0.5320942      1
+##  2 25.3910853      1
+##  3 37.4805755      1
+##  4 20.8732917      1
+##  5 70.8899113      2
+##  6 14.8300636      1
+##  7 49.4363507      1
+##  8 20.9386771      1
+##  9 35.4585176      1
+## 10  9.8302441      1
 ## # ... with 490 more rows
 ```
 
@@ -184,7 +184,7 @@ Como este problema es de dos clases, podemos graficar como sigue:
 
 
 ```r
-graf_1 <- ggplot(dat, aes(x = x)) +
+graf_1 <- ggplot(dat_ent, aes(x = x)) +
   geom_jitter(aes(colour = g, y = as.numeric(g=='1')), width=0, height=0.1)
 graf_1
 ```
@@ -233,9 +233,9 @@ más cercanos (curva roja):
 
 ```r
 graf_data <- data_frame(x = seq(0,100, 1))
-vmc_5 <- kknn(g ~ x, train = dat,  k = 60,
+vmc <- kknn(g ~ x, train = dat_ent,  k = 60,
               test = graf_data, kernel = 'rectangular')
-graf_data$p_1 <- vmc_5$prob[ ,1]
+graf_data$p_1 <- vmc$prob[ ,1]
 graf_verdadero <- data_frame(x = 0:100, p_1 = p_1(x))
 graf_1 + 
   geom_line(data = graf_data, aes(y = p_1), colour = 'red', size=1.2) +
@@ -414,15 +414,13 @@ calculamos la devianza de entrenamiento
 
 
 ```r
-h <- function(x){
-  x <- ifelse(x < 1e-6, 1e-6, ifelse(x > 1 - 1e-6, 1e-6, x))
-  -2*log(x)
-}
-vmc_5 <- kknn(g ~ x, train = dat,  k = 200,
-              test = dat, kernel = 'rectangular')
-dat_dev <- dat %>% select(x,g)
-dat_dev$hat_p_1 <- predict(vmc_5, type ='prob')[,1]
-dat_dev$hat_p_2 <- predict(vmc_5, type ='prob')[,2]
+s <- function(x) -2*log(x)
+
+vmc <- kknn(g ~ x, train = dat_ent,  k = 60,
+              test = dat_ent, kernel = 'rectangular')
+dat_dev <- dat_ent %>% select(x,g)
+dat_dev$hat_p_1 <- predict(vmc, type ='prob')[,1]
+dat_dev$hat_p_2 <- predict(vmc, type ='prob')[,2]
 dat_dev <- dat_dev %>% mutate(hat_p_g = ifelse(g==1, hat_p_1, hat_p_2))
 ```
 
@@ -431,24 +429,24 @@ probabilidad correspondiente a la columna hat_p_g:
 
 
 ```r
-tail(dat_dev, 30)
+head(dat_dev, 50)
 ```
 
 ```
-## # A tibble: 30 x 5
-##            x      g hat_p_1 hat_p_2 hat_p_g
-##        <dbl> <fctr>   <dbl>   <dbl>   <dbl>
-##  1  3.629547      1   0.945   0.055   0.945
-##  2 36.975212      1   0.840   0.160   0.840
-##  3 79.587499      1   0.680   0.320   0.680
-##  4  2.878901      1   0.945   0.055   0.945
-##  5 63.944601      1   0.705   0.295   0.705
-##  6  1.395961      1   0.945   0.055   0.945
-##  7  8.720574      1   0.940   0.060   0.940
-##  8 10.415431      1   0.930   0.070   0.930
-##  9 10.724991      1   0.930   0.070   0.930
-## 10 23.793922      1   0.900   0.100   0.900
-## # ... with 20 more rows
+## # A tibble: 50 x 5
+##             x      g   hat_p_1    hat_p_2   hat_p_g
+##         <dbl> <fctr>     <dbl>      <dbl>     <dbl>
+##  1  0.5320942      1 0.9666667 0.03333333 0.9666667
+##  2 25.3910853      1 0.8833333 0.11666667 0.8833333
+##  3 37.4805755      1 0.8500000 0.15000000 0.8500000
+##  4 20.8732917      1 0.9000000 0.10000000 0.9000000
+##  5 70.8899113      2 0.6000000 0.40000000 0.4000000
+##  6 14.8300636      1 0.9333333 0.06666667 0.9333333
+##  7 49.4363507      1 0.8000000 0.20000000 0.8000000
+##  8 20.9386771      1 0.9000000 0.10000000 0.9000000
+##  9 35.4585176      1 0.7500000 0.25000000 0.7500000
+## 10  9.8302441      1 0.9333333 0.06666667 0.9333333
+## # ... with 40 more rows
 ```
 
 Ahora aplicamos la función $h$ que describimos arriba, y promediamos sobre
@@ -456,7 +454,7 @@ el conjunto de entrenamiento:
 
 
 ```r
-dat_dev <- dat_dev %>% mutate(dev = h(hat_p_g))
+dat_dev <- dat_dev %>% mutate(dev = s(hat_p_g))
 dat_dev %>% ungroup %>% summarise(dev_entrena = mean(dev))
 ```
 
@@ -464,7 +462,7 @@ dat_dev %>% ungroup %>% summarise(dev_entrena = mean(dev))
 ## # A tibble: 1 x 1
 ##   dev_entrena
 ##         <dbl>
-## 1   0.7843025
+## 1   0.6997961
 ```
 
 Recordemos que la devianza de entrenamiento no es la cantidad que evalúa el
@@ -472,19 +470,19 @@ desempeño del modelo. Hagamos el cálculo entonces para una muestra de prueba:
 
 
 ```r
-set.seed(123)
+set.seed(1213)
 x <- pmin(rexp(1000,1/30),100)
 probs <- p_1(x)
 g <- ifelse(rbinom(length(x), 1, probs)==1 ,1, 2)
 dat_prueba <- data_frame(x = x, g = factor(g))
 
-vmc <- kknn(g ~ x, train = dat,  k = 200,
+vmc <- kknn(g ~ x, train = dat_ent,  k = 60,
               test = dat_prueba, kernel = 'rectangular')
 dat_dev <- dat_prueba %>% select(x,g)
 dat_dev$hat_p_1 <- predict(vmc, type ='prob')[,1]
 dat_dev$hat_p_2 <- predict(vmc, type ='prob')[,2]
 dat_dev <- dat_dev %>% mutate(hat_p_g = ifelse(g==1, hat_p_1, hat_p_2))
-dat_dev <- dat_dev %>% mutate(dev = h(hat_p_g))
+dat_dev <- dat_dev %>% mutate(dev = s(hat_p_g))
 dat_dev %>% ungroup %>% summarise(dev_prueba = mean(dev))
 ```
 
@@ -492,43 +490,22 @@ dat_dev %>% ungroup %>% summarise(dev_prueba = mean(dev))
 ## # A tibble: 1 x 1
 ##   dev_prueba
 ##        <dbl>
-## 1  0.7976629
+## 1  0.7113815
 ```
 
 
 ### Ejercicio
-Utiliza 5, 20, 80, 100, 200 y 400 vecinos más cercanos para nuestro ejemplo de tarjetas
+Utiliza 5, 20, 60, 200 y 400 vecinos más cercanos para nuestro ejemplo de tarjetas
 de crédito. ¿Cuál tiene menor devianza de prueba? ¿Cuál tiene menor devianza
 de entrenamiento? Grafica el mejor que obtengas y otros dos modelos malos. ¿Por qué
-crees que la devianza es muy grande para los modelos malos?
+crees que la devianza es muy grande para los modelos malos? 
 
-Empieza con el siguiente código:
+Nota: ten cuidado con probabilidades iguales a 0 o 1, pues en en estos casos
+la devianza puede dar $\infty$. Puedes por ejemplo hacer que las probabilidades
+siempre estén en $[\epsilon, 1-\epsilon]$ para $\epsilon>0$ chica.
 
+Empieza con el código en *clase_3_ejercicio.R*.
 
-```r
-dev_calc <- function(dat_entrena, dat_prueba){
-  devianza_prueba <- function(k){
-    vmc <- kknn(g ~ x, train = dat_entrena,  k = k,
-              test = dat_prueba, kernel = 'rectangular')
-    dat_prueba$hat_p_1 <- predict(vmc, type ='prob')[,1]
-    dat_prueba$hat_p_2 <- predict(vmc, type ='prob')[,2]
-    dat_prueba <- dat_prueba %>% 
-      mutate(hat_p_g = ifelse(g==1, hat_p_1, hat_p_2)) %>%
-      mutate(dev = h(hat_p_g))
-    error_prueba <- dat_prueba %>% ungroup %>% 
-      summarise(dev_prueba =mean(dev)) %>%
-      pull(dev_prueba)
-    error_prueba
-    }
-  devianza_prueba
-}
-dev_pr <- dev_calc(dat, dat_prueba)
-dev_pr(5)
-```
-
-```
-## [1] 14.55477
-```
 
 
 
@@ -565,8 +542,6 @@ Veamos cómo se comporta en términos de error de clasificación nuestro último
 
 
 ```r
-vmc <- kknn(g ~ x, train = dat,  k = 100,
-              test = dat_prueba, kernel = 'rectangular')
 dat_dev$hat_G <- predict(vmc)
 dat_dev %>% mutate(correcto = hat_G == g) %>% 
   ungroup %>% summarise(p_correctos = mean(correcto)) %>%
@@ -577,14 +552,14 @@ dat_dev %>% mutate(correcto = hat_G == g) %>%
 ## # A tibble: 1 x 2
 ##   p_correctos error_clasif
 ##         <dbl>        <dbl>
-## 1       0.827        0.173
+## 1       0.851        0.149
 ```
 
 
 ```r
-vmc <- kknn(g ~ x, train = dat,  k = 3,
+vmc_2 <- kknn(g ~ x, train = dat_ent,  k = 3,
               test = dat_prueba, kernel = 'rectangular')
-dat_dev$hat_G <- predict(vmc)
+dat_dev$hat_G <- predict(vmc_2)
 dat_dev %>% mutate(correcto = hat_G == g) %>% 
   ungroup %>% summarise(p_correctos = mean(correcto)) %>%
   mutate(error_clasif = 1 - p_correctos)
@@ -594,7 +569,7 @@ dat_dev %>% mutate(correcto = hat_G == g) %>%
 ## # A tibble: 1 x 2
 ##   p_correctos error_clasif
 ##         <dbl>        <dbl>
-## 1       0.808        0.192
+## 1        0.82         0.18
 ```
 
 ### Discusión: relación entre devianza y error de clasificación
@@ -702,7 +677,7 @@ h <- function(x){exp(x)/(1+exp(x)) }
 curve(h, from=-6, to =6)
 ```
 
-<img src="03-clasificacion_files/figure-html/unnamed-chunk-25-1.png" width="672" />
+<img src="03-clasificacion_files/figure-html/unnamed-chunk-24-1.png" width="672" />
 ```
 
 Esta función comprime adecuadamente (para nuestros propósitos) 
@@ -731,9 +706,9 @@ En nuestro ejemplo:
 
 ```r
 graf_data <- data_frame(x = seq(0,100, 1))
-vmc_5 <- kknn(g ~ x, train = dat,  k = 60,
+vmc_graf <- kknn(g ~ x, train = dat_ent,  k = 60,
               test = graf_data, kernel = 'rectangular')
-graf_data$p_1 <- vmc_5$prob[ ,1]
+graf_data$p_1 <- vmc_graf$prob[ ,1]
 graf_verdadero <- data_frame(x = 0:100, p_1 = p_1(x))
 graf_1 + 
   geom_line(data = graf_data, aes(y = p_1), colour = 'red', size=1.2) +
@@ -741,7 +716,7 @@ graf_1 +
   ylab('Probabilidad al corriente') + xlab('% crédito usado')
 ```
 
-<img src="03-clasificacion_files/figure-html/unnamed-chunk-27-1.png" width="672" />
+<img src="03-clasificacion_files/figure-html/unnamed-chunk-26-1.png" width="672" />
 
 Ahora intentaremos ajustar a mano (intenta cambiar
 las betas para p_mod_1 y p_mod_2 en el ejemplo de abajo) 
@@ -768,19 +743,19 @@ graf_1 +
   ylab('Probabilidad al corriente') + xlab('% crédito usado')
 ```
 
-<img src="03-clasificacion_files/figure-html/unnamed-chunk-28-1.png" width="672" />
+<img src="03-clasificacion_files/figure-html/unnamed-chunk-27-1.png" width="672" />
 
 Podemos usar también la función glm de R para ajustar los coeficientes:
 
 
 ```r
-mod_1 <- glm(g==1 ~ x, data = dat, family = 'binomial')
+mod_1 <- glm(g==1 ~ x, data = dat_ent, family = 'binomial')
 coef(mod_1)
 ```
 
 ```
 ## (Intercept)           x 
-##  3.07732994 -0.03733906
+##  3.24467326 -0.04353428
 ```
 
 ```r
@@ -795,7 +770,7 @@ graf_1 +
   ylab('Probabilidad al corriente') + xlab('% crédito usado')
 ```
 
-<img src="03-clasificacion_files/figure-html/unnamed-chunk-29-1.png" width="672" />
+<img src="03-clasificacion_files/figure-html/unnamed-chunk-28-1.png" width="672" />
 
 
 ### Regresión logística
@@ -914,16 +889,16 @@ Probemos nuestros cálculos con el ejemplo de 1 entrada de tarjetas de crédito.
 
 
 ```r
-dat$y <- as.numeric(dat$g==1)
-dat$x_s <- (dat$x - mean(dat$x))/sd(dat$x)
-devianza <- devianza_calc(dat[, 'x_s', drop = FALSE], dat$y)
-grad <- grad_calc(dat[, 'x_s', drop = FALSE], dat$y)
+dat_ent$y <- as.numeric(dat_ent$g==1)
+dat_ent <- dat_ent %>% ungroup %>% mutate(x_s = (x - mean(x))/sd(x))
+devianza <- devianza_calc(dat_ent[, 'x_s', drop = FALSE], dat_ent$y)
+grad <- grad_calc(dat_ent[, 'x_s', drop = FALSE], dat_ent$y)
 grad(c(0,1))
 ```
 
 ```
 ## Intercept       x_s 
-## -343.3876  365.3740
+## -354.2728  363.2408
 ```
 
 ```r
@@ -932,7 +907,7 @@ grad(c(0.5,-0.1))
 
 ```
 ## Intercept       x_s 
-## -207.8100  136.7175
+## -217.8069  140.9315
 ```
 Verificamos cálculo de gradiente:
 
@@ -941,7 +916,7 @@ Verificamos cálculo de gradiente:
 ```
 
 ```
-## [1] -207.7983
+## [1] -217.7951
 ```
 
 ```r
@@ -949,7 +924,7 @@ Verificamos cálculo de gradiente:
 ```
 
 ```
-## [1] 136.7294
+## [1] 140.9435
 ```
 Y hacemos descenso:
 
@@ -960,50 +935,50 @@ tail(iteraciones, 20)
 
 ```
 ##            [,1]      [,2]
-## [181,] 1.913531 -1.033536
-## [182,] 1.913531 -1.033536
-## [183,] 1.913531 -1.033537
-## [184,] 1.913531 -1.033537
-## [185,] 1.913531 -1.033537
-## [186,] 1.913531 -1.033537
-## [187,] 1.913531 -1.033537
-## [188,] 1.913531 -1.033537
-## [189,] 1.913531 -1.033537
-## [190,] 1.913531 -1.033537
-## [191,] 1.913531 -1.033537
-## [192,] 1.913531 -1.033537
-## [193,] 1.913531 -1.033537
-## [194,] 1.913531 -1.033537
-## [195,] 1.913531 -1.033537
-## [196,] 1.913531 -1.033537
-## [197,] 1.913531 -1.033537
-## [198,] 1.913532 -1.033537
-## [199,] 1.913532 -1.033537
-## [200,] 1.913532 -1.033537
+## [181,] 2.017177 -1.085143
+## [182,] 2.017177 -1.085143
+## [183,] 2.017178 -1.085144
+## [184,] 2.017178 -1.085144
+## [185,] 2.017178 -1.085144
+## [186,] 2.017178 -1.085144
+## [187,] 2.017178 -1.085144
+## [188,] 2.017179 -1.085144
+## [189,] 2.017179 -1.085144
+## [190,] 2.017179 -1.085144
+## [191,] 2.017179 -1.085144
+## [192,] 2.017179 -1.085144
+## [193,] 2.017179 -1.085145
+## [194,] 2.017179 -1.085145
+## [195,] 2.017179 -1.085145
+## [196,] 2.017180 -1.085145
+## [197,] 2.017180 -1.085145
+## [198,] 2.017180 -1.085145
+## [199,] 2.017180 -1.085145
+## [200,] 2.017180 -1.085145
 ```
 
 ```r
 plot(apply(iteraciones, 1, devianza))
 ```
 
-<img src="03-clasificacion_files/figure-html/unnamed-chunk-35-1.png" width="480" />
+<img src="03-clasificacion_files/figure-html/unnamed-chunk-34-1.png" width="480" />
 
 ```r
 matplot(iteraciones)
 ```
 
-<img src="03-clasificacion_files/figure-html/unnamed-chunk-35-2.png" width="480" />
+<img src="03-clasificacion_files/figure-html/unnamed-chunk-34-2.png" width="480" />
 
 Comparamos con glm:
 
 ```r
-mod_1 <- glm(y~x_s, data=dat, family = 'binomial') 
+mod_1 <- glm(y~x_s, data=dat_ent, family = 'binomial') 
 coef(mod_1)
 ```
 
 ```
 ## (Intercept)         x_s 
-##    1.913532   -1.033537
+##    2.017181   -1.085146
 ```
 
 ```r
@@ -1011,7 +986,7 @@ mod_1$deviance
 ```
 
 ```
-## [1] 373.8606
+## [1] 351.676
 ```
 
 ```r
@@ -1019,7 +994,7 @@ devianza(iteraciones[200,])
 ```
 
 ```
-## [1] 373.8606
+## [1] 351.676
 ```
 
 
@@ -1035,7 +1010,7 @@ de la muestra de entrenamiento está dada por:
  $$L(\beta) =\prod_{i=1}^N p_{y^{(i)}} (x^{(i)})$$
 Y la log verosimilitud es
 
- $$ll(\beta) =\sum_{i=1}^N \log(p_{y^{(i)}} (x^{(i)})).$$
+ $$l(\beta) =\sum_{i=1}^N \log(p_{y^{(i)}} (x^{(i)})).$$
 
 Así que ajustar el modelo minimizando la expresión
 \@ref(eq:devianza)
@@ -1075,19 +1050,19 @@ Consideremos el modelo ajustado:
 
 
 ```r
-head(dat)
+head(dat_ent)
 ```
 
 ```
 ## # A tibble: 6 x 5
 ##            x       p_1      g     y        x_s
 ##        <dbl>     <dbl> <fctr> <dbl>      <dbl>
-## 1 20.0112971 0.9149209      1     1 -0.4030769
-## 2  1.2461596 0.9500000      1     1 -1.0810133
-## 3  0.4717593 0.9500000      1     1 -1.1089904
-## 4 14.2580957 0.9500000      2     0 -0.6109254
-## 5 36.0420104 0.8027059      1     1  0.1760717
-## 6  1.8943146 0.9500000      1     1 -1.0575971
+## 1  0.5320942 0.9500000      1     1 -1.1098309
+## 2 25.3910853 0.8772624      1     1 -0.1125285
+## 3 37.4805755 0.7926360      1     1  0.3724823
+## 4 20.8732917 0.9088870      1     1 -0.2937750
+## 5 70.8899113 0.5587706      2     0  1.7128107
+## 6 14.8300636 0.9500000      1     1 -0.5362196
 ```
 
 ```r
@@ -1096,7 +1071,7 @@ coeficientes
 ```
 
 ```
-## [1]  1.913532 -1.033537
+## [1]  2.017180 -1.085145
 ```
 Como centramos todas las entradas, la ordenada al origen se interpreta
 como la probabilidad de clase cuando todas las variables están en su media:
@@ -1106,7 +1081,7 @@ h(coeficientes[1])
 ```
 
 ```
-## [1] 0.8714154
+## [1] 0.8825891
 ```
 
 
@@ -1122,7 +1097,7 @@ coeficientes[2]
 ```
 
 ```
-## [1] -1.033537
+## [1] -1.085145
 ```
 
 Y la probabilidad de estar al corriente cambia a 70\%:
@@ -1132,18 +1107,18 @@ h(coeficientes[1]+ coeficientes[2])
 ```
 
 ```
-## [1] 0.7068211
+## [1] 0.7174879
 ```
 
 Nótese que una desviación estándar de $x$ equivale a
 
 
 ```r
-sd(dat$x)
+sd(dat_ent$x)
 ```
 
 ```
-## [1] 27.67979
+## [1] 24.92623
 ```
 
 **Ojo**: En regresión lineal, las variables contribuyen independientemente
@@ -1260,7 +1235,7 @@ iteraciones <- descenso(1000, rep(0,p+1), 0.001, h_deriv = grad)
 matplot(iteraciones)
 ```
 
-<img src="03-clasificacion_files/figure-html/unnamed-chunk-48-1.png" width="672" />
+<img src="03-clasificacion_files/figure-html/unnamed-chunk-47-1.png" width="672" />
 
 
 ```r
@@ -1308,4 +1283,6 @@ mean(y_prueba != y_pred)
 ```
 ## [1] 0.1987952
 ```
+
+### Tarea {-}
 
