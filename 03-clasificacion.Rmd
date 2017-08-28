@@ -159,18 +159,18 @@ Vamos a generar unos datos con el modelo simple del ejemplo anterior:
 library(dplyr)
 library(tidyr)
 library(kknn)
-set.seed(192133)
+set.seed(1933)
 x <- pmin(rexp(500,1/30),100)
 probs <- p_1(x)
 g <- ifelse(rbinom(length(x), 1, probs)==1 ,1, 2)
-dat <- data_frame(x = x, p_1 = probs, g = factor(g))
-dat %>% select(x, g) 
+dat_ent <- data_frame(x = x, p_1 = probs, g = factor(g))
+dat_ent %>% select(x, g) 
 ```
 
 Como este problema es de dos clases, podemos graficar como sigue:
 
 ```{r}
-graf_1 <- ggplot(dat, aes(x = x)) +
+graf_1 <- ggplot(dat_ent, aes(x = x)) +
   geom_jitter(aes(colour = g, y = as.numeric(g=='1')), width=0, height=0.1)
 graf_1
 ```
@@ -218,9 +218,9 @@ más cercanos (curva roja):
 
 ```{r}
 graf_data <- data_frame(x = seq(0,100, 1))
-vmc_5 <- kknn(g ~ x, train = dat,  k = 60,
+vmc <- kknn(g ~ x, train = dat_ent,  k = 60,
               test = graf_data, kernel = 'rectangular')
-graf_data$p_1 <- vmc_5$prob[ ,1]
+graf_data$p_1 <- vmc$prob[ ,1]
 graf_verdadero <- data_frame(x = 0:100, p_1 = p_1(x))
 graf_1 + 
   geom_line(data = graf_data, aes(y = p_1), colour = 'red', size=1.2) +
@@ -371,15 +371,13 @@ Regresamos a nuestros ejemplo de impago de tarjetas de crédito. Primero
 calculamos la devianza de entrenamiento
 
 ```{r}
-h <- function(x){
-  x <- ifelse(x < 1e-6, 1e-6, ifelse(x > 1 - 1e-6, 1e-6, x))
-  -2*log(x)
-}
-vmc_5 <- kknn(g ~ x, train = dat,  k = 200,
-              test = dat, kernel = 'rectangular')
-dat_dev <- dat %>% select(x,g)
-dat_dev$hat_p_1 <- predict(vmc_5, type ='prob')[,1]
-dat_dev$hat_p_2 <- predict(vmc_5, type ='prob')[,2]
+s <- function(x) -2*log(x)
+
+vmc <- kknn(g ~ x, train = dat_ent,  k = 60,
+              test = dat_ent, kernel = 'rectangular')
+dat_dev <- dat_ent %>% select(x,g)
+dat_dev$hat_p_1 <- predict(vmc, type ='prob')[,1]
+dat_dev$hat_p_2 <- predict(vmc, type ='prob')[,2]
 dat_dev <- dat_dev %>% mutate(hat_p_g = ifelse(g==1, hat_p_1, hat_p_2))
 ```
 
@@ -387,14 +385,14 @@ Nótese que dependiendo de qué clase observamos (columna $g$), extraemos la
 probabilidad correspondiente a la columna hat_p_g:
 
 ```{r}
-tail(dat_dev, 30)
+head(dat_dev, 50)
 ```
 
 Ahora aplicamos la función $h$ que describimos arriba, y promediamos sobre
 el conjunto de entrenamiento:
 
 ```{r}
-dat_dev <- dat_dev %>% mutate(dev = h(hat_p_g))
+dat_dev <- dat_dev %>% mutate(dev = s(hat_p_g))
 dat_dev %>% ungroup %>% summarise(dev_entrena = mean(dev))
 ```
 
@@ -402,51 +400,35 @@ Recordemos que la devianza de entrenamiento no es la cantidad que evalúa el
 desempeño del modelo. Hagamos el cálculo entonces para una muestra de prueba:
 
 ```{r}
-set.seed(123)
+set.seed(1213)
 x <- pmin(rexp(1000,1/30),100)
 probs <- p_1(x)
 g <- ifelse(rbinom(length(x), 1, probs)==1 ,1, 2)
 dat_prueba <- data_frame(x = x, g = factor(g))
 
-vmc <- kknn(g ~ x, train = dat,  k = 200,
+vmc <- kknn(g ~ x, train = dat_ent,  k = 60,
               test = dat_prueba, kernel = 'rectangular')
 dat_dev <- dat_prueba %>% select(x,g)
 dat_dev$hat_p_1 <- predict(vmc, type ='prob')[,1]
 dat_dev$hat_p_2 <- predict(vmc, type ='prob')[,2]
 dat_dev <- dat_dev %>% mutate(hat_p_g = ifelse(g==1, hat_p_1, hat_p_2))
-dat_dev <- dat_dev %>% mutate(dev = h(hat_p_g))
+dat_dev <- dat_dev %>% mutate(dev = s(hat_p_g))
 dat_dev %>% ungroup %>% summarise(dev_prueba = mean(dev))
 ```
 
 
 ### Ejercicio
-Utiliza 5, 20, 80, 100, 200 y 400 vecinos más cercanos para nuestro ejemplo de tarjetas
+Utiliza 5, 20, 60, 200 y 400 vecinos más cercanos para nuestro ejemplo de tarjetas
 de crédito. ¿Cuál tiene menor devianza de prueba? ¿Cuál tiene menor devianza
 de entrenamiento? Grafica el mejor que obtengas y otros dos modelos malos. ¿Por qué
-crees que la devianza es muy grande para los modelos malos?
+crees que la devianza es muy grande para los modelos malos? 
 
-Empieza con el siguiente código:
+Nota: ten cuidado con probabilidades iguales a 0 o 1, pues en en estos casos
+la devianza puede dar $\infty$. Puedes por ejemplo hacer que las probabilidades
+siempre estén en $[\epsilon, 1-\epsilon]$ para $\epsilon>0$ chica.
 
-```{r}
-dev_calc <- function(dat_entrena, dat_prueba){
-  devianza_prueba <- function(k){
-    vmc <- kknn(g ~ x, train = dat_entrena,  k = k,
-              test = dat_prueba, kernel = 'rectangular')
-    dat_prueba$hat_p_1 <- predict(vmc, type ='prob')[,1]
-    dat_prueba$hat_p_2 <- predict(vmc, type ='prob')[,2]
-    dat_prueba <- dat_prueba %>% 
-      mutate(hat_p_g = ifelse(g==1, hat_p_1, hat_p_2)) %>%
-      mutate(dev = h(hat_p_g))
-    error_prueba <- dat_prueba %>% ungroup %>% 
-      summarise(dev_prueba =mean(dev)) %>%
-      pull(dev_prueba)
-    error_prueba
-    }
-  devianza_prueba
-}
-dev_pr <- dev_calc(dat, dat_prueba)
-dev_pr(5)
-```
+Empieza con el código en *clase_3_ejercicio.R*.
+
 
 
 
@@ -486,8 +468,6 @@ es decir, la proporción de casos de prueba que son clasificados incorrectamente
 Veamos cómo se comporta en términos de error de clasificación nuestro último modelo:
 
 ```{r}
-vmc <- kknn(g ~ x, train = dat,  k = 100,
-              test = dat_prueba, kernel = 'rectangular')
 dat_dev$hat_G <- predict(vmc)
 dat_dev %>% mutate(correcto = hat_G == g) %>% 
   ungroup %>% summarise(p_correctos = mean(correcto)) %>%
@@ -495,9 +475,9 @@ dat_dev %>% mutate(correcto = hat_G == g) %>%
 ```
 
 ```{r}
-vmc <- kknn(g ~ x, train = dat,  k = 3,
+vmc_2 <- kknn(g ~ x, train = dat_ent,  k = 3,
               test = dat_prueba, kernel = 'rectangular')
-dat_dev$hat_G <- predict(vmc)
+dat_dev$hat_G <- predict(vmc_2)
 dat_dev %>% mutate(correcto = hat_G == g) %>% 
   ungroup %>% summarise(p_correctos = mean(correcto)) %>%
   mutate(error_clasif = 1 - p_correctos)
@@ -633,9 +613,9 @@ En nuestro ejemplo:
 
 ```{r}
 graf_data <- data_frame(x = seq(0,100, 1))
-vmc_5 <- kknn(g ~ x, train = dat,  k = 60,
+vmc_graf <- kknn(g ~ x, train = dat_ent,  k = 60,
               test = graf_data, kernel = 'rectangular')
-graf_data$p_1 <- vmc_5$prob[ ,1]
+graf_data$p_1 <- vmc_graf$prob[ ,1]
 graf_verdadero <- data_frame(x = 0:100, p_1 = p_1(x))
 graf_1 + 
   geom_line(data = graf_data, aes(y = p_1), colour = 'red', size=1.2) +
@@ -670,7 +650,7 @@ graf_1 +
 Podemos usar también la función glm de R para ajustar los coeficientes:
 
 ```{r}
-mod_1 <- glm(g==1 ~ x, data = dat, family = 'binomial')
+mod_1 <- glm(g==1 ~ x, data = dat_ent, family = 'binomial')
 coef(mod_1)
 p_mod_final <- p_logistico(coef(mod_1)[1], coef(mod_1)[2])
 graf_data <- graf_data %>% 
@@ -802,10 +782,10 @@ descenso <- function(n, z_0, eta, h_deriv){
 Probemos nuestros cálculos con el ejemplo de 1 entrada de tarjetas de crédito.
 
 ```{r}
-dat$y <- as.numeric(dat$g==1)
-dat$x_s <- (dat$x - mean(dat$x))/sd(dat$x)
-devianza <- devianza_calc(dat[, 'x_s', drop = FALSE], dat$y)
-grad <- grad_calc(dat[, 'x_s', drop = FALSE], dat$y)
+dat_ent$y <- as.numeric(dat_ent$g==1)
+dat_ent <- dat_ent %>% ungroup %>% mutate(x_s = (x - mean(x))/sd(x))
+devianza <- devianza_calc(dat_ent[, 'x_s', drop = FALSE], dat_ent$y)
+grad <- grad_calc(dat_ent[, 'x_s', drop = FALSE], dat_ent$y)
 grad(c(0,1))
 grad(c(0.5,-0.1))
 ```
@@ -824,7 +804,7 @@ matplot(iteraciones)
 
 Comparamos con glm:
 ```{r}
-mod_1 <- glm(y~x_s, data=dat, family = 'binomial') 
+mod_1 <- glm(y~x_s, data=dat_ent, family = 'binomial') 
 coef(mod_1)
 mod_1$deviance
 devianza(iteraciones[200,])
@@ -843,7 +823,7 @@ de la muestra de entrenamiento está dada por:
  $$L(\beta) =\prod_{i=1}^N p_{y^{(i)}} (x^{(i)})$$
 Y la log verosimilitud es
 
- $$ll(\beta) =\sum_{i=1}^N \log(p_{y^{(i)}} (x^{(i)})).$$
+ $$l(\beta) =\sum_{i=1}^N \log(p_{y^{(i)}} (x^{(i)})).$$
 
 Así que ajustar el modelo minimizando la expresión
 \@ref(eq:devianza)
@@ -882,7 +862,7 @@ no linealidad introducida por la función logística.
 Consideremos el modelo ajustado:
 
 ```{r}
-head(dat)
+head(dat_ent)
 coeficientes <- iteraciones[200,]
 coeficientes
 ```
@@ -911,7 +891,7 @@ h(coeficientes[1]+ coeficientes[2])
 Nótese que una desviación estándar de $x$ equivale a
 
 ```{r}
-sd(dat$x)
+sd(dat_ent$x)
 ```
 
 **Ojo**: En regresión lineal, las variables contribuyen independientemente
@@ -1007,4 +987,6 @@ p_beta <- h(as.matrix(cbind(1, x_prueba)) %*% beta)
 y_pred <- as.numeric(p_beta > 0.5)
 mean(y_prueba != y_pred)
 ```
+
+### Tarea {-}
 
