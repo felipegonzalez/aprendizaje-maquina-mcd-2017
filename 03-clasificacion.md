@@ -1,4 +1,4 @@
-# Problemas de clasificación y regresión logística {#clasificacion}
+# Regresión logística {#logistica}
 
 
 
@@ -116,7 +116,8 @@ $1$ corresponde al corriente y $2$ representa impago.
   
 Estas son probabilidades, pues hay otras variables que influyen en que un cliente
 permanezca al corriente o no en sus pagos más allá de información contenida en el
-porcentaje de crédito usado.
+porcentaje de crédito usado. Nótese que estas probabilidades son diferentes
+a las no condicionadas, por ejempo, podríamos tener que a total $P(G=1)=0.83$.
 
 
 ```r
@@ -340,20 +341,20 @@ eventos con probabilidad estimada extremadamente baja).
 
 Quisiéramos encontrar una función $h$ apropiada, de forma que la pérdida
 al observar $(x, g)$ sea 
-$$h(\hat{p}_{g}(x)),$$
+$$s(\hat{p}_{g}(x)),$$
 y que cumpla con los puntos arriba señalados. Entonces tenemos que
 
-- $h$ debe ser una función continua y decreciente en $[0,1]$
-- Podemos poner $h(1)=0$ (no hay pérdida si ocurre algo con probabilidad 1)
-- $h(p)$ debe ser muy grande is $p$ es muy chica.
+- $s$ debe ser una función continua y decreciente en $[0,1]$
+- Podemos poner $s(1)=0$ (no hay pérdida si ocurre algo con probabilidad 1)
+- $s(p)$ debe ser muy grande is $p$ es muy chica.
 
 Una opción analíticamente conveniente es
-$$h(z) = - 2log(z)$$
+$$s(z) = - 2log(z)$$
 
 
 ```r
-h <- function(z){ -2*log(z)}
-curve(h, 0, 1)
+s <- function(z){ -2*log(z)}
+curve(s, 0, 1)
 ```
 
 <img src="03-clasificacion_files/figure-html/unnamed-chunk-12-1.png" width="288" />
@@ -406,17 +407,6 @@ que es una estimación de la devianza de predicción
 $$-2E\left [ \log(\hat{p}_G(X)) \right ]$$</div>\EndKnitrBlock{comentario}
 
 
-### Máxima verosimilitud {-}
-
-Si cambiamos el signo y tomamos exponencial de esta última cantidad 
-obtenemos
- $$\prod_{i=1}^N p_{g^{(i)}} (x^{(i)})$$
-Si ${\mathcal L}$ es una muestra de $(X,G)$, entonces esta expresión es
-la probabilidad (condicional a las $x$) de observar la muestra de 
-entrenamiento bajo el modelo. Así que ajustar el modelo minimizando la expresión
-\@ref(eq:devianza)
-es los mismo que hacer máxima verosimilitud.
-
 #### Ejemplo {-}
 
 Regresamos a nuestros ejemplo de impago de tarjetas de crédito. Primero
@@ -425,10 +415,10 @@ calculamos la devianza de entrenamiento
 
 ```r
 h <- function(x){
-  x <- ifelse(x < 0.0001, 0.0001, ifelse(x > 0.9999, 0.9999, x))
+  x <- ifelse(x < 1e-6, 1e-6, ifelse(x > 1 - 1e-6, 1e-6, x))
   -2*log(x)
 }
-vmc_5 <- kknn(g ~ x, train = dat,  k = 60,
+vmc_5 <- kknn(g ~ x, train = dat,  k = 200,
               test = dat, kernel = 'rectangular')
 dat_dev <- dat %>% select(x,g)
 dat_dev$hat_p_1 <- predict(vmc_5, type ='prob')[,1]
@@ -446,18 +436,18 @@ tail(dat_dev, 30)
 
 ```
 ## # A tibble: 30 x 5
-##            x      g   hat_p_1    hat_p_2   hat_p_g
-##        <dbl> <fctr>     <dbl>      <dbl>     <dbl>
-##  1  3.629547      1 0.9666667 0.03333333 0.9666667
-##  2 36.975212      1 0.8666667 0.13333333 0.8666667
-##  3 79.587499      1 0.6000000 0.40000000 0.6000000
-##  4  2.878901      1 0.9666667 0.03333333 0.9666667
-##  5 63.944601      1 0.7333333 0.26666667 0.7333333
-##  6  1.395961      1 0.9666667 0.03333333 0.9666667
-##  7  8.720574      1 0.9500000 0.05000000 0.9500000
-##  8 10.415431      1 0.9000000 0.10000000 0.9000000
-##  9 10.724991      1 0.9166667 0.08333333 0.9166667
-## 10 23.793922      1 0.9833333 0.01666667 0.9833333
+##            x      g hat_p_1 hat_p_2 hat_p_g
+##        <dbl> <fctr>   <dbl>   <dbl>   <dbl>
+##  1  3.629547      1   0.945   0.055   0.945
+##  2 36.975212      1   0.840   0.160   0.840
+##  3 79.587499      1   0.680   0.320   0.680
+##  4  2.878901      1   0.945   0.055   0.945
+##  5 63.944601      1   0.705   0.295   0.705
+##  6  1.395961      1   0.945   0.055   0.945
+##  7  8.720574      1   0.940   0.060   0.940
+##  8 10.415431      1   0.930   0.070   0.930
+##  9 10.724991      1   0.930   0.070   0.930
+## 10 23.793922      1   0.900   0.100   0.900
 ## # ... with 20 more rows
 ```
 
@@ -474,7 +464,7 @@ dat_dev %>% ungroup %>% summarise(dev_entrena = mean(dev))
 ## # A tibble: 1 x 1
 ##   dev_entrena
 ##         <dbl>
-## 1   0.7365614
+## 1   0.7843025
 ```
 
 Recordemos que la devianza de entrenamiento no es la cantidad que evalúa el
@@ -488,7 +478,7 @@ probs <- p_1(x)
 g <- ifelse(rbinom(length(x), 1, probs)==1 ,1, 2)
 dat_prueba <- data_frame(x = x, g = factor(g))
 
-vmc <- kknn(g ~ x, train = dat,  k = 400,
+vmc <- kknn(g ~ x, train = dat,  k = 200,
               test = dat_prueba, kernel = 'rectangular')
 dat_dev <- dat_prueba %>% select(x,g)
 dat_dev$hat_p_1 <- predict(vmc, type ='prob')[,1]
@@ -502,7 +492,7 @@ dat_dev %>% ungroup %>% summarise(dev_prueba = mean(dev))
 ## # A tibble: 1 x 1
 ##   dev_prueba
 ##        <dbl>
-## 1  0.8568372
+## 1  0.7976629
 ```
 
 
@@ -537,7 +527,7 @@ dev_pr(5)
 ```
 
 ```
-## [1] 1.430125
+## [1] 14.55477
 ```
 
 
@@ -568,14 +558,14 @@ de prueba
 $${\mathcal T}=\{ (x_0^{(1)},g_0^{(1)}),(x_0^{(2)},g_0^{(2)}), \ldots, (x_0^{(m)}, g_0^{(m)})$$
 mediante
 $$\hat{Err} = \frac{1}{m} \sum_{j=i}^m I(\hat{G}(x_0^{(i)}) \neq g_0^{(i)}),$$
-es decir, la proporción de casos de prueba que son clasificados correctamente.</div>\EndKnitrBlock{comentario}
+es decir, la proporción de casos de prueba que son clasificados incorrectamente.</div>\EndKnitrBlock{comentario}
 
 #### Ejemplo {-}
 Veamos cómo se comporta en términos de error de clasificación nuestro último modelo:
 
 
 ```r
-vmc <- kknn(g ~ x, train = dat,  k = 20,
+vmc <- kknn(g ~ x, train = dat,  k = 100,
               test = dat_prueba, kernel = 'rectangular')
 dat_dev$hat_G <- predict(vmc)
 dat_dev %>% mutate(correcto = hat_G == g) %>% 
@@ -587,7 +577,7 @@ dat_dev %>% mutate(correcto = hat_G == g) %>%
 ## # A tibble: 1 x 2
 ##   p_correctos error_clasif
 ##         <dbl>        <dbl>
-## 1       0.845        0.155
+## 1       0.827        0.173
 ```
 
 
@@ -607,7 +597,7 @@ dat_dev %>% mutate(correcto = hat_G == g) %>%
 ## 1       0.808        0.192
 ```
 
-#### Discusión: relación entre devianza y error de clasificación
+### Discusión: relación entre devianza y error de clasificación
 
 Cuando utilizamos devianza,
 el mejor desempeño se alcanza cuando las probabilidades $\hat{p}_g (x)$
@@ -630,8 +620,24 @@ el clasificador $\hat{G}(x)$ producido a partir de las $\hat{p}_g(x)$ deberá
 estar cercano a $G_{bayes}(x)$, que es el clasificador que minimiza el error
 de clasificación.
 
-Este argumento explica que buscar modelos con devianza baja no está enfrentado
-a buscar modelos con error de clasificación bajo.
+Este argumento explica que buscar modelos con devianza baja no está alineado
+con buscar modelos con error de clasificación bajo.
+
+Cuando sea posible, es mejor trabajar con probabilidades de clase y devianza que solamente
+con clasificadores y error de clasificación. Hay varias razones para esto:
+
+- Tenemos una medida de qué tan seguros estamos en la clasificación (por ejemplo,
+$p_1 = 0.55$ en vez de $p_1 = 0.995$). 
+- La salida de probabilides es un insumo más útil para tareas posteriores (por ejemplo,
+si quisiéramos ofrecer las 3 clases más probables en clasificación de imágenes).
+- Permite hacer selección de modelos de manera más atinada: por ejemplo, dada una
+misma tasa de correctos, preferimos aquellos modelos que lo hacen con probabilidades
+que discriminan más (más altas cuando está en lo correcto y más bajas cuando 
+se equivoca).
+
+
+
+
 
 ## Regresión logística
 
@@ -664,7 +670,7 @@ knitr::include_graphics(path = c("imagenes/clas_lineal.png", "imagenes/clas_noli
 Vamos a construir el modelo de regresión logística (binaria) 
 para una sola entrada.
 Suponemos que
-tenemos una sola entrada $X_1$, y que 
+tenemos una sola entrada $X_1$, y  
 que $G\in\{1,2\}$. Nos convendrá crear una nueva variable $Y$ dada por
 $Y=1$ si $G=2$, $Y=0$ si $G=1$. 
 
@@ -703,8 +709,6 @@ Esta función comprime adecuadamente (para nuestros propósitos)
 el rango de todos los reales dentro del intervalo $[0,1]$.
 
 
-Para $\beta_0$ y $\beta_1$ generales, 
-
 \BeginKnitrBlock{comentario}<div class="comentario">El modelo de regresión logística simple está dado por
 $$p_1(x)=p_1(x;\beta)= h(\beta_0+\beta_1x_1)= \frac{e^{\beta_0+\beta_1x_1}}{1+ e^{\beta_0+\beta_1x_1}},$$
 y $$p_0(x)=p_0(x;\beta)=1-p_1(x;\beta),$$
@@ -716,7 +720,7 @@ Este es un modelo paramétrico con 2 parámetros.
 
 - Demostrar que, si $p_1(x)$ está dado como en la ecuación anterior, entonces
 también podemos escribir:
-$$p_2(x)=\frac{1}{1+e^{\beta_0+\beta_1x_1}}.$$
+$$p_o(x)=\frac{1}{1+e^{\beta_0+\beta_1x_1}}.$$
 
 - Graficar las funciones $p_1(x;\beta)$ para distintos
 valores de $\beta_0$ y $\beta_1$.
@@ -826,10 +830,15 @@ $$p_1(x)=p_1(x;\beta)= h(\beta_0+\beta_1x_1 + \beta_2x_2 +\cdots + \beta_p x_p),
 
 y definimos la devianza sobre el conjunto de entrenamiento
 
-$$D(\beta) = -\sum_{i=1}^N \log(p_{y^{(i)}} (x^{(i)})).$$ 
+$$D(\beta) = -2\sum_{i=1}^N \log(p_{y^{(i)}} (x^{(i)})).$$ 
 
-Esta expresión puede ser difícil de operar, pero podemos reescribir como:
-$$D(\beta) = -\sum_{i=1}^N y_i \log(p_{1} (x^{(i)})) + (1-y^{(i)}) \log(p_{1} (x^{(i)})).$$ 
+Los **coeficientes estimados por regresión logística** están dados por
+$$\hat{\beta} = \arg\max_\beta D(\beta)$$
+
+Para minimizar utilizaremos descenso en gradiente (aunque hay más opciones).
+
+La última expresión para $D(\beta)$ puede ser difícil de operar, pero podemos reescribir como:
+$$D(\beta) = -2\sum_{i=1}^N y_i \log(p_{1} (x^{(i)})) + (1-y^{(i)}) \log(p_{1} (x^{(i)})).$$ 
 
 
 Para hacer descenso en gradiente, necesitamos encontrar $\frac{\partial D}{\beta_j}$
@@ -973,6 +982,18 @@ tail(iteraciones, 20)
 ## [200,] 1.913532 -1.033537
 ```
 
+```r
+plot(apply(iteraciones, 1, devianza))
+```
+
+<img src="03-clasificacion_files/figure-html/unnamed-chunk-35-1.png" width="480" />
+
+```r
+matplot(iteraciones)
+```
+
+<img src="03-clasificacion_files/figure-html/unnamed-chunk-35-2.png" width="480" />
+
 Comparamos con glm:
 
 ```r
@@ -1003,6 +1024,24 @@ devianza(iteraciones[200,])
 
 
 ## Observaciones adicionales
+
+
+#### Máxima verosimilitud {-}
+
+Es fácil ver que este método de estimación de los coeficientes (minimizando la
+devianza de entrenamiento) es el método de máxima verosimilitud.  La verosimilitud
+de la muestra de entrenamiento está dada por:
+
+ $$L(\beta) =\prod_{i=1}^N p_{y^{(i)}} (x^{(i)})$$
+Y la log verosimilitud es
+
+ $$ll(\beta) =\sum_{i=1}^N \log(p_{y^{(i)}} (x^{(i)})).$$
+
+Así que ajustar el modelo minimizando la expresión
+\@ref(eq:devianza)
+es los mismo que hacer máxima verosimilitud (condicional a los valores de $x$).
+
+
 
 #### Normalización {-}
 Igual que en regresión lineal, en regresión logística conviene normalizar
