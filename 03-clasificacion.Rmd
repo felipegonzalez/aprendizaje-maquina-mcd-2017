@@ -636,7 +636,7 @@ p_logistico <- function(beta_0, beta_1){
     h(z)
   }
 }
-p_mod_1 <- p_logistico(5, -0.1)
+p_mod_1 <- p_logistico(-20, 1)
 p_mod_2 <- p_logistico(3, -0.04)
 graf_data <- graf_data %>% 
   mutate(p_mod_1 = p_mod_1(x), p_mod_2 = p_mod_2(x))
@@ -701,12 +701,12 @@ y definimos la devianza sobre el conjunto de entrenamiento
 $$D(\beta) = -2\sum_{i=1}^N \log(p_{y^{(i)}} (x^{(i)})).$$ 
 
 Los **coeficientes estimados por regresión logística** están dados por
-$$\hat{\beta} = \arg\max_\beta D(\beta)$$
+$$\hat{\beta} = \arg\min_\beta D(\beta)$$
 
 Para minimizar utilizaremos descenso en gradiente (aunque hay más opciones).
 
 La última expresión para $D(\beta)$ puede ser difícil de operar, pero podemos reescribir como:
-$$D(\beta) = -2\sum_{i=1}^N y_i \log(p_{1} (x^{(i)})) + (1-y^{(i)}) \log(p_{1} (x^{(i)})).$$ 
+$$D(\beta) = -2\sum_{i=1}^N y_i \log(p_{1} (x^{(i)})) + (1-y^{(i)}) \log(p_{0} (x^{(i)})).$$ 
 
 
 Para hacer descenso en gradiente, necesitamos encontrar $\frac{\partial D}{\beta_j}$
