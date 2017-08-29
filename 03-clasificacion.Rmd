@@ -753,7 +753,7 @@ menores de lo que hicimos en regresión lineal:
 devianza_calc <- function(x, y){
   dev_fun <- function(beta){
     p_beta <- h(as.matrix(cbind(1, x)) %*% beta) 
-   -2*sum(y*log(p_beta) + (1-y)*log(1-p_beta))
+   -2*mean(y*log(p_beta) + (1-y)*log(1-p_beta))
   }
   dev_fun
 }
