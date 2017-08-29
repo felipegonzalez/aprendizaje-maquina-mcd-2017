@@ -25,7 +25,7 @@
 <meta name="author" content="Felipe González">
 
 
-<meta name="date" content="2017-08-28">
+<meta name="date" content="2017-08-29">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -684,7 +684,7 @@ Para un paso <span class="math inline">\(\eta&gt;0\)</span> fijo, la iteración 
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">devianza_calc &lt;-<span class="st"> </span><span class="cf">function</span>(x, y){
   dev_fun &lt;-<span class="st"> </span><span class="cf">function</span>(beta){
     p_beta &lt;-<span class="st"> </span><span class="kw">h</span>(<span class="kw">as.matrix</span>(<span class="kw">cbind</span>(<span class="dv">1</span>, x)) <span class="op">%*%</span><span class="st"> </span>beta) 
-   <span class="op">-</span><span class="dv">2</span><span class="op">*</span><span class="kw">sum</span>(y<span class="op">*</span><span class="kw">log</span>(p_beta) <span class="op">+</span><span class="st"> </span>(<span class="dv">1</span><span class="op">-</span>y)<span class="op">*</span><span class="kw">log</span>(<span class="dv">1</span><span class="op">-</span>p_beta))
+   <span class="op">-</span><span class="dv">2</span><span class="op">*</span><span class="kw">mean</span>(y<span class="op">*</span><span class="kw">log</span>(p_beta) <span class="op">+</span><span class="st"> </span>(<span class="dv">1</span><span class="op">-</span>y)<span class="op">*</span><span class="kw">log</span>(<span class="dv">1</span><span class="op">-</span>p_beta))
   }
   dev_fun
 }
@@ -722,9 +722,9 @@ grad &lt;-<span class="st"> </span><span class="kw">grad_calc</span>(dat_ent[, <
 ## -217.8069  140.9315</code></pre>
 <p>Verificamos cálculo de gradiente:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">(<span class="kw">devianza</span>(<span class="kw">c</span>(<span class="fl">0.5</span><span class="op">+</span><span class="fl">0.0001</span>,<span class="op">-</span><span class="fl">0.1</span>)) <span class="op">-</span><span class="st"> </span><span class="kw">devianza</span>(<span class="kw">c</span>(<span class="fl">0.5</span>,<span class="op">-</span><span class="fl">0.1</span>)))<span class="op">/</span><span class="fl">0.0001</span></code></pre></div>
-<pre><code>## [1] -217.7951</code></pre>
+<pre><code>## [1] -0.4355903</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">(<span class="kw">devianza</span>(<span class="kw">c</span>(<span class="fl">0.5</span>,<span class="op">-</span><span class="fl">0.1</span><span class="op">+</span><span class="fl">0.0001</span>)) <span class="op">-</span><span class="st"> </span><span class="kw">devianza</span>(<span class="kw">c</span>(<span class="fl">0.5</span>,<span class="op">-</span><span class="fl">0.1</span>)))<span class="op">/</span><span class="fl">0.0001</span></code></pre></div>
-<pre><code>## [1] 140.9435</code></pre>
+<pre><code>## [1] 0.281887</code></pre>
 <p>Y hacemos descenso:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">iteraciones &lt;-<span class="st"> </span><span class="kw">descenso</span>(<span class="dv">200</span>, <span class="dt">z_0=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">0</span>), <span class="dt">eta =</span> <span class="fl">0.001</span>, <span class="dt">h_deriv =</span> grad)
 <span class="kw">tail</span>(iteraciones, <span class="dv">20</span>)</code></pre></div>
@@ -761,7 +761,7 @@ grad &lt;-<span class="st"> </span><span class="kw">grad_calc</span>(dat_ent[, <
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mod_<span class="dv">1</span><span class="op">$</span>deviance</code></pre></div>
 <pre><code>## [1] 351.676</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">devianza</span>(iteraciones[<span class="dv">200</span>,])</code></pre></div>
-<pre><code>## [1] 351.676</code></pre>
+<pre><code>## [1] 0.703352</code></pre>
 </div>
 </div>
 <div id="observaciones-adicionales" class="section level2">
@@ -900,7 +900,7 @@ diabetes_coef</code></pre></div>
 y_prueba &lt;-<span class="st"> </span>diabetes_pr_s<span class="op">$</span>type <span class="op">==</span><span class="st"> &#39;Yes&#39;</span>
 dev_prueba &lt;-<span class="st"> </span><span class="kw">devianza_calc</span>(x_prueba, y_prueba)
 <span class="kw">dev_prueba</span>(iteraciones[<span class="dv">1000</span>,])</code></pre></div>
-<pre><code>## [1] 292.6239</code></pre>
+<pre><code>## [1] 0.8813972</code></pre>
 <p>Y para el error clasificación de prueba, necesitamos las probabilidades de clase ajustadas:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">beta &lt;-<span class="st"> </span>iteraciones[<span class="dv">1000</span>, ]
 p_beta &lt;-<span class="st"> </span><span class="kw">h</span>(<span class="kw">as.matrix</span>(<span class="kw">cbind</span>(<span class="dv">1</span>, x_prueba)) <span class="op">%*%</span><span class="st"> </span>beta) 

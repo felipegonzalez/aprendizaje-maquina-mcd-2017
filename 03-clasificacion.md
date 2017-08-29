@@ -859,7 +859,7 @@ menores de lo que hicimos en regresión lineal:
 devianza_calc <- function(x, y){
   dev_fun <- function(beta){
     p_beta <- h(as.matrix(cbind(1, x)) %*% beta) 
-   -2*sum(y*log(p_beta) + (1-y)*log(1-p_beta))
+   -2*mean(y*log(p_beta) + (1-y)*log(1-p_beta))
   }
   dev_fun
 }
@@ -916,7 +916,7 @@ Verificamos cálculo de gradiente:
 ```
 
 ```
-## [1] -217.7951
+## [1] -0.4355903
 ```
 
 ```r
@@ -924,7 +924,7 @@ Verificamos cálculo de gradiente:
 ```
 
 ```
-## [1] 140.9435
+## [1] 0.281887
 ```
 Y hacemos descenso:
 
@@ -994,7 +994,7 @@ devianza(iteraciones[200,])
 ```
 
 ```
-## [1] 351.676
+## [1] 0.703352
 ```
 
 
@@ -1268,7 +1268,7 @@ dev_prueba(iteraciones[1000,])
 ```
 
 ```
-## [1] 292.6239
+## [1] 0.8813972
 ```
 
 Y para el error clasificación de prueba, necesitamos las probabilidades de clase ajustadas:
