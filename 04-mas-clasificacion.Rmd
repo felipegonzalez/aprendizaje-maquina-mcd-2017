@@ -1,0 +1,256 @@
+# Más sobre problemas de clasificación
+
+En esta parte presentamos técnicas adicionales para evaluar el 
+desempeño de un modelo. En la parte anterior vimos que
+
+La **devianza** es una buena medida para ajustar y evaluar el desempeño de un modelo y 
+comparar modelos, y utilizar las probabilidades de clase. Sin embargo, es una medida de dificil de interpretar en cuanto 
+a los errores que podemos esperar del modelo.
+
+Por otro lado, la **tasa de clasificación incorrecta** puede
+usarse para evaluar el desempeño de un clasificador 
+(incluyendo uno derivado de probabilidades de clase), puede interpretarse
+con facilidad,
+pero se queda corta en muchas aplicaciones. Una deficiencia grande
+de esta medida es que, contrario al problema de regresión, hay errores
+de clasificación que son cualitativamente diferentes.
+
+#### Ejemplo {-}
+- Por ejemplo, diagnosticar a alguien con una enfermedad cuando no la tiene
+tiene consecuencias distintas a diagnosticar como libre de enfermedad a alguien
+que la tiene. Estas consecuencias dependen de qué tan agresivos, existosos y/o
+validados son los tratamientos consecuentes, de y qué tan peligrosa es la enfermedad.
+
+- Cuando usamos un buscador como Google, es cualitativamente diferente que el
+buscador omita resultados relevantes a que nos presente resultados irrelevantes.
+
+- ¿Otros ejemplos?
+
+En general, los costos de los distintos errores son distintos, y en muchos
+problemas quiséramos entenderlos y controlarlos individualmente. Aunque en teoría
+podríamos asignar costos a los errores y definir una función de pérdida apropiada,
+en la práctica esto muchas veces no es tan fácil o deseable. Podemos, sin embargo,
+reportar el tipo de errores que ocurren
+
+```{block2, type='comentario'}
+**Matriz de confusión**.
+Sea $\hat{G}$ un clasificador binario. La matriz de confusión $C$ de $\hat{G}$ está 
+dada por
+$$C_{i,j} = \text{Número de casos de la clase verdadera j que son clasificados como clase i
+ por el clasificador}$$
+```
+
+#### Ejemplo {-} 
+
+En un ejemplo de tres clases, podríamos obtener la matriz de confusión:
+
+```{r, echo=FALSE}
+tabla_1 <- data.frame(A=c(50,20,20), B=c(2,105,10), C=c(0,10,30))
+rownames(tabla_1) <- c('A.pred', 'B.pred', 'C.pred')
+tabla_1 <- as.table(as.matrix(tabla_1))
+knitr::kable(tabla_1)
+```
+
+Esto quiere decir que de 90 casos de clase $A$, sólo clasificamos
+a 50 en la clase correcta, de 117 casos de clase $B$, acertamos en 105, etcétera.
+Podemos ver esta tabla de distintas formas, por ejemplo, usando porcentajes
+por columna, nos dice cómo se distribuyen los casos de cada clase:
+
+```{r}
+knitr::kable(round(prop.table(tabla_1, 2),2))
+```
+
+Mientras que una tabla de porcentajes por renglón nos muestra
+qué pasa cada vez que hacemos una predicción dada:
+
+```{r}
+knitr::kable(round(prop.table(tabla_1, 1),2))
+```
+
+Ahora pensemos cómo podría sernos de utilidad esta tabla. Discute
+
+- El clasificador fuera uno de severidad de emergencias en un hospital,
+donde A=requiere atención inmediata B=urgente C=puede posponerse.
+- El clasificador fuera el tipo de producto que compran  clientes de un negocio
+A=producto premium, B=producto estándar, C=no compra`. Imagínate
+que el producto premium es caro pero requiere de atención personal de
+un agente de ventas para ser vendido.
+
+La tasa de incorrectas es la misma en los dos ejemplos, pero la adecuación
+del clasificador es muy diferente.
+
+## Análisis de error para clasificadores binarios
+
+Cuando la variable a predecir es binaria (dos clases), podemos
+etiquetar una clase como *positivo* y otra como *negativo*. En el fondo
+no importa cómo catalogemos cada clase, pero para problemas particulares
+una asignación puede ser más natural. Por ejemplo, en diagnóstico de 
+enfermedades, positivo=tiene la enfermedad, en análisis de crédito,
+positivo=cae en impago, en sistemas de recomendacion, positivo = le gusta
+el producto X, en recuperación de textos, positivo=el documento es relevante a la
+búsqueda, etc.
+
+
+```{block2, type='comentario'}
+Hay dos tipos de errores en un clasificador binario (positivo - negativo):
+
+- Falsos positivos (fp): clasificar como positivo a un caso negativo.
+- Falsos negativos (fn): clasificar como negativo a un caso positivo.
+
+A los casos clasificados correctamente les llamamos positivos verdaderos (pv)
+y negativos verdaderos (nv).
+```
+
+La matriz de confusion es entonces
+
+\begin{tabular*}{r|cc}
+ & positivo & negativo \\
+ \hline
+positivo.pred & pv & fp \\
+negativo.pred & fn & nv \\
+\end{tabular*}
+
+Nótese que un clasificador bueno, en general, es uno
+que tiene la mayor parte de los casos en la diagonal de la matriz
+de confusión.
+
+Podemos estudiar a nuestro clasificador en términos de las proporciones de casos que caen en cada celda, que dependen del desempeño del clasificador en cuanto a casos positivos y negativos. La nomenclatura es
+confusa, pues en distintas áreas se usan distintos nombres para estas proporciones:
+
+- Tasa de falsos positivos
+$$\frac{fp}{fp+nv}=\frac{fp}{negativos}$$
+
+- Tasa de falsos negativos
+$$\frac{fn}{pv+fn}=\frac{fn}{positivos}$$
+
+- Especificidad
+$$\frac{nv}{fp+nv}=\frac{nv}{negativos}$$
+
+- Sensibilidad o Recall
+$$\frac{pv}{pv+fn}=\frac{pv}{positivos}$$ 
+
+Y también otras que tienen como base las predicciones:
+
+- Valor predictivo positivo o Precisión
+$$\frac{vp}{vp+fp}=\frac{vp}{pred.positivo}$$
+
+- Valor predictivo negativo
+$$\frac{vn}{fn+vn}=\frac{vp}{pred.negativo}$$
+
+Y veremos otras que toman en cuenta ambos tipos de errores
+
+- Tasa de clasificación incorrecta
+- Medida F
+- AUC (area bajo la curva ROC)
+
+
+Dependiendo de el tema y el objetivo hay medidas más naturales que otras:
+
+- En pruebas clínicas, se usa típicamente sensibilidad y especificidad (proporción de positivos que detectamos y proporción de negativos que descartamos).
+- En búsqueda y recuperación de documentos (positivo=el documento es relevante, negativo=el documento no es relevante), se usa precisión y recall (precisión=de los documentos que entregamos (predicción positiva), cuáles son realmente positivos/relevantes, y recall=de todos los documentos relevantes, cuáles devolvemos). Aquí la tasa de falsos positivos (de todos los negativos, cuáles se predicen positivos), por ejemplo, no es de ayuda pues generalmente son bajas y no discriminan el desempeño de los clasificadores. La razón es que típicamente hay una gran cantidad de negativos, y se devuelven relativamente pocos documentos, de forma que la tasa de falsos positivos generalmente es muy pequeña.
+
+#### Ejercicio {-}
+¿Qué relaciones hay entre las cantidades mostradas arriba? 
+Por ejemplo: Escribe la tasa de clasificación incorrecta en términos
+de especificidad y sensibilidad.
+También intenta escribir valor predictivo positivo y valor predictivo negativo en términos de sensibilidad y especificidad.
+
+
+```{block2, type='comentario'}
+Cada clasificador tiene un balance distinto especificidad-sensibliidad. Muchas veces no escogemos clasificadores por la tasa
+de incorrectos solamente, sino que intentamos buscar un balance ade- cuado entre el comportamiento de clasificación para positivos y para negativos.
+```
+
+#### Ejercicio {-}
+Calcular la matriz de confusión (sobre la muestra de prueba) para el
+clasificador logístico de diabetes en términos de glucosa. Calcula 
+adicionalmente con la muestra de prueba sus valores de especificidad y sensibilidad, y precisión y recall.
+
+```{r, warnings=FALSE, messages=FALSE}
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+diabetes_ent <- as_data_frame(MASS::Pima.tr)
+diabetes_pr <- as_data_frame(MASS::Pima.te)
+mod_1 <- glm(type ~ glu, data = diabetes_ent, family = 'binomial')
+preds_prueba <- predict(mod_1, newdata = diabetes_pr, type ='response')
+```
+
+
+### Punto de corte para un clasificador binario
+
+¿Qué sucede cuando el perfil de sensibilidad y especificidad de un 
+clasificador binario no es apropiado para nuestros fines?
+Recordemos que una vez que hemos estimado con $\hat{p}_1(x)$, nuestra regla de clasificación es:
+
+1. Predecir positivo si $\hat{p}_1(x) > 0.5$, 
+2. Predecir negativo si $\hat{p}_1(x) < 0.5.$
+
+Esto sugiere una regla alternativa:
+
+
+Para $0 < d < 1$, podemos utilizar nuestras estimaciones $\hat{p}_1(x)$ para construir un clasificador alternativo poniendo:
+
+1. Predecir positivo si $\hat{p}_1(x) > d$, 
+2. Predecir negativo si $\hat{p}_1(x) < d$.
+
+
+Distintos valores de $d$ dan distintos perfiles de sensibilidad-especificidad para una misma estimación de las probabilidades condicionales de clase:
+Para minimizar la tasa de incorrectos conviene poner d = 0.5. Sin embargo, es común que este no es el único fin de un clasificador bueno (pensar en ejemplo de fraude).
+
+- Cuando incrementamos d, quiere decir que exigimos estar más seguros de que un caso es positivo para clasificarlo como positivo. Eso quiere decir que la especifidad va a ser más grande (entre
+los negativos verdaderos va a haber menos falsos positivos). Sin embargo, la sensibilidad va a ser más chica pues captamos menos de los verdaderos positivos.
+
+#### Ejemplo {-}
+Por ejemplo, si en el caso de diabetes incrementamos el punto de corte a 0.7:
+```{r}
+table(preds_prueba > 0.7, diabetes_pr$type)
+tab <- prop.table(table(preds_prueba > 0.7, diabetes_pr$type),2)
+tab
+```
+
+La especificidad ahora `r round(tab[1,1],2)` , muy alta (descartamos muy bien casos negativos), pero la sensibilidad se deteriora a `r round(tab[2,2],2)`
+
+
+- Cuando hacemos más chico d, entonces exigimos estar más segu- ros de que un caso es negativo para clasificarlo como negativo. Esto aumenta la sensibilidad, pero la especificidad baja.
+Por ejemplo, si en el caso de diabetes ponemos el punto de corte en 0.3:
+```{r}
+table(preds_prueba > 0.3, diabetes_pr$type)
+tab <- prop.table(table(preds_prueba > 0.3, diabetes_pr$type),2)
+tab
+```
+
+### Espacio ROC de clasificadores
+
+Podemos visualizar el desempeño de cada uno de estos clasificadores
+mapeándolos a las coordenadas de tasa de falsos positivos
+(1-especificidad) y sensibilidad:
+
+```{r, fig.width = 5, fig.asp =0.9}
+clasif_1 <- data.frame(
+  corte = c('0.3','0.5','0.7','perfecto','azar'),
+  tasa_falsos_pos=c(0.24,0.08,0.02,0,0.7),
+  sensibilidad =c(0.66, 0.46,0.19,1,0.7))
+ggplot(clasif_1, aes(x=tasa_falsos_pos, y=sensibilidad,
+  label=corte)) + geom_point() + 
+  geom_abline(intercept=0, slope=1) +
+  xlim(c(0,1)) +ylim(c(0,1)) + geom_text(hjust=-0.3, col='red')+
+  xlab('1-especificidad (tasa falsos pos)')
+
+```
+
+
+
+1. Nótese que agregamos otros dos clasificadores, uno perfecto, que tiene tasa de falsos positivos igual a 0 y sensibilidad igual a 1.
+2. En esta gráfica, un clasificador G2 que está arriba a la izquierda de G1 domina a G1, pues tiene mejor especificidad y mejor sensi- bilidad. Entre los clasificadores 0.4, 0.5 y 0.7 de la gráfica, no hay ninguno que domine a otro.
+3. Todos los clasificadores en la diagonal son equivalentes a un cla- sificador al azar. ¿Por qué? La razón es que si cada vez que vemos un nuevo caso lo clasificamos como positivo con probabilidad p fija y arbitraria. Esto implica que cuando veamos un caso positivo, la probabilidad de ’atinarle’ es de p (sensibilidad), y cuando vemos un negativo, la probabilidad de equivocarnos también es de p (tasa de falsos positivos). De modo que este clasificador al azar está en la diagonal.
+4. ¿Qué podemos decir acerca de clasificadores que caen por debajo de la diagonal? Estos son clasificadores particularmente malos, pues existen clasificadores con mejor especificidad y/o sensibili- dad que son clasificadores al azar! Sin embargo, se puede construir un mejor clasificador volteando las predicciones, lo que cambia sensibilidad por tasa de falsos positivos.
+5. ¿Cuál de los tres clasificadores es el mejor? En términos de la tasa de incorrectos, el de corte 0.5. Sin embargo, para otros propósitos puede ser razonable escoger alguno de los otros.
+
+## Problemas de clasificación multinomial
+
+
+## Regresión logística multinomial
+
+
+
