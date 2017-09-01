@@ -693,8 +693,8 @@ grad_calc &lt;-<span class="st"> </span><span class="cf">function</span>(x_ent, 
   salida_grad &lt;-<span class="st"> </span><span class="cf">function</span>(beta){
     p_beta &lt;-<span class="st"> </span><span class="kw">h</span>(<span class="kw">as.matrix</span>(<span class="kw">cbind</span>(<span class="dv">1</span>, x_ent)) <span class="op">%*%</span><span class="st"> </span>beta) 
     e &lt;-<span class="st"> </span>y_ent <span class="op">-</span><span class="st"> </span>p_beta
-    grad_out &lt;-<span class="st"> </span><span class="op">-</span><span class="dv">2</span><span class="op">*</span><span class="kw">apply</span>(<span class="kw">t</span>(<span class="kw">cbind</span>(<span class="dv">1</span>,x_ent)) <span class="op">%*%</span><span class="st"> </span>e, <span class="dv">1</span>, sum)
-    <span class="kw">names</span>(grad_out)[<span class="dv">1</span>] &lt;-<span class="st"> &#39;Intercept&#39;</span>
+    grad_out &lt;-<span class="st"> </span><span class="op">-</span><span class="dv">2</span><span class="op">*</span><span class="kw">as.numeric</span>(<span class="kw">t</span>(<span class="kw">cbind</span>(<span class="dv">1</span>,x_ent)) <span class="op">%*%</span><span class="st"> </span>e)
+    <span class="kw">names</span>(grad_out) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;Intercept&#39;</span>, <span class="kw">colnames</span>(x_ent))
     grad_out
   }
   salida_grad
