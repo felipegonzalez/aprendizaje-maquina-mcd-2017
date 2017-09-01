@@ -859,7 +859,7 @@ menores de lo que hicimos en regresión lineal:
 devianza_calc <- function(x, y){
   dev_fun <- function(beta){
     p_beta <- h(as.matrix(cbind(1, x)) %*% beta) 
-   -2*mean(y*log(p_beta) + (1-y)*log(1-p_beta))
+   -2*sum(y*log(p_beta) + (1-y)*log(1-p_beta))
   }
   dev_fun
 }
@@ -916,7 +916,7 @@ Verificamos cálculo de gradiente:
 ```
 
 ```
-## [1] -0.4355903
+## [1] -217.7951
 ```
 
 ```r
@@ -924,7 +924,7 @@ Verificamos cálculo de gradiente:
 ```
 
 ```
-## [1] 0.281887
+## [1] 140.9435
 ```
 Y hacemos descenso:
 
@@ -994,9 +994,19 @@ devianza(iteraciones[200,])
 ```
 
 ```
-## [1] 0.703352
+## [1] 351.676
 ```
 
+Nótese que esta devianza está calculada sin dividir intre entre el número de casos. Podemos calcular la devianza promedio de entrenamiento haciendo:
+
+
+```r
+devianza(iteraciones[200,])/nrow(dat_ent)
+```
+
+```
+## [1] 0.703352
+```
 
 ## Observaciones adicionales
 
@@ -1235,7 +1245,7 @@ iteraciones <- descenso(1000, rep(0,p+1), 0.001, h_deriv = grad)
 matplot(iteraciones)
 ```
 
-<img src="03-clasificacion_files/figure-html/unnamed-chunk-47-1.png" width="672" />
+<img src="03-clasificacion_files/figure-html/unnamed-chunk-48-1.png" width="672" />
 
 
 ```r
@@ -1264,7 +1274,7 @@ Ahora calculamos devianza de prueba y error de clasificación:
 x_prueba <- diabetes_pr_s %>% select(age:skin) %>% as.matrix
 y_prueba <- diabetes_pr_s$type == 'Yes'
 dev_prueba <- devianza_calc(x_prueba, y_prueba)
-dev_prueba(iteraciones[1000,])
+dev_prueba(iteraciones[1000,])/nrow(x_prueba)
 ```
 
 ```
