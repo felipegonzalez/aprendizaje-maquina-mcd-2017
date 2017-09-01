@@ -412,8 +412,8 @@ grad_calc <- function(x_ent, y_ent){
   salida_grad <- function(beta){
     f_beta <- as.matrix(cbind(1, x_ent)) %*% beta
     e <- y_ent - f_beta
-    grad_out <- -apply(t(cbind(1,x_ent)) %*% e, 1, sum)
-    names(grad_out)[1] <- 'Intercept'
+    grad_out <- -as.numeric(t(cbind(1,x_ent)) %*% e)
+    names(grad_out) <- c('Intercept', colnames(x_ent))
     grad_out
   }
   salida_grad

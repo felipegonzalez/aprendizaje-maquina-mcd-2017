@@ -762,8 +762,8 @@ grad_calc <- function(x_ent, y_ent){
   salida_grad <- function(beta){
     p_beta <- h(as.matrix(cbind(1, x_ent)) %*% beta) 
     e <- y_ent - p_beta
-    grad_out <- -2*apply(t(cbind(1,x_ent)) %*% e, 1, sum)
-    names(grad_out)[1] <- 'Intercept'
+    grad_out <- -2*as.numeric(t(cbind(1,x_ent)) %*% e)
+    names(grad_out) <- c('Intercept', colnames(x_ent))
     grad_out
   }
   salida_grad
@@ -814,7 +814,7 @@ Nótese que esta devianza está calculada sin dividir intre entre el número de 
 
 ```{r}
 devianza(iteraciones[200,])/nrow(dat_ent)
-``
+```
 
 ## Observaciones adicionales
 
