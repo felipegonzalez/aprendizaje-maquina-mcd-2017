@@ -814,7 +814,7 @@ Nótese que esta devianza está calculada sin dividir intre entre el número de 
 
 ```{r}
 devianza(iteraciones[200,])/nrow(dat_ent)
-``
+```
 
 ## Observaciones adicionales
 
