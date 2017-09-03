@@ -4,7 +4,7 @@ En esta parte presentamos técnicas adicionales para evaluar el
 desempeño de un modelo. En la parte anterior vimos que
 
 - La **devianza** es una buena medida para ajustar y evaluar el desempeño de un modelo y 
-comparar modelos, y utilizar las probabilidades de clase. Sin embargo, es una medida de dificil de interpretar en cuanto 
+comparar modelos, y utiliza las probabilidades de clase. Sin embargo, es una medida de dificil de interpretar en cuanto 
 a los errores que podemos esperar del modelo.
 
 - Por otro lado, la **tasa de clasificación incorrecta** puede
@@ -83,10 +83,11 @@ Ahora pensemos cómo podría sernos de utilidad esta tabla. Discute
 
 - El clasificador fuera uno de severidad de emergencias en un hospital,
 donde A=requiere atención inmediata B=urgente C=puede posponerse.
-- El clasificador fuera el tipo de producto que compran  clientes de un negocio
-A=producto premium, B=producto estándar, C=no compra`. Imagínate
-que el producto premium es caro pero requiere de atención personal de
-un agente de ventas para ser vendido.
+
+- El clasificador fuera de tipos de cliente de un negocio. Por ejemplo,
+A = cliente de gasto potencial alto, B=cliente medio, C=abandonador. Imagínate
+que tiene un costo intentar conservar a un abandonador, y hay una inversión
+alta para tratar a los clientes A.
 
 La tasa de incorrectas es la misma en los dos ejemplos, pero la adecuación
 del clasificador es muy diferente.
@@ -113,12 +114,26 @@ y negativos verdaderos (nv).</div>\EndKnitrBlock{comentario}
 
 La matriz de confusion es entonces
 
-\begin{tabular*}{r|cc}
- & positivo & negativo \\
- \hline
-positivo.pred & pv & fp \\
-negativo.pred & fn & nv \\
-\end{tabular*}
+
+
+```r
+library(dplyr)
+tabla <- data_frame('-' = c('positivo.pred','negativo.pred','total'),
+                    'positivo'=c('pv','fn','pos'),
+                    'negativo'=c('fp','nv','neg'),
+                    'total' = c('pred.pos','pred.neg',''))
+knitr::kable(tabla)
+```
+
+
+
+-               positivo   negativo   total    
+--------------  ---------  ---------  ---------
+positivo.pred   pv         fp         pred.pos 
+negativo.pred   fn         nv         pred.neg 
+total           pos        neg                 
+
+
 
 Nótese que un clasificador bueno, en general, es uno
 que tiene la mayor parte de los casos en la diagonal de la matriz
@@ -128,37 +143,59 @@ Podemos estudiar a nuestro clasificador en términos de las proporciones de caso
 confusa, pues en distintas áreas se usan distintos nombres para estas proporciones:
 
 - Tasa de falsos positivos
-$$\frac{fp}{fp+nv}=\frac{fp}{negativos}$$
+$$\frac{fp}{fp+nv}=\frac{fp}{neg}$$
 
 - Tasa de falsos negativos
-$$\frac{fn}{pv+fn}=\frac{fn}{positivos}$$
+$$\frac{fn}{pv+fn}=\frac{fn}{pos}$$
 
 - Especificidad
-$$\frac{nv}{fp+nv}=\frac{nv}{negativos}$$
+$$\frac{nv}{fp+nv}=\frac{nv}{neg}$$
 
 - Sensibilidad o Recall
-$$\frac{pv}{pv+fn}=\frac{pv}{positivos}$$ 
+$$\frac{pv}{pv+fn}=\frac{pv}{pos}$$ 
 
 Y también otras que tienen como base las predicciones:
 
 - Valor predictivo positivo o Precisión
-$$\frac{vp}{vp+fp}=\frac{vp}{pred.positivo}$$
+$$\frac{vp}{vp+fp}=\frac{vp}{pred.pos}$$
 
 - Valor predictivo negativo
-$$\frac{vn}{fn+vn}=\frac{vp}{pred.negativo}$$
+$$\frac{vn}{fn+vn}=\frac{vp}{pred.neg}$$
 
-Y veremos otras que toman en cuenta ambos tipos de errores
+Y hay varias medidas resumen que ponderan de distinta forma
 
 - Tasa de clasificación incorrecta
-- Medida F
-- AUC (area bajo la curva ROC)
+$$\frac{fn+fv}{neg+pos}$$
+
+- Medida F (media armónica de precisión y recall)
+$$2\frac{precision \cdot recall}{precision +  recall}$$
+
+- AUC (area bajo la curva ROC) ver más adelante
+
 - Kappa 
+$$\kappa = \frac{p_o - p_e}{1-p_e},$$
+donde $p_o =$ tasa de correctos, y 
+$p_e$ es la probabilidad de clasificar correctamente al azar, dado por 
+$$p_e = \frac{pos}{total}\frac{pred.pos}{total} + \frac{neg}{total}\frac{pred.neg}{total}$$
 
 
 Dependiendo de el tema y el objetivo hay medidas más naturales que otras:
 
 - En pruebas clínicas, se usa típicamente sensibilidad y especificidad (proporción de positivos que detectamos y proporción de negativos que descartamos).
 - En búsqueda y recuperación de documentos (positivo=el documento es relevante, negativo=el documento no es relevante), se usa precisión y recall (precisión=de los documentos que entregamos (predicción positiva), cuáles son realmente positivos/relevantes, y recall=de todos los documentos relevantes, cuáles devolvemos). Aquí la tasa de falsos positivos (de todos los negativos, cuáles se predicen positivos), por ejemplo, no es de ayuda pues generalmente son bajas y no discriminan el desempeño de los clasificadores. La razón es que típicamente hay una gran cantidad de negativos, y se devuelven relativamente pocos documentos, de forma que la tasa de falsos positivos generalmente es muy pequeña.
+- $\kappa$ señala un problema importante cuando interpretamos tasas de correctos. 
+Por ejemplo, supongamos que hay un 85\% de positivos y un 15\% de negativos. Si nuestro
+clasificador clasifica todo a positivo, nuestra tasa de correctos sería 85\% - pero
+nuestro clasificador no está aprovechando los datos. En este caso, 
+$$p_e = 0.85(1) + 0.15(0)= 0.85$$,
+y tenemos que  $\kappa = 0$ (similar al azar). Supongamos por otra parte
+que escogemos 50\% del tiempo positivo al azar. Esto quiere decir que
+tendríamos $p_o=0.5$. Pero
+$$p_e = 0.85(0.50) + 0.15(0.50) = 0.50,$$
+de modo que otra vez $\kappa = 0$. $\kappa$ es un valor entre 0 y 1 que mide
+qué tan superior es nuestro clasificador a uno dado al azar (uno que la predicción
+no tiene qué ver con la clase verdadera).
+
 
 #### Ejercicio {-}
 ¿Qué relaciones hay entre las cantidades mostradas arriba? 
@@ -168,7 +205,7 @@ También intenta escribir valor predictivo positivo y valor predictivo negativo 
 
 
 \BeginKnitrBlock{comentario}<div class="comentario">Cada clasificador tiene un balance distinto especificidad-sensibliidad. Muchas veces no escogemos clasificadores por la tasa
-de incorrectos solamente, sino que intentamos buscar un balance ade- cuado entre el comportamiento de clasificación para positivos y para negativos.</div>\EndKnitrBlock{comentario}
+de incorrectos solamente, sino que intentamos buscar un balance adecuado entre el comportamiento de clasificación para positivos y para negativos.</div>\EndKnitrBlock{comentario}
 
 #### Ejercicio {-}
 Calcular la matriz de confusión (sobre la muestra de prueba) para el
@@ -178,26 +215,6 @@ adicionalmente con la muestra de prueba sus valores de especificidad y sensibili
 
 ```r
 library(dplyr)
-```
-
-```
-## 
-## Attaching package: 'dplyr'
-```
-
-```
-## The following objects are masked from 'package:stats':
-## 
-##     filter, lag
-```
-
-```
-## The following objects are masked from 'package:base':
-## 
-##     intersect, setdiff, setequal, union
-```
-
-```r
 library(tidyr)
 library(ggplot2)
 diabetes_ent <- as_data_frame(MASS::Pima.tr)
@@ -214,7 +231,7 @@ clasificador binario no es apropiado para nuestros fines?
 Recordemos que una vez que hemos estimado con $\hat{p}_1(x)$, nuestra regla de clasificación es:
 
 1. Predecir positivo si $\hat{p}_1(x) > 0.5$, 
-2. Predecir negativo si $\hat{p}_1(x) < 0.5.$
+2. Predecir negativo si $\hat{p}_1(x) \leq 0.5.$
 
 Esto sugiere una regla alternativa:
 
@@ -222,11 +239,11 @@ Esto sugiere una regla alternativa:
 Para $0 < d < 1$, podemos utilizar nuestras estimaciones $\hat{p}_1(x)$ para construir un clasificador alternativo poniendo:
 
 1. Predecir positivo si $\hat{p}_1(x) > d$, 
-2. Predecir negativo si $\hat{p}_1(x) < d$.
+2. Predecir negativo si $\hat{p}_1(x) \leq d$.
 
 
 Distintos valores de $d$ dan distintos perfiles de sensibilidad-especificidad para una misma estimación de las probabilidades condicionales de clase:
-Para minimizar la tasa de incorrectos conviene poner d = 0.5. Sin embargo, es común que este no es el único fin de un clasificador bueno (pensar en ejemplo de fraude).
+Para minimizar la tasa de incorrectos conviene poner $d = 0.5$. Sin embargo, es común que este no es el único fin de un clasificador bueno (pensar en ejemplo de fraude).
 
 - Cuando incrementamos d, quiere decir que exigimos estar más seguros de que un caso es positivo para clasificarlo como positivo. Eso quiere decir que la especifidad va a ser más grande (entre
 los negativos verdaderos va a haber menos falsos positivos). Sin embargo, la sensibilidad va a ser más chica pues captamos menos de los verdaderos positivos.
@@ -260,7 +277,7 @@ tab
 La especificidad ahora 0.99 , muy alta (descartamos muy bien casos negativos), pero la sensibilidad se deteriora a 0.29
 
 
-- Cuando hacemos más chico d, entonces exigimos estar más segu- ros de que un caso es negativo para clasificarlo como negativo. Esto aumenta la sensibilidad, pero la especificidad baja.
+- Cuando hacemos más chico d, entonces exigimos estar más seguros de que un caso es negativo para clasificarlo como negativo. Esto aumenta la sensibilidad, pero la especificidad baja.
 Por ejemplo, si en el caso de diabetes ponemos el punto de corte en 0.3:
 
 ```r
@@ -305,18 +322,18 @@ ggplot(clasif_1, aes(x=tasa_falsos_pos, y=sensibilidad,
   xlab('1-especificidad (tasa falsos pos)')
 ```
 
-<img src="04-mas-clasificacion_files/figure-html/unnamed-chunk-10-1.png" width="480" />
+<img src="04-mas-clasificacion_files/figure-html/unnamed-chunk-11-1.png" width="480" />
 
 
 
 1. Nótese que agregamos otros dos clasificadores, uno perfecto, que tiene tasa de falsos positivos igual a 0 y sensibilidad igual a 1.
-2. En esta gráfica, un clasificador G2 que está arriba a la izquierda de G1 domina a G1, pues tiene mejor especificidad y mejor sensi- bilidad. Entre los clasificadores 0.4, 0.5 y 0.7 de la gráfica, no hay ninguno que domine a otro.
-3. Todos los clasificadores en la diagonal son equivalentes a un clasificador al azar. ¿Por qué? La razón es que si cada vez que vemos un nuevo caso lo clasificamos como positivo con probabilidad p fija y arbitraria. Esto implica que cuando veamos un caso positivo, la probabilidad de ’atinarle’ es de p (sensibilidad), y cuando vemos un negativo, la probabilidad de equivocarnos también es de p (tasa de falsos positivos). De modo que este clasificador al azar está en la diagonal.
-4. ¿Qué podemos decir acerca de clasificadores que caen por debajo de la diagonal? Estos son clasificadores particularmente malos, pues existen clasificadores con mejor especificidad y/o sensibili- dad que son clasificadores al azar! Sin embargo, se puede construir un mejor clasificador volteando las predicciones, lo que cambia sensibilidad por tasa de falsos positivos.
+2. En esta gráfica, un clasificador $G_2$ que está arriba a la izquierda de $G_1$
+domina a $G_1$, pues tiene mejor especificidad y mejor sensibilidad. Entre los clasificadores 0.3, 0.5 y 0.7 de la gráfica, no hay ninguno que domine a otro.
+3. Todos los clasificadores en la diagonal son equivalentes a un clasificador al azar. ¿Por qué? La razón es que si cada vez que vemos un nuevo caso lo clasificamos como positivo con probabilidad $p$ fija y arbitraria. Esto implica que cuando veamos un caso positivo, la probabilidad de ’atinarle’ es de p (sensibilidad), y cuando vemos un negativo, la probabilidad de equivocarnos también es de p (tasa de falsos positivos). De modo que este clasificador al azar está en la diagonal.
+4. ¿Qué podemos decir acerca de clasificadores que caen por debajo de la diagonal? Estos son clasificadores particularmente malos, pues existen clasificadores con mejor especificidad y/o sensibilidad que son clasificadores al azar! Sin embargo, se puede construir un mejor clasificador volteando las predicciones, lo que cambia sensibilidad por tasa de falsos positivos.
 5. ¿Cuál de los tres clasificadores es el mejor? En términos de la tasa de incorrectos, el de corte 0.5. Sin embargo, para otros propósitos puede ser razonable escoger alguno de los otros.
 
-### Perfil de un clasificador binario y curvas ROC{-}
-
+## Perfil de un clasificador binario y curvas ROC
 
 En lugar de examinar cada punto de corte por separado, podemos hacer el análisis de todos los posibles puntos de corte mediante la curva ROC (receiver operating characteristic, de ingeniería).
 \BeginKnitrBlock{comentario}<div class="comentario"> Para un problema de clasificación binaria, dadas estimaciones $\hat{p}(x)$, 
@@ -349,7 +366,7 @@ head(arrange(diabetes_pr, desc(probs_prueba_1)))
 tableplot(diabetes_pr, sortCol = probs_prueba_1)
 ```
 
-<img src="04-mas-clasificacion_files/figure-html/unnamed-chunk-12-1.png" width="672" />
+<img src="04-mas-clasificacion_files/figure-html/unnamed-chunk-13-1.png" width="672" />
 
 
 La columna de probabilidad de la derecha nos dice en qué valores
@@ -374,13 +391,31 @@ ggplot(graf_roc_1, aes(x = tfp, y = sens, colour=d)) + geom_point() +
   xlab('1-especificidad') + ylab('Sensibilidad') 
 ```
 
-<img src="04-mas-clasificacion_files/figure-html/unnamed-chunk-13-1.png" width="672" />
+<img src="04-mas-clasificacion_files/figure-html/unnamed-chunk-14-1.png" width="672" />
 
 En esta gráfica podemos ver todos los clasificadores posibles basados
 en las probabilidades de clase. Podemos usar estas curvas como evaluación
 de nuestros clasificadores, dejando para más tarde la selección del punto de
 corte, si esto es necesario (por ejemplo, dependiendo de los costos de cada
 tipo de error).
+
+También podemos definir una medida resumen del desempeño de un clasificador según
+esta curva:
+
+\BeginKnitrBlock{comentario}<div class="comentario">La medida AUC (area under the curve) para un clasificador es el área 
+bajo la curva generada por los pares sensibilidad-especificidad de la curva ROC.</div>\EndKnitrBlock{comentario}
+
+
+```r
+auc_1 <- performance(pred_rocr, measure = 'auc')@y.values
+auc_1
+```
+
+```
+## [[1]]
+## [1] 0.7970543
+```
+
 
 También es útil para comparar modelos. Consideremos el modelo de los datos
 de diabetes que incluyen todas las variables:
@@ -409,7 +444,7 @@ head(arrange(diabetes_pr, desc(probs_prueba_2)))
 tableplot(diabetes_pr, sortCol = probs_prueba_2)
 ```
 
-<img src="04-mas-clasificacion_files/figure-html/unnamed-chunk-14-1.png" width="672" />
+<img src="04-mas-clasificacion_files/figure-html/unnamed-chunk-17-1.png" width="672" />
 
 
 Y graficamos juntas:
@@ -419,6 +454,7 @@ Y graficamos juntas:
 library(ROCR)
 pred_rocr <- prediction(diabetes_pr$probs_prueba_2, diabetes_pr$type) 
 perf <- performance(pred_rocr, measure = "sens", x.measure = "fpr") 
+auc_2 <- performance(pred_rocr, measure = "auc")@y.values
 graf_roc_2 <- data_frame(tfp = perf@x.values[[1]], sens = perf@y.values[[1]], 
                        d = perf@alpha.values[[1]])
 
@@ -430,7 +466,28 @@ ggplot(graf_roc, aes(x = tfp, y = sens, colour = modelo)) + geom_point() +
   xlab('1-especificidad') + ylab('Sensibilidad') 
 ```
 
-<img src="04-mas-clasificacion_files/figure-html/unnamed-chunk-15-1.png" width="672" />
+<img src="04-mas-clasificacion_files/figure-html/unnamed-chunk-18-1.png" width="672" />
+
+Comparación auc:
+
+
+```r
+auc_1
+```
+
+```
+## [[1]]
+## [1] 0.7970543
+```
+
+```r
+auc_2
+```
+
+```
+## [[1]]
+## [1] 0.8658823
+```
 
 En este ejemplo, vemos que casi no importa que perfil de especificidad y sensibilidad busquemos: el clasificador que usa todas las variables
 domina casi siempre al clasificador que sólo utiliza las variables de glucosa. 
@@ -439,7 +496,7 @@ en este caso, el modelo de una variable puede ser ligeramente superior.
 
 ## Regresión logística para problemas de más de 2 clases
 
-Consideramos ahora un problema con más de dos clases, de ma- nera que $G ∈ {1,2,...,K}$
+Consideramos ahora un problema con más de dos clases, de manera que $G ∈ {1,2,...,K}$
 ($K$ clases), y tenemos $X = (X1 ...,Xp)$ entradas.
 ¿Cómo generalizar el modelo de regresión logística a este problema?
 Una estrategia es la de uno contra todos:
@@ -712,7 +769,7 @@ ggplot(tab_cruzada, aes(x=x, y=y)) + geom_tile(aes(fill = dif_p)) +
   facet_grid(digito_1~digito)+scale_fill_distiller(palette = "Spectral")
 ```
 
-<img src="04-mas-clasificacion_files/figure-html/unnamed-chunk-22-1.png" width="672" />
+<img src="04-mas-clasificacion_files/figure-html/unnamed-chunk-26-1.png" width="672" />
 
 
 
@@ -823,21 +880,21 @@ es menor el error?
 
 ## Descenso en gradiente para regresión multinomial logística
 
-Supondremos $K$ clases, 
+Supondremos $K$ clases, numeradas de $0,1,\ldots, K-1$. *OJO*: al aplicar
+este código debes ser cuidadoso con las etiquetas de clase.
 
 
 ```r
 pred_ml <- function(x, beta){
   p <- ncol(x)
-  K <- length(beta)/(p+1)
-  beta_mat <- matrix(beta, K, p + 1 , byrow = TRUE)
+  K <- length(beta)/(p+1) + 1
+  beta_mat <- matrix(beta, K - 1, p + 1 , byrow = TRUE)
   u_beta <- exp(as.matrix(cbind(1, x)) %*% t(beta_mat))
-  Z <- apply(u_beta, 1, sum)
-  p_beta <- u_beta/Z
+  Z <- 1 + apply(u_beta, 1, sum)
+  p_beta <- cbind(u_beta, 1)/Z
   as.matrix(p_beta)
 }
-  
-  
+
 devianza_calc <- function(x, y){
   dev_fun <- function(beta){
     p_beta <- pred_ml(x, beta)
@@ -849,23 +906,26 @@ devianza_calc <- function(x, y){
 
 grad_calc <- function(x_ent, y_ent){
   p <- ncol(x_ent)
-  K <- length(unique(y_ent))
-  #param_l <- (K-1)*(p+1)
+  K <- length(unique(y_ent)) 
+  y_fact <- factor(y_ent) 
+  # matriz de indicadoras de clase
+  y_dummy <-  model.matrix(~-1 + y_fact)
   salida_grad <- function(beta){
     p_beta <-  pred_ml(x_ent, beta)
-    ff <- factor(y_ent) 
-    y_dummy <-  model.matrix(~-1+ff) 
-    e_mat <-  y_dummy  - p_beta
+    e_mat <-  (y_dummy  - p_beta)[, -K]
     grad_out <- -2*(t(cbind(1,x_ent)) %*% e_mat)
     as.numeric(grad_out)
   }
   salida_grad
 }
-descenso <- function(n, z_0, eta, h_deriv){
+descenso <- function(n, z_0, eta, h_deriv, dev_fun){
   z <- matrix(0,n, length(z_0))
   z[1, ] <- z_0
   for(i in 1:(n-1)){
     z[i+1, ] <- z[i, ] - eta * h_deriv(z[i, ])
+    if(i %% 100 == 0){
+      print(paste0(i, ' Devianza: ', dev_fun(z[i+1, ])))
+    }
   }
   z
 }
@@ -876,34 +936,101 @@ descenso <- function(n, z_0, eta, h_deriv){
 ```r
 x_ent <- digitos_entrena %>% select(contains('pixel')) %>% as.matrix
 y_ent <- digitos_entrena$digito
-beta <- runif(257*10)
-dev_ent <- devianza_calc(x_ent, y_ent)
-grad <- grad_calc(x_ent, y_ent)
+x_pr <- digitos_prueba %>% select(contains('pixel')) %>% as.matrix
+y_pr <- digitos_prueba$digito
+beta <- runif(257*9)
+dev_ent <- devianza_calc(scale(x_ent), y_ent)
+grad <- grad_calc(scale(x_ent), y_ent)
 dev_ent(beta)
 ```
 
 ```
-## [1] 121153.2
+## [1] 278912.6
 ```
+
+Hacemos algunas revisiiones del gradiente:
 
 
 ```r
 beta_2 <- beta 
 epsilon <- 0.00001
-beta_2[10] <- beta[10] + epsilon
+beta_2[1000] <- beta[1000] + epsilon
 
 (dev_ent(beta_2) - dev_ent(beta))/epsilon
 ```
 
 ```
-## [1] -103.0393
+## [1] -950.4275
 ```
 
 
 ```r
-grad(beta)[10]
+grad(beta)[1000]
 ```
 
 ```
-## [1] -103.0397
+## [1] -950.4288
+```
+
+Ya ahora podemos hacer descenso:
+
+
+```r
+iteraciones <- descenso(2000, rep(0, 257*9), eta=0.001, 
+                        h_deriv = grad, dev_fun = dev_ent)
+```
+
+```
+## [1] "100 Devianza: 817.809554010357"
+## [1] "200 Devianza: 408.010947736697"
+## [1] "300 Devianza: 289.951542494061"
+## [1] "400 Devianza: 227.805737974779"
+## [1] "500 Devianza: 190.43408903327"
+## [1] "600 Devianza: 165.487702748531"
+## [1] "700 Devianza: 147.301091651991"
+## [1] "800 Devianza: 133.221066964653"
+## [1] "900 Devianza: 121.903186824327"
+## [1] "1000 Devianza: 112.560175747607"
+## [1] "1100 Devianza: 104.688785448699"
+## [1] "1200 Devianza: 97.9483674585563"
+## [1] "1300 Devianza: 92.0984398108757"
+## [1] "1400 Devianza: 86.9631199039947"
+## [1] "1500 Devianza: 82.4103777725155"
+## [1] "1600 Devianza: 78.3393471851082"
+## [1] "1700 Devianza: 74.6718258066508"
+## [1] "1800 Devianza: 71.3463032980959"
+## [1] "1900 Devianza: 68.3137316150628"
+```
+
+```r
+x_ent_s <- scale(x_ent)
+medias <- attr(x_ent_s, 'scaled:center')
+sd <- attr(x_ent_s, 'scaled:scale')
+x_pr_s <- scale(x_pr, center = medias, scale = sd)
+probas <- pred_ml(x_pr_s, iteraciones[2000,])
+clase <- apply(probas, 1, which.max)
+table(clase - 1, y_pr )
+```
+
+```
+##    y_pr
+##       0   1   2   3   4   5   6   7   8   9
+##   0 347   0   4   1   3   3   1   1   7   0
+##   1   0 252   0   0   4   0   0   1   0   1
+##   2   2   1 168   4   7   1   7   2   5   0
+##   3   2   5   5 148   2   6   0   2   1   0
+##   4   4   0   5   1 168   2   2   5   2   3
+##   5   1   0   2   8   3 139   3   0   6   1
+##   6   0   3   2   1   3   2 156   0   2   0
+##   7   1   1   4   1   3   0   0 133   2   3
+##   8   1   1   8   1   3   5   1   0 136   3
+##   9   1   1   0   1   4   2   0   3   5 166
+```
+
+```r
+1 - mean(clase-1 != y_pr)
+```
+
+```
+## [1] 0.9033383
 ```
