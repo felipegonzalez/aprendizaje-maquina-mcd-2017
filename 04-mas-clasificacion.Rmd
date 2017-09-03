@@ -3,11 +3,11 @@
 En esta parte presentamos técnicas adicionales para evaluar el 
 desempeño de un modelo. En la parte anterior vimos que
 
-La **devianza** es una buena medida para ajustar y evaluar el desempeño de un modelo y 
+- La **devianza** es una buena medida para ajustar y evaluar el desempeño de un modelo y 
 comparar modelos, y utilizar las probabilidades de clase. Sin embargo, es una medida de dificil de interpretar en cuanto 
 a los errores que podemos esperar del modelo.
 
-Por otro lado, la **tasa de clasificación incorrecta** puede
+- Por otro lado, la **tasa de clasificación incorrecta** puede
 usarse para evaluar el desempeño de un clasificador 
 (incluyendo uno derivado de probabilidades de clase), puede interpretarse
 con facilidad,
@@ -18,8 +18,7 @@ de clasificación que son cualitativamente diferentes.
 #### Ejemplo {-}
 - Por ejemplo, diagnosticar a alguien con una enfermedad cuando no la tiene
 tiene consecuencias distintas a diagnosticar como libre de enfermedad a alguien
-que la tiene. Estas consecuencias dependen de qué tan agresivos, existosos y/o
-validados son los tratamientos consecuentes, de y qué tan peligrosa es la enfermedad.
+que la tiene. Estas consecuencias dependen de cómo son son los tratamientos consecuentes, de y qué tan peligrosa es la enfermedad.
 
 - Cuando usamos un buscador como Google, es cualitativamente diferente que el
 buscador omita resultados relevantes a que nos presente resultados irrelevantes.
@@ -36,8 +35,9 @@ reportar el tipo de errores que ocurren
 **Matriz de confusión**.
 Sea $\hat{G}$ un clasificador binario. La matriz de confusión $C$ de $\hat{G}$ está 
 dada por
-$$C_{i,j} = \text{Número de casos de la clase verdadera j que son clasificados como clase i
- por el clasificador}$$
+
+$C_{i,j} = $\text{Número de casos de la clase verdadera j que son clasificados como clase i
+ por el clasificador}$
 ```
 
 #### Ejemplo {-} 
@@ -279,7 +279,7 @@ cuando cortamos más abajo.
 Vamos a graficar todos los pares (1-especificidad, sensibilidad)
 para cada punto de corte $d$ de estas probabilidades.
 
-```{r}
+```{r, message=FALSE, warning=FALSE}
 library(ROCR)
 pred_rocr <- prediction(diabetes_pr$probs_prueba_1, diabetes_pr$type) 
 perf <- performance(pred_rocr, measure = "sens", x.measure = "fpr") 
@@ -496,7 +496,7 @@ mod_mult <- multinom(digito ~ ., data = digitos_entrena, MaxNWt=100000, maxit = 
 ```
 
 
-```{r}
+```{r, cache = TRUE}
 confusion_prueba <- table(predict(mod_mult, newdata = digitos_prueba), digitos_prueba$digito)
 confusion_prueba
 sum(diag(confusion_prueba))/sum(confusion_prueba)
@@ -510,4 +510,73 @@ Y nota que el error es más grande que cuando nos detuvimos antes. Discute en cl
 es menor el error?
 - ¿Cuál crees que es el problema de este segundo modelo comparado con el primero? ¿Por qué crees que sucede? ¿Cómo podríamos corregir este problema?
 
+## Descenso en gradiente para regresión multinomial logística
 
+Supondremos $K$ clases, 
+
+```{r}
+pred_ml <- function(x, beta){
+  p <- ncol(x)
+  K <- length(beta)/(p+1)
+  beta_mat <- matrix(beta, K, p + 1 , byrow = TRUE)
+  u_beta <- exp(as.matrix(cbind(1, x)) %*% t(beta_mat))
+  Z <- apply(u_beta, 1, sum)
+  p_beta <- u_beta/Z
+  as.matrix(p_beta)
+}
+  
+  
+devianza_calc <- function(x, y){
+  dev_fun <- function(beta){
+    p_beta <- pred_ml(x, beta)
+    p <- sapply(1:nrow(x), function(i) p_beta[i, y[i]+1])
+   -2*sum(log(p))
+  }
+  dev_fun
+}
+
+grad_calc <- function(x_ent, y_ent){
+  p <- ncol(x_ent)
+  K <- length(unique(y_ent))
+  #param_l <- (K-1)*(p+1)
+  salida_grad <- function(beta){
+    p_beta <-  pred_ml(x_ent, beta)
+    ff <- factor(y_ent) 
+    y_dummy <-  model.matrix(~-1+ff) 
+    e_mat <-  y_dummy  - p_beta
+    grad_out <- -2*(t(cbind(1,x_ent)) %*% e_mat)
+    as.numeric(grad_out)
+  }
+  salida_grad
+}
+descenso <- function(n, z_0, eta, h_deriv){
+  z <- matrix(0,n, length(z_0))
+  z[1, ] <- z_0
+  for(i in 1:(n-1)){
+    z[i+1, ] <- z[i, ] - eta * h_deriv(z[i, ])
+  }
+  z
+}
+```
+
+
+```{r}
+x_ent <- digitos_entrena %>% select(contains('pixel')) %>% as.matrix
+y_ent <- digitos_entrena$digito
+beta <- runif(257*10)
+dev_ent <- devianza_calc(x_ent, y_ent)
+grad <- grad_calc(x_ent, y_ent)
+dev_ent(beta)
+```
+
+```{r}
+beta_2 <- beta 
+epsilon <- 0.00001
+beta_2[10] <- beta[10] + epsilon
+
+(dev_ent(beta_2) - dev_ent(beta))/epsilon
+```
+
+```{r}
+grad(beta)[10]
+```
