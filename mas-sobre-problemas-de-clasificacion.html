@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html >
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Aprendizaje de máquina</title>
+  <meta name="description" content="Notas y material para el curso de aprendizaje de máquina 2017 (ITAM)">
+  <meta name="generator" content="bookdown 0.5 and GitBook 2.6.7">
+
+  <meta property="og:title" content="Aprendizaje de máquina" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="Notas y material para el curso de aprendizaje de máquina 2017 (ITAM)" />
+  <meta name="github-repo" content="felipegonzalez/aprendizaje-maquina-2017" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Aprendizaje de máquina" />
+  
+  <meta name="twitter:description" content="Notas y material para el curso de aprendizaje de máquina 2017 (ITAM)" />
+  
+
+<meta name="author" content="Felipe González">
+
+
+<meta name="date" content="2017-09-03">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  
+  
+<link rel="prev" href="logistica.html">
+
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+<link rel="stylesheet" href="toc.css" type="text/css" />
+<link rel="stylesheet" href="font-awesome.min.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Aprendizaje Máquina</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Temario y referencias</a><ul>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#evaluacion"><i class="fa fa-check"></i>Evaluación</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#software-r-y-rstudio"><i class="fa fa-check"></i>Software: R y Rstudio</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#referencias-principales"><i class="fa fa-check"></i>Referencias principales</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#otras-referencias"><i class="fa fa-check"></i>Otras referencias</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#otros-materiales"><i class="fa fa-check"></i>Otros materiales</a></li>
+</ul></li>
+<li class="chapter" data-level="1" data-path="introduccion.html"><a href="introduccion.html"><i class="fa fa-check"></i><b>1</b> Introducción</a><ul>
+<li class="chapter" data-level="1.1" data-path="introduccion.html"><a href="introduccion.html#que-es-aprendizaje-de-maquina-machine-learning"><i class="fa fa-check"></i><b>1.1</b> ¿Qué es aprendizaje de máquina (machine learning)?</a></li>
+<li class="chapter" data-level="1.2" data-path="introduccion.html"><a href="introduccion.html#aprendizaje-supervisado-1"><i class="fa fa-check"></i><b>1.2</b> Aprendizaje Supervisado</a><ul>
+<li class="chapter" data-level="1.2.1" data-path="introduccion.html"><a href="introduccion.html#proceso-generador-de-datos-modelo-teorico"><i class="fa fa-check"></i><b>1.2.1</b> Proceso generador de datos (modelo teórico)</a></li>
+</ul></li>
+<li class="chapter" data-level="1.3" data-path="introduccion.html"><a href="introduccion.html#predicciones"><i class="fa fa-check"></i><b>1.3</b> Predicciones</a></li>
+<li class="chapter" data-level="1.4" data-path="introduccion.html"><a href="introduccion.html#cuantificacion-de-error-o-precision"><i class="fa fa-check"></i><b>1.4</b> Cuantificación de error o precisión</a></li>
+<li class="chapter" data-level="1.5" data-path="introduccion.html"><a href="introduccion.html#aprendizaje"><i class="fa fa-check"></i><b>1.5</b> Tarea de aprendizaje supervisado</a><ul>
+<li class="chapter" data-level="1.5.1" data-path="introduccion.html"><a href="introduccion.html#observaciones"><i class="fa fa-check"></i><b>1.5.1</b> Observaciones</a></li>
+</ul></li>
+<li class="chapter" data-level="1.6" data-path="introduccion.html"><a href="introduccion.html#por-que-tenemos-errores"><i class="fa fa-check"></i><b>1.6</b> ¿Por qué tenemos errores?</a></li>
+<li class="chapter" data-level="1.7" data-path="introduccion.html"><a href="introduccion.html#como-estimar-f"><i class="fa fa-check"></i><b>1.7</b> ¿Cómo estimar f?</a></li>
+<li class="chapter" data-level="1.8" data-path="introduccion.html"><a href="introduccion.html#resumen"><i class="fa fa-check"></i><b>1.8</b> Resumen</a></li>
+<li class="chapter" data-level="1.9" data-path="introduccion.html"><a href="introduccion.html#tarea"><i class="fa fa-check"></i><b>1.9</b> Tarea</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="regresion.html"><a href="regresion.html"><i class="fa fa-check"></i><b>2</b> Regresión lineal</a><ul>
+<li class="chapter" data-level="2.1" data-path="introduccion.html"><a href="introduccion.html#introduccion"><i class="fa fa-check"></i><b>2.1</b> Introducción</a></li>
+<li class="chapter" data-level="2.2" data-path="regresion.html"><a href="regresion.html#aprendizaje-de-coeficientes-ajuste"><i class="fa fa-check"></i><b>2.2</b> Aprendizaje de coeficientes (ajuste)</a></li>
+<li class="chapter" data-level="2.3" data-path="regresion.html"><a href="regresion.html#descenso-en-gradiente"><i class="fa fa-check"></i><b>2.3</b> Descenso en gradiente</a><ul>
+<li class="chapter" data-level="2.3.1" data-path="regresion.html"><a href="regresion.html#seleccion-de-tamano-de-paso-eta"><i class="fa fa-check"></i><b>2.3.1</b> Selección de tamaño de paso <span class="math inline">\(\eta\)</span></a></li>
+<li class="chapter" data-level="2.3.2" data-path="regresion.html"><a href="regresion.html#funciones-de-varias-variables"><i class="fa fa-check"></i><b>2.3.2</b> Funciones de varias variables</a></li>
+</ul></li>
+<li class="chapter" data-level="2.4" data-path="regresion.html"><a href="regresion.html#descenso-en-gradiente-para-regresion-lineal"><i class="fa fa-check"></i><b>2.4</b> Descenso en gradiente para regresión lineal</a></li>
+<li class="chapter" data-level="2.5" data-path="regresion.html"><a href="regresion.html#normalizacion-de-entradas"><i class="fa fa-check"></i><b>2.5</b> Normalización de entradas</a></li>
+<li class="chapter" data-level="2.6" data-path="regresion.html"><a href="regresion.html#interpretacion-de-modelos-lineales"><i class="fa fa-check"></i><b>2.6</b> Interpretación de modelos lineales</a></li>
+<li class="chapter" data-level="2.7" data-path="regresion.html"><a href="regresion.html#solucion-analitica"><i class="fa fa-check"></i><b>2.7</b> Solución analítica</a></li>
+<li class="chapter" data-level="2.8" data-path="regresion.html"><a href="regresion.html#por-que-el-modelo-lineal-funciona-bien-muchas-veces"><i class="fa fa-check"></i><b>2.8</b> ¿Por qué el modelo lineal funciona bien (muchas veces)?</a><ul>
+<li class="chapter" data-level="2.8.1" data-path="regresion.html"><a href="regresion.html#k-vecinos-mas-cercanos"><i class="fa fa-check"></i><b>2.8.1</b> k vecinos más cercanos</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="regresion.html"><a href="regresion.html#tarea-1"><i class="fa fa-check"></i>Tarea</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="logistica.html"><a href="logistica.html"><i class="fa fa-check"></i><b>3</b> Regresión logística</a><ul>
+<li class="chapter" data-level="3.1" data-path="logistica.html"><a href="logistica.html#el-problema-de-clasificacion"><i class="fa fa-check"></i><b>3.1</b> El problema de clasificación</a><ul>
+<li class="chapter" data-level="" data-path="logistica.html"><a href="logistica.html#que-estimar-en-problemas-de-clasificacion"><i class="fa fa-check"></i>¿Qué estimar en problemas de clasificación?</a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="logistica.html"><a href="logistica.html#estimacion-de-probabilidades-de-clase"><i class="fa fa-check"></i><b>3.2</b> Estimación de probabilidades de clase</a><ul>
+<li class="chapter" data-level="" data-path="logistica.html"><a href="logistica.html#ejemplo-10"><i class="fa fa-check"></i>Ejemplo</a></li>
+<li class="chapter" data-level="3.2.1" data-path="logistica.html"><a href="logistica.html#k-vecinos-mas-cercanos-1"><i class="fa fa-check"></i><b>3.2.1</b> k-vecinos más cercanos</a></li>
+<li class="chapter" data-level="" data-path="logistica.html"><a href="logistica.html#ejemplo-12"><i class="fa fa-check"></i>Ejemplo</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="logistica.html"><a href="logistica.html#error-para-modelos-de-clasificacion"><i class="fa fa-check"></i><b>3.3</b> Error para modelos de clasificación</a><ul>
+<li class="chapter" data-level="3.3.1" data-path="logistica.html"><a href="logistica.html#ejercicio-1"><i class="fa fa-check"></i><b>3.3.1</b> Ejercicio</a></li>
+<li class="chapter" data-level="3.3.2" data-path="logistica.html"><a href="logistica.html#error-de-clasificacion-y-funcion-de-perdida-0-1"><i class="fa fa-check"></i><b>3.3.2</b> Error de clasificación y función de pérdida 0-1</a></li>
+<li class="chapter" data-level="3.3.3" data-path="logistica.html"><a href="logistica.html#discusion-relacion-entre-devianza-y-error-de-clasificacion"><i class="fa fa-check"></i><b>3.3.3</b> Discusión: relación entre devianza y error de clasificación</a></li>
+</ul></li>
+<li class="chapter" data-level="3.4" data-path="logistica.html"><a href="logistica.html#regresion-logistica"><i class="fa fa-check"></i><b>3.4</b> Regresión logística</a><ul>
+<li class="chapter" data-level="3.4.1" data-path="logistica.html"><a href="logistica.html#regresion-logistica-simple"><i class="fa fa-check"></i><b>3.4.1</b> Regresión logística simple</a></li>
+<li class="chapter" data-level="3.4.2" data-path="logistica.html"><a href="logistica.html#funcion-logistica"><i class="fa fa-check"></i><b>3.4.2</b> Función logística</a></li>
+<li class="chapter" data-level="3.4.3" data-path="logistica.html"><a href="logistica.html#regresion-logistica-1"><i class="fa fa-check"></i><b>3.4.3</b> Regresión logística</a></li>
+</ul></li>
+<li class="chapter" data-level="3.5" data-path="logistica.html"><a href="logistica.html#aprendizaje-de-coeficientes-para-regresion-logistica-binomial."><i class="fa fa-check"></i><b>3.5</b> Aprendizaje de coeficientes para regresión logística (binomial).</a></li>
+<li class="chapter" data-level="3.6" data-path="logistica.html"><a href="logistica.html#observaciones-adicionales"><i class="fa fa-check"></i><b>3.6</b> Observaciones adicionales</a></li>
+<li class="chapter" data-level="3.7" data-path="logistica.html"><a href="logistica.html#ejercicio-datos-de-diabetes"><i class="fa fa-check"></i><b>3.7</b> Ejercicio: datos de diabetes</a><ul>
+<li class="chapter" data-level="" data-path="logistica.html"><a href="logistica.html#tarea-2"><i class="fa fa-check"></i>Tarea</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="mas-sobre-problemas-de-clasificacion.html"><a href="mas-sobre-problemas-de-clasificacion.html"><i class="fa fa-check"></i><b>4</b> Más sobre problemas de clasificación</a><ul>
+<li class="chapter" data-level="4.1" data-path="mas-sobre-problemas-de-clasificacion.html"><a href="mas-sobre-problemas-de-clasificacion.html#analisis-de-error-para-clasificadores-binarios"><i class="fa fa-check"></i><b>4.1</b> Análisis de error para clasificadores binarios</a><ul>
+<li class="chapter" data-level="4.1.1" data-path="mas-sobre-problemas-de-clasificacion.html"><a href="mas-sobre-problemas-de-clasificacion.html#punto-de-corte-para-un-clasificador-binario"><i class="fa fa-check"></i><b>4.1.1</b> Punto de corte para un clasificador binario</a></li>
+<li class="chapter" data-level="4.1.2" data-path="mas-sobre-problemas-de-clasificacion.html"><a href="mas-sobre-problemas-de-clasificacion.html#espacio-roc-de-clasificadores"><i class="fa fa-check"></i><b>4.1.2</b> Espacio ROC de clasificadores</a></li>
+<li class="chapter" data-level="" data-path="mas-sobre-problemas-de-clasificacion.html"><a href="mas-sobre-problemas-de-clasificacion.html#perfil-de-un-clasificador-binario-y-curvas-roc"><i class="fa fa-check"></i>Perfil de un clasificador binario y curvas ROC</a></li>
+</ul></li>
+<li class="chapter" data-level="4.2" data-path="mas-sobre-problemas-de-clasificacion.html"><a href="mas-sobre-problemas-de-clasificacion.html#regresion-logistica-para-problemas-de-mas-de-2-clases"><i class="fa fa-check"></i><b>4.2</b> Regresión logística para problemas de más de 2 clases</a><ul>
+<li class="chapter" data-level="4.2.1" data-path="mas-sobre-problemas-de-clasificacion.html"><a href="mas-sobre-problemas-de-clasificacion.html#regresion-logistica-multinomial"><i class="fa fa-check"></i><b>4.2.1</b> Regresión logística multinomial</a></li>
+<li class="chapter" data-level="4.2.2" data-path="mas-sobre-problemas-de-clasificacion.html"><a href="mas-sobre-problemas-de-clasificacion.html#interpretacion-de-coeficientes"><i class="fa fa-check"></i><b>4.2.2</b> Interpretación de coeficientes</a></li>
+<li class="chapter" data-level="4.2.3" data-path="mas-sobre-problemas-de-clasificacion.html"><a href="mas-sobre-problemas-de-clasificacion.html#ejemplo-clasificacion-de-digitos-con-regresion-multinomial"><i class="fa fa-check"></i><b>4.2.3</b> Ejemplo: Clasificación de dígitos con regresión multinomial</a></li>
+<li class="chapter" data-level="" data-path="mas-sobre-problemas-de-clasificacion.html"><a href="mas-sobre-problemas-de-clasificacion.html#discusion"><i class="fa fa-check"></i>Discusión</a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="mas-sobre-problemas-de-clasificacion.html"><a href="mas-sobre-problemas-de-clasificacion.html#descenso-en-gradiente-para-regresion-multinomial-logistica"><i class="fa fa-check"></i><b>4.3</b> Descenso en gradiente para regresión multinomial logística</a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Publicado con bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Aprendizaje de máquina</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="mas-sobre-problemas-de-clasificacion" class="section level1">
+<h1><span class="header-section-number">Clase 4</span> Más sobre problemas de clasificación</h1>
+<p>En esta parte presentamos técnicas adicionales para evaluar el desempeño de un modelo. En la parte anterior vimos que</p>
+<ul>
+<li><p>La <strong>devianza</strong> es una buena medida para ajustar y evaluar el desempeño de un modelo y comparar modelos, y utilizar las probabilidades de clase. Sin embargo, es una medida de dificil de interpretar en cuanto a los errores que podemos esperar del modelo.</p></li>
+<li><p>Por otro lado, la <strong>tasa de clasificación incorrecta</strong> puede usarse para evaluar el desempeño de un clasificador (incluyendo uno derivado de probabilidades de clase), puede interpretarse con facilidad, pero se queda corta en muchas aplicaciones. Una deficiencia grande de esta medida es que, contrario al problema de regresión, hay errores de clasificación que son cualitativamente diferentes.</p></li>
+</ul>
+<div id="ejemplo-19" class="section level4 unnumbered">
+<h4>Ejemplo</h4>
+<ul>
+<li><p>Por ejemplo, diagnosticar a alguien con una enfermedad cuando no la tiene tiene consecuencias distintas a diagnosticar como libre de enfermedad a alguien que la tiene. Estas consecuencias dependen de cómo son son los tratamientos consecuentes, de y qué tan peligrosa es la enfermedad.</p></li>
+<li><p>Cuando usamos un buscador como Google, es cualitativamente diferente que el buscador omita resultados relevantes a que nos presente resultados irrelevantes.</p></li>
+<li><p>¿Otros ejemplos?</p></li>
+</ul>
+<p>En general, los costos de los distintos errores son distintos, y en muchos problemas quiséramos entenderlos y controlarlos individualmente. Aunque en teoría podríamos asignar costos a los errores y definir una función de pérdida apropiada, en la práctica esto muchas veces no es tan fácil o deseable. Podemos, sin embargo, reportar el tipo de errores que ocurren</p>
+
+<div class="comentario">
+<p><strong>Matriz de confusión</strong>. Sea <span class="math inline">\(\hat{G}\)</span> un clasificador binario. La matriz de confusión <span class="math inline">\(C\)</span> de <span class="math inline">\(\hat{G}\)</span> está dada por</p>
+$C_{i,j} = <span class="math inline">\(\text{Número de casos de la clase verdadera j que son clasificados como clase i
+ por el clasificador}\)</span>
+</div>
+
+</div>
+<div id="ejemplo-20" class="section level4 unnumbered">
+<h4>Ejemplo</h4>
+<p>En un ejemplo de tres clases, podríamos obtener la matriz de confusión:</p>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th align="right">A</th>
+<th align="right">B</th>
+<th align="right">C</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>A.pred</td>
+<td align="right">50</td>
+<td align="right">2</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td>B.pred</td>
+<td align="right">20</td>
+<td align="right">105</td>
+<td align="right">10</td>
+</tr>
+<tr class="odd">
+<td>C.pred</td>
+<td align="right">20</td>
+<td align="right">10</td>
+<td align="right">30</td>
+</tr>
+</tbody>
+</table>
+<p>Esto quiere decir que de 90 casos de clase <span class="math inline">\(A\)</span>, sólo clasificamos a 50 en la clase correcta, de 117 casos de clase <span class="math inline">\(B\)</span>, acertamos en 105, etcétera. Podemos ver esta tabla de distintas formas, por ejemplo, usando porcentajes por columna, nos dice cómo se distribuyen los casos de cada clase:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">knitr<span class="op">::</span><span class="kw">kable</span>(<span class="kw">round</span>(<span class="kw">prop.table</span>(tabla_<span class="dv">1</span>, <span class="dv">2</span>),<span class="dv">2</span>))</code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th align="right">A</th>
+<th align="right">B</th>
+<th align="right">C</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>A.pred</td>
+<td align="right">0.56</td>
+<td align="right">0.02</td>
+<td align="right">0.00</td>
+</tr>
+<tr class="even">
+<td>B.pred</td>
+<td align="right">0.22</td>
+<td align="right">0.90</td>
+<td align="right">0.25</td>
+</tr>
+<tr class="odd">
+<td>C.pred</td>
+<td align="right">0.22</td>
+<td align="right">0.09</td>
+<td align="right">0.75</td>
+</tr>
+</tbody>
+</table>
+<p>Mientras que una tabla de porcentajes por renglón nos muestra qué pasa cada vez que hacemos una predicción dada:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">knitr<span class="op">::</span><span class="kw">kable</span>(<span class="kw">round</span>(<span class="kw">prop.table</span>(tabla_<span class="dv">1</span>, <span class="dv">1</span>),<span class="dv">2</span>))</code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th align="right">A</th>
+<th align="right">B</th>
+<th align="right">C</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>A.pred</td>
+<td align="right">0.96</td>
+<td align="right">0.04</td>
+<td align="right">0.00</td>
+</tr>
+<tr class="even">
+<td>B.pred</td>
+<td align="right">0.15</td>
+<td align="right">0.78</td>
+<td align="right">0.07</td>
+</tr>
+<tr class="odd">
+<td>C.pred</td>
+<td align="right">0.33</td>
+<td align="right">0.17</td>
+<td align="right">0.50</td>
+</tr>
+</tbody>
+</table>
+<p>Ahora pensemos cómo podría sernos de utilidad esta tabla. Discute</p>
+<ul>
+<li>El clasificador fuera uno de severidad de emergencias en un hospital, donde A=requiere atención inmediata B=urgente C=puede posponerse.</li>
+<li>El clasificador fuera el tipo de producto que compran clientes de un negocio A=producto premium, B=producto estándar, C=no compra`. Imagínate que el producto premium es caro pero requiere de atención personal de un agente de ventas para ser vendido.</li>
+</ul>
+<p>La tasa de incorrectas es la misma en los dos ejemplos, pero la adecuación del clasificador es muy diferente.</p>
+</div>
+<div id="analisis-de-error-para-clasificadores-binarios" class="section level2">
+<h2><span class="header-section-number">4.1</span> Análisis de error para clasificadores binarios</h2>
+<p>Cuando la variable a predecir es binaria (dos clases), podemos etiquetar una clase como <em>positivo</em> y otra como <em>negativo</em>. En el fondo no importa cómo catalogemos cada clase, pero para problemas particulares una asignación puede ser más natural. Por ejemplo, en diagnóstico de enfermedades, positivo=tiene la enfermedad, en análisis de crédito, positivo=cae en impago, en sistemas de recomendacion, positivo = le gusta el producto X, en recuperación de textos, positivo=el documento es relevante a la búsqueda, etc.</p>
+
+<div class="comentario">
+<p>Hay dos tipos de errores en un clasificador binario (positivo - negativo):</p>
+<ul>
+<li>Falsos positivos (fp): clasificar como positivo a un caso negativo.</li>
+<li>Falsos negativos (fn): clasificar como negativo a un caso positivo.</li>
+</ul>
+A los casos clasificados correctamente les llamamos positivos verdaderos (pv) y negativos verdaderos (nv).
+</div>
+
+<p>La matriz de confusion es entonces</p>
+
+<p>Nótese que un clasificador bueno, en general, es uno que tiene la mayor parte de los casos en la diagonal de la matriz de confusión.</p>
+<p>Podemos estudiar a nuestro clasificador en términos de las proporciones de casos que caen en cada celda, que dependen del desempeño del clasificador en cuanto a casos positivos y negativos. La nomenclatura es confusa, pues en distintas áreas se usan distintos nombres para estas proporciones:</p>
+<ul>
+<li><p>Tasa de falsos positivos <span class="math display">\[\frac{fp}{fp+nv}=\frac{fp}{negativos}\]</span></p></li>
+<li><p>Tasa de falsos negativos <span class="math display">\[\frac{fn}{pv+fn}=\frac{fn}{positivos}\]</span></p></li>
+<li><p>Especificidad <span class="math display">\[\frac{nv}{fp+nv}=\frac{nv}{negativos}\]</span></p></li>
+<li><p>Sensibilidad o Recall <span class="math display">\[\frac{pv}{pv+fn}=\frac{pv}{positivos}\]</span></p></li>
+</ul>
+<p>Y también otras que tienen como base las predicciones:</p>
+<ul>
+<li><p>Valor predictivo positivo o Precisión <span class="math display">\[\frac{vp}{vp+fp}=\frac{vp}{pred.positivo}\]</span></p></li>
+<li><p>Valor predictivo negativo <span class="math display">\[\frac{vn}{fn+vn}=\frac{vp}{pred.negativo}\]</span></p></li>
+</ul>
+<p>Y veremos otras que toman en cuenta ambos tipos de errores</p>
+<ul>
+<li>Tasa de clasificación incorrecta</li>
+<li>Medida F</li>
+<li>AUC (area bajo la curva ROC)</li>
+<li>Kappa</li>
+</ul>
+<p>Dependiendo de el tema y el objetivo hay medidas más naturales que otras:</p>
+<ul>
+<li>En pruebas clínicas, se usa típicamente sensibilidad y especificidad (proporción de positivos que detectamos y proporción de negativos que descartamos).</li>
+<li>En búsqueda y recuperación de documentos (positivo=el documento es relevante, negativo=el documento no es relevante), se usa precisión y recall (precisión=de los documentos que entregamos (predicción positiva), cuáles son realmente positivos/relevantes, y recall=de todos los documentos relevantes, cuáles devolvemos). Aquí la tasa de falsos positivos (de todos los negativos, cuáles se predicen positivos), por ejemplo, no es de ayuda pues generalmente son bajas y no discriminan el desempeño de los clasificadores. La razón es que típicamente hay una gran cantidad de negativos, y se devuelven relativamente pocos documentos, de forma que la tasa de falsos positivos generalmente es muy pequeña.</li>
+</ul>
+<div id="ejercicio-3" class="section level4 unnumbered">
+<h4>Ejercicio</h4>
+<p>¿Qué relaciones hay entre las cantidades mostradas arriba? Por ejemplo: Escribe la tasa de clasificación incorrecta en términos de especificidad y sensibilidad. También intenta escribir valor predictivo positivo y valor predictivo negativo en términos de sensibilidad y especificidad.</p>
+
+<div class="comentario">
+Cada clasificador tiene un balance distinto especificidad-sensibliidad. Muchas veces no escogemos clasificadores por la tasa de incorrectos solamente, sino que intentamos buscar un balance ade- cuado entre el comportamiento de clasificación para positivos y para negativos.
+</div>
+
+</div>
+<div id="ejercicio-4" class="section level4 unnumbered">
+<h4>Ejercicio</h4>
+<p>Calcular la matriz de confusión (sobre la muestra de prueba) para el clasificador logístico de diabetes en términos de glucosa. Calcula adicionalmente con la muestra de prueba sus valores de especificidad y sensibilidad, y precisión y recall.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(dplyr)</code></pre></div>
+<pre><code>## 
+## Attaching package: &#39;dplyr&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:stats&#39;:
+## 
+##     filter, lag</code></pre>
+<pre><code>## The following objects are masked from &#39;package:base&#39;:
+## 
+##     intersect, setdiff, setequal, union</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(tidyr)
+<span class="kw">library</span>(ggplot2)
+diabetes_ent &lt;-<span class="st"> </span><span class="kw">as_data_frame</span>(MASS<span class="op">::</span>Pima.tr)
+diabetes_pr &lt;-<span class="st"> </span><span class="kw">as_data_frame</span>(MASS<span class="op">::</span>Pima.te)
+mod_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">glm</span>(type <span class="op">~</span><span class="st"> </span>glu, <span class="dt">data =</span> diabetes_ent, <span class="dt">family =</span> <span class="st">&#39;binomial&#39;</span>)
+preds_prueba &lt;-<span class="st"> </span><span class="kw">predict</span>(mod_<span class="dv">1</span>, <span class="dt">newdata =</span> diabetes_pr, <span class="dt">type =</span><span class="st">&#39;response&#39;</span>)</code></pre></div>
+</div>
+<div id="punto-de-corte-para-un-clasificador-binario" class="section level3">
+<h3><span class="header-section-number">4.1.1</span> Punto de corte para un clasificador binario</h3>
+<p>¿Qué sucede cuando el perfil de sensibilidad y especificidad de un clasificador binario no es apropiado para nuestros fines? Recordemos que una vez que hemos estimado con <span class="math inline">\(\hat{p}_1(x)\)</span>, nuestra regla de clasificación es:</p>
+<ol style="list-style-type: decimal">
+<li>Predecir positivo si <span class="math inline">\(\hat{p}_1(x) &gt; 0.5\)</span>,</li>
+<li>Predecir negativo si <span class="math inline">\(\hat{p}_1(x) &lt; 0.5.\)</span></li>
+</ol>
+<p>Esto sugiere una regla alternativa:</p>
+<p>Para <span class="math inline">\(0 &lt; d &lt; 1\)</span>, podemos utilizar nuestras estimaciones <span class="math inline">\(\hat{p}_1(x)\)</span> para construir un clasificador alternativo poniendo:</p>
+<ol style="list-style-type: decimal">
+<li>Predecir positivo si <span class="math inline">\(\hat{p}_1(x) &gt; d\)</span>,</li>
+<li>Predecir negativo si <span class="math inline">\(\hat{p}_1(x) &lt; d\)</span>.</li>
+</ol>
+<p>Distintos valores de <span class="math inline">\(d\)</span> dan distintos perfiles de sensibilidad-especificidad para una misma estimación de las probabilidades condicionales de clase: Para minimizar la tasa de incorrectos conviene poner d = 0.5. Sin embargo, es común que este no es el único fin de un clasificador bueno (pensar en ejemplo de fraude).</p>
+<ul>
+<li>Cuando incrementamos d, quiere decir que exigimos estar más seguros de que un caso es positivo para clasificarlo como positivo. Eso quiere decir que la especifidad va a ser más grande (entre los negativos verdaderos va a haber menos falsos positivos). Sin embargo, la sensibilidad va a ser más chica pues captamos menos de los verdaderos positivos.</li>
+</ul>
+<div id="ejemplo-21" class="section level4 unnumbered">
+<h4>Ejemplo</h4>
+<p>Por ejemplo, si en el caso de diabetes incrementamos el punto de corte a 0.7:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">table</span>(preds_prueba <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.7</span>, diabetes_pr<span class="op">$</span>type)</code></pre></div>
+<pre><code>##        
+##          No Yes
+##   FALSE 220  77
+##   TRUE    3  32</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tab &lt;-<span class="st"> </span><span class="kw">prop.table</span>(<span class="kw">table</span>(preds_prueba <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.7</span>, diabetes_pr<span class="op">$</span>type),<span class="dv">2</span>)
+tab</code></pre></div>
+<pre><code>##        
+##                 No        Yes
+##   FALSE 0.98654709 0.70642202
+##   TRUE  0.01345291 0.29357798</code></pre>
+<p>La especificidad ahora 0.99 , muy alta (descartamos muy bien casos negativos), pero la sensibilidad se deteriora a 0.29</p>
+<ul>
+<li>Cuando hacemos más chico d, entonces exigimos estar más segu- ros de que un caso es negativo para clasificarlo como negativo. Esto aumenta la sensibilidad, pero la especificidad baja. Por ejemplo, si en el caso de diabetes ponemos el punto de corte en 0.3:</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">table</span>(preds_prueba <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.3</span>, diabetes_pr<span class="op">$</span>type)</code></pre></div>
+<pre><code>##        
+##          No Yes
+##   FALSE 170  37
+##   TRUE   53  72</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tab &lt;-<span class="st"> </span><span class="kw">prop.table</span>(<span class="kw">table</span>(preds_prueba <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.3</span>, diabetes_pr<span class="op">$</span>type),<span class="dv">2</span>)
+tab</code></pre></div>
+<pre><code>##        
+##                No       Yes
+##   FALSE 0.7623318 0.3394495
+##   TRUE  0.2376682 0.6605505</code></pre>
+</div>
+</div>
+<div id="espacio-roc-de-clasificadores" class="section level3">
+<h3><span class="header-section-number">4.1.2</span> Espacio ROC de clasificadores</h3>
+<p>Podemos visualizar el desempeño de cada uno de estos clasificadores mapeándolos a las coordenadas de tasa de falsos positivos (1-especificidad) y sensibilidad:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">clasif_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">data.frame</span>(
+  <span class="dt">corte =</span> <span class="kw">c</span>(<span class="st">&#39;0.3&#39;</span>,<span class="st">&#39;0.5&#39;</span>,<span class="st">&#39;0.7&#39;</span>,<span class="st">&#39;perfecto&#39;</span>,<span class="st">&#39;azar&#39;</span>),
+  <span class="dt">tasa_falsos_pos=</span><span class="kw">c</span>(<span class="fl">0.24</span>,<span class="fl">0.08</span>,<span class="fl">0.02</span>,<span class="dv">0</span>,<span class="fl">0.7</span>),
+  <span class="dt">sensibilidad =</span><span class="kw">c</span>(<span class="fl">0.66</span>, <span class="fl">0.46</span>,<span class="fl">0.19</span>,<span class="dv">1</span>,<span class="fl">0.7</span>))
+<span class="kw">ggplot</span>(clasif_<span class="dv">1</span>, <span class="kw">aes</span>(<span class="dt">x=</span>tasa_falsos_pos, <span class="dt">y=</span>sensibilidad,
+  <span class="dt">label=</span>corte)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_abline</span>(<span class="dt">intercept=</span><span class="dv">0</span>, <span class="dt">slope=</span><span class="dv">1</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">xlim</span>(<span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>)) <span class="op">+</span><span class="kw">ylim</span>(<span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_text</span>(<span class="dt">hjust=</span><span class="op">-</span><span class="fl">0.3</span>, <span class="dt">col=</span><span class="st">&#39;red&#39;</span>)<span class="op">+</span>
+<span class="st">  </span><span class="kw">xlab</span>(<span class="st">&#39;1-especificidad (tasa falsos pos)&#39;</span>)</code></pre></div>
+<p><img src="04-mas-clasificacion_files/figure-html/unnamed-chunk-10-1.png" width="480" /></p>
+<ol style="list-style-type: decimal">
+<li>Nótese que agregamos otros dos clasificadores, uno perfecto, que tiene tasa de falsos positivos igual a 0 y sensibilidad igual a 1.</li>
+<li>En esta gráfica, un clasificador G2 que está arriba a la izquierda de G1 domina a G1, pues tiene mejor especificidad y mejor sensi- bilidad. Entre los clasificadores 0.4, 0.5 y 0.7 de la gráfica, no hay ninguno que domine a otro.</li>
+<li>Todos los clasificadores en la diagonal son equivalentes a un clasificador al azar. ¿Por qué? La razón es que si cada vez que vemos un nuevo caso lo clasificamos como positivo con probabilidad p fija y arbitraria. Esto implica que cuando veamos un caso positivo, la probabilidad de ’atinarle’ es de p (sensibilidad), y cuando vemos un negativo, la probabilidad de equivocarnos también es de p (tasa de falsos positivos). De modo que este clasificador al azar está en la diagonal.</li>
+<li>¿Qué podemos decir acerca de clasificadores que caen por debajo de la diagonal? Estos son clasificadores particularmente malos, pues existen clasificadores con mejor especificidad y/o sensibili- dad que son clasificadores al azar! Sin embargo, se puede construir un mejor clasificador volteando las predicciones, lo que cambia sensibilidad por tasa de falsos positivos.</li>
+<li>¿Cuál de los tres clasificadores es el mejor? En términos de la tasa de incorrectos, el de corte 0.5. Sin embargo, para otros propósitos puede ser razonable escoger alguno de los otros.</li>
+</ol>
+</div>
+<div id="perfil-de-un-clasificador-binario-y-curvas-roc" class="section level3 unnumbered">
+<h3>Perfil de un clasificador binario y curvas ROC</h3>
+En lugar de examinar cada punto de corte por separado, podemos hacer el análisis de todos los posibles puntos de corte mediante la curva ROC (receiver operating characteristic, de ingeniería). 
+<div class="comentario">
+Para un problema de clasificación binaria, dadas estimaciones <span class="math inline">\(\hat{p}(x)\)</span>, la curva ROC grafica todos los pares de (1-especificidad, sensibilidad) para cada posible punto de corte <span class="math inline">\(\hat{p}(x) &gt; d\)</span>.
+</div>
+
+<div id="ejemplo-22" class="section level4 unnumbered">
+<h4>Ejemplo</h4>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(tabplot)
+mod_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">glm</span>(type <span class="op">~</span><span class="st"> </span>glu, diabetes_ent, <span class="dt">family =</span> <span class="st">&#39;binomial&#39;</span>)
+diabetes_pr<span class="op">$</span>probs_prueba_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">predict</span>(mod_<span class="dv">1</span>, <span class="dt">newdata =</span> diabetes_pr,
+                                      <span class="dt">type =</span> <span class="st">&quot;response&quot;</span>) 
+<span class="kw">head</span>(<span class="kw">arrange</span>(diabetes_pr, <span class="kw">desc</span>(probs_prueba_<span class="dv">1</span>)))</code></pre></div>
+<pre><code>## # A tibble: 6 x 9
+##   npreg   glu    bp  skin   bmi   ped   age   type probs_prueba_1
+##   &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;fctr&gt;          &lt;dbl&gt;
+## 1     2   197    70    45  30.5 0.158    53    Yes      0.8743254
+## 2     4   197    70    39  36.7 2.329    31     No      0.8743254
+## 3     8   196    76    29  37.5 0.605    57    Yes      0.8701147
+## 4     1   196    76    36  36.5 0.875    29    Yes      0.8701147
+## 5     3   193    70    31  34.9 0.241    25    Yes      0.8567582
+## 6     5   189    64    33  31.2 0.583    29    Yes      0.8371927</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">tableplot</span>(diabetes_pr, <span class="dt">sortCol =</span> probs_prueba_<span class="dv">1</span>)</code></pre></div>
+<p><img src="04-mas-clasificacion_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+<p>La columna de probabilidad de la derecha nos dice en qué valores podemos cortar para obtener distintos clasificadores. Nótese que si cortamos más arriba, se nos escapan más positivos verdaderos que clasificamos como negativos, pero clasificamos a más negativos verdaderos como negativos. Lo opuesto ocurre cuando cortamos más abajo.</p>
+<p>Vamos a graficar todos los pares (1-especificidad, sensibilidad) para cada punto de corte <span class="math inline">\(d\)</span> de estas probabilidades.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(ROCR)
+pred_rocr &lt;-<span class="st"> </span><span class="kw">prediction</span>(diabetes_pr<span class="op">$</span>probs_prueba_<span class="dv">1</span>, diabetes_pr<span class="op">$</span>type) 
+perf &lt;-<span class="st"> </span><span class="kw">performance</span>(pred_rocr, <span class="dt">measure =</span> <span class="st">&quot;sens&quot;</span>, <span class="dt">x.measure =</span> <span class="st">&quot;fpr&quot;</span>) 
+graf_roc_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">data_frame</span>(<span class="dt">tfp =</span> perf<span class="op">@</span>x.values[[<span class="dv">1</span>]], <span class="dt">sens =</span> perf<span class="op">@</span>y.values[[<span class="dv">1</span>]], 
+                       <span class="dt">d =</span> perf<span class="op">@</span>alpha.values[[<span class="dv">1</span>]])
+
+<span class="kw">ggplot</span>(graf_roc_<span class="dv">1</span>, <span class="kw">aes</span>(<span class="dt">x =</span> tfp, <span class="dt">y =</span> sens, <span class="dt">colour=</span>d)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">xlab</span>(<span class="st">&#39;1-especificidad&#39;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">ylab</span>(<span class="st">&#39;Sensibilidad&#39;</span>) </code></pre></div>
+<p><img src="04-mas-clasificacion_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+<p>En esta gráfica podemos ver todos los clasificadores posibles basados en las probabilidades de clase. Podemos usar estas curvas como evaluación de nuestros clasificadores, dejando para más tarde la selección del punto de corte, si esto es necesario (por ejemplo, dependiendo de los costos de cada tipo de error).</p>
+<p>También es útil para comparar modelos. Consideremos el modelo de los datos de diabetes que incluyen todas las variables:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mod_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">glm</span>(type <span class="op">~</span><span class="st"> </span>., diabetes_ent, <span class="dt">family =</span> <span class="st">&#39;binomial&#39;</span>)
+diabetes_pr<span class="op">$</span>probs_prueba_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">predict</span>(mod_<span class="dv">2</span>, <span class="dt">newdata =</span> diabetes_pr,
+                                      <span class="dt">type =</span> <span class="st">&quot;response&quot;</span>) 
+<span class="kw">head</span>(<span class="kw">arrange</span>(diabetes_pr, <span class="kw">desc</span>(probs_prueba_<span class="dv">2</span>)))</code></pre></div>
+<pre><code>## # A tibble: 6 x 10
+##   npreg   glu    bp  skin   bmi   ped   age   type probs_prueba_1
+##   &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;fctr&gt;          &lt;dbl&gt;
+## 1     0   180    78    63  59.4 2.420    25    Yes      0.7854027
+## 2     4   197    70    39  36.7 2.329    31     No      0.8743254
+## 3     5   187    76    27  43.6 1.034    53    Yes      0.8266286
+## 4     3   173    82    48  38.4 2.137    25    Yes      0.7374869
+## 5     0   173    78    32  46.5 1.159    58     No      0.7374869
+## 6    17   163    72    41  40.9 0.817    47    Yes      0.6581611
+## # ... with 1 more variables: probs_prueba_2 &lt;dbl&gt;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">tableplot</span>(diabetes_pr, <span class="dt">sortCol =</span> probs_prueba_<span class="dv">2</span>)</code></pre></div>
+<p><img src="04-mas-clasificacion_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
+<p>Y graficamos juntas:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(ROCR)
+pred_rocr &lt;-<span class="st"> </span><span class="kw">prediction</span>(diabetes_pr<span class="op">$</span>probs_prueba_<span class="dv">2</span>, diabetes_pr<span class="op">$</span>type) 
+perf &lt;-<span class="st"> </span><span class="kw">performance</span>(pred_rocr, <span class="dt">measure =</span> <span class="st">&quot;sens&quot;</span>, <span class="dt">x.measure =</span> <span class="st">&quot;fpr&quot;</span>) 
+graf_roc_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">data_frame</span>(<span class="dt">tfp =</span> perf<span class="op">@</span>x.values[[<span class="dv">1</span>]], <span class="dt">sens =</span> perf<span class="op">@</span>y.values[[<span class="dv">1</span>]], 
+                       <span class="dt">d =</span> perf<span class="op">@</span>alpha.values[[<span class="dv">1</span>]])
+
+graf_roc_<span class="dv">2</span><span class="op">$</span>modelo &lt;-<span class="st"> &#39;Todas las variables&#39;</span>
+graf_roc_<span class="dv">1</span><span class="op">$</span>modelo &lt;-<span class="st"> &#39;Solo glucosa&#39;</span>
+graf_roc &lt;-<span class="st"> </span><span class="kw">bind_rows</span>(graf_roc_<span class="dv">1</span>, graf_roc_<span class="dv">2</span>)
+
+<span class="kw">ggplot</span>(graf_roc, <span class="kw">aes</span>(<span class="dt">x =</span> tfp, <span class="dt">y =</span> sens, <span class="dt">colour =</span> modelo)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">xlab</span>(<span class="st">&#39;1-especificidad&#39;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">ylab</span>(<span class="st">&#39;Sensibilidad&#39;</span>) </code></pre></div>
+<p><img src="04-mas-clasificacion_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
+<p>En este ejemplo, vemos que casi no importa que perfil de especificidad y sensibilidad busquemos: el clasificador que usa todas las variables domina casi siempre al clasificador que sólo utiliza las variables de glucosa. La razón es que para cualquier punto de corte (con sensibilidad menor a 0.4) en el clasificador de una variable, existe otro clasificador en la curva roja (todas las variable), que domina al primero. La excepción es para clasificadores de valores de sensibilidad baja, con tasas de falsos positivos muy chicas: en este caso, el modelo de una variable puede ser ligeramente superior.</p>
+</div>
+</div>
+</div>
+<div id="regresion-logistica-para-problemas-de-mas-de-2-clases" class="section level2">
+<h2><span class="header-section-number">4.2</span> Regresión logística para problemas de más de 2 clases</h2>
+<p>Consideramos ahora un problema con más de dos clases, de ma- nera que <span class="math inline">\(G ∈ {1,2,...,K}\)</span> (<span class="math inline">\(K\)</span> clases), y tenemos <span class="math inline">\(X = (X1 ...,Xp)\)</span> entradas. ¿Cómo generalizar el modelo de regresión logística a este problema? Una estrategia es la de uno contra todos:</p>
+<p>En clasificación uno contra todos, hacemos</p>
+<ol style="list-style-type: decimal">
+<li><p>Para cada clase <span class="math inline">\(g\in\{1,\ldots,K\}\)</span> entrenamos un modelo de regresión logística (binaria) <span class="math inline">\(\hat{p}^{(g)}(x)\)</span>, tomando como positivos a los casos de 1 clase <span class="math inline">\(g\)</span>, y como negativos a todo el resto. Esto lo hacemos como en las secciones anteriores, y de manera independiente para cada clase.</p></li>
+<li><p>Para clasificar un nuevo caso <span class="math inline">\(x\)</span>, calculamos <span class="math display">\[\hat{p}^{(1)}, \hat{p}^{(2)},\ldots, \hat{p}^{(K)}\]</span></p></li>
+</ol>
+<p>y clasificamos a la clase de máxima probabilidad <span class="math display">\[\hat{G}(x) = \arg\max_g \hat{p}^{(g)}(x)\]</span> Nótese que no hay ninguna garantía de que las probabilidades de clase sumen 1, pues se trata de estimaciones independientes de cada clase. En este sentido, produce estimaciones que en realidad no satisfacen las propiedades del modelo de probabilidad establecido. Sin embargo, esta estrategia es simple y en muchos casos funciona bien.</p>
+<div id="regresion-logistica-multinomial" class="section level3">
+<h3><span class="header-section-number">4.2.1</span> Regresión logística multinomial</h3>
+<p>Si queremos obtener estimaciones de las probabilidades de clase que sumen uno, entonces tenemos que contruir las estimaciones de cada clase de clase de manera conjunta. Como vimos antes, tenemos que estimar, para cada <span class="math inline">\(x\)</span> y <span class="math inline">\(g\in\{1,\ldots, K\}\)</span>, las probabilidades condicionales de clase: <span class="math display">\[p_g(x) = P(G = g|X = x).\]</span></p>
+<p>Consideremos primero cómo funciona el modelo de regresión logística (2 clases)</p>
+<p>Tenemos que <span class="math display">\[p_1(x) = h(\beta_0 + \beta_1x_1 + \ldots + \beta_p x_p) =
+\exp(\beta_0 + \beta_1x_1 + \ldots + \beta_p x_p)/Z
+\]</span> y <span class="math display">\[p_2 (x) = 1/Z\]</span> donde <span class="math inline">\(Z = 1 + \exp(\beta_0 + \beta_1x_1 + \ldots + \beta_p x_p)\)</span>.</p>
+<p>Podemos generalizar para más de 2 clases usando una idea similar:</p>
+<p><span class="math display">\[p_1(x) =  \exp(\beta_{0,1} + \beta_{1,1}x_1 + \ldots + \beta_{p,1} x_p)/Z\]</span></p>
+<p><span class="math display">\[p_2(x) =  \exp(\beta_{0,2} + \beta_{1,2}x_2 + \ldots + \beta_{p.2} x_p)/Z\]</span> hasta <span class="math display">\[p_{K-1}(x) =  \exp(\beta_{0,{K-1}} + \beta_{1,{K-1}}x_2 + \ldots + \beta_{p,{K-1}} x_p)/Z\]</span> y <span class="math display">\[p_K(x) = 1/Z\]</span></p>
+<p>En este caso, para que las probabilidades sumen 1, necesitamos que <span class="math display">\[Z = 1 + \sum_{j=1}^{K-1}\exp(\beta_0^j + \beta_1^jx_2 + \ldots + \beta_p^j x_p)\]</span></p>
+<p>Para ajustar coeficientes, usamos el mismo criterio de devianza de entrenamiento. Buscamos minimizar: <span class="math display">\[D(\beta)=−2 \sum_{i=1}^N p_{g^{(i)}}(x^{(i)}),\]</span> Donde <span class="math inline">\(\beta\)</span> contiene todos los coeficientes organizados en un vector de tamaño <span class="math inline">\((p+1)(K+1)\)</span>: <span class="math display">\[\beta = ( \beta_0^1, \beta_1^1, \ldots , \beta_p^1,  \beta_0^2, \beta_1^2, \ldots , \beta_p^2, \ldots \beta_0^{K-1}, \beta_1^{K-1}, \ldots , \beta_p^{K-1} )\]</span></p>
+<p>Y ahora podemos usar algún método númerico para minimizar la devianza (por ejemplo, descenso en gradiente). Cuando es muy importante tener probabilidades bien calibradas, el enfoque multinomial es más apropiado, pero muchas veces, especialmente si sólo nos interesa clasificar, los dos métodos dan resultados similares.</p>
+</div>
+<div id="interpretacion-de-coeficientes" class="section level3">
+<h3><span class="header-section-number">4.2.2</span> Interpretación de coeficientes</h3>
+<p>Los coeficientes mostrados en la parametrización de arriba se intrepretan más fácilmente como comparaciones de la clase <span class="math inline">\(j\)</span> contra la clase <span class="math inline">\(K\)</span>, pues</p>
+<p><span class="math display">\[\log\left (\frac{p_g(x)}{p_K(x)}\right ) = \beta_{0,{g}} + \beta_{1,{g}}x_2 + \ldots + \beta_{p,{g}} x_p\]</span></p>
+<p>Para comparar la clase <span class="math inline">\(j\)</span> con la clase <span class="math inline">\(k\)</span> notamos que</p>
+<p><span class="math display">\[\log\left (\frac{p_j(x)}{p_k(x)}\right ) = 
+(\beta_{0,{j}}- \beta_{0,{k}}) + (\beta_{1,{j}}-\beta_{1,{k}} )x_2 + \ldots + (\beta_{p,{j}} -\beta_{p,{k}})  x_p\]</span></p>
+<p>Así que sólo hace falta restar los coeficientes. Nótese adicionalmente que en la parametrización, podemos pensar que</p>
+<p><span class="math display">\[\beta_{0,K} = \beta_{1,K} = \cdots = \beta_{p,K} = 0\]</span></p>
+</div>
+<div id="ejemplo-clasificacion-de-digitos-con-regresion-multinomial" class="section level3">
+<h3><span class="header-section-number">4.2.3</span> Ejemplo: Clasificación de dígitos con regresión multinomial</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(readr)
+digitos_entrena &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&#39;datos/zip-train.csv&#39;</span>)</code></pre></div>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_double()
+## )</code></pre>
+<pre><code>## See spec(...) for full column specifications.</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">digitos_prueba &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&#39;datos/zip-test.csv&#39;</span>)</code></pre></div>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_double()
+## )
+## See spec(...) for full column specifications.</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">names</span>(digitos_entrena)[<span class="dv">1</span>] &lt;-<span class="st"> &#39;digito&#39;</span>
+<span class="kw">names</span>(digitos_entrena)[<span class="dv">2</span><span class="op">:</span><span class="dv">257</span>] &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&#39;pixel_&#39;</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">256</span>)
+<span class="kw">names</span>(digitos_prueba)[<span class="dv">1</span>] &lt;-<span class="st"> &#39;digito&#39;</span>
+<span class="kw">names</span>(digitos_prueba)[<span class="dv">2</span><span class="op">:</span><span class="dv">257</span>] &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&#39;pixel_&#39;</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">256</span>)</code></pre></div>
+<p>En este ejemplo, usamos la función <em>multinom</em> de <em>nnet</em>, que usa BFGS para hacer la optimización:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(nnet)
+mod_mult &lt;-<span class="st"> </span><span class="kw">multinom</span>(digito <span class="op">~</span><span class="st"> </span>., <span class="dt">data =</span> digitos_entrena, <span class="dt">MaxNWt=</span><span class="dv">100000</span>, <span class="dt">maxit =</span> <span class="dv">20</span>)</code></pre></div>
+<pre><code>## # weights:  2580 (2313 variable)
+## initial  value 16788.147913 
+## iter  10 value 2598.959017
+## iter  20 value 1494.978090
+## final  value 1494.978090 
+## stopped after 20 iterations</code></pre>
+<p>Checamos para diagnóstico la matriz de confusión <strong>de entrenamiento</strong>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">table</span>(<span class="kw">predict</span>(mod_mult), digitos_entrena<span class="op">$</span>digito)</code></pre></div>
+<pre><code>##    
+##        0    1    2    3    4    5    6    7    8    9
+##   0 1153    0    5    2    3    9    1    1    7    0
+##   1    0  998    0    0    2    0    1    1    2    3
+##   2    2    0  693    1    7    2    8    3   10    2
+##   3    9    0   15  632    2   21    0    2   24    2
+##   4    3    2    9    2  621    4    4    9   10   44
+##   5   24    4    5   19    9  511   43    1   34    6
+##   6    2    0    0    0    1    3  607    0    0    0
+##   7    0    0    1    0    0    1    0  613    1    8
+##   8    1    1    3    2    2    4    0    1  451    2
+##   9    0    0    0    0    5    1    0   14    3  577</code></pre>
+<p>Ahora validamos con la muestra de prueba y calculamos error de clasificación:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">confusion_prueba &lt;-<span class="st"> </span><span class="kw">table</span>(<span class="kw">predict</span>(mod_mult, <span class="dt">newdata =</span> digitos_prueba), digitos_prueba<span class="op">$</span>digito)
+confusion_prueba</code></pre></div>
+<pre><code>##    
+##       0   1   2   3   4   5   6   7   8   9
+##   0 335   0   3   0   3   6   4   0   3   0
+##   1   0 252   0   0   1   0   0   0   1   3
+##   2   1   1 171   4   8   0   5   2   3   2
+##   3   3   3   8 145   1  18   0   3  12   0
+##   4   3   6   7   1 176   1   2   6   8  16
+##   5  11   1   5  13   2 130  13   2  14   1
+##   6   4   1   1   0   2   0 143   0   1   0
+##   7   0   0   1   1   2   1   0 130   1   5
+##   8   1   0   2   1   2   1   3   0 118   0
+##   9   1   0   0   1   3   3   0   4   5 150</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sum</span>(<span class="kw">diag</span>(confusion_prueba))<span class="op">/</span><span class="kw">sum</span>(confusion_prueba)</code></pre></div>
+<pre><code>## [1] 0.8719482</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">round</span>(<span class="kw">prop.table</span>(confusion_prueba, <span class="dv">2</span>),<span class="dv">2</span>)</code></pre></div>
+<pre><code>##    
+##        0    1    2    3    4    5    6    7    8    9
+##   0 0.93 0.00 0.02 0.00 0.02 0.04 0.02 0.00 0.02 0.00
+##   1 0.00 0.95 0.00 0.00 0.00 0.00 0.00 0.00 0.01 0.02
+##   2 0.00 0.00 0.86 0.02 0.04 0.00 0.03 0.01 0.02 0.01
+##   3 0.01 0.01 0.04 0.87 0.00 0.11 0.00 0.02 0.07 0.00
+##   4 0.01 0.02 0.04 0.01 0.88 0.01 0.01 0.04 0.05 0.09
+##   5 0.03 0.00 0.03 0.08 0.01 0.81 0.08 0.01 0.08 0.01
+##   6 0.01 0.00 0.01 0.00 0.01 0.00 0.84 0.00 0.01 0.00
+##   7 0.00 0.00 0.01 0.01 0.01 0.01 0.00 0.88 0.01 0.03
+##   8 0.00 0.00 0.01 0.01 0.01 0.01 0.02 0.00 0.71 0.00
+##   9 0.00 0.00 0.00 0.01 0.02 0.02 0.00 0.03 0.03 0.85</code></pre>
+<p>El resultado no es muy bueno. Veremos más adelante mejores métodos para este problema. ¿Podemos interpretar el modelo?</p>
+<p>Una idea es tomar los coeficientes y graficarlos según la estructura de las imágenes:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">coefs &lt;-<span class="st"> </span><span class="kw">coef</span>(mod_mult)
+coefs_reng &lt;-<span class="st"> </span>coefs[<span class="dv">1</span>, , drop =<span class="ot">FALSE</span>]
+coefs &lt;-<span class="st"> </span><span class="kw">rbind</span>(coefs_reng, coefs)
+coefs[<span class="dv">1</span> , ] &lt;-<span class="st"> </span><span class="dv">0</span>
+<span class="kw">dim</span>(coefs)</code></pre></div>
+<pre><code>## [1]  10 257</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">beta_df &lt;-<span class="st"> </span>coefs[,<span class="op">-</span><span class="dv">1</span>] <span class="op">%&gt;%</span><span class="st"> </span>as.data.frame <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">digito =</span> <span class="dv">0</span><span class="op">:</span>(<span class="kw">nrow</span>(coefs)<span class="op">-</span><span class="dv">1</span>)) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">gather</span>(pixel, valor, <span class="kw">contains</span>(<span class="st">&#39;pixel&#39;</span>)) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">separate</span>(pixel, <span class="dt">into =</span> <span class="kw">c</span>(<span class="st">&#39;str&#39;</span>,<span class="st">&#39;pixel_no&#39;</span>), <span class="dt">sep=</span><span class="st">&#39;_&#39;</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">x =</span> (<span class="kw">as.integer</span>(pixel_no)<span class="op">-</span><span class="dv">1</span>) <span class="op">%%</span><span class="st"> </span><span class="dv">16</span>, <span class="dt">y =</span> <span class="op">-</span>((<span class="kw">as.integer</span>(pixel_no)<span class="op">-</span><span class="dv">1</span>) <span class="op">%/%</span><span class="st"> </span><span class="dv">16</span>))
+<span class="kw">head</span>(beta_df)</code></pre></div>
+<pre><code>##   digito   str pixel_no        valor x y
+## 1      0 pixel        1  0.000000000 0 0
+## 2      1 pixel        1  0.621681333 0 0
+## 3      2 pixel        1 -0.005914605 0 0
+## 4      3 pixel        1  0.044257959 0 0
+## 5      4 pixel        1  0.190966643 0 0
+## 6      5 pixel        1 -0.010655932 0 0</code></pre>
+<p>Podemos cruzar la tabla con sí misma para hacer comparaciones:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tab_coef &lt;-<span class="st"> </span>beta_df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(digito, x, y, valor)
+tab_coef_<span class="dv">1</span> &lt;-<span class="st"> </span>tab_coef
+<span class="kw">names</span>(tab_coef_<span class="dv">1</span>) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;digito_1&#39;</span>,<span class="st">&#39;x&#39;</span>,<span class="st">&#39;y&#39;</span>,<span class="st">&#39;valor_1&#39;</span>)
+tab_cruzada &lt;-<span class="st"> </span><span class="kw">full_join</span>(tab_coef_<span class="dv">1</span>, tab_coef) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">dif =</span> valor_<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>valor)</code></pre></div>
+<pre><code>## Joining, by = c(&quot;x&quot;, &quot;y&quot;)</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tab_cruzada &lt;-<span class="st"> </span>tab_cruzada <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(digito, digito_<span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">dif_s =</span> (dif <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(dif))<span class="op">/</span><span class="kw">sd</span>(dif)) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">dif_p =</span> <span class="kw">pmin</span>(<span class="kw">pmax</span>(dif_s, <span class="op">-</span><span class="dv">2</span>), <span class="dv">2</span>))</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(tab_cruzada, <span class="kw">aes</span>(<span class="dt">x=</span>x, <span class="dt">y=</span>y)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_tile</span>(<span class="kw">aes</span>(<span class="dt">fill =</span> dif_p)) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">facet_grid</span>(digito_<span class="dv">1</span><span class="op">~</span>digito)<span class="op">+</span><span class="kw">scale_fill_distiller</span>(<span class="dt">palette =</span> <span class="st">&quot;Spectral&quot;</span>)</code></pre></div>
+<p><img src="04-mas-clasificacion_files/figure-html/unnamed-chunk-22-1.png" width="672" /></p>
+</div>
+<div id="discusion" class="section level3 unnumbered">
+<h3>Discusión</h3>
+<p>Nótese que no corrimos el modelo hasta convergencia. Vamos a hacerlo ahora:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mod_mult &lt;-<span class="st"> </span><span class="kw">multinom</span>(digito <span class="op">~</span><span class="st"> </span>., <span class="dt">data =</span> digitos_entrena, <span class="dt">MaxNWt=</span><span class="dv">100000</span>, <span class="dt">maxit =</span> <span class="dv">500</span>)</code></pre></div>
+<pre><code>## # weights:  2580 (2313 variable)
+## initial  value 16788.147913 
+## iter  10 value 2598.959017
+## iter  20 value 1494.978090
+## iter  30 value 903.291402
+## iter  40 value 443.785686
+## iter  50 value 260.626756
+## iter  60 value 190.835491
+## iter  70 value 160.773160
+## iter  80 value 114.048146
+## iter  90 value 88.746976
+## iter 100 value 76.302570
+## iter 110 value 63.400188
+## iter 120 value 54.375215
+## iter 130 value 46.291174
+## iter 140 value 38.303470
+## iter 150 value 28.822810
+## iter 160 value 17.888648
+## iter 170 value 9.531256
+## iter 180 value 2.985614
+## iter 190 value 0.714996
+## iter 200 value 0.209654
+## iter 210 value 0.066710
+## iter 220 value 0.030412
+## iter 230 value 0.014036
+## iter 240 value 0.006702
+## iter 250 value 0.004146
+## iter 260 value 0.001844
+## iter 270 value 0.001128
+## iter 280 value 0.000744
+## iter 290 value 0.000462
+## iter 300 value 0.000308
+## iter 310 value 0.000265
+## iter 320 value 0.000231
+## final  value 0.000076 
+## converged</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">confusion_prueba &lt;-<span class="st"> </span><span class="kw">table</span>(<span class="kw">predict</span>(mod_mult, <span class="dt">newdata =</span> digitos_prueba), digitos_prueba<span class="op">$</span>digito)
+confusion_prueba</code></pre></div>
+<pre><code>##    
+##       0   1   2   3   4   5   6   7   8   9
+##   0 332   0   6   2   4   2   1   2   7   2
+##   1   0 242   1   3   3   4   1   2   0   2
+##   2   2   2 148   5   5   0   4   3   3   0
+##   3   4   1   9 128   4  10   0   3   2   4
+##   4   3   5   8   0 149   8   6   7   5   2
+##   5   0   1   3  11   5 116   8   0  10   1
+##   6   5   7   4   3  10   4 144   0   4   1
+##   7   2   1   3   1   4   1   1 125   2   4
+##   8   6   3  14   7   6  10   4   0 132   3
+##   9   5   2   2   6  10   5   1   5   1 158</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sum</span>(<span class="kw">diag</span>(confusion_prueba))<span class="op">/</span><span class="kw">sum</span>(confusion_prueba)</code></pre></div>
+<pre><code>## [1] 0.8340807</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">round</span>(<span class="kw">prop.table</span>(confusion_prueba, <span class="dv">2</span>),<span class="dv">2</span>)</code></pre></div>
+<pre><code>##    
+##        0    1    2    3    4    5    6    7    8    9
+##   0 0.92 0.00 0.03 0.01 0.02 0.01 0.01 0.01 0.04 0.01
+##   1 0.00 0.92 0.01 0.02 0.02 0.02 0.01 0.01 0.00 0.01
+##   2 0.01 0.01 0.75 0.03 0.02 0.00 0.02 0.02 0.02 0.00
+##   3 0.01 0.00 0.05 0.77 0.02 0.06 0.00 0.02 0.01 0.02
+##   4 0.01 0.02 0.04 0.00 0.74 0.05 0.04 0.05 0.03 0.01
+##   5 0.00 0.00 0.02 0.07 0.02 0.72 0.05 0.00 0.06 0.01
+##   6 0.01 0.03 0.02 0.02 0.05 0.02 0.85 0.00 0.02 0.01
+##   7 0.01 0.00 0.02 0.01 0.02 0.01 0.01 0.85 0.01 0.02
+##   8 0.02 0.01 0.07 0.04 0.03 0.06 0.02 0.00 0.80 0.02
+##   9 0.01 0.01 0.01 0.04 0.05 0.03 0.01 0.03 0.01 0.89</code></pre>
+<p>Y nota que el error es más grande que cuando nos detuvimos antes. Discute en clase:</p>
+<ul>
+<li>Grafica los coeficientes para este segundo modelo</li>
+<li>¿En cuál de los dos modelos es más fácil interpretar los coeficientes? ¿En cuál es menor el error?</li>
+<li>¿Cuál crees que es el problema de este segundo modelo comparado con el primero? ¿Por qué crees que sucede? ¿Cómo podríamos corregir este problema?</li>
+</ul>
+</div>
+</div>
+<div id="descenso-en-gradiente-para-regresion-multinomial-logistica" class="section level2">
+<h2><span class="header-section-number">4.3</span> Descenso en gradiente para regresión multinomial logística</h2>
+<p>Supondremos <span class="math inline">\(K\)</span> clases,</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pred_ml &lt;-<span class="st"> </span><span class="cf">function</span>(x, beta){
+  p &lt;-<span class="st"> </span><span class="kw">ncol</span>(x)
+  K &lt;-<span class="st"> </span><span class="kw">length</span>(beta)<span class="op">/</span>(p<span class="op">+</span><span class="dv">1</span>)
+  beta_mat &lt;-<span class="st"> </span><span class="kw">matrix</span>(beta, K, p <span class="op">+</span><span class="st"> </span><span class="dv">1</span> , <span class="dt">byrow =</span> <span class="ot">TRUE</span>)
+  u_beta &lt;-<span class="st"> </span><span class="kw">exp</span>(<span class="kw">as.matrix</span>(<span class="kw">cbind</span>(<span class="dv">1</span>, x)) <span class="op">%*%</span><span class="st"> </span><span class="kw">t</span>(beta_mat))
+  Z &lt;-<span class="st"> </span><span class="kw">apply</span>(u_beta, <span class="dv">1</span>, sum)
+  p_beta &lt;-<span class="st"> </span>u_beta<span class="op">/</span>Z
+  <span class="kw">as.matrix</span>(p_beta)
+}
+  
+  
+devianza_calc &lt;-<span class="st"> </span><span class="cf">function</span>(x, y){
+  dev_fun &lt;-<span class="st"> </span><span class="cf">function</span>(beta){
+    p_beta &lt;-<span class="st"> </span><span class="kw">pred_ml</span>(x, beta)
+    p &lt;-<span class="st"> </span><span class="kw">sapply</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(x), <span class="cf">function</span>(i) p_beta[i, y[i]<span class="op">+</span><span class="dv">1</span>])
+   <span class="op">-</span><span class="dv">2</span><span class="op">*</span><span class="kw">sum</span>(<span class="kw">log</span>(p))
+  }
+  dev_fun
+}
+
+grad_calc &lt;-<span class="st"> </span><span class="cf">function</span>(x_ent, y_ent){
+  p &lt;-<span class="st"> </span><span class="kw">ncol</span>(x_ent)
+  K &lt;-<span class="st"> </span><span class="kw">length</span>(<span class="kw">unique</span>(y_ent))
+  <span class="co">#param_l &lt;- (K-1)*(p+1)</span>
+  salida_grad &lt;-<span class="st"> </span><span class="cf">function</span>(beta){
+    p_beta &lt;-<span class="st">  </span><span class="kw">pred_ml</span>(x_ent, beta)
+    ff &lt;-<span class="st"> </span><span class="kw">factor</span>(y_ent) 
+    y_dummy &lt;-<span class="st">  </span><span class="kw">model.matrix</span>(<span class="op">~-</span><span class="dv">1</span><span class="op">+</span>ff) 
+    e_mat &lt;-<span class="st">  </span>y_dummy  <span class="op">-</span><span class="st"> </span>p_beta
+    grad_out &lt;-<span class="st"> </span><span class="op">-</span><span class="dv">2</span><span class="op">*</span>(<span class="kw">t</span>(<span class="kw">cbind</span>(<span class="dv">1</span>,x_ent)) <span class="op">%*%</span><span class="st"> </span>e_mat)
+    <span class="kw">as.numeric</span>(grad_out)
+  }
+  salida_grad
+}
+descenso &lt;-<span class="st"> </span><span class="cf">function</span>(n, z_<span class="dv">0</span>, eta, h_deriv){
+  z &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="dv">0</span>,n, <span class="kw">length</span>(z_<span class="dv">0</span>))
+  z[<span class="dv">1</span>, ] &lt;-<span class="st"> </span>z_<span class="dv">0</span>
+  <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>(n<span class="op">-</span><span class="dv">1</span>)){
+    z[i<span class="op">+</span><span class="dv">1</span>, ] &lt;-<span class="st"> </span>z[i, ] <span class="op">-</span><span class="st"> </span>eta <span class="op">*</span><span class="st"> </span><span class="kw">h_deriv</span>(z[i, ])
+  }
+  z
+}</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x_ent &lt;-<span class="st"> </span>digitos_entrena <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="kw">contains</span>(<span class="st">&#39;pixel&#39;</span>)) <span class="op">%&gt;%</span><span class="st"> </span>as.matrix
+y_ent &lt;-<span class="st"> </span>digitos_entrena<span class="op">$</span>digito
+beta &lt;-<span class="st"> </span><span class="kw">runif</span>(<span class="dv">257</span><span class="op">*</span><span class="dv">10</span>)
+dev_ent &lt;-<span class="st"> </span><span class="kw">devianza_calc</span>(x_ent, y_ent)
+grad &lt;-<span class="st"> </span><span class="kw">grad_calc</span>(x_ent, y_ent)
+<span class="kw">dev_ent</span>(beta)</code></pre></div>
+<pre><code>## [1] 121153.2</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">beta_<span class="dv">2</span> &lt;-<span class="st"> </span>beta 
+epsilon &lt;-<span class="st"> </span><span class="fl">0.00001</span>
+beta_<span class="dv">2</span>[<span class="dv">10</span>] &lt;-<span class="st"> </span>beta[<span class="dv">10</span>] <span class="op">+</span><span class="st"> </span>epsilon
+
+(<span class="kw">dev_ent</span>(beta_<span class="dv">2</span>) <span class="op">-</span><span class="st"> </span><span class="kw">dev_ent</span>(beta))<span class="op">/</span>epsilon</code></pre></div>
+<pre><code>## [1] -103.0393</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">grad</span>(beta)[<span class="dv">10</span>]</code></pre></div>
+<pre><code>## [1] -103.0397</code></pre>
+
+<div id="refs" class="references">
+<div>
+<p>Breiman, Leo. 2001. “Statistical Modeling: The Two Cultures (with Comments and a Rejoinder by the Author).” <em>Statist. Sci.</em> 16 (3). The Institute of Mathematical Statistics: 199–231. doi:<a href="https://doi.org/10.1214/ss/1009213726">10.1214/ss/1009213726</a>.</p>
+</div>
+<div>
+<p>James, Gareth, Daniela Witten, Trevor Hastie, and Robert Tibshirani. 2014. <em>An Introduction to Statistical Learning: With Applications in R</em>. Springer Publishing Company, Incorporated. <a href="http://www-bcf.usc.edu/~gareth/ISL/" class="uri">http://www-bcf.usc.edu/~gareth/ISL/</a>.</p>
+</div>
+<div>
+<p>Ng, Andrew. 2017. “Machine Learning.” <a href="https://www.coursera.org/learn/machine-learning" class="uri">https://www.coursera.org/learn/machine-learning</a>.</p>
+</div>
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="logistica.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"google": false,
+"weibo": false,
+"instapper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/felipegonzalez/aprendizaje-maquina-2017/edit/master/04-mas-clasificacion.Rmd",
+"text": "Edit"
+},
+"download": ["aprendizaje-maquina.pdf", "aprendizaje-maquina.epub"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:" && /^https?:/.test(script.src))
+      script.src  = script.src.replace(/^https?:/, '');
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
