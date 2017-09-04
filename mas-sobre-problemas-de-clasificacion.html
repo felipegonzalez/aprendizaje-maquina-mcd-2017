@@ -25,7 +25,7 @@
 <meta name="author" content="Felipe González">
 
 
-<meta name="date" content="2017-09-03">
+<meta name="date" content="2017-09-04">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -392,7 +392,7 @@ knitr<span class="op">::</span><span class="kw">kable</span>(tabla)</code></pre>
 <p>Y también otras que tienen como base las predicciones:</p>
 <ul>
 <li><p>Valor predictivo positivo o Precisión <span class="math display">\[\frac{vp}{vp+fp}=\frac{vp}{pred.pos}\]</span></p></li>
-<li><p>Valor predictivo negativo <span class="math display">\[\frac{vn}{fn+vn}=\frac{vp}{pred.neg}\]</span></p></li>
+<li><p>Valor predictivo negativo <span class="math display">\[\frac{vn}{fn+vn}=\frac{vn}{pred.neg}\]</span></p></li>
 </ul>
 <p>Y hay varias medidas resumen que ponderan de distinta forma</p>
 <ul>
@@ -851,22 +851,25 @@ descenso &lt;-<span class="st"> </span><span class="cf">function</span>(n, z_<sp
 }</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x_ent &lt;-<span class="st"> </span>digitos_entrena <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="kw">contains</span>(<span class="st">&#39;pixel&#39;</span>)) <span class="op">%&gt;%</span><span class="st"> </span>as.matrix
 y_ent &lt;-<span class="st"> </span>digitos_entrena<span class="op">$</span>digito
+x_ent_s &lt;-<span class="st"> </span><span class="kw">scale</span>(x_ent)
+medias &lt;-<span class="st"> </span><span class="kw">attr</span>(x_ent_s, <span class="st">&#39;scaled:center&#39;</span>)
+sd &lt;-<span class="st"> </span><span class="kw">attr</span>(x_ent_s, <span class="st">&#39;scaled:scale&#39;</span>)
 x_pr &lt;-<span class="st"> </span>digitos_prueba <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="kw">contains</span>(<span class="st">&#39;pixel&#39;</span>)) <span class="op">%&gt;%</span><span class="st"> </span>as.matrix
 y_pr &lt;-<span class="st"> </span>digitos_prueba<span class="op">$</span>digito
 beta &lt;-<span class="st"> </span><span class="kw">runif</span>(<span class="dv">257</span><span class="op">*</span><span class="dv">9</span>)
-dev_ent &lt;-<span class="st"> </span><span class="kw">devianza_calc</span>(<span class="kw">scale</span>(x_ent), y_ent)
-grad &lt;-<span class="st"> </span><span class="kw">grad_calc</span>(<span class="kw">scale</span>(x_ent), y_ent)
+dev_ent &lt;-<span class="st"> </span><span class="kw">devianza_calc</span>(x_ent_s, y_ent)
+grad &lt;-<span class="st"> </span><span class="kw">grad_calc</span>(x_ent_s, y_ent)
 <span class="kw">dev_ent</span>(beta)</code></pre></div>
-<pre><code>## [1] 278912.6</code></pre>
+<pre><code>## [1] 254976.6</code></pre>
 <p>Hacemos algunas revisiiones del gradiente:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">beta_<span class="dv">2</span> &lt;-<span class="st"> </span>beta 
 epsilon &lt;-<span class="st"> </span><span class="fl">0.00001</span>
 beta_<span class="dv">2</span>[<span class="dv">1000</span>] &lt;-<span class="st"> </span>beta[<span class="dv">1000</span>] <span class="op">+</span><span class="st"> </span>epsilon
 
 (<span class="kw">dev_ent</span>(beta_<span class="dv">2</span>) <span class="op">-</span><span class="st"> </span><span class="kw">dev_ent</span>(beta))<span class="op">/</span>epsilon</code></pre></div>
-<pre><code>## [1] -950.4275</code></pre>
+<pre><code>## [1] -456.111</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">grad</span>(beta)[<span class="dv">1000</span>]</code></pre></div>
-<pre><code>## [1] -950.4288</code></pre>
+<pre><code>## [1] -456.1135</code></pre>
 <p>Ya ahora podemos hacer descenso:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">iteraciones &lt;-<span class="st"> </span><span class="kw">descenso</span>(<span class="dv">2000</span>, <span class="kw">rep</span>(<span class="dv">0</span>, <span class="dv">257</span><span class="op">*</span><span class="dv">9</span>), <span class="dt">eta=</span><span class="fl">0.001</span>, 
                         <span class="dt">h_deriv =</span> grad, <span class="dt">dev_fun =</span> dev_ent)</code></pre></div>
@@ -889,10 +892,7 @@ beta_<span class="dv">2</span>[<span class="dv">1000</span>] &lt;-<span class="s
 ## [1] &quot;1700 Devianza: 74.6718258066508&quot;
 ## [1] &quot;1800 Devianza: 71.3463032980959&quot;
 ## [1] &quot;1900 Devianza: 68.3137316150628&quot;</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x_ent_s &lt;-<span class="st"> </span><span class="kw">scale</span>(x_ent)
-medias &lt;-<span class="st"> </span><span class="kw">attr</span>(x_ent_s, <span class="st">&#39;scaled:center&#39;</span>)
-sd &lt;-<span class="st"> </span><span class="kw">attr</span>(x_ent_s, <span class="st">&#39;scaled:scale&#39;</span>)
-x_pr_s &lt;-<span class="st"> </span><span class="kw">scale</span>(x_pr, <span class="dt">center =</span> medias, <span class="dt">scale =</span> sd)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x_pr_s &lt;-<span class="st"> </span><span class="kw">scale</span>(x_pr, <span class="dt">center =</span> medias, <span class="dt">scale =</span> sd)
 probas &lt;-<span class="st"> </span><span class="kw">pred_ml</span>(x_pr_s, iteraciones[<span class="dv">2000</span>,])
 clase &lt;-<span class="st"> </span><span class="kw">apply</span>(probas, <span class="dv">1</span>, which.max)
 <span class="kw">table</span>(clase <span class="op">-</span><span class="st"> </span><span class="dv">1</span>, y_pr )</code></pre></div>

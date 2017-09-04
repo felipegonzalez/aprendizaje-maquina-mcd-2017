@@ -135,7 +135,7 @@ curve(p_1, 0,100, xlab = 'Porcentaje de crédito máximo', ylab = 'p_1(x)',
 Si usamos el clasificador de Bayes, tendríamos por ejemplo que
 si $X=10\%$, como $p_1(10\%) = 0.95$ y $p_2(10\%)=0.05$, nuestra predicción
 de clase sería $G(10\%) = 1$ (al corriente), pero si $X=70\%$,
-$G(70\%) = 2$ (impago), pues $p_1(70\%) = 0.57$ y $p_2(70\%) = 0.43$.
+$G(70\%) = 1$ (impago), pues $p_1(70\%) = 0.57$ y $p_2(70\%) = 0.43$.
 
 
 
@@ -449,7 +449,7 @@ head(dat_dev, 50)
 ## # ... with 40 more rows
 ```
 
-Ahora aplicamos la función $h$ que describimos arriba, y promediamos sobre
+Ahora aplicamos la función $s$ que describimos arriba, y promediamos sobre
 el conjunto de entrenamiento:
 
 
@@ -813,7 +813,7 @@ $$\hat{\beta} = \arg\min_\beta D(\beta)$$
 Para minimizar utilizaremos descenso en gradiente (aunque hay más opciones).
 
 La última expresión para $D(\beta)$ puede ser difícil de operar, pero podemos reescribir como:
-$$D(\beta) = -2\sum_{i=1}^N y_i \log(p_{1} (x^{(i)})) + (1-y^{(i)}) \log(p_{0} (x^{(i)})).$$ 
+$$D(\beta) = -2\sum_{i=1}^N y^{(i)} \log(p_{1} (x^{(i)})) + (1-y^{(i)}) \log(p_{0} (x^{(i)})).$$ 
 
 
 Para hacer descenso en gradiente, necesitamos encontrar $\frac{\partial D}{\beta_j}$
@@ -846,7 +846,7 @@ $$ \frac{\partial D}{\partial\beta_j} = - 2\sum_{i=1}^N  (y^{(i)}-p(x^{(i)}))x_j
 De modo que, 
 
 \BeginKnitrBlock{comentario}<div class="comentario">Para un paso $\eta>0$ fijo, la iteración de descenso para regresión logística es:
-$$\beta_j = \beta_j + {2\eta} \sum_{i=1}^N (y^{(i)}-p(x^{(i)}))x_j^{(i)}$$
+$$\beta_{j+1} = \beta_j + {2\eta} \sum_{i=1}^N (y^{(i)}-p(x^{(i)}))x_j^{(i)}$$
 para 
 $j=0,1,\ldots, p$, donde fijamos $x_0^{(i)}=1$.</div>\EndKnitrBlock{comentario}
 

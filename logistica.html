@@ -25,7 +25,7 @@
 <meta name="author" content="Felipe González">
 
 
-<meta name="date" content="2017-09-03">
+<meta name="date" content="2017-09-04">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -278,7 +278,7 @@ Es decir, clasificamos en la clase que tiene máxima probabilidad de ocurrir.
   <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>))</code></pre></div>
 <p><img src="03-clasificacion_files/figure-html/unnamed-chunk-4-1.png" width="384" /></p>
 <p>¿Por qué en este ejemplo ya no mostramos la función <span class="math inline">\(p_2(x)\)</span>?</p>
-<p>Si usamos el clasificador de Bayes, tendríamos por ejemplo que si <span class="math inline">\(X=10\%\)</span>, como <span class="math inline">\(p_1(10\%) = 0.95\)</span> y <span class="math inline">\(p_2(10\%)=0.05\)</span>, nuestra predicción de clase sería <span class="math inline">\(G(10\%) = 1\)</span> (al corriente), pero si <span class="math inline">\(X=70\%\)</span>, <span class="math inline">\(G(70\%) = 2\)</span> (impago), pues <span class="math inline">\(p_1(70\%) = 0.57\)</span> y <span class="math inline">\(p_2(70\%) = 0.43\)</span>.</p>
+<p>Si usamos el clasificador de Bayes, tendríamos por ejemplo que si <span class="math inline">\(X=10\%\)</span>, como <span class="math inline">\(p_1(10\%) = 0.95\)</span> y <span class="math inline">\(p_2(10\%)=0.05\)</span>, nuestra predicción de clase sería <span class="math inline">\(G(10\%) = 1\)</span> (al corriente), pero si <span class="math inline">\(X=70\%\)</span>, <span class="math inline">\(G(70\%) = 1\)</span> (impago), pues <span class="math inline">\(p_1(70\%) = 0.57\)</span> y <span class="math inline">\(p_2(70\%) = 0.43\)</span>.</p>
 </div>
 </div>
 </div>
@@ -472,7 +472,7 @@ dat_dev &lt;-<span class="st"> </span>dat_dev <span class="op">%&gt;%</span><spa
 ##  9 35.4585176      1 0.7500000 0.25000000 0.7500000
 ## 10  9.8302441      1 0.9333333 0.06666667 0.9333333
 ## # ... with 40 more rows</code></pre>
-<p>Ahora aplicamos la función <span class="math inline">\(h\)</span> que describimos arriba, y promediamos sobre el conjunto de entrenamiento:</p>
+<p>Ahora aplicamos la función <span class="math inline">\(s\)</span> que describimos arriba, y promediamos sobre el conjunto de entrenamiento:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dat_dev &lt;-<span class="st"> </span>dat_dev <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">dev =</span> <span class="kw">s</span>(hat_p_g))
 dat_dev <span class="op">%&gt;%</span><span class="st"> </span>ungroup <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">summarise</span>(<span class="dt">dev_entrena =</span> <span class="kw">mean</span>(dev))</code></pre></div>
 <pre><code>## # A tibble: 1 x 1
@@ -674,7 +674,7 @@ El modelo de regresión logística está dado por <span class="math display">\[p
 <p><span class="math display">\[D(\beta) = -2\sum_{i=1}^N \log(p_{y^{(i)}} (x^{(i)})).\]</span></p>
 <p>Los <strong>coeficientes estimados por regresión logística</strong> están dados por <span class="math display">\[\hat{\beta} = \arg\min_\beta D(\beta)\]</span></p>
 <p>Para minimizar utilizaremos descenso en gradiente (aunque hay más opciones).</p>
-<p>La última expresión para <span class="math inline">\(D(\beta)\)</span> puede ser difícil de operar, pero podemos reescribir como: <span class="math display">\[D(\beta) = -2\sum_{i=1}^N y_i \log(p_{1} (x^{(i)})) + (1-y^{(i)}) \log(p_{0} (x^{(i)})).\]</span></p>
+<p>La última expresión para <span class="math inline">\(D(\beta)\)</span> puede ser difícil de operar, pero podemos reescribir como: <span class="math display">\[D(\beta) = -2\sum_{i=1}^N y^{(i)} \log(p_{1} (x^{(i)})) + (1-y^{(i)}) \log(p_{0} (x^{(i)})).\]</span></p>
 <p>Para hacer descenso en gradiente, necesitamos encontrar <span class="math inline">\(\frac{\partial D}{\beta_j}\)</span> para <span class="math inline">\(j=1,2,\ldots,p\)</span>.</p>
 <p>Igual que en regresión lineal, comenzamos por calcular la derivada de un término:</p>
 <p><span class="math display">\[D^{(i)} (\beta) = y^{(i)} \log(p_{1} (x^{(i)})) + (1-y^{(i)}) \log(1-p_{1} (x^{(i)}))\]</span></p>
@@ -691,7 +691,7 @@ Así que
 <p>De modo que,</p>
 
 <div class="comentario">
-Para un paso <span class="math inline">\(\eta&gt;0\)</span> fijo, la iteración de descenso para regresión logística es: <span class="math display">\[\beta_j = \beta_j + {2\eta} \sum_{i=1}^N (y^{(i)}-p(x^{(i)}))x_j^{(i)}\]</span> para <span class="math inline">\(j=0,1,\ldots, p\)</span>, donde fijamos <span class="math inline">\(x_0^{(i)}=1\)</span>.
+Para un paso <span class="math inline">\(\eta&gt;0\)</span> fijo, la iteración de descenso para regresión logística es: <span class="math display">\[\beta_{j+1} = \beta_j + {2\eta} \sum_{i=1}^N (y^{(i)}-p(x^{(i)}))x_j^{(i)}\]</span> para <span class="math inline">\(j=0,1,\ldots, p\)</span>, donde fijamos <span class="math inline">\(x_0^{(i)}=1\)</span>.
 </div>
 
 <p>Podríamos usar las siguientes implementaciones, que representan cambios menores de lo que hicimos en regresión lineal:</p>

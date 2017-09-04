@@ -160,7 +160,7 @@ Y también otras que tienen como base las predicciones:
 $$\frac{vp}{vp+fp}=\frac{vp}{pred.pos}$$
 
 - Valor predictivo negativo
-$$\frac{vn}{fn+vn}=\frac{vp}{pred.neg}$$
+$$\frac{vn}{fn+vn}=\frac{vn}{pred.neg}$$
 
 Y hay varias medidas resumen que ponderan de distinta forma
 
@@ -936,16 +936,19 @@ descenso <- function(n, z_0, eta, h_deriv, dev_fun){
 ```r
 x_ent <- digitos_entrena %>% select(contains('pixel')) %>% as.matrix
 y_ent <- digitos_entrena$digito
+x_ent_s <- scale(x_ent)
+medias <- attr(x_ent_s, 'scaled:center')
+sd <- attr(x_ent_s, 'scaled:scale')
 x_pr <- digitos_prueba %>% select(contains('pixel')) %>% as.matrix
 y_pr <- digitos_prueba$digito
 beta <- runif(257*9)
-dev_ent <- devianza_calc(scale(x_ent), y_ent)
-grad <- grad_calc(scale(x_ent), y_ent)
+dev_ent <- devianza_calc(x_ent_s, y_ent)
+grad <- grad_calc(x_ent_s, y_ent)
 dev_ent(beta)
 ```
 
 ```
-## [1] 278912.6
+## [1] 254976.6
 ```
 
 Hacemos algunas revisiiones del gradiente:
@@ -960,7 +963,7 @@ beta_2[1000] <- beta[1000] + epsilon
 ```
 
 ```
-## [1] -950.4275
+## [1] -456.111
 ```
 
 
@@ -969,7 +972,7 @@ grad(beta)[1000]
 ```
 
 ```
-## [1] -950.4288
+## [1] -456.1135
 ```
 
 Ya ahora podemos hacer descenso:
@@ -1003,9 +1006,6 @@ iteraciones <- descenso(2000, rep(0, 257*9), eta=0.001,
 ```
 
 ```r
-x_ent_s <- scale(x_ent)
-medias <- attr(x_ent_s, 'scaled:center')
-sd <- attr(x_ent_s, 'scaled:scale')
 x_pr_s <- scale(x_pr, center = medias, scale = sd)
 probas <- pred_ml(x_pr_s, iteraciones[2000,])
 clase <- apply(probas, 1, which.max)
