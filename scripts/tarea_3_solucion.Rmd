@@ -1,0 +1,160 @@
+---
+title: "Tarea 3"
+author: "FG"
+date: "8/29/2017"
+output: html_document
+---
+
+## Regresión logística
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Supongamos que queremos identificar dígitos "altos" escritos a mano
+(5,6,7,8,9 vs 0,1,2,3,4). Usamos los siguientes
+datos: 
+
+```{r, warnings = FALSE, messages=FALSE}
+library(readr)
+library(dplyr)
+library(tidyr)
+```
+
+```{r}
+digitos_entrena <- read_csv('../datos/zip-train.csv')
+digitos_prueba <- read_csv('../datos/zip-train.csv')
+names(digitos_entrena)[1] <- 'digito'
+names(digitos_entrena)[2:257] <- paste0('pixel_', 1:256)
+names(digitos_prueba)[1] <- 'digito'
+names(digitos_prueba)[2:257] <- paste0('pixel_', 1:256)
+dim(digitos_entrena)
+table(digitos_entrena$digito)
+```
+
+Puedes graficar para entender los datos con esta función:
+```{r}
+graficar_digitos <- function(d_frame){
+  matriz_digitos <- lapply(1:nrow(d_frame), function(i){ 
+    	matrix(as.numeric(d_frame[i, 257:2]), 16, 16)[16:1, ]
+    })
+	image(Reduce("rbind", matriz_digitos), 
+    col = terrain.colors(30), axes = FALSE)
+	text(seq(0,0.9, length.out = nrow(d_frame)) + 0.05, 0.05, label = d_frame$digito, cex = 1.5)
+}
+graficar_digitos(digitos_entrena[1:10,])
+```
+
+
+0. Los datos ya están divididos en entrenamiento y prueba. Usa esta división y 
+normlaliza 
+ - Explica por qué es menos importante normalizar en este caso, pero de todas formas
+puede es buena idea. 
+ - En estos datos de entrenamiento, los dígitos en la muestra de prueba
+ son escritos por personas diferentes que los de la muestra de entrenamiento. Explica
+ por qué esto es importante para validar correctamente el modelo.
+
+
+```{r}
+digitos_entrena$id <- 1:nrow(digitos_entrena)
+digitos_prueba$id <- 1:nrow(digitos_prueba)
+
+digitos_entrena$digito <- ifelse(digitos_entrena$digito %in% c(0,1,2,3,4),1,0)
+digitos_prueba$digito <- ifelse(digitos_prueba$digito %in% c(0,1,2,3,4),1,0)
+
+
+dat_norm <- digitos_entrena %>% select(-digito, -id) %>%
+  gather(variable, valor, pixel_1:pixel_256) %>%
+  group_by(variable) %>% summarise(m = mean(valor), s = sd(valor))
+dat_norm
+
+normalizar <- function(datos, dat_norm){
+  datos_salida <- datos %>% 
+    gather(variable, valor,  matches('pixel')) %>%
+    left_join(dat_norm) %>%
+    mutate(valor_s = (valor - m)/s) %>%
+    select(id, digito, variable, valor_s) %>%
+    spread(variable, valor_s)
+  datos_salida
+}
+dat_e_norm <- normalizar(digitos_entrena, dat_norm)
+dat_p_norm <- normalizar(digitos_prueba, dat_norm)
+```
+
+1. Ajusta con descenso en gradiente un modelo de regresión logística, y compara
+con la salida de glm para checar tus cálculos. 
+
+```{r}
+h <- function(z){
+  exp(z)/(1+exp(z))
+}
+devianza_calc <- function(x, y){
+  dev_fun <- function(beta){
+    p_beta <- h(as.matrix(cbind(1, x)) %*% beta) 
+   -2*mean(y*log(p_beta) + (1-y)*log(1-p_beta))
+  }
+  dev_fun
+}
+
+grad_calc <- function(x_ent, y_ent){
+  x_ent_1 <- as.matrix(cbind(1, x_ent))
+  salida_grad <- function(beta){
+    p_beta <- h(x_ent_1 %*% beta)
+    e <- y_ent - p_beta
+    grad_out <- -2*as.numeric(t(x_ent_1) %*% e)
+    names(grad_out) <- c('Intercept', colnames(x_ent_1)[-1])
+    grad_out
+  }
+  salida_grad
+}
+descenso <- function(n, z_0, eta, h_deriv){
+  z <- matrix(0,n, length(z_0))
+  z[1, ] <- z_0
+  for(i in 1:(n-1)){
+    z[i+1, ] <- z[i, ] - eta * h_deriv(z[i, ])
+  }
+  z
+}
+```
+
+```{r}
+x_ent <- dat_e_norm %>% select(matches('pixel'))
+x_pr <- dat_p_norm %>% select(matches('pixel'))
+y_ent <- dat_e_norm$digito
+y_pr <- dat_p_norm$digito
+grad <- grad_calc(x_ent, y_ent)
+dev <- devianza_calc(x_ent, y_ent)
+dev_prueba <- devianza_calc(x_pr,y_pr)
+iteraciones_1 <- descenso(2000, z_0 = rep(0,256+1), eta=0.2/nrow(x_ent), grad)
+plot(apply(iteraciones_1[100:2000,], 1, dev))
+```
+
+```{r}
+dev_prueba(beta <- iteraciones_1[2000, ])
+probs <- h(as.matrix(cbind(1, x_pr)) %*% beta) 
+table(y_pr, probs>0.5)
+mean(y_pr != (probs>0.5))
+```
+
+```{r}
+mod_1 <- glm(digito~., data = dat_e_norm %>% select(-id), family='binomial')
+plot(coef(mod_1), beta)
+```
+
+2. Reporta devianza de entrenamiento y de prueba. Calcula también la tasa
+de incorrectos de prueba (usando el clasificador de máxima probabilidad).
+3. Discute por qué el enfoque de este ejercicio puede no ser tan bueno (una regresión
+logística para separa altos de bajos). ¿Qué otro
+enfoque se te ocurre usando regresión logística?
+3. (Opcional) Compara desempeño (puedes usar solo tasa de incorrectos) con 
+algunos modelos de k-vecinos más cercanos. Por ejemplo, 1 vecino más cercano (clasificar
+según el ejemplo más similar).
+4. (Opcional) ¿Puedes interpretar cómo funciona el modelo para hacer predicciones?
+
+```{r, fig.width= 8, fig.asp= 0.5}
+renglon <- digitos_entrena[1,,drop=FALSE]
+renglon[,] <- as.numeric(c(0,scale(beta[-1]),0))
+graficar_digitos(rbind(renglon, dat_e_norm[21:24,]))
+
+```
+
