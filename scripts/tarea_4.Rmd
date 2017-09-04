@@ -1,0 +1,44 @@
+---
+title: "Tarea 4: "
+output: html_notebook
+---
+
+Consideramos 
+datos para detección de spam en e-mail [spambase](https://archive.ics.uci.edu/ml/datasets/spambase).
+
+```{r, message=FALSE, warning=FALSE}
+library(readr)
+library(tidyr)
+library(dplyr)
+spam_entrena <- read_csv('../datos/spam-entrena.csv')
+spam_prueba <- read_csv('../datos/spam-prueba.csv')
+```
+
+Las variables de entrada son extraídas de emails (los textos de 
+emails fueron procesados para obtener estas entradas). Son frecuencias
+de ocurrencia de palabras (por ejemplo, wffree, wfremove, wfmail son frecuencias
+de las palabras free, remove, mail, etc.), y otras entradas cuentan
+aparición de ciertos caracteres (cfdollar, cfexc son frecuencias de caracteres
+signo de dólar y signo de exclamación).
+
+Queremos predecir con estas entradas si un mail es spam o no
+
+
+```{r}
+table(spam_entrena$spam)
+```
+
+Puedes usar el método que quieras para hacer la estimación. 
+
+1. Construye un modelo solamente usando las variables  de caracteres (cfsc, cfpar, etc). 
+Calcula la curva ROC (entrenamiento y prueba). 
+
+2. Construye un modelo utilizando todas las variables. Calcula la curva ROC (entrenamiento
+y prueba). 
+
+3. Grafica las curvas ROC de prueba de los dos modelos anteriores. ¿Qué modelo es superior?
+
+3. Discute un punto de corte apropiado para hacer un filtro de spam. 
+¿Escogerías especificidad más alta o sensibilidad más alta? Explica discutiendo
+los costos de cada tipo de error (falso positivo o falso negativo). Escoge el punto
+de corte y muestra la matriz de confusión correspondiente (prueba).

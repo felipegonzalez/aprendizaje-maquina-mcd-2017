@@ -653,3 +653,9 @@ clase <- apply(probas, 1, which.max)
 table(clase - 1, y_pr )
 1 - mean(clase-1 != y_pr)
 ```
+
+
+
+#### Tarea 4 {-}
+Ver *scripts/tarea_4.Rmd*.
+
