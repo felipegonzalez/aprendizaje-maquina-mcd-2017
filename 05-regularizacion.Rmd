@@ -107,7 +107,6 @@ puede ser alta.
 
 - Cuando hay variables correlacionadas en las entradas la varianza también puede ser alta.
 
-
 En estos casos, conviene buscar maneras de reducir varianza - generalmente a costa
 de un incremento de sesgo.
 
@@ -284,7 +283,7 @@ mod_restringido <- glmnet(x = x_e, y = dat_e$y,
   alpha = 0,
   family='binomial', intercept = F, 
   lambda = 0.1)
-beta_penalizado <- coef(mod.restringido)[-1] # quitar intercept
+beta_penalizado <- coef(mod_restringido)[-1] # quitar intercept
 ```
 
 Y podemos ver que el tamaño de los coeficientes se redujo considerablemente:
@@ -305,8 +304,8 @@ qplot(beta, beta_penalizado) +
 
 
 ```{r}
-p_entrena$prob_hat_pen <- h(x_e %*% as.numeric(beta.restr))
-p_prueba$prob_hat_pen <- h(x_p %*% as.numeric(beta.restr))
+p_entrena$prob_hat_pen <- h(x_e %*% as.numeric(beta_penalizado))
+p_prueba$prob_hat_pen <- h(x_p %*% as.numeric(beta_penalizado))
 ```
 Para los datos de entrenamiento:
 ```{r}
@@ -530,9 +529,9 @@ ponder en riesgo la estimación final del error del modelo seleccionado? )
 
 ### Validación cruzada
 
-En muchos casos, no queremos apartar una muestra de prueba para seleccionar modelos,
-pues no tenemos muchos datos, por ejemplo, al dividir la muestra obtendríamos
-un modelo relativamente malo en relación al que resulta de todos los datos.
+En muchos casos, no queremos apartar una muestra de validación para seleccionar modelos,
+pues no tenemos muchos datos (al dividir la muestra obtendríamos
+un modelo relativamente malo en relación al que resulta de todos los datos).
 Un criterio para seleccionar la regularización adecuada
 es el de **validación cruzada*, que es un método computacional
 para producir una estimación interna (usando sólo muestra de entrenamiento)
@@ -567,19 +566,19 @@ promediando las $k$ estimaciones anteriores, para obtener:
 $$\widehat{cv} = \frac{1}{k} \sum_{j=1}^k \hat{e}_j.$$
 
 
-
 Por ejemplo, el paquete *glmnet* incluye la función
 *cv.glmnet*, que hace los $k$ ajustes para cada una
 de las lambdas:
 
 ```{r}
 library(glmnet)
-cv.mod.ridge <- cv.glmnet(x=salida$mat.entrena, y=salida$g.entrena, 
+set.seed(291)
+cv_mod_ridge <- cv.glmnet(x = x_e, y=dat_e$y, 
   alpha = 0,
   family='binomial', intercept = F, nfolds = 10, nlambda=50)
-plot(cv.mod.ridge)
-cv.mod.ridge$lambda.min
-cv.mod.ridge$lambda.1se
+plot(cv_mod_ridge)
+cv_mod_ridge$lambda.min
+cv_mod_ridge$lambda.1se
 ```
 
 Nótese que la estimación del error de predicción por validación
@@ -595,15 +594,17 @@ criterio es tomar el modelo más simple que tenga error consistente con el
 mejor modelo.
 
 
-
 ¿Cómo se desempeña validación cruzada como estimación del error?
 ```{r}
-#comp.dat <- data.frame(log.lambda=log(devianza.prueba$lambda),
-#  devianza.prueba = devianza.prueba$dev,
-#  devianza.vc = cv.mod.ridge$cvm)
-#comp.dat.m <- melt(comp.dat, id.vars='log.lambda')
-#ggplot(comp.dat.m, aes(x=log.lambda, y=value, colour=variable)) +
-#  geom_point()
+cross_valid <- data_frame(devianza_cv = cv_mod_ridge$cvm,
+                          modelo = attr(cv_mod_ridge$glmnet.fit$a0, 'names')[1:49])
+
+devs <- devianzas_prueba %>% left_join(cross_valid) %>%
+  rename(devianza_prueba = devianza) %>%
+  gather(tipo, devianza,  devianza_prueba, devianza_cv)
+
+ggplot(devs, aes(x=log(lambda), y=devianza, colour=tipo)) +
+  geom_point()
 ```
 
 
