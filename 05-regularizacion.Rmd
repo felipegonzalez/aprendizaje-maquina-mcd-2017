@@ -495,6 +495,10 @@ prop.table(tab_confusion, margin=2)
 ```
 
 
+#### Ejemplo: variables correlacionadas
+
+Ridge es efectivo para reducir varianza inducida por variables correlacionadas.
+
 
 
 ## Entrenamiento, Validación y Prueba
@@ -685,7 +689,7 @@ La salida de glmnet,
 sin embargo, tiene coeficientes para todas las clases ($K(p+1)$ parámetros). 
 ¿Por qué en regresión ridge no está sobreparametrizado el modelo? 
 
-## Regresión lasso
+## Regularización lasso
 
 
 Otra forma de regularización es el {\em lasso}, que en lugar de penalizar
