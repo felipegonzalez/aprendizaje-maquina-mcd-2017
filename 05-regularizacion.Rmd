@@ -495,9 +495,43 @@ prop.table(tab_confusion, margin=2)
 ```
 
 
-#### Ejemplo: variables correlacionadas
+#### Ejemplo: variables correlacionadas {-}
 
 Ridge es efectivo para reducir varianza inducida por variables correlacionadas.
+
+```{r, warning=FALSE, message=FALSE}
+library(readr)
+dat_grasa <- read_csv(file = 'datos/bodyfat.csv')
+head(dat_grasa)
+nrow(dat_grasa)
+set.seed(127)
+dat_grasa$unif <- runif(nrow(dat_grasa), 0, 1)
+dat_grasa <- arrange(dat_grasa, unif)
+dat_grasa$id <- 1:nrow(dat_grasa)
+bfat_e <- dat_grasa[1:100,]
+bfat_p <- dat_grasa[101:252,]
+```
+```{r}
+xbf_e <- bfat_e %>% select(estatura, peso, abdomen, muslo, biceps) %>% as.matrix
+cor(xbf_e)
+ridge_bodyfat <- glmnet(x = scale(xbf_e), y = bfat_e$grasacorp, alpha=0, 
+                        lambda = exp(seq(-5, 5, 0.25)))
+plot(ridge_bodyfat, xvar = 'lambda', label=TRUE)
+```
+
+Donde notamos que las variables con correlaciones altas se "encogen" juntas
+hacia valores similares conforme aumentamos la constante de penalización $\lambda$.
+Nótese que para regularización muy baja peso y abdomen por ejemplo, tienen
+signos opuestos y valores altos: esto es posible pues tienen correlación alta,
+de modo que la función de predicción está pobremente determinada: hay un espacio
+grande de pares de parámetros que dan predicciones similares, y esto resulta
+en coeficientes con varianza alta y predicciones inestables y ruidosas.
+
+- Nótese, adicionalmente, que los coeficientes parecen tener más sentido en relación
+al problema con regularización. Regularización, en este tipo de problemas, es una
+de las componentes necesarias (pero no suficiente) para ir hacia interpretación
+del fenómeno que nos interesa.
+
 
 
 
@@ -518,7 +552,7 @@ final del modelo seleccionado arriba. Es una buena idea
 apartar esta muestra si el proceso de validación incluye muchos métodos
 con varios parámetros afinados (como la $\lambda$ de regresión ridge).
 
-```{r}
+```{r, out.width=450}
 knitr::include_graphics("./imagenes/div_muestra.png")
 ```
 
@@ -547,11 +581,11 @@ del error de predicción.
 
 En validación cruzada (con $k$ vueltas), 
 construimos al azar una partición, con tamaños similares, de la muestra de entrenamiento
-$ {\mathcal L}=\{ (x_i,y_i)\}_{i=1}^n$:
+${\mathcal L}=\{ (x_i,y_i)\}_{i=1}^n$:
 
 $$ {\mathcal L}={\mathcal L}_1\cup {\mathcal L}_2\cup\cdots\cup {\mathcal L}_k.$$
 
-```{r}
+```{r, out.width=320}
 knitr::include_graphics("./imagenes/div_muestra_cv.png")
 ```
 
@@ -692,7 +726,7 @@ sin embargo, tiene coeficientes para todas las clases ($K(p+1)$ parámetros).
 ## Regularización lasso
 
 
-Otra forma de regularización es el {\em lasso}, que en lugar de penalizar
+Otra forma de regularización es el **lasso**, que en lugar de penalizar
 con la suma de cuadrados en los coeficientes, penaliza por la suma
 de su valor absoluto.
 
@@ -738,7 +772,7 @@ de estas curvas de nivel. Para el problema restringido, buscamos más
 bien la curva de nivel más baja que intersecta la restricción:
 
 ```{r}
-knitr::include_graphics('./diagramas/ridge_lasso.png')
+knitr::include_graphics('./imagenes/ridge_lasso.png')
 ```
 Y obsérvese ahora que la solución de lasso *puede hacer algunos coeficientes
 igual a 0*. Es decir,
@@ -770,7 +804,7 @@ nunca se hacen exactamente cero, pues la restricción no es diferenciable en el 
 
 Consideramos el ejemplo de bodyfat:
 
-```{r}
+```{r, message=FALSE, warning=FALSE}
 library(readr)
 dat_grasa <- read_csv(file = 'datos/bodyfat.csv')
 head(dat_grasa)
@@ -782,12 +816,6 @@ dat_grasa$id <- 1:nrow(dat_grasa)
 dat_e <- dat_grasa[1:150,]
 dat_p <- dat_grasa[151:252,]
 
-set.seed(127)
-dat_grasa$unif <- runif(nrow(dat_grasa), 0, 1)
-dat_grasa <- arrange(dat_grasa, unif)
-dat_grasa$id <- 1:nrow(dat_grasa)
-dat_e <- dat_grasa[1:150,]
-dat_p <- dat_grasa[151:252,]
 ```
 
 ```{r}
