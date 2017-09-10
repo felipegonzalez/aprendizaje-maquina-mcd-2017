@@ -24,11 +24,12 @@ de cuál es la muestra de entrenamiento.
 - Puede ser que $\hat{f}(x_0)$ varía mucho dependiendo de la muestra de entrenamiento,
 y en consecuencia es poco probable que $\hat{f}(x_0)$ esté cerca de  $f(x_0)$.
 
-Es posible demostrar sin mucha dificultad que 
+Es posible demostrar que 
 
 $$E\left ( (f(x_0)-\hat{f}(x_0))^2   \right) =
 (f(x_0) - E(\hat{f}(x_0)))^2 + Var (\hat{f}(x_0))$$
 
+donde los valores esperados y varianza son sobre posibles muestras de entrenamiento.
 Al primer término le llamamos **sesgo** : Qué tan lejos en promedio están las estimaciones
 de nuestro modelo del verdadero valor, y al segundo término le llamamos
 **varianza**: qué tanto varían las estimaciones del modelo. Ambas pueden
@@ -90,6 +91,8 @@ El primer método sufre de sesgo: es un método rígido que no aprende de patron
 en los datos. El segundo método sufre de varianza: es un método flexible que aprende
 ruido. Cada uno de estos problemas requiere soluciones diferentes. 
 
+En esta parte veremos métodos de *regularización*, que sirven para reducir la
+varianza con lo que esperamos sean costos menores de sesgo.
 
 ### Sesgo y varianza en modelos lineales
 
@@ -132,7 +135,7 @@ h <- function(x){ 1 / (1 + exp(-x))}
 set.seed(2805)
 beta <- rnorm(100,0,0.1)
 names(beta) <- paste0('V', 1:length(beta))
-beta
+head(beta)
 ```
 
 Con esta función simulamos datos de entrenamiento (400) y datos
@@ -142,21 +145,16 @@ de prueba (5000).
 sim_datos <- function(n, m, beta){
   p <- length(beta)
   #n = casos de entrenamiento, m= casos de prueba, p=num variables
-  mat_entrena <- matrix(rnorm(n*p, 0, 0.5), n, p) + rnorm(p) 
-  mat_prueba <- matrix(rnorm(m*p, 0, 0.5), m, p) + rnorm(p) 
-  p_entrena <- h(mat_entrena %*% beta) 
-  p_prueba <- h(mat_prueba %*% beta) 
-  y_entrena = rbinom(n, 1, p_entrena)
-  y_prueba = rbinom(m, 1, p_prueba)
-  dat_entrena <- as.data.frame(mat_entrena)
-  dat_prueba <- as.data.frame(mat_prueba)
-  dat_entrena$y <- y_entrena
-  dat_prueba$y <- y_prueba
-  dat_entrena$entrena <- TRUE
-  dat_prueba$entrena <- FALSE
-  datos <- bind_rows(dat_entrena, dat_prueba)
-  datos
+  mat <- matrix(rnorm((n+m)*p, 0, 0.5), n+m, p) + rnorm(n + m) 
+  prob <- h(mat %*% beta) 
+  y <- rbinom(n + m, 1, prob)
+  dat <- as.data.frame(mat)
+  dat$y <- y
+  dat$entrena <- FALSE
+  dat$entrena[1:n] <- TRUE
+  dat
 }
+set.seed(9921)
 datos <- sim_datos(n = 400, m = 2000, beta = beta)
 ```
 
@@ -173,7 +171,7 @@ mod_1 <- glm(y ~ -1 + ., datos %>% filter(entrena) %>% select(-entrena),
 qplot(beta, mod_1$coefficients) + 
   xlab('Coeficientes') + 
   ylab('Coeficientes estimados') +
-  geom_abline(xintercept=0, slope =1) +
+  geom_abline(intercept=0, slope =1) +
   xlim(c(-1.5,1.5))+ ylim(c(-1.5,1.5))
 ```
 
@@ -189,7 +187,7 @@ mod_2 <- glm(y ~ -1 + ., datos_2 %>% filter(entrena) %>% select(-entrena),
              family = 'binomial')
 qplot(mod_1$coefficients, mod_2$coefficients) + xlab('Coeficientes mod 1') + 
   ylab('Coeficientes mod 2') +
-  geom_abline(xintercept=0, slope =1) +
+  geom_abline(intercept=0, slope =1) +
   xlim(c(-1.5,1.5))+ ylim(c(-1.5,1.5))
 ```
 
@@ -277,7 +275,7 @@ de penalización.
 
 En este caso obtenemos (veremos más del paquete *glmnet*):
 
-```{r}
+```{r, warning=FALSE, message=FALSE}
 library(glmnet)
 mod_restringido <- glmnet(x = x_e, y = dat_e$y, 
   alpha = 0,
@@ -325,7 +323,7 @@ prop.table(tab, margin=2)
 
 Curvas ROC de prueba:
 
-```{r}
+```{r, warning=FALSE, message =FALSE}
 library(ROCR)
 pred <- prediction(predictions = p_prueba$prob_hat_1, labels = p_prueba$clase)
 perf <- performance(pred, measure = "sens", x.measure = "fpr") 
@@ -357,7 +355,7 @@ abline(a=0, b=1, col ='gray')
 
 ## Regularización ridge
 
-rriba vimos un ejemplo de regresión penalizada tipo **ridge**. Recordemos
+Arriba vimos un ejemplo de regresión penalizada tipo **ridge**. Recordemos
 que para regresión lineal, buscábamos minimizar la cantidad
 $$D(\beta)=\frac{1}{n}\sum_{i=1}^n (y_i -\beta_0 - \sum_{j=1}^p \beta_j x_{ij})^2$$
 y en regresión logística,
@@ -366,7 +364,7 @@ donde los denotamos de la misma forma para unificar notación.
 
 ```{block2, type='comentario'}
 En regresión **ridge** (lineal/logística), para $\lambda>0$ fija minimizamos
-$$D_{\lambda}^2 (\beta)=D(\beta)  + \lambda\sum_{i=1}^p \beta_j^2$$,
+$$D_{\lambda}^{ridge} (\beta)=D(\beta)  + \lambda\sum_{i=1}^p \beta_j^2$$,
 donde suponemos que las entradas están estandarizadas (centradas y escaladas por
 la desviación estándar).
 ```
@@ -400,9 +398,9 @@ y una penalización fija no afecta de la misma forma a cada coeficiente.
 Resolver este problema por descenso en gradiente no tienen dificultad, pues:
 
 ```{block2, type='comentario'}
-$$\frac{\partial D_{\lambda}^2 (\beta)}{\partial\beta_j} = \frac{\partial D(\beta)}{\beta_j} + 2\lambda\beta_j$$
+$$\frac{\partial D_{\lambda}^{ridge} (\beta)}{\partial\beta_j} = \frac{\partial D(\beta)}{\beta_j} + 2\lambda\beta_j$$
 para $j=1,\ldots, p$, y 
-$$\frac{\partial D_{\lambda}^2 (\beta)}{\partial\beta_0} = \frac{\partial D(\beta)}{\beta_0}.$$
+$$\frac{\partial D_{\lambda}^{ridge} (\beta)}{\partial\beta_0} = \frac{\partial D(\beta)}{\beta_0}.$$
 ```
 
 De forma que sólo hay que hacer una modificación  mínima al algoritmo de descenso en gradiente
@@ -480,6 +478,11 @@ ggplot(devianzas_prueba, aes(x = lambda, y= devianza)) +
 
 Buscamos entonces minimizar la devianza (evaluada en la muestra de prueba),
 que corresponde a tomar un valor de $\lambda$ alrededor de exp(-2).
+
+**Discusión**: ¿por qué la devianza de prueba tiene esta forma, que es
+típica para problemas de regularización? 
+
+
 El modelo final queda como sigue:
 
 ```{r}
@@ -564,6 +567,11 @@ que cada una de las estimaciones $\hat{e}_j$ es un estimador del error de $\hat{
 - Dado el punto anterior, podemos construir una mejor estimación
 promediando las $k$ estimaciones anteriores, para obtener:
 $$\widehat{cv} = \frac{1}{k} \sum_{j=1}^k \hat{e}_j.$$
+- ¿Cómo escoger $k$? Usualmente se usan $k=5,10,20$, y $k=10$ es el más popular.
+La razón es que cuando $k$ es muy chico, tendemos a evaluar modelos construidos
+con pocos datos (comparado al modelo con todos los datos de entrenamiento). Por otra
+parte, cuando $k$ es grande el método puede ser muy costoso (por ejemplo, si 
+$k=N$, hay que entrenar un modelo para cada dato de entrada).
 
 
 Por ejemplo, el paquete *glmnet* incluye la función
@@ -628,21 +636,54 @@ El resultado es que:
 de la familia de modelos que consideramos.
 - Como estimación del error de predicción del modelo que ajustamos,
 validación cruzada es más seguro que usar el error de entrenamiento, que
-muchas veces puede estar fuertemente sesgado hacia arriba. Sin embargo, lo
+muchas veces puede estar fuertemente sesgado hacia abajo. Sin embargo, lo
 mejor en este caso es utilizar una muestra de prueba.
 
 
 ### Ejercicio {-}
-En regresión ridge, coeficientes de variables correlacionadas se encogen
-juntos. Esta es una buena estrategia, pues precisamente cuando
-tenemos variables correlacionadas, los coeficientes estimados pueden
-sufrir de varianza alta (si tenemos dos variables similares,
-¿cuánta influencia le asignamos a cada una por las predicciones?).
 
-Construye un ejemplo simulado ($p=2$)con dos bloques de variables que tengan
-variación común, y la respuesta es una variable $y$ que es función lineal
-de las cuatro variables dadas. ¿Cómo se comportan los coeficientes?
+Consideremos el ejemplo de reconocimiento de dígitos.
 
+```{r, message=FALSE, warning=FALSE}
+library(readr)
+digitos_entrena <- read_csv('datos/zip-train.csv')
+digitos_prueba <- read_csv('datos/zip-test.csv')
+names(digitos_entrena)[1] <- 'digito'
+names(digitos_entrena)[2:257] <- paste0('pixel_', 1:256)
+names(digitos_prueba)[1] <- 'digito'
+names(digitos_prueba)[2:257] <- paste0('pixel_', 1:256)
+```
+```{r}
+set.seed(2912)
+if(TRUE){
+  digitos_entrena_s <- sample_n(digitos_entrena, size = 2000)
+} else {
+  digitos_entrena_s <- digitos_entrena
+}
+x_e <- digitos_entrena_s %>% select(-digito) %>% as.matrix
+x_p <- digitos_prueba  %>% select(-digito) %>% as.matrix
+library(doMC)
+registerDoMC(cores=5)
+digitos_cv <- cv.glmnet(x = x_e, y = factor(digitos_entrena_s$digito), 
+                        family = 'multinomial', alpha = 0, 
+                        parallel = TRUE, nfolds = 10, lambda = exp(seq(-12, 2, 1)))
+plot(digitos_cv)
+```
+```{r}
+preds_prueba <- predict(digitos_cv, newx = x_p, s = 'lambda.min')[,,1] # solo un grupo de coeficientes
+dim(preds_prueba)
+preds_clase <- apply(preds_prueba, 1, which.max)
+table(preds_clase, digitos_prueba$digito)
+mean(preds_clase -1 != digitos_prueba$digito)
+```
+
+Este modelo mejora considerablemente al modelo sin regularización.
+
+**Observación**: Cuando vimos regresión multinomial, la última clase es
+uno menos la suma del resto de probabilidades de clase ($(K-1)(p+1)$ parámetros).
+La salida de glmnet,
+sin embargo, tiene coeficientes para todas las clases ($K(p+1)$ parámetros). 
+¿Por qué en regresión ridge no está sobreparametrizado el modelo? 
 
 ## Regresión lasso
 
@@ -663,7 +704,7 @@ problemas de restricción:
 
 
 ```{block2, type='comentario'}
-En regresión {\bf lasso} (lineal/logística), para $s>0$ fija minimizamos
+En regresión **lasso** (lineal/logística), para $s>0$ fija minimizamos
 $$D(\beta), $$
 sujeto a
 $$\sum_{i=1}^p |\beta_j|< s$$
@@ -693,7 +734,7 @@ de estas curvas de nivel. Para el problema restringido, buscamos más
 bien la curva de nivel más baja que intersecta la restricción:
 
 ```{r}
-knitr::include_graphics(c('./diagramas/ridge_lasso.png'))
+knitr::include_graphics('./diagramas/ridge_lasso.png')
 ```
 Y obsérvese ahora que la solución de lasso *puede hacer algunos coeficientes
 igual a 0*. Es decir,
@@ -715,12 +756,56 @@ correlacionadas para reducir varianza en las predicciones.
 similitudes con {\em regresión de mejor subconjunto}, en donde para cada número de variables $l$
 buscamos escoger las $l$ variables que den el mejor modelo. Sin embargo, el enfoque
 de lasso es más eficiente y puede calcularse de manera más simple.
+- Descenso en gradiente no es apropiado para regresión lasso (ver documentación de
+glmnet para ver cómo se hace en este paquete). El problema es que los coeficientes
+nunca se hacen exactamente cero, pues la restricción no es diferenciable en el origen 
+(coeficientes igual a cero).
 ```
 
+#### Ejemplo {-}
 
+Consideramos el ejemplo de bodyfat:
 
+```{r}
+library(readr)
+dat_grasa <- read_csv(file = 'datos/bodyfat.csv')
+head(dat_grasa)
+nrow(dat_grasa)
+set.seed(127)
+dat_grasa$unif <- runif(nrow(dat_grasa), 0, 1)
+dat_grasa <- arrange(dat_grasa, unif)
+dat_grasa$id <- 1:nrow(dat_grasa)
+dat_e <- dat_grasa[1:150,]
+dat_p <- dat_grasa[151:252,]
 
+set.seed(127)
+dat_grasa$unif <- runif(nrow(dat_grasa), 0, 1)
+dat_grasa <- arrange(dat_grasa, unif)
+dat_grasa$id <- 1:nrow(dat_grasa)
+dat_e <- dat_grasa[1:150,]
+dat_p <- dat_grasa[151:252,]
+```
 
+```{r}
+x_e <- dat_e %>% select(-grasacorp, -id, -unif) %>% as.matrix
+x_p <- dat_p %>% select(-grasacorp, -id, -unif) %>% as.matrix
+
+mod_bodyfat <- cv.glmnet(x = x_e, y = dat_e$grasacorp, alpha = 1) #alpha=1 para lasso
+plot(mod_bodyfat)
+```
+```{r}
+coeficientes <- predict(mod_bodyfat, s ='lambda.1se', type='coefficients')
+coeficientes
+```
+```{r}
+pred_prueba <- predict(mod_bodyfat, newx = x_p, s ='lambda.1se')
+sqrt(mean((pred_prueba-dat_p$grasacorp)^2))
+```
+Comparado con regresión lineal:
+```{r}
+pred_prueba <- predict(lm(grasacorp ~., data = dat_e %>% select(-id, -unif)), newdata=dat_p)
+sqrt(mean((pred_prueba-dat_p$grasacorp)^2))
+```
 
 
 
