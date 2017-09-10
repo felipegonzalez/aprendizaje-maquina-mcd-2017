@@ -552,9 +552,47 @@ tab_confusion</code></pre></div>
 ##   FALSE 0.6533865 0.2901606
 ##   TRUE  0.3466135 0.7098394</code></pre>
 </div>
-<div id="ejemplo-variables-correlacionadas" class="section level4">
-<h4><span class="header-section-number">5.2.1.1</span> Ejemplo: variables correlacionadas</h4>
+<div id="ejemplo-variables-correlacionadas" class="section level4 unnumbered">
+<h4>Ejemplo: variables correlacionadas</h4>
 <p>Ridge es efectivo para reducir varianza inducida por variables correlacionadas.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(readr)
+dat_grasa &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="dt">file =</span> <span class="st">&#39;datos/bodyfat.csv&#39;</span>)
+<span class="kw">head</span>(dat_grasa)</code></pre></div>
+<pre><code>## # A tibble: 6 x 14
+##   grasacorp  edad   peso estatura cuello pecho abdomen cadera muslo
+##       &lt;dbl&gt; &lt;int&gt;  &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;
+## 1      12.3    23 154.25    67.75   36.2  93.1    85.2   94.5  59.0
+## 2       6.1    22 173.25    72.25   38.5  93.6    83.0   98.7  58.7
+## 3      25.3    22 154.00    66.25   34.0  95.8    87.9   99.2  59.6
+## 4      10.4    26 184.75    72.25   37.4 101.8    86.4  101.2  60.1
+## 5      28.7    24 184.25    71.25   34.4  97.3   100.0  101.9  63.2
+## 6      20.9    24 210.25    74.75   39.0 104.5    94.4  107.8  66.0
+## # ... with 5 more variables: rodilla &lt;dbl&gt;, tobillo &lt;dbl&gt;, biceps &lt;dbl&gt;,
+## #   antebrazo &lt;dbl&gt;, muñeca &lt;dbl&gt;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">nrow</span>(dat_grasa)</code></pre></div>
+<pre><code>## [1] 252</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">127</span>)
+dat_grasa<span class="op">$</span>unif &lt;-<span class="st"> </span><span class="kw">runif</span>(<span class="kw">nrow</span>(dat_grasa), <span class="dv">0</span>, <span class="dv">1</span>)
+dat_grasa &lt;-<span class="st"> </span><span class="kw">arrange</span>(dat_grasa, unif)
+dat_grasa<span class="op">$</span>id &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(dat_grasa)
+bfat_e &lt;-<span class="st"> </span>dat_grasa[<span class="dv">1</span><span class="op">:</span><span class="dv">100</span>,]
+bfat_p &lt;-<span class="st"> </span>dat_grasa[<span class="dv">101</span><span class="op">:</span><span class="dv">252</span>,]</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">xbf_e &lt;-<span class="st"> </span>bfat_e <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(estatura, peso, abdomen, muslo, biceps) <span class="op">%&gt;%</span><span class="st"> </span>as.matrix
+<span class="kw">cor</span>(xbf_e)</code></pre></div>
+<pre><code>##            estatura      peso   abdomen      muslo    biceps
+## estatura 1.00000000 0.2534694 0.0928379 0.04835578 0.1857616
+## peso     0.25346939 1.0000000 0.9059227 0.86412005 0.8273691
+## abdomen  0.09283790 0.9059227 1.0000000 0.78986726 0.7308348
+## muslo    0.04835578 0.8641200 0.7898673 1.00000000 0.7899550
+## biceps   0.18576161 0.8273691 0.7308348 0.78995504 1.0000000</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ridge_bodyfat &lt;-<span class="st"> </span><span class="kw">glmnet</span>(<span class="dt">x =</span> <span class="kw">scale</span>(xbf_e), <span class="dt">y =</span> bfat_e<span class="op">$</span>grasacorp, <span class="dt">alpha=</span><span class="dv">0</span>, 
+                        <span class="dt">lambda =</span> <span class="kw">exp</span>(<span class="kw">seq</span>(<span class="op">-</span><span class="dv">5</span>, <span class="dv">5</span>, <span class="fl">0.25</span>)))
+<span class="kw">plot</span>(ridge_bodyfat, <span class="dt">xvar =</span> <span class="st">&#39;lambda&#39;</span>, <span class="dt">label=</span><span class="ot">TRUE</span>)</code></pre></div>
+<p><img src="05-regularizacion_files/figure-html/unnamed-chunk-33-1.png" width="672" /></p>
+<p>Donde notamos que las variables con correlaciones altas se “encogen” juntas hacia valores similares conforme aumentamos la constante de penalización <span class="math inline">\(\lambda\)</span>. Nótese que para regularización muy baja peso y abdomen por ejemplo, tienen signos opuestos y valores altos: esto es posible pues tienen correlación alta, de modo que la función de predicción está pobremente determinada: hay un espacio grande de pares de parámetros que dan predicciones similares, y esto resulta en coeficientes con varianza alta y predicciones inestables y ruidosas.</p>
+<ul>
+<li>Nótese, adicionalmente, que los coeficientes parecen tener más sentido en relación al problema con regularización. Regularización, en este tipo de problemas, es una de las componentes necesarias (pero no suficiente) para ir hacia interpretación del fenómeno que nos interesa.</li>
+</ul>
 </div>
 </div>
 </div>
@@ -567,16 +605,16 @@ tab_confusion</code></pre></div>
 <li>Posiblemente una muestra adicional independiente, que llamamos <strong>muestra de prueba</strong>, con la que hacemos una evaluación final del modelo seleccionado arriba. Es una buena idea apartar esta muestra si el proceso de validación incluye muchos métodos con varios parámetros afinados (como la <span class="math inline">\(\lambda\)</span> de regresión ridge).</li>
 </ul>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="st">&quot;./imagenes/div_muestra.png&quot;</span>)</code></pre></div>
-<p><img src="imagenes/div_muestra.png" /><!-- --></p>
+<p><img src="imagenes/div_muestra.png" width="450" /></p>
 <p>Cuando tenemos datos abundantes, este enfoque es el usual. Por ejemplo, podemos dividir la muestra en 50-25-25 por ciento. Ajustamos modelos con el primer 50%, evaluamos y seleccionamos con el segundo 25% y finalmente, si es necesario, evaluamos el modelo final seleccionado con la muestra final de 25%.</p>
 <p>La razón de este proceso es que así podemos ir y venir entre entrenamiento y validación, buscando mejores enfoques y modelos, y no ponemos en riesgo la estimación final del error. (Pregunta: ¿por qué probar agresivamente buscando mejorar el error de validación podría ponder en riesgo la estimación final del error del modelo seleccionado? )</p>
 <div id="validacion-cruzada" class="section level3">
 <h3><span class="header-section-number">5.3.1</span> Validación cruzada</h3>
 <p>En muchos casos, no queremos apartar una muestra de validación para seleccionar modelos, pues no tenemos muchos datos (al dividir la muestra obtendríamos un modelo relativamente malo en relación al que resulta de todos los datos). Un criterio para seleccionar la regularización adecuada es el de **validación cruzada*, que es un método computacional para producir una estimación interna (usando sólo muestra de entrenamiento) del error de predicción.</p>
-<p>En validación cruzada (con <span class="math inline">\(k\)</span> vueltas), construimos al azar una partición, con tamaños similares, de la muestra de entrenamiento $ {L}={ (x_i,y_i)}_{i=1}^n$:</p>
+<p>En validación cruzada (con <span class="math inline">\(k\)</span> vueltas), construimos al azar una partición, con tamaños similares, de la muestra de entrenamiento <span class="math inline">\({\mathcal L}=\{ (x_i,y_i)\}_{i=1}^n\)</span>:</p>
 <p><span class="math display">\[ {\mathcal L}={\mathcal L}_1\cup {\mathcal L}_2\cup\cdots\cup {\mathcal L}_k.\]</span></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="st">&quot;./imagenes/div_muestra_cv.png&quot;</span>)</code></pre></div>
-<p><img src="imagenes/div_muestra_cv.png" /><!-- --></p>
+<p><img src="imagenes/div_muestra_cv.png" width="320" /></p>
 <p>Construimos <span class="math inline">\(k\)</span> modelos distintos, digamos <span class="math inline">\(\hat{f}_j\)</span>, usando solamente la muestra <span class="math inline">\({\mathcal L}-{\mathcal L}_j\)</span>. Este modelo lo evaluamos usando la parte que no usamos, <span class="math inline">\({\mathcal L}_j\)</span>, para obtener una estimación honesta del error del modelo <span class="math inline">\(\hat{f}_k\)</span>, a la que denotamos por <span class="math inline">\(\hat{e}_j\)</span>.</p>
 <p>Notemos entonces que tenemos <span class="math inline">\(k\)</span> estimaciones del error <span class="math inline">\(\hat{e}_1,\ldots, \hat{e}_k\)</span>, una para cada uno de los modelos que construimos. La idea ahora es que</p>
 <ul>
@@ -591,7 +629,7 @@ cv_mod_ridge &lt;-<span class="st"> </span><span class="kw">cv.glmnet</span>(<sp
   <span class="dt">alpha =</span> <span class="dv">0</span>,
   <span class="dt">family=</span><span class="st">&#39;binomial&#39;</span>, <span class="dt">intercept =</span> F, <span class="dt">nfolds =</span> <span class="dv">10</span>, <span class="dt">nlambda=</span><span class="dv">50</span>)
 <span class="kw">plot</span>(cv_mod_ridge)</code></pre></div>
-<p><img src="05-regularizacion_files/figure-html/unnamed-chunk-34-1.png" width="672" /></p>
+<p><img src="05-regularizacion_files/figure-html/unnamed-chunk-36-1.png" width="672" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cv_mod_ridge<span class="op">$</span>lambda.min</code></pre></div>
 <pre><code>## [1] 0.2155714</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cv_mod_ridge<span class="op">$</span>lambda.1se</code></pre></div>
@@ -613,7 +651,7 @@ devs &lt;-<span class="st"> </span>devianzas_prueba <span class="op">%&gt;%</spa
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(devs, <span class="kw">aes</span>(<span class="dt">x=</span><span class="kw">log</span>(lambda), <span class="dt">y=</span>devianza, <span class="dt">colour=</span>tipo)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_point</span>()</code></pre></div>
 <pre><code>## Warning: Removed 1 rows containing missing values (geom_point).</code></pre>
-<p><img src="05-regularizacion_files/figure-html/unnamed-chunk-35-1.png" width="672" /></p>
+<p><img src="05-regularizacion_files/figure-html/unnamed-chunk-37-1.png" width="672" /></p>
 <p>Vemos que la estimación en algunos casos no es tan buena, aún cuando todos los datos fueron usados. Pero el mínimo se encuentra en lugares muy similares.</p>
 <p>La razón es que validación cruzada en realidad considera perturbaciones del conjunto de entrenamiento, de forma que lo que intenta evaluar el error producido, para cada lambda, sobre distintas muestras de entrenamiento.</p>
 <p>En realidad nosotros queremos evaluar el error de predicción del modelo que ajustamos. Validación cruzada es más un estimador del error esperado de predicción sobre los modelos que ajustaríamos con distintas muestras de entrenamiento.</p>
@@ -649,7 +687,7 @@ digitos_cv &lt;-<span class="st"> </span><span class="kw">cv.glmnet</span>(<span
                         <span class="dt">family =</span> <span class="st">&#39;multinomial&#39;</span>, <span class="dt">alpha =</span> <span class="dv">0</span>, 
                         <span class="dt">parallel =</span> <span class="ot">TRUE</span>, <span class="dt">nfolds =</span> <span class="dv">10</span>, <span class="dt">lambda =</span> <span class="kw">exp</span>(<span class="kw">seq</span>(<span class="op">-</span><span class="dv">12</span>, <span class="dv">2</span>, <span class="dv">1</span>)))
 <span class="kw">plot</span>(digitos_cv)</code></pre></div>
-<p><img src="05-regularizacion_files/figure-html/unnamed-chunk-37-1.png" width="672" /></p>
+<p><img src="05-regularizacion_files/figure-html/unnamed-chunk-39-1.png" width="672" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">preds_prueba &lt;-<span class="st"> </span><span class="kw">predict</span>(digitos_cv, <span class="dt">newx =</span> x_p, <span class="dt">s =</span> <span class="st">&#39;lambda.min&#39;</span>)[,,<span class="dv">1</span>] <span class="co"># solo un grupo de coeficientes</span>
 <span class="kw">dim</span>(preds_prueba)</code></pre></div>
 <pre><code>## [1] 2007   10</code></pre>
@@ -675,7 +713,7 @@ digitos_cv &lt;-<span class="st"> </span><span class="kw">cv.glmnet</span>(<span
 </div>
 <div id="regularizacion-lasso" class="section level2">
 <h2><span class="header-section-number">5.4</span> Regularización lasso</h2>
-<p>Otra forma de regularización es el {}, que en lugar de penalizar con la suma de cuadrados en los coeficientes, penaliza por la suma de su valor absoluto.</p>
+<p>Otra forma de regularización es el <strong>lasso</strong>, que en lugar de penalizar con la suma de cuadrados en los coeficientes, penaliza por la suma de su valor absoluto.</p>
 
 <div class="comentario">
 En regresión <strong>lasso</strong> (lineal/logística), para <span class="math inline">\(\lambda&gt;0\)</span> fija minimizamos <span class="math display">\[D_{\lambda}^2 (\beta)=D(\beta)  + \lambda\sum_{i=1}^p |\beta_j|\]</span>, donde suponemos que las entradas están estandarizadas (centradas y escaladas por la desviación estándar).
@@ -694,8 +732,8 @@ En regresión <strong>ridge</strong> (lineal/logística), para <span class="math
 <p> <span class="math inline">\(s\)</span> y <span class="math inline">\(t\)</span> chicas corresponden a valores de penalización <span class="math inline">\(\lambda\)</span> grandes.</p>
 <p>En un principio, puede parecer que ridge y lasso deben dar resultados muy similares, pues en ambos casos penalizamos por el tamaño de los coeficientes. Sin embargo, son distintos de una manera muy importante.</p>
 <p>En la siguiente gráfica regresentamos las curvas de nivel de <span class="math inline">\(D(\beta)\)</span>. Recordemos que en mínimos cuadrados o regresión logística intentamos minimizar esta cantidad sin restricciones, y este mínimo se encuentra en el centro de estas curvas de nivel. Para el problema restringido, buscamos más bien la curva de nivel más baja que intersecta la restricción:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="st">&#39;./diagramas/ridge_lasso.png&#39;</span>)</code></pre></div>
-<p><img src="./diagramas/ridge_lasso.png" /><!-- --> Y obsérvese ahora que la solución de lasso <em>puede hacer algunos coeficientes igual a 0</em>. Es decir,</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="st">&#39;./imagenes/ridge_lasso.png&#39;</span>)</code></pre></div>
+<p><img src="imagenes/ridge_lasso.png" /><!-- --> Y obsérvese ahora que la solución de lasso <em>puede hacer algunos coeficientes igual a 0</em>. Es decir,</p>
 
 <div class="comentario">
 <p>En regresión ridge, los coeficientes se encogen gradualmente desde la solución no restringida hasta el origen. Ridge es un método de <strong>encogimiento de coeficientes.</strong></p>
@@ -715,25 +753,8 @@ En regresión lasso, los coeficientes se encogen gradualmente, pero también se 
 <h4>Ejemplo</h4>
 <p>Consideramos el ejemplo de bodyfat:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(readr)
-dat_grasa &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="dt">file =</span> <span class="st">&#39;datos/bodyfat.csv&#39;</span>)</code></pre></div>
-<pre><code>## Parsed with column specification:
-## cols(
-##   grasacorp = col_double(),
-##   edad = col_integer(),
-##   peso = col_double(),
-##   estatura = col_double(),
-##   cuello = col_double(),
-##   pecho = col_double(),
-##   abdomen = col_double(),
-##   cadera = col_double(),
-##   muslo = col_double(),
-##   rodilla = col_double(),
-##   tobillo = col_double(),
-##   biceps = col_double(),
-##   antebrazo = col_double(),
-##   muñeca = col_double()
-## )</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(dat_grasa)</code></pre></div>
+dat_grasa &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="dt">file =</span> <span class="st">&#39;datos/bodyfat.csv&#39;</span>)
+<span class="kw">head</span>(dat_grasa)</code></pre></div>
 <pre><code>## # A tibble: 6 x 14
 ##   grasacorp  edad   peso estatura cuello pecho abdomen cadera muslo
 ##       &lt;dbl&gt; &lt;int&gt;  &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;
@@ -752,45 +773,38 @@ dat_grasa<span class="op">$</span>unif &lt;-<span class="st"> </span><span class
 dat_grasa &lt;-<span class="st"> </span><span class="kw">arrange</span>(dat_grasa, unif)
 dat_grasa<span class="op">$</span>id &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(dat_grasa)
 dat_e &lt;-<span class="st"> </span>dat_grasa[<span class="dv">1</span><span class="op">:</span><span class="dv">150</span>,]
-dat_p &lt;-<span class="st"> </span>dat_grasa[<span class="dv">151</span><span class="op">:</span><span class="dv">252</span>,]
-
-<span class="kw">set.seed</span>(<span class="dv">127</span>)
-dat_grasa<span class="op">$</span>unif &lt;-<span class="st"> </span><span class="kw">runif</span>(<span class="kw">nrow</span>(dat_grasa), <span class="dv">0</span>, <span class="dv">1</span>)
-dat_grasa &lt;-<span class="st"> </span><span class="kw">arrange</span>(dat_grasa, unif)
-dat_grasa<span class="op">$</span>id &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(dat_grasa)
-dat_e &lt;-<span class="st"> </span>dat_grasa[<span class="dv">1</span><span class="op">:</span><span class="dv">150</span>,]
 dat_p &lt;-<span class="st"> </span>dat_grasa[<span class="dv">151</span><span class="op">:</span><span class="dv">252</span>,]</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x_e &lt;-<span class="st"> </span>dat_e <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="op">-</span>grasacorp, <span class="op">-</span>id, <span class="op">-</span>unif) <span class="op">%&gt;%</span><span class="st"> </span>as.matrix
 x_p &lt;-<span class="st"> </span>dat_p <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="op">-</span>grasacorp, <span class="op">-</span>id, <span class="op">-</span>unif) <span class="op">%&gt;%</span><span class="st"> </span>as.matrix
 
 mod_bodyfat &lt;-<span class="st"> </span><span class="kw">cv.glmnet</span>(<span class="dt">x =</span> x_e, <span class="dt">y =</span> dat_e<span class="op">$</span>grasacorp, <span class="dt">alpha =</span> <span class="dv">1</span>) <span class="co">#alpha=1 para lasso</span>
 <span class="kw">plot</span>(mod_bodyfat)</code></pre></div>
-<p><img src="05-regularizacion_files/figure-html/unnamed-chunk-46-1.png" width="672" /></p>
+<p><img src="05-regularizacion_files/figure-html/unnamed-chunk-48-1.png" width="672" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">coeficientes &lt;-<span class="st"> </span><span class="kw">predict</span>(mod_bodyfat, <span class="dt">s =</span><span class="st">&#39;lambda.1se&#39;</span>, <span class="dt">type=</span><span class="st">&#39;coefficients&#39;</span>)
 coeficientes</code></pre></div>
 <pre><code>## 14 x 1 sparse Matrix of class &quot;dgCMatrix&quot;
 ##                        1
-## (Intercept) -16.80991730
-## edad          0.04562857
+## (Intercept) -20.75924241
+## edad          0.05179279
 ## peso          .         
-## estatura     -0.24218851
+## estatura     -0.09936002
 ## cuello        .         
 ## pecho         .         
-## abdomen       0.65480182
+## abdomen       0.58019360
 ## cadera        .         
 ## muslo         .         
 ## rodilla       .         
 ## tobillo       .         
 ## biceps        .         
 ## antebrazo     .         
-## muñeca       -0.52301251</code></pre>
+## muñeca       -0.51756817</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pred_prueba &lt;-<span class="st"> </span><span class="kw">predict</span>(mod_bodyfat, <span class="dt">newx =</span> x_p, <span class="dt">s =</span><span class="st">&#39;lambda.1se&#39;</span>)
 <span class="kw">sqrt</span>(<span class="kw">mean</span>((pred_prueba<span class="op">-</span>dat_p<span class="op">$</span>grasacorp)<span class="op">^</span><span class="dv">2</span>))</code></pre></div>
-<pre><code>## [1] 4.566748</code></pre>
+<pre><code>## [1] 4.374339</code></pre>
 <p>Comparado con regresión lineal:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pred_prueba &lt;-<span class="st"> </span><span class="kw">predict</span>(<span class="kw">lm</span>(grasacorp <span class="op">~</span>., <span class="dt">data =</span> dat_e <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="op">-</span>id, <span class="op">-</span>unif)), <span class="dt">newdata=</span>dat_p)
 <span class="kw">sqrt</span>(<span class="kw">mean</span>((pred_prueba<span class="op">-</span>dat_p<span class="op">$</span>grasacorp)<span class="op">^</span><span class="dv">2</span>))</code></pre></div>
-<pre><code>## [1] 4.891036</code></pre>
+<pre><code>## [1] 4.311924</code></pre>
 
 <div id="refs" class="references">
 <div>

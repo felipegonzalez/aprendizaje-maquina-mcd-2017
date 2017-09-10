@@ -675,9 +675,83 @@ prop.table(tab_confusion, margin=2)
 ```
 
 
-#### Ejemplo: variables correlacionadas
+#### Ejemplo: variables correlacionadas {-}
 
 Ridge es efectivo para reducir varianza inducida por variables correlacionadas.
+
+
+```r
+library(readr)
+dat_grasa <- read_csv(file = 'datos/bodyfat.csv')
+head(dat_grasa)
+```
+
+```
+## # A tibble: 6 x 14
+##   grasacorp  edad   peso estatura cuello pecho abdomen cadera muslo
+##       <dbl> <int>  <dbl>    <dbl>  <dbl> <dbl>   <dbl>  <dbl> <dbl>
+## 1      12.3    23 154.25    67.75   36.2  93.1    85.2   94.5  59.0
+## 2       6.1    22 173.25    72.25   38.5  93.6    83.0   98.7  58.7
+## 3      25.3    22 154.00    66.25   34.0  95.8    87.9   99.2  59.6
+## 4      10.4    26 184.75    72.25   37.4 101.8    86.4  101.2  60.1
+## 5      28.7    24 184.25    71.25   34.4  97.3   100.0  101.9  63.2
+## 6      20.9    24 210.25    74.75   39.0 104.5    94.4  107.8  66.0
+## # ... with 5 more variables: rodilla <dbl>, tobillo <dbl>, biceps <dbl>,
+## #   antebrazo <dbl>, muñeca <dbl>
+```
+
+```r
+nrow(dat_grasa)
+```
+
+```
+## [1] 252
+```
+
+```r
+set.seed(127)
+dat_grasa$unif <- runif(nrow(dat_grasa), 0, 1)
+dat_grasa <- arrange(dat_grasa, unif)
+dat_grasa$id <- 1:nrow(dat_grasa)
+bfat_e <- dat_grasa[1:100,]
+bfat_p <- dat_grasa[101:252,]
+```
+
+```r
+xbf_e <- bfat_e %>% select(estatura, peso, abdomen, muslo, biceps) %>% as.matrix
+cor(xbf_e)
+```
+
+```
+##            estatura      peso   abdomen      muslo    biceps
+## estatura 1.00000000 0.2534694 0.0928379 0.04835578 0.1857616
+## peso     0.25346939 1.0000000 0.9059227 0.86412005 0.8273691
+## abdomen  0.09283790 0.9059227 1.0000000 0.78986726 0.7308348
+## muslo    0.04835578 0.8641200 0.7898673 1.00000000 0.7899550
+## biceps   0.18576161 0.8273691 0.7308348 0.78995504 1.0000000
+```
+
+```r
+ridge_bodyfat <- glmnet(x = scale(xbf_e), y = bfat_e$grasacorp, alpha=0, 
+                        lambda = exp(seq(-5, 5, 0.25)))
+plot(ridge_bodyfat, xvar = 'lambda', label=TRUE)
+```
+
+<img src="05-regularizacion_files/figure-html/unnamed-chunk-33-1.png" width="672" />
+
+Donde notamos que las variables con correlaciones altas se "encogen" juntas
+hacia valores similares conforme aumentamos la constante de penalización $\lambda$.
+Nótese que para regularización muy baja peso y abdomen por ejemplo, tienen
+signos opuestos y valores altos: esto es posible pues tienen correlación alta,
+de modo que la función de predicción está pobremente determinada: hay un espacio
+grande de pares de parámetros que dan predicciones similares, y esto resulta
+en coeficientes con varianza alta y predicciones inestables y ruidosas.
+
+- Nótese, adicionalmente, que los coeficientes parecen tener más sentido en relación
+al problema con regularización. Regularización, en este tipo de problemas, es una
+de las componentes necesarias (pero no suficiente) para ir hacia interpretación
+del fenómeno que nos interesa.
+
 
 
 
@@ -703,7 +777,7 @@ con varios parámetros afinados (como la $\lambda$ de regresión ridge).
 knitr::include_graphics("./imagenes/div_muestra.png")
 ```
 
-![](./imagenes/div_muestra.png)<!-- -->
+<img src="./imagenes/div_muestra.png" width="450" />
 
 Cuando tenemos datos abundantes, este enfoque es el usual. Por ejemplo,
 podemos dividir la muestra en 50-25-25 por ciento. Ajustamos modelos
@@ -730,7 +804,7 @@ del error de predicción.
 
 En validación cruzada (con $k$ vueltas), 
 construimos al azar una partición, con tamaños similares, de la muestra de entrenamiento
-$ {\mathcal L}=\{ (x_i,y_i)\}_{i=1}^n$:
+${\mathcal L}=\{ (x_i,y_i)\}_{i=1}^n$:
 
 $$ {\mathcal L}={\mathcal L}_1\cup {\mathcal L}_2\cup\cdots\cup {\mathcal L}_k.$$
 
@@ -739,7 +813,7 @@ $$ {\mathcal L}={\mathcal L}_1\cup {\mathcal L}_2\cup\cdots\cup {\mathcal L}_k.$
 knitr::include_graphics("./imagenes/div_muestra_cv.png")
 ```
 
-![](./imagenes/div_muestra_cv.png)<!-- -->
+<img src="./imagenes/div_muestra_cv.png" width="320" />
 
 Construimos $k$ modelos distintos, digamos $\hat{f}_j$, usando solamente
 la muestra ${\mathcal L}-{\mathcal L}_j$. Este modelo lo evaluamos
@@ -778,7 +852,7 @@ cv_mod_ridge <- cv.glmnet(x = x_e, y=dat_e$y,
 plot(cv_mod_ridge)
 ```
 
-<img src="05-regularizacion_files/figure-html/unnamed-chunk-34-1.png" width="672" />
+<img src="05-regularizacion_files/figure-html/unnamed-chunk-36-1.png" width="672" />
 
 ```r
 cv_mod_ridge$lambda.min
@@ -833,7 +907,7 @@ ggplot(devs, aes(x=log(lambda), y=devianza, colour=tipo)) +
 ## Warning: Removed 1 rows containing missing values (geom_point).
 ```
 
-<img src="05-regularizacion_files/figure-html/unnamed-chunk-35-1.png" width="672" />
+<img src="05-regularizacion_files/figure-html/unnamed-chunk-37-1.png" width="672" />
 
 
 Vemos que la estimación en algunos casos no es tan buena, aún cuando
@@ -903,7 +977,7 @@ digitos_cv <- cv.glmnet(x = x_e, y = factor(digitos_entrena_s$digito),
 plot(digitos_cv)
 ```
 
-<img src="05-regularizacion_files/figure-html/unnamed-chunk-37-1.png" width="672" />
+<img src="05-regularizacion_files/figure-html/unnamed-chunk-39-1.png" width="672" />
 
 ```r
 preds_prueba <- predict(digitos_cv, newx = x_p, s = 'lambda.min')[,,1] # solo un grupo de coeficientes
@@ -953,7 +1027,7 @@ sin embargo, tiene coeficientes para todas las clases ($K(p+1)$ parámetros).
 ## Regularización lasso
 
 
-Otra forma de regularización es el {\em lasso}, que en lugar de penalizar
+Otra forma de regularización es el **lasso**, que en lugar de penalizar
 con la suma de cuadrados en los coeficientes, penaliza por la suma
 de su valor absoluto.
 
@@ -994,10 +1068,10 @@ bien la curva de nivel más baja que intersecta la restricción:
 
 
 ```r
-knitr::include_graphics('./diagramas/ridge_lasso.png')
+knitr::include_graphics('./imagenes/ridge_lasso.png')
 ```
 
-![](./diagramas/ridge_lasso.png)<!-- -->
+![](./imagenes/ridge_lasso.png)<!-- -->
 Y obsérvese ahora que la solución de lasso *puede hacer algunos coeficientes
 igual a 0*. Es decir,
 
@@ -1028,29 +1102,6 @@ Consideramos el ejemplo de bodyfat:
 ```r
 library(readr)
 dat_grasa <- read_csv(file = 'datos/bodyfat.csv')
-```
-
-```
-## Parsed with column specification:
-## cols(
-##   grasacorp = col_double(),
-##   edad = col_integer(),
-##   peso = col_double(),
-##   estatura = col_double(),
-##   cuello = col_double(),
-##   pecho = col_double(),
-##   abdomen = col_double(),
-##   cadera = col_double(),
-##   muslo = col_double(),
-##   rodilla = col_double(),
-##   tobillo = col_double(),
-##   biceps = col_double(),
-##   antebrazo = col_double(),
-##   muñeca = col_double()
-## )
-```
-
-```r
 head(dat_grasa)
 ```
 
@@ -1083,13 +1134,6 @@ dat_grasa <- arrange(dat_grasa, unif)
 dat_grasa$id <- 1:nrow(dat_grasa)
 dat_e <- dat_grasa[1:150,]
 dat_p <- dat_grasa[151:252,]
-
-set.seed(127)
-dat_grasa$unif <- runif(nrow(dat_grasa), 0, 1)
-dat_grasa <- arrange(dat_grasa, unif)
-dat_grasa$id <- 1:nrow(dat_grasa)
-dat_e <- dat_grasa[1:150,]
-dat_p <- dat_grasa[151:252,]
 ```
 
 
@@ -1101,7 +1145,7 @@ mod_bodyfat <- cv.glmnet(x = x_e, y = dat_e$grasacorp, alpha = 1) #alpha=1 para 
 plot(mod_bodyfat)
 ```
 
-<img src="05-regularizacion_files/figure-html/unnamed-chunk-46-1.png" width="672" />
+<img src="05-regularizacion_files/figure-html/unnamed-chunk-48-1.png" width="672" />
 
 ```r
 coeficientes <- predict(mod_bodyfat, s ='lambda.1se', type='coefficients')
@@ -1111,20 +1155,20 @@ coeficientes
 ```
 ## 14 x 1 sparse Matrix of class "dgCMatrix"
 ##                        1
-## (Intercept) -16.80991730
-## edad          0.04562857
+## (Intercept) -20.75924241
+## edad          0.05179279
 ## peso          .         
-## estatura     -0.24218851
+## estatura     -0.09936002
 ## cuello        .         
 ## pecho         .         
-## abdomen       0.65480182
+## abdomen       0.58019360
 ## cadera        .         
 ## muslo         .         
 ## rodilla       .         
 ## tobillo       .         
 ## biceps        .         
 ## antebrazo     .         
-## muñeca       -0.52301251
+## muñeca       -0.51756817
 ```
 
 ```r
@@ -1133,7 +1177,7 @@ sqrt(mean((pred_prueba-dat_p$grasacorp)^2))
 ```
 
 ```
-## [1] 4.566748
+## [1] 4.374339
 ```
 Comparado con regresión lineal:
 
@@ -1143,7 +1187,7 @@ sqrt(mean((pred_prueba-dat_p$grasacorp)^2))
 ```
 
 ```
-## [1] 4.891036
+## [1] 4.311924
 ```
 
 
