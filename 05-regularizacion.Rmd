@@ -644,6 +644,78 @@ variación común, y la respuesta es una variable $y$ que es función lineal
 de las cuatro variables dadas. ¿Cómo se comportan los coeficientes?
 
 
+## Regresión lasso
+
+
+Otra forma de regularización es el {\em lasso}, que en lugar de penalizar
+con la suma de cuadrados en los coeficientes, penaliza por la suma
+de su valor absoluto.
+
+```{block2, type='comentario'}
+En regresión **lasso** (lineal/logística), para $\lambda>0$ fija minimizamos
+$$D_{\lambda}^2 (\beta)=D(\beta)  + \lambda\sum_{i=1}^p |\beta_j|$$,
+donde suponemos que las entradas están estandarizadas (centradas y escaladas por
+la desviación estándar).
+```
+
+El problema de minimización de ridge y de lasso se pueden reescribir como
+problemas de restricción:
+
+
+```{block2, type='comentario'}
+En regresión {\bf lasso} (lineal/logística), para $s>0$ fija minimizamos
+$$D(\beta), $$
+sujeto a
+$$\sum_{i=1}^p |\beta_j|< s$$
+donde suponemos que las entradas están estandarizadas (centradas y escaladas por
+la desviación estándar).
+```
+
+```{block2, type='comentario'}
+En regresión **ridge** (lineal/logística), para $t>0$ fija minimizamos
+$$D(\beta), $$
+sujeto a
+$$\sum_{i=1}^p \beta_j^2 < t$$
+donde suponemos que las entradas están estandarizadas (centradas y escaladas por
+la desviación estándar).
+```
+$s$ y $t$ chicas corresponden a valores de penalización $\lambda$ grandes.
+
+
+En un principio, puede parecer que ridge y lasso deben dar resultados
+muy similares, pues en ambos casos penalizamos por el tamaño de los coeficientes.
+Sin embargo, son distintos de una manera muy importante.
+
+En la siguiente gráfica regresentamos las curvas de nivel de $D(\beta)$. 
+Recordemos que en mínimos cuadrados o regresión logística intentamos minimizar
+esta cantidad sin restricciones, y este mínimo se encuentra en el centro 
+de estas curvas de nivel. Para el problema restringido, buscamos más
+bien la curva de nivel más baja que intersecta la restricción:
+
+```{r}
+knitr::include_graphics(c('./diagramas/ridge_lasso.png'))
+```
+Y obsérvese ahora que la solución de lasso *puede hacer algunos coeficientes
+igual a 0*. Es decir,
+
+```{block2, type='comentario'}
+En regresión ridge, los coeficientes se encogen gradualmente desde la solución
+no restringida hasta el origen. Ridge es un método de **encogimiento de coeficientes.**
+
+En regresión lasso, los coeficientes se encogen gradualmente, pero también
+se excluyen  variables del modelo. Por eso lasso es un método de
+*encogimiento y selección de variables*.
+```
+
+```{block2, type='comentario'}
+- Regresión ridge es especialmente útil cuando tenemos varias variables de entrada
+fuertemente correlacionadas. Regresión ridge intenta encoger juntos coeficientes de variables
+correlacionadas para reducir varianza en las predicciones.
+- Lasso encoge igualmente coeficientes para reducir varianza, pero también comparte
+similitudes con {\em regresión de mejor subconjunto}, en donde para cada número de variables $l$
+buscamos escoger las $l$ variables que den el mejor modelo. Sin embargo, el enfoque
+de lasso es más eficiente y puede calcularse de manera más simple.
+```
 
 
 
