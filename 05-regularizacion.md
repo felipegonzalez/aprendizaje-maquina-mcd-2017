@@ -1086,9 +1086,9 @@ se excluyen  variables del modelo. Por eso lasso es un método de
 fuertemente correlacionadas. Regresión ridge intenta encoger juntos coeficientes de variables
 correlacionadas para reducir varianza en las predicciones.
 - Lasso encoge igualmente coeficientes para reducir varianza, pero también comparte
-similitudes con {\em regresión de mejor subconjunto}, en donde para cada número de variables $l$
+similitudes con *regresión de mejor subconjunto*, en donde para cada número de variables $l$
 buscamos escoger las $l$ variables que den el mejor modelo. Sin embargo, el enfoque
-de lasso es más eficiente y puede calcularse de manera más simple.
+de lasso es más escalable y puede calcularse de manera más simple.
 - Descenso en gradiente no es apropiado para regresión lasso (ver documentación de
 glmnet para ver cómo se hace en este paquete). El problema es que los coeficientes
 nunca se hacen exactamente cero, pues la restricción no es diferenciable en el origen 

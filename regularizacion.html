@@ -25,7 +25,7 @@
 <meta name="author" content="Felipe González">
 
 
-<meta name="date" content="2017-09-10">
+<meta name="date" content="2017-09-11">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -744,7 +744,7 @@ En regresión lasso, los coeficientes se encogen gradualmente, pero también se 
 <div class="comentario">
 <ul>
 <li>Regresión ridge es especialmente útil cuando tenemos varias variables de entrada fuertemente correlacionadas. Regresión ridge intenta encoger juntos coeficientes de variables correlacionadas para reducir varianza en las predicciones.</li>
-<li>Lasso encoge igualmente coeficientes para reducir varianza, pero también comparte similitudes con {}, en donde para cada número de variables <span class="math inline">\(l\)</span> buscamos escoger las <span class="math inline">\(l\)</span> variables que den el mejor modelo. Sin embargo, el enfoque de lasso es más eficiente y puede calcularse de manera más simple.</li>
+<li>Lasso encoge igualmente coeficientes para reducir varianza, pero también comparte similitudes con <em>regresión de mejor subconjunto</em>, en donde para cada número de variables <span class="math inline">\(l\)</span> buscamos escoger las <span class="math inline">\(l\)</span> variables que den el mejor modelo. Sin embargo, el enfoque de lasso es más escalable y puede calcularse de manera más simple.</li>
 <li>Descenso en gradiente no es apropiado para regresión lasso (ver documentación de glmnet para ver cómo se hace en este paquete). El problema es que los coeficientes nunca se hacen exactamente cero, pues la restricción no es diferenciable en el origen (coeficientes igual a cero).
 </div>
 </li>
