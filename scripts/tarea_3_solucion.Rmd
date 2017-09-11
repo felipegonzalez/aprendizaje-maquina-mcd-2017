@@ -23,7 +23,7 @@ library(tidyr)
 
 ```{r}
 digitos_entrena <- read_csv('../datos/zip-train.csv')
-digitos_prueba <- read_csv('../datos/zip-train.csv')
+digitos_prueba <- read_csv('../datos/zip-test.csv')
 names(digitos_entrena)[1] <- 'digito'
 names(digitos_entrena)[2:257] <- paste0('pixel_', 1:256)
 names(digitos_prueba)[1] <- 'digito'
