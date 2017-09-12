@@ -25,7 +25,7 @@
 <meta name="author" content="Felipe González">
 
 
-<meta name="date" content="2017-09-11">
+<meta name="date" content="2017-09-12">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -195,6 +195,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="" data-path="regularizacion.html"><a href="regularizacion.html#ejercicio-5"><i class="fa fa-check"></i>Ejercicio</a></li>
 </ul></li>
 <li class="chapter" data-level="5.4" data-path="regularizacion.html"><a href="regularizacion.html#regularizacion-lasso"><i class="fa fa-check"></i><b>5.4</b> Regularización lasso</a></li>
+<li class="chapter" data-level="5.5" data-path="regularizacion.html"><a href="regularizacion.html#tarea-3"><i class="fa fa-check"></i><b>5.5</b> Tarea</a></li>
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Publicado con bookdown</a></li>
@@ -805,6 +806,11 @@ coeficientes</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pred_prueba &lt;-<span class="st"> </span><span class="kw">predict</span>(<span class="kw">lm</span>(grasacorp <span class="op">~</span>., <span class="dt">data =</span> dat_e <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="op">-</span>id, <span class="op">-</span>unif)), <span class="dt">newdata=</span>dat_p)
 <span class="kw">sqrt</span>(<span class="kw">mean</span>((pred_prueba<span class="op">-</span>dat_p<span class="op">$</span>grasacorp)<span class="op">^</span><span class="dv">2</span>))</code></pre></div>
 <pre><code>## [1] 4.311924</code></pre>
+</div>
+</div>
+<div id="tarea-3" class="section level2">
+<h2><span class="header-section-number">5.5</span> Tarea</h2>
+<p>Repite el ejercicio de spam (con todas las variables), y utiliza regresión ridge (glmnet). Escoge el parámetro de regularización con validación cruzada y recalcula la matriz de confusión. ¿Obtuviste ganancias en clasificación? Checa los nuevos coeficientes y compara con los que obtuviste usando regresión logística sin regularización. (Nota: los coeficientes que devuelve glmnet son no estandarizados, aún cuando el cálculo se hace estandarizando - si quieres obtener coeficientes estandarizados puedes estandarizar a mano antes de correr glmnet).</p>
 
 <div id="refs" class="references">
 <div>
@@ -815,7 +821,6 @@ coeficientes</code></pre></div>
 </div>
 <div>
 <p>Ng, Andrew. 2017. “Machine Learning.” <a href="https://www.coursera.org/learn/machine-learning" class="uri">https://www.coursera.org/learn/machine-learning</a>.</p>
-</div>
 </div>
 </div>
 </div>
