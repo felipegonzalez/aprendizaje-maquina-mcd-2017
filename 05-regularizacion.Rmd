@@ -839,5 +839,15 @@ pred_prueba <- predict(lm(grasacorp ~., data = dat_e %>% select(-id, -unif)), ne
 sqrt(mean((pred_prueba-dat_p$grasacorp)^2))
 ```
 
+## Tarea 
+
+Repite el ejercicio de spam (con todas las variables), y utiliza regresión ridge (glmnet). Escoge
+el parámetro de regularización con validación cruzada y recalcula la matriz de confusión. ¿Obtuviste
+ganancias en clasificación? Checa los nuevos coeficientes y compara con los que obtuviste usando
+regresión logística sin regularización. (Nota: los coeficientes que devuelve glmnet son no estandarizados,
+aún cuando el cálculo se hace estandarizando - si quieres obtener coeficientes estandarizados puedes
+estandarizar a mano antes de correr glmnet).
+
+
 
 
