@@ -1,0 +1,397 @@
+# Extensiones de regresión e Intro a redes neuronales
+
+
+## Extendiendo el modelo lineal
+
+Los modelos lineales son modelos simples que tienen la ventaja de que
+es relativamente fácil entender cómo contribuyen las variables de entrada 
+(simplemente describimos los coeficientes), y es relativamente fácil ajustarlos.
+
+Sin embargo, puede ser que sean pobres desde el punto de vista predictivo. Hay dos razones:
+
+1. Los coeficientes tienen varianza alta, 
+de modo que las predicciones resultantes son inestables 
+(por ejemplo, por pocos datos o variables de entradas correlacionadas). 
+En este caso, vimos que con el enfoque de regularización ridge o lasso podemos
+mejorar la estabilidad, 
+las predicciones, y obtener modelos más parsimoniosos.
+
+2. El modelo tiene sesgo, en el sentido de que la estructura lineal
+es deficiente para describir patrones claros e importantes en los datos. Este 
+problema puede suceder 
+cuando tenemos relaciones complejas entre las variables. Cuando hay relativamente 
+pocas entradas y 
+suficientes datos, puede ser posible ajustar estructuras más realistas y complejas. 
+Aunque veremos otros métodos para atacar este problema más adelante, a veces
+extensiones 
+simples del modelo lineal pueden resolver este problema. Igualmente,
+esperamos encontrar 
+mejores predicciones con modelos más realistas.
+
+### Cómo hacer más flexible el modelo lineal
+
+```{block2, type ='comentario'}
+ Podemos construir modelos lineales más flexibles expandiendo el espacio de entradas con transformaciones y combinaciones de las variables originales de entrada.
+```
+
+La idea básica es entonces transformar a nuevas entradas, 
+antes de ajustar un modelo:
+$$(x_1,...,x_p) \to (b_1(x),...,b_M (x)).$$
+
+donde típicamente $M$ es mayor que $p$. Entonces, en lugar de ajustar
+el modelo lineal en las $x_1,\ldots, x_p$, que es
+
+$$ f(x) = \beta_0 + \sum_{i=1}^p \beta_jx_j$$
+
+ajustamos un *modelo lineal en las entradas transformadas*:
+
+$$ f(x) = \beta_0 +  \sum_{i=1}^M \beta_jb_j(x).$$
+
+
+Como cada $b_j$ es una función que toma valores numéricos, podemos
+considerarlas como una {\em entrada derivada} de las entradas originales.
+
+#### Ejemplo {-}
+Si $x_1$ es compras totales de un cliente de tarjeta
+de crédito, y $x_2$ es el número de compras, podemos crear
+una entrada derivada $b_1(x_1,x_2)=x_1/x_2$ que representa el tamaño promedio
+por compra. Podríamos entonces poner $b_2(x_1,x_2)=x_1$, $b_3(x_1,x_2)=x_2$,
+y ajustar un modelo lineal usando las entradas derivadas $b_1,b_2, b_3$.
+
+
+Lo conveniente de este enfoque es que lo único que hacemos para
+hacer más flexible el modelo es transformar en primer lugar las variables
+de entrada (quizá produciendo más entradas que el número de variables originales).
+Después construimos un modelo lineal, y todo lo que hemos visto aplica
+sin cambios: el modelo sigue siendo lineal, pero el espacio de entradas
+es diferente (generalmente expandido).
+
+Veremos las siguientes técnicas:
+
+- Incluir variables cualitativas (categóricas). Transformación de variables.
+- Interacciones entre variables: incluir términos de la forma $x_1x_2$
+- Regresión polinomial: incluír términos de la forma $x_1^2$, $x_1^3$, etcétera.
+- Splines de regresión.
+
+### Variables cualitativas y transformación de variables
+
+
+Una técnica útil para mejorar el sesgo de modelos de regresión 
+consiste en incluir o sustituir valores transformados de las
+variables de entrada. Una de las más comunes es para variables positivas:
+
+```{block2, type='comentario'}
+- Cuando una variable que toma valores positivos y recorre varios órdenes 
+de magnitud, 
+puede ayudar transformar con logaritmo o 
+raíz cuadrada (esto incluye transformar la variable respuesta).
+- Menos común: variables que son proporciones $p$ pueden transformarse mediante la
+transformación inversa de la logística ($x = \log(\frac{p}{1-p})$.)
+```
+
+#### Ejemplo {-}
+
+Consideramos predecir el quilataje de un diamante en función de su precio.
+
+
+```{r, warning=FALSE, message=FALSE}
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+set.seed(231)
+diamonds_muestra <- sample_n(diamonds, 3000)
+ggplot(diamonds_muestra, aes(x=price, y=carat)) + geom_point() +
+  geom_smooth(method = 'lm')
+```
+
+Nótese que el modelo lineal está sesgado, y produce sobrestimaciones y subestimaciones
+para distintos valores de $x$. Aunque podríamos utilizar un método más flexible para
+este modelo, una opción es transformar entrada y salida con logaritmo:
+
+```{r}
+diamonds_muestra <- diamonds_muestra %>% 
+  mutate(log_price = log(price), log_carat = log(carat))
+ggplot(diamonds_muestra, aes(x=log_price, y=log_carat)) + geom_point() +
+  geom_smooth(method = 'lm')
+```
+
+Nota: si tenemos ceros en los datos podemos usar también $\log(x+1)$. Podemos
+graficar también en unidades originales:
+
+```{r}
+
+ggplot(diamonds_muestra, aes(x=price/1000, y=carat)) + geom_point() +
+  geom_smooth(method = 'lm') + 
+  scale_x_log10(breaks=2^seq(-1,5,1)) + scale_y_log10(breaks=2^seq(-2,5,1))
+```
+
+
+
+Muchas veces queremos usar variables cualitativas como entradas de nuestro modelo.
+Pero en la expresión
+
+$$ f(x) = \beta_0 +  \sum_{i=1}^p \beta_jx_j,$$
+todas las entradas son numéricas. Podemos usar un truco simple para incluir
+variables cualitativas
+
+#### Ejemplo {-}
+Supongamos que queremos incluir la variable que identifica la calidad de corte:
+
+```{r}
+diamonds_muestra %>% group_by(cut) %>% count
+ggplot(diamonds_muestra, 
+       aes(x=price, y=carat, colour=color, group=color)) + 
+  geom_point(alpha=0.5) + 
+  geom_smooth(method='lm', se=FALSE, size=1.5) + 
+  scale_y_log10(breaks=c(0.25,0.5,1,2))+
+  scale_x_log10(breaks=c(500,1000,2000,4000,8000))
+```
+
+
+
+Podemos incluir de manera simple esta variable creando variables *dummy* o
+*indicadoras*, que
+son variables que toman valores 0 o 1 dependiendo de cada clase:
+
+
+```{r}
+diamonds_muestra <- diamonds_muestra %>% mutate(color= as.character(color))
+datos <- diamonds_muestra[, c('log_carat', 'log_price', 'color')] 
+head(datos)
+x_e <- model.matrix( ~   color, data = datos)
+head(x_e, 10)
+```
+
+Y ahora podemos hacer:
+
+```{r}
+datos_d <- as.data.frame(x_e)
+datos_d$log_carat <- datos$log_carat
+datos_d$log_price <- datos$log_price
+datos_d$`(Intercept)` <- NULL
+mod_1 <- lm(log_carat ~ ., data = datos_d)
+summary(mod_1)
+```
+
+Nótese que  si la variable categórica tiene $K$ clases,
+solo creamos variables indicadores de las primeras $K-1$ clases, pues
+la dummy de la última clase tiene información redundante: es decir, si
+para las primeras $K-1$ clases las variables dummy son cero, entonces
+ya sabemos que se trata de la última clase $K$, y no necesitamos incluir
+una indicadora para la última clase.
+
+
+Más fácilmente, la función lm hace la codificación dummy automáticamente. Por ejemplo,
+para el modelo logarítmico:
+```{r}
+lm(log_carat ~ log_price + color, data = diamonds_muestra) 
+```
+
+
+**Observaciones**:
+- Nótese también que hay coeficiente para una de las clases, por lo que discutimos arriba. También podemos pensar que el coefi- ciente de esta clase es 0, y así comparamos con las otras clases.
+- Cuando tenemos variables dummy, el intercept se interpreta con el nivel esperado cuando las variables cuantitativas valen cero, y la variable categórica toma la clase que se excluyó en la construcción de las indicadoras.
+
+### Interacciones
+
+En el modelo lineal, cada variable contribuye de la misma manera independientemente de los valores de las otras variables. Esta es un simplificación o aproximación útil, 
+pero muchas veces puede producir sesgo demasiado grande en el modelo. 
+Por ejemplo: consideremos los siguientes datos de la relación de mediciones de temperatura y ozono en la atmósfera:
+
+
+```{r}
+head(airquality)
+air <- filter(airquality, !is.na(Ozone) & !is.na(Wind) & !is.na(Temp))
+lm(Ozone ~Temp, data = air[1:80,])
+```
+```{r}
+set.seed(9132)
+air <- sample_n(air, 116)
+ggplot(air[1:50,], aes(x = Temp, y = Ozone)) + geom_point() + geom_smooth(method = 'lm')
+```
+
+Y notamos un sesgo posible en nuestro modelo. Si coloreamos por velocidad del viento:
+
+```{r}
+cuantiles <- quantile(air$Wind)
+
+ggplot(air[1:50,], aes(x = Temp, y = Ozone, colour= cut(Wind, cuantiles))) + 
+  geom_point() + geom_smooth(method = 'rlm', se = FALSE)
+```
+
+Nótese que parece ser que cuando los niveles de viento son altos, entonces
+hay una relación más fuerte entre temperatura y Ozono. Esto es una *interacción*
+de temperatura y viento.
+
+Podemos hacer los siguiente: incluír un factor adicional, el producto
+de temperatura con viento:
+
+```{r}
+air$temp_wind <- air$Temp*air$Wind
+mod_0 <- lm(Ozone ~ Temp, data = air[1:50,])
+mod_1 <- lm(Ozone ~ Temp + Wind, data = air[1:50,])
+mod_2 <- lm(Ozone ~ Temp + Wind + temp_wind, air[1:50,])
+mod_2
+pred_0 <- predict(mod_0, newdata = air[51:116,])
+pred_1 <- predict(mod_1, newdata = air[51:116,])
+pred_2 <- predict(mod_2, newdata = air[51:116,])
+mean(abs(pred_0-air[51:116,'Ozone']))
+mean(abs(pred_1-air[51:116,'Ozone']))
+mean(abs(pred_2-air[51:116,'Ozone']))
+```
+
+Podemos interpretar el modelo con interacción de la siguiente forma:
+
+- Si $Wind = 5$, entonces la relación Temperatura Ozono es:
+$$ Ozono = -290 + 4.5Temp + 14.6(5) - 0.2(Temp)(5) = -217 + 3.5Temp$$
+- Si $Wind=10$, 
+ entonces la relación Temperatura Ozono es:
+$$ Ozono = -290 + 4.5Temp + 14.6(15) - 0.2(Temp)(15) = -71 + 1.5Temp$$
+
+Incluir interacciones en modelos lineales es buena idea para problemas con un número relativamente chico de variables (por ejemplo, $p < 10$).
+En estos casos, conviene comenzar agregando interacciones entre variables que tengan efectos relativamente grandes en la predicción.
+No es tan buena estrategia para un número grande de variables: por ejemplo, para clasificación de dígitos, hay 256 entradas. Poner todas las interacciones añadiría más de
+30 mil variables adicionales, y es difícil escoger algunas para incluir en el modelo
+a priori.
+
+
+### Categorización de variables
+
+
+En categorización de variable, intentamos hacer un ajuste local en distintas partes del espacio de entrada. La idea es contruir cubetas, particionando el rango de una variable dada, y ajustar entonces un modelo usando la variable dummy indicadora de cada cubeta.
+
+
+```{r}
+dat_wage <- ISLR::Wage 
+ggplot(dat_wage, aes(x=age, y=wage)) + geom_point()
+```
+
+
+
+Cuando la relación entre entradas y salida no es lineal,  podemos obtener menor
+sesgo en nuestros 
+modelos usando esta técnica. En este ejemplo, escogimos edades de corte
+aproximadamente separadas por 10 años, por ejemplo:
+
+```{r}
+#cuantiles_age <- quantile(dat_wage$age, probs=seq(0,1,0.2))
+#cuantiles_age
+dat_wage <- dat_wage %>% 
+  mutate(age_cut = cut(age, c(18, 25, 35, 45, 55, 65, 80), include.lowest=TRUE))
+mod_age <- lm(wage ~ age_cut, data=dat_wage)
+mod_age
+dat_wage$pred_wage <- predict(mod_age)
+ggplot(dat_wage) + geom_point(aes(x=age, y=wage)) +
+  geom_line(aes(x=age, y=pred_wage), colour = 'red', size=1.1)
+
+```
+
+- Podemos escoger los puntos de corte en lugares que son razonables para el problema
+(rangos en los es razonable modelar como una constante).
+- También podemos hacer cortes automáticos usando percentiles de los datos: por ejemplo,
+cortar en cuatro usando los percentiles 25\%, 0.5\% y 0.75\%. Con más datos es posible
+incrementar el número de cortes.
+- Nótese que cuando hacemos estas categorizaciones estamos incrementando el 
+número de parámetros a estimar del modelo (si hacemos tres cortes, por ejemplo, aumentamos
+en 3 el número de parámetros).
+
+
+En estos ejemplos, también es posible incluir términos cuadráticos para modelar
+la relación, por ejemplo:
+
+```{r}
+dat_wage$age_2 <- dat_wage$age^2
+
+mod_age <- lm(wage ~ age + age_2, data=dat_wage)
+mod_age
+dat_wage$pred_wage <- predict(mod_age)
+ggplot(dat_wage) + geom_point(aes(x=age, y=wage)) +
+  geom_line(aes(x=age, y=pred_wage), colour = 'red', size=1.1)
+
+```
+
+Muchas veces usar potencias de variables de entrada es una mala idea, pues
+fácilmente podemos encontrar problemas numéricos. Una
+ alternativa es usar *splines*, que son familias de funciones con buenas propiedades
+ que nos permiten hacer expansiones del espacio de entradas. No las veremos con
+ detalle, pero aquí hay unos ejemplos:
+ 
+ Por ejemplo, podemos usar B-spines, que construyen "chipotes" en distintos
+ rangos de la variable de entrada (es como hacer categorización, pero con
+ funciones de respuesta suaves):
+ 
+```{r}
+library(splines2)
+splines_age  <- mSpline(seq(18,80, 0.2), 
+                         knots = c(25, 35, 45, 55, 65),
+                         degree = 2)
+matplot(splines_age, type='l')
+``` 
+ 
+```{r}
+dat_wage <- ISLR::Wage 
+splines_age  <- mSpline(dat_wage$age, 
+                         knots = c(25, 35, 45, 65),
+                         degree = 2) %>% data.frame
+colnames(splines_age) <- paste0('spline_', 1:6)
+dat_wage <- bind_cols(dat_wage, splines_age)
+dat_sp <- dat_wage %>% dplyr::select(wage, contains('spline'))
+head(dat_sp)
+mod_age <- lm(wage ~. , data=dat_sp)
+mod_age
+dat_wage$pred_wage <- predict(mod_age)
+ggplot(dat_wage) + geom_point(aes(x=age, y=wage)) +
+  geom_line(aes(x=age, y=pred_wage), colour = 'red', size=1.1)
+```
+
+
+O podemos usar i-splines, por ejemplo:
+
+```{r}
+library(splines2)
+splines_age  <- iSpline(seq(18,80, 0.2), 
+                         knots = c(25, 35, 45, 65),
+                         degree = 2)
+matplot(splines_age, type='l')
+``` 
+
+```{r}
+dat_wage <- ISLR::Wage 
+splines_age  <- iSpline(dat_wage$age, 
+                         knots = c(25, 35, 45, 65),
+                         degree = 2) %>% data.frame
+colnames(splines_age) <- paste0('spline_', 1:6)
+dat_wage <- bind_cols(dat_wage, splines_age)
+dat_sp <- dat_wage %>% dplyr::select(wage, contains('spline'))
+head(dat_sp)
+mod_age <- lm(wage ~. , data=dat_sp)
+mod_age
+dat_wage$pred_wage <- predict(mod_age)
+ggplot(dat_wage) + geom_point(aes(x=age, y=wage)) +
+  geom_line(aes(x=age, y=pred_wage), colour = 'red', size=1.1)
+```
+
+
+### ¿Cuándo usar estas técnicas?
+
+Estas técnicas pueden mejorar considerablemente nuestros modelos lineales, pero
+a veces puede ser difícil descubrir exactamente que transformaciones pueden ser
+útiles. En general, 
+
+- Es mejor usar regularización al hacer este tipo de trabajo, 
+para protegernos de varianza alta cuando incluimos varias entradas derivadas.
+- Es buena idea probar incluir interacciones entre variables que tienen efectos grandes en la predicción, o interacciones que creemos son importantes en nuestro problema (por ejemplo,
+temperatura y viento en nuestro ejemplo de arriba, o existencia de estacionamiento y 
+tráfico vehicular como en nuestro ejemplo de predicción de ventas de una tienda).
+- Gráficas como la de arriba (entrada vs respuesta) pueden ayudarnos a decidir
+si conviene categorizar alguna variable o añadir un efecto no lineal.
+
+Este es un trabajo que no es tan fácil, pero para problema con relativamente pocas
+variables es factible. En situaciones con muchas variables de entrada
+y muchos datos, existen mejores opciones.
+
+
+
+
+
+

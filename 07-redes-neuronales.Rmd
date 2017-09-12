@@ -1,0 +1,37 @@
+# Redes neuronales
+
+## Introducción a redes neuronales
+
+En la parte anterior, vimos cómo hacer más flexibles los métodos de regresión: 
+la idea es construir entradas derivadas a partir de las variables originales, e incluirlas en el modelo de regresión.
+Este enfoque es bueno cuando tenemos relativamente pocas variables originales de entrada, y tenemos una idea de qué variables derivadas es buena idea incluir (por ejemplo, splines para una va- riable como edad, interacciones para variables importantes, etc). Sin embargo, si hay una gran cantidad de entradas, esta técnica puede ser prohibitiva en términos de cálculo y 
+trabajo manual.
+
+Por ejemplo, si tenemos unas 100 entradas numéricas, al crear todas las interacciones xixj y los cuadrados x12 terminamos con unas 5150 variables. Para el problema de dígitos (256 entradas o pixeles) terminaríamos con unas 32 mil entradas adicionales. Aún cuando es posible regularizar, en estos casos suena más conveniente construir entradas derivadas a partir de los datos.
+
+Para hacer esto, consideramos entradas $X_1, . . . , Xp$, y supongamos que tenemos un problema de clasificación binaria, con $G = 1$ o $G = 0$. Aunque hay muchas 
+maneras de construir entradas derivadas, una
+manera simple sería construir $m$ nuevas entradas mediante:  
+
+$$a_k = h \left ( \theta_{k,0} + \sum_{j=1}^p \theta_{k,j}x_j
+\right)$$
+
+para $k=1,\ldots, m$, donde $h$ es la función logística, y las $\theta$ son parámetros
+que seleccionaremos más tarde.
+
+ Modelamos ahora la probabilidad de clase 1 con regresión logística
+- pero en lugar de usar las entradas originales X usamos las entradas derivadas 
+$a_1, . . . , a_m$:
+$$p_1(x) = h \left ( \beta_0 + \sum_{j=1}^m \beta_ja_j
+\right)$$ 
+ 
+ 
+Podemos representar este esquema con una red dirigida  ($m=3$ variables derivadas):
+
+
+
+
+
+
+
+
