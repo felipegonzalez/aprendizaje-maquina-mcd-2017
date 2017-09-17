@@ -1,4 +1,4 @@
-# Extensiones de regresión e Intro a redes neuronales
+# Extensiones para regresión lineal y logística
 
 
 
@@ -48,7 +48,7 @@ $$ f(x) = \beta_0 +  \sum_{i=1}^M \beta_jb_j(x).$$
 
 
 Como cada $b_j$ es una función que toma valores numéricos, podemos
-considerarlas como una {\em entrada derivada} de las entradas originales.
+considerarla como una *entrada derivada* de las entradas originales.
 
 #### Ejemplo {-}
 Si $x_1$ es compras totales de un cliente de tarjeta
@@ -76,16 +76,9 @@ Veremos las siguientes técnicas:
 
 Una técnica útil para mejorar el sesgo de modelos de regresión 
 consiste en incluir o sustituir valores transformados de las
-variables de entrada. Una de las más comunes es para variables positivas:
+variables de entrada. Una de las más comunes es usar logaritmo
+para variables positivas:
 
-```{block2, type='comentario'}
-- Cuando una variable que toma valores positivos y recorre varios órdenes 
-de magnitud, 
-puede ayudar transformar con logaritmo o 
-raíz cuadrada (esto incluye transformar la variable respuesta).
-- Menos común: variables que son proporciones $p$ pueden transformarse mediante la
-transformación inversa de la logística ($x = \log(\frac{p}{1-p})$.)
-```
 
 #### Ejemplo {-}
 
@@ -124,6 +117,15 @@ ggplot(diamonds_muestra, aes(x=price/1000, y=carat)) + geom_point() +
 ```
 
 
+```{block2, type='comentario'}
+- Cuando una variable  *toma valores positivos y recorre varios órdenes 
+de magnitud*, 
+puede ayudar transformar con logaritmo o 
+raíz cuadrada (esto incluye transformar la variable respuesta).
+- Menos común: variables que son proporciones $p$ pueden transformarse mediante la
+transformación inversa de la logística ($x = \log(\frac{p}{1-p})$.)
+```
+
 ## Variables cualitativas
 
 Muchas veces queremos usar variables cualitativas como entradas de nuestro modelo.
@@ -134,10 +136,10 @@ todas las entradas son numéricas. Podemos usar un truco simple para incluir
 variables cualitativas
 
 #### Ejemplo {-}
-Supongamos que queremos incluir la variable que identifica la calidad de corte:
+Supongamos que queremos incluir la variable *color*:
 
 ```{r}
-diamonds_muestra %>% group_by(cut) %>% count
+diamonds_muestra %>% group_by(color) %>% count
 ggplot(diamonds_muestra, 
        aes(x=price, y=carat, colour=color, group=color)) + 
   geom_point(alpha=0.5) + 
@@ -188,8 +190,17 @@ lm(log_carat ~ log_price + color, data = diamonds_muestra)
 
 
 **Observaciones**:
-- Nótese también que hay coeficiente para una de las clases, por lo que discutimos arriba. También podemos pensar que el coefi- ciente de esta clase es 0, y así comparamos con las otras clases.
+- Nótese también que no hay coeficiente para una de las clases, por lo que discutimos arriba. También podemos pensar que el coeficiente de esta clase es 0, y así comparamos con las otras clases.
 - Cuando tenemos variables dummy, el intercept se interpreta con el nivel esperado cuando las variables cuantitativas valen cero, y la variable categórica toma la clase que se excluyó en la construcción de las indicadoras.
+
+```{block2, type='comentario'}
+Podemos incluir variables cualitativas usando este truco de codificación
+dummy (también llamado a veces *one-hot encoding*). Ojo: variables con muchas 
+categorías pueden inducir varianza alta en el modelo
+(dependiendo del tamaño de los datos). En estos
+casos conviene usar regularización y quizá (si es razonable) usar categorizaciones
+más gruesas.
+```
 
 ## Interacciones
 
@@ -261,6 +272,12 @@ mod_3 <- lm(Ozone ~ Temp + Wind + Temp:Wind, air[1:50,])
 mod_3
 ```
 
+```{block2, type='comentario'}
+Podemos incluir interacciones para pares de variables que son importantes en la
+predicción, o que por conocimiento del dominio sabemos que son factibles. Conviene
+usar regularización si necesitamos incluir varias interacciones.
+```
+
 
 ## Categorización de variables
 
@@ -303,6 +320,16 @@ incrementar el número de cortes.
 número de parámetros a estimar del modelo (si hacemos tres cortes, por ejemplo, aumentamos
 en 3 el número de parámetros).
 
+
+```{block2, type='comentario'}
+Las categorizaciones de variables son útiles cuando sabemos que hay efectos
+no lineales de la variable subyacente (por ejemplo, edad o nivel socioeconómico),
+y las categorías son suficientemente chicas para que el modelo localmente constante
+sea razonable.
+```
+
+Muchas veces los splines son mejores opciones:
+
 ## Splines
 
 En estos ejemplos, también es posible incluir términos cuadráticos para modelar
@@ -310,7 +337,6 @@ la relación, por ejemplo:
 
 ```{r}
 dat_wage$age_2 <- dat_wage$age^2
-
 mod_age <- lm(wage ~ age + age_2, data=dat_wage)
 mod_age
 dat_wage$pred_wage <- predict(mod_age)
