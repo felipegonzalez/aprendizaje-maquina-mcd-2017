@@ -304,9 +304,9 @@ ejemplo simple:
 
 ```{r}
 p <- function(x1, x2){
-  h(-4 + 3*x1 + 3*x2 + -6*x1*x2)
+  h(-8 + 10*x1 + 10*x2 - 15*x1*x2)
 }
-dat <- expand.grid(x1 = seq(-1,2,0.05), x2 = seq(-1, 2, 0.05))
+dat <- expand.grid(x1 = seq(0,1,0.05), x2 = seq(0, 1, 0.05))
 dat <- dat %>% mutate(p = p(x1, x2))
 ggplot(dat, aes(x=x1, y=x2)) + geom_tile(aes(fill=p))
 ```
@@ -322,7 +322,7 @@ con y sin interacciones:
 ```{r}
 set.seed(12)
 n <- 500
-dat_ent <- data_frame(x1=runif(n,-1,2), x2 = runif(n, -1, 2)) %>%
+dat_ent <- data_frame(x1=runif(n,0,1), x2 = runif(n, 0, 1)) %>%
   mutate(p = p(x1, x2)) %>%
   mutate(y = rbinom(n, 1, p))
 mod_1 <- glm(y ~ x1 + x2, data = dat_ent, family = 'binomial')
@@ -365,10 +365,10 @@ feed_fow <- function(beta, x){
 Y vemos que esta red captura la interacción:
 
 ```{r}
-feed_fow(nn$wts, c(-1,2))
-feed_fow(nn$wts, c(2,-1))
-feed_fow(nn$wts, c(2,2))
-feed_fow(nn$wts, c(-1,-1))
+feed_fow(nn$wts, c(0,0))
+feed_fow(nn$wts, c(0,1))
+feed_fow(nn$wts, c(1,0))
+# feed_fow(nn$wts, c(1,1))
 ```
 
 ```{r}
