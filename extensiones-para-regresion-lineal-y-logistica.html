@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html >
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Aprendizaje de máquina</title>
+  <meta name="description" content="Notas y material para el curso de aprendizaje de máquina 2017 (ITAM)">
+  <meta name="generator" content="bookdown 0.5 and GitBook 2.6.7">
+
+  <meta property="og:title" content="Aprendizaje de máquina" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="Notas y material para el curso de aprendizaje de máquina 2017 (ITAM)" />
+  <meta name="github-repo" content="felipegonzalez/aprendizaje-maquina-2017" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Aprendizaje de máquina" />
+  
+  <meta name="twitter:description" content="Notas y material para el curso de aprendizaje de máquina 2017 (ITAM)" />
+  
+
+<meta name="author" content="Felipe González">
+
+
+<meta name="date" content="2017-09-18">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  
+  
+<link rel="prev" href="regularizacion.html">
+<link rel="next" href="redes-neuronales-parte-1.html">
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+<link rel="stylesheet" href="toc.css" type="text/css" />
+<link rel="stylesheet" href="font-awesome.min.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Aprendizaje Máquina</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Temario y referencias</a><ul>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#evaluacion"><i class="fa fa-check"></i>Evaluación</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#software-r-y-rstudio"><i class="fa fa-check"></i>Software: R y Rstudio</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#referencias-principales"><i class="fa fa-check"></i>Referencias principales</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#otras-referencias"><i class="fa fa-check"></i>Otras referencias</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#otros-materiales"><i class="fa fa-check"></i>Otros materiales</a></li>
+</ul></li>
+<li class="chapter" data-level="1" data-path="introduccion.html"><a href="introduccion.html"><i class="fa fa-check"></i><b>1</b> Introducción</a><ul>
+<li class="chapter" data-level="1.1" data-path="introduccion.html"><a href="introduccion.html#que-es-aprendizaje-de-maquina-machine-learning"><i class="fa fa-check"></i><b>1.1</b> ¿Qué es aprendizaje de máquina (machine learning)?</a></li>
+<li class="chapter" data-level="1.2" data-path="introduccion.html"><a href="introduccion.html#aprendizaje-supervisado-1"><i class="fa fa-check"></i><b>1.2</b> Aprendizaje Supervisado</a><ul>
+<li class="chapter" data-level="1.2.1" data-path="introduccion.html"><a href="introduccion.html#proceso-generador-de-datos-modelo-teorico"><i class="fa fa-check"></i><b>1.2.1</b> Proceso generador de datos (modelo teórico)</a></li>
+</ul></li>
+<li class="chapter" data-level="1.3" data-path="introduccion.html"><a href="introduccion.html#predicciones"><i class="fa fa-check"></i><b>1.3</b> Predicciones</a></li>
+<li class="chapter" data-level="1.4" data-path="introduccion.html"><a href="introduccion.html#cuantificacion-de-error-o-precision"><i class="fa fa-check"></i><b>1.4</b> Cuantificación de error o precisión</a></li>
+<li class="chapter" data-level="1.5" data-path="introduccion.html"><a href="introduccion.html#aprendizaje"><i class="fa fa-check"></i><b>1.5</b> Tarea de aprendizaje supervisado</a><ul>
+<li class="chapter" data-level="1.5.1" data-path="introduccion.html"><a href="introduccion.html#observaciones"><i class="fa fa-check"></i><b>1.5.1</b> Observaciones</a></li>
+</ul></li>
+<li class="chapter" data-level="1.6" data-path="introduccion.html"><a href="introduccion.html#por-que-tenemos-errores"><i class="fa fa-check"></i><b>1.6</b> ¿Por qué tenemos errores?</a></li>
+<li class="chapter" data-level="1.7" data-path="introduccion.html"><a href="introduccion.html#como-estimar-f"><i class="fa fa-check"></i><b>1.7</b> ¿Cómo estimar f?</a></li>
+<li class="chapter" data-level="1.8" data-path="introduccion.html"><a href="introduccion.html#resumen"><i class="fa fa-check"></i><b>1.8</b> Resumen</a></li>
+<li class="chapter" data-level="1.9" data-path="introduccion.html"><a href="introduccion.html#tarea"><i class="fa fa-check"></i><b>1.9</b> Tarea</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="regresion.html"><a href="regresion.html"><i class="fa fa-check"></i><b>2</b> Regresión lineal</a><ul>
+<li class="chapter" data-level="2.1" data-path="introduccion.html"><a href="introduccion.html#introduccion"><i class="fa fa-check"></i><b>2.1</b> Introducción</a></li>
+<li class="chapter" data-level="2.2" data-path="regresion.html"><a href="regresion.html#aprendizaje-de-coeficientes-ajuste"><i class="fa fa-check"></i><b>2.2</b> Aprendizaje de coeficientes (ajuste)</a></li>
+<li class="chapter" data-level="2.3" data-path="regresion.html"><a href="regresion.html#descenso-en-gradiente"><i class="fa fa-check"></i><b>2.3</b> Descenso en gradiente</a><ul>
+<li class="chapter" data-level="2.3.1" data-path="regresion.html"><a href="regresion.html#seleccion-de-tamano-de-paso-eta"><i class="fa fa-check"></i><b>2.3.1</b> Selección de tamaño de paso <span class="math inline">\(\eta\)</span></a></li>
+<li class="chapter" data-level="2.3.2" data-path="regresion.html"><a href="regresion.html#funciones-de-varias-variables"><i class="fa fa-check"></i><b>2.3.2</b> Funciones de varias variables</a></li>
+</ul></li>
+<li class="chapter" data-level="2.4" data-path="regresion.html"><a href="regresion.html#descenso-en-gradiente-para-regresion-lineal"><i class="fa fa-check"></i><b>2.4</b> Descenso en gradiente para regresión lineal</a></li>
+<li class="chapter" data-level="2.5" data-path="regresion.html"><a href="regresion.html#normalizacion-de-entradas"><i class="fa fa-check"></i><b>2.5</b> Normalización de entradas</a></li>
+<li class="chapter" data-level="2.6" data-path="regresion.html"><a href="regresion.html#interpretacion-de-modelos-lineales"><i class="fa fa-check"></i><b>2.6</b> Interpretación de modelos lineales</a></li>
+<li class="chapter" data-level="2.7" data-path="regresion.html"><a href="regresion.html#solucion-analitica"><i class="fa fa-check"></i><b>2.7</b> Solución analítica</a></li>
+<li class="chapter" data-level="2.8" data-path="regresion.html"><a href="regresion.html#por-que-el-modelo-lineal-funciona-bien-muchas-veces"><i class="fa fa-check"></i><b>2.8</b> ¿Por qué el modelo lineal funciona bien (muchas veces)?</a><ul>
+<li class="chapter" data-level="2.8.1" data-path="regresion.html"><a href="regresion.html#k-vecinos-mas-cercanos"><i class="fa fa-check"></i><b>2.8.1</b> k vecinos más cercanos</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="regresion.html"><a href="regresion.html#tarea-1"><i class="fa fa-check"></i>Tarea</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="logistica.html"><a href="logistica.html"><i class="fa fa-check"></i><b>3</b> Regresión logística</a><ul>
+<li class="chapter" data-level="3.1" data-path="logistica.html"><a href="logistica.html#el-problema-de-clasificacion"><i class="fa fa-check"></i><b>3.1</b> El problema de clasificación</a><ul>
+<li class="chapter" data-level="" data-path="logistica.html"><a href="logistica.html#que-estimar-en-problemas-de-clasificacion"><i class="fa fa-check"></i>¿Qué estimar en problemas de clasificación?</a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="logistica.html"><a href="logistica.html#estimacion-de-probabilidades-de-clase"><i class="fa fa-check"></i><b>3.2</b> Estimación de probabilidades de clase</a><ul>
+<li class="chapter" data-level="" data-path="logistica.html"><a href="logistica.html#ejemplo-10"><i class="fa fa-check"></i>Ejemplo</a></li>
+<li class="chapter" data-level="3.2.1" data-path="logistica.html"><a href="logistica.html#k-vecinos-mas-cercanos-1"><i class="fa fa-check"></i><b>3.2.1</b> k-vecinos más cercanos</a></li>
+<li class="chapter" data-level="" data-path="logistica.html"><a href="logistica.html#ejemplo-12"><i class="fa fa-check"></i>Ejemplo</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="logistica.html"><a href="logistica.html#error-para-modelos-de-clasificacion"><i class="fa fa-check"></i><b>3.3</b> Error para modelos de clasificación</a><ul>
+<li class="chapter" data-level="3.3.1" data-path="logistica.html"><a href="logistica.html#ejercicio-1"><i class="fa fa-check"></i><b>3.3.1</b> Ejercicio</a></li>
+<li class="chapter" data-level="3.3.2" data-path="logistica.html"><a href="logistica.html#error-de-clasificacion-y-funcion-de-perdida-0-1"><i class="fa fa-check"></i><b>3.3.2</b> Error de clasificación y función de pérdida 0-1</a></li>
+<li class="chapter" data-level="3.3.3" data-path="logistica.html"><a href="logistica.html#discusion-relacion-entre-devianza-y-error-de-clasificacion"><i class="fa fa-check"></i><b>3.3.3</b> Discusión: relación entre devianza y error de clasificación</a></li>
+</ul></li>
+<li class="chapter" data-level="3.4" data-path="logistica.html"><a href="logistica.html#regresion-logistica"><i class="fa fa-check"></i><b>3.4</b> Regresión logística</a><ul>
+<li class="chapter" data-level="3.4.1" data-path="logistica.html"><a href="logistica.html#regresion-logistica-simple"><i class="fa fa-check"></i><b>3.4.1</b> Regresión logística simple</a></li>
+<li class="chapter" data-level="3.4.2" data-path="logistica.html"><a href="logistica.html#funcion-logistica"><i class="fa fa-check"></i><b>3.4.2</b> Función logística</a></li>
+<li class="chapter" data-level="3.4.3" data-path="logistica.html"><a href="logistica.html#regresion-logistica-1"><i class="fa fa-check"></i><b>3.4.3</b> Regresión logística</a></li>
+</ul></li>
+<li class="chapter" data-level="3.5" data-path="logistica.html"><a href="logistica.html#aprendizaje-de-coeficientes-para-regresion-logistica-binomial."><i class="fa fa-check"></i><b>3.5</b> Aprendizaje de coeficientes para regresión logística (binomial).</a></li>
+<li class="chapter" data-level="3.6" data-path="logistica.html"><a href="logistica.html#observaciones-adicionales"><i class="fa fa-check"></i><b>3.6</b> Observaciones adicionales</a></li>
+<li class="chapter" data-level="3.7" data-path="logistica.html"><a href="logistica.html#ejercicio-datos-de-diabetes"><i class="fa fa-check"></i><b>3.7</b> Ejercicio: datos de diabetes</a><ul>
+<li class="chapter" data-level="" data-path="logistica.html"><a href="logistica.html#tarea-2"><i class="fa fa-check"></i>Tarea</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="mas-sobre-problemas-de-clasificacion.html"><a href="mas-sobre-problemas-de-clasificacion.html"><i class="fa fa-check"></i><b>4</b> Más sobre problemas de clasificación</a><ul>
+<li class="chapter" data-level="4.1" data-path="mas-sobre-problemas-de-clasificacion.html"><a href="mas-sobre-problemas-de-clasificacion.html#analisis-de-error-para-clasificadores-binarios"><i class="fa fa-check"></i><b>4.1</b> Análisis de error para clasificadores binarios</a><ul>
+<li class="chapter" data-level="4.1.1" data-path="mas-sobre-problemas-de-clasificacion.html"><a href="mas-sobre-problemas-de-clasificacion.html#punto-de-corte-para-un-clasificador-binario"><i class="fa fa-check"></i><b>4.1.1</b> Punto de corte para un clasificador binario</a></li>
+<li class="chapter" data-level="4.1.2" data-path="mas-sobre-problemas-de-clasificacion.html"><a href="mas-sobre-problemas-de-clasificacion.html#espacio-roc-de-clasificadores"><i class="fa fa-check"></i><b>4.1.2</b> Espacio ROC de clasificadores</a></li>
+</ul></li>
+<li class="chapter" data-level="4.2" data-path="mas-sobre-problemas-de-clasificacion.html"><a href="mas-sobre-problemas-de-clasificacion.html#perfil-de-un-clasificador-binario-y-curvas-roc"><i class="fa fa-check"></i><b>4.2</b> Perfil de un clasificador binario y curvas ROC</a></li>
+<li class="chapter" data-level="4.3" data-path="mas-sobre-problemas-de-clasificacion.html"><a href="mas-sobre-problemas-de-clasificacion.html#regresion-logistica-para-problemas-de-mas-de-2-clases"><i class="fa fa-check"></i><b>4.3</b> Regresión logística para problemas de más de 2 clases</a><ul>
+<li class="chapter" data-level="4.3.1" data-path="mas-sobre-problemas-de-clasificacion.html"><a href="mas-sobre-problemas-de-clasificacion.html#regresion-logistica-multinomial"><i class="fa fa-check"></i><b>4.3.1</b> Regresión logística multinomial</a></li>
+<li class="chapter" data-level="4.3.2" data-path="mas-sobre-problemas-de-clasificacion.html"><a href="mas-sobre-problemas-de-clasificacion.html#interpretacion-de-coeficientes"><i class="fa fa-check"></i><b>4.3.2</b> Interpretación de coeficientes</a></li>
+<li class="chapter" data-level="4.3.3" data-path="mas-sobre-problemas-de-clasificacion.html"><a href="mas-sobre-problemas-de-clasificacion.html#ejemplo-clasificacion-de-digitos-con-regresion-multinomial"><i class="fa fa-check"></i><b>4.3.3</b> Ejemplo: Clasificación de dígitos con regresión multinomial</a></li>
+<li class="chapter" data-level="" data-path="mas-sobre-problemas-de-clasificacion.html"><a href="mas-sobre-problemas-de-clasificacion.html#discusion"><i class="fa fa-check"></i>Discusión</a></li>
+</ul></li>
+<li class="chapter" data-level="4.4" data-path="mas-sobre-problemas-de-clasificacion.html"><a href="mas-sobre-problemas-de-clasificacion.html#descenso-en-gradiente-para-regresion-multinomial-logistica"><i class="fa fa-check"></i><b>4.4</b> Descenso en gradiente para regresión multinomial logística</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="regularizacion.html"><a href="regularizacion.html"><i class="fa fa-check"></i><b>5</b> Regularización</a><ul>
+<li class="chapter" data-level="5.1" data-path="regularizacion.html"><a href="regularizacion.html#sesgo-y-varianza-de-predictores"><i class="fa fa-check"></i><b>5.1</b> Sesgo y varianza de predictores</a><ul>
+<li class="chapter" data-level="5.1.1" data-path="regularizacion.html"><a href="regularizacion.html#sesgo-y-varianza-en-modelos-lineales"><i class="fa fa-check"></i><b>5.1.1</b> Sesgo y varianza en modelos lineales</a></li>
+<li class="chapter" data-level="5.1.2" data-path="regularizacion.html"><a href="regularizacion.html#reduciendo-varianza-de-los-coeficientes"><i class="fa fa-check"></i><b>5.1.2</b> Reduciendo varianza de los coeficientes</a></li>
+</ul></li>
+<li class="chapter" data-level="5.2" data-path="regularizacion.html"><a href="regularizacion.html#regularizacion-ridge"><i class="fa fa-check"></i><b>5.2</b> Regularización ridge</a><ul>
+<li class="chapter" data-level="5.2.1" data-path="regularizacion.html"><a href="regularizacion.html#seleccion-de-coeficiente-de-regularizacion"><i class="fa fa-check"></i><b>5.2.1</b> Selección de coeficiente de regularización</a></li>
+</ul></li>
+<li class="chapter" data-level="5.3" data-path="regularizacion.html"><a href="regularizacion.html#entrenamiento-validacion-y-prueba"><i class="fa fa-check"></i><b>5.3</b> Entrenamiento, Validación y Prueba</a><ul>
+<li class="chapter" data-level="5.3.1" data-path="regularizacion.html"><a href="regularizacion.html#validacion-cruzada"><i class="fa fa-check"></i><b>5.3.1</b> Validación cruzada</a></li>
+<li class="chapter" data-level="" data-path="regularizacion.html"><a href="regularizacion.html#ejercicio-5"><i class="fa fa-check"></i>Ejercicio</a></li>
+</ul></li>
+<li class="chapter" data-level="5.4" data-path="regularizacion.html"><a href="regularizacion.html#regularizacion-lasso"><i class="fa fa-check"></i><b>5.4</b> Regularización lasso</a></li>
+<li class="chapter" data-level="5.5" data-path="regularizacion.html"><a href="regularizacion.html#tarea-3"><i class="fa fa-check"></i><b>5.5</b> Tarea</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="extensiones-para-regresion-lineal-y-logistica.html"><a href="extensiones-para-regresion-lineal-y-logistica.html"><i class="fa fa-check"></i><b>6</b> Extensiones para regresión lineal y logística</a><ul>
+<li class="chapter" data-level="6.1" data-path="extensiones-para-regresion-lineal-y-logistica.html"><a href="extensiones-para-regresion-lineal-y-logistica.html#como-hacer-mas-flexible-el-modelo-lineal"><i class="fa fa-check"></i><b>6.1</b> Cómo hacer más flexible el modelo lineal</a></li>
+<li class="chapter" data-level="6.2" data-path="extensiones-para-regresion-lineal-y-logistica.html"><a href="extensiones-para-regresion-lineal-y-logistica.html#transformacion-de-entradas"><i class="fa fa-check"></i><b>6.2</b> Transformación de entradas</a></li>
+<li class="chapter" data-level="6.3" data-path="extensiones-para-regresion-lineal-y-logistica.html"><a href="extensiones-para-regresion-lineal-y-logistica.html#variables-cualitativas"><i class="fa fa-check"></i><b>6.3</b> Variables cualitativas</a></li>
+<li class="chapter" data-level="6.4" data-path="extensiones-para-regresion-lineal-y-logistica.html"><a href="extensiones-para-regresion-lineal-y-logistica.html#interacciones"><i class="fa fa-check"></i><b>6.4</b> Interacciones</a></li>
+<li class="chapter" data-level="6.5" data-path="extensiones-para-regresion-lineal-y-logistica.html"><a href="extensiones-para-regresion-lineal-y-logistica.html#categorizacion-de-variables"><i class="fa fa-check"></i><b>6.5</b> Categorización de variables</a></li>
+<li class="chapter" data-level="6.6" data-path="extensiones-para-regresion-lineal-y-logistica.html"><a href="extensiones-para-regresion-lineal-y-logistica.html#splines"><i class="fa fa-check"></i><b>6.6</b> Splines</a><ul>
+<li class="chapter" data-level="6.6.1" data-path="extensiones-para-regresion-lineal-y-logistica.html"><a href="extensiones-para-regresion-lineal-y-logistica.html#cuando-usar-estas-tecnicas"><i class="fa fa-check"></i><b>6.6.1</b> ¿Cuándo usar estas técnicas?</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html"><i class="fa fa-check"></i><b>7</b> Redes neuronales (parte 1)</a><ul>
+<li class="chapter" data-level="7.1" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#introduccion-a-redes-neuronales"><i class="fa fa-check"></i><b>7.1</b> Introducción a redes neuronales</a><ul>
+<li class="chapter" data-level="" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#como-construyen-entradas-las-redes-neuronales"><i class="fa fa-check"></i>¿Cómo construyen entradas las redes neuronales?</a></li>
+<li class="chapter" data-level="" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#como-ajustar-los-parametros"><i class="fa fa-check"></i>¿Cómo ajustar los parámetros?</a></li>
+</ul></li>
+<li class="chapter" data-level="7.2" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#interacciones-en-redes-neuronales"><i class="fa fa-check"></i><b>7.2</b> Interacciones en redes neuronales</a></li>
+<li class="chapter" data-level="7.3" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#redes-neuronales-completamente-conexas"><i class="fa fa-check"></i><b>7.3</b> Redes neuronales completamente conexas</a></li>
+<li class="chapter" data-level="7.4" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#feed-forward"><i class="fa fa-check"></i><b>7.4</b> Feed forward</a></li>
+<li class="chapter" data-level="7.5" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#ajuste-de-parametros-introduccion"><i class="fa fa-check"></i><b>7.5</b> Ajuste de parámetros (introducción)</a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Publicado con bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Aprendizaje de máquina</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="extensiones-para-regresion-lineal-y-logistica" class="section level1">
+<h1><span class="header-section-number">Clase 6</span> Extensiones para regresión lineal y logística</h1>
+<p>Los modelos lineales son modelos simples que tienen la ventaja de que es relativamente fácil entender cómo contribuyen las variables de entrada (simplemente describimos los coeficientes), y es relativamente fácil ajustarlos.</p>
+<p>Sin embargo, puede ser que sean pobres desde el punto de vista predictivo. Hay dos razones:</p>
+<ol style="list-style-type: decimal">
+<li><p>Los coeficientes tienen <strong>varianza</strong> alta, de modo que las predicciones resultantes son inestables (por ejemplo, por pocos datos o variables de entradas correlacionadas). En este caso, vimos que con el enfoque de regularización ridge o lasso podemos mejorar la estabilidad, las predicciones, y obtener modelos más parsimoniosos.</p></li>
+<li><p>El modelo tiene <strong>sesgo</strong> alto, en el sentido de que la estructura lineal es deficiente para describir patrones claros e importantes en los datos. Este problema puede suceder cuando tenemos relaciones complejas entre las variables. Cuando hay relativamente pocas entradas y suficientes datos, puede ser posible ajustar estructuras más realistas y complejas. Aunque veremos otros métodos para atacar este problema más adelante, a veces extensiones simples del modelo lineal pueden resolver este problema. Igualmente, esperamos encontrar mejores predicciones con modelos más realistas.</p></li>
+</ol>
+<div id="como-hacer-mas-flexible-el-modelo-lineal" class="section level2">
+<h2><span class="header-section-number">6.1</span> Cómo hacer más flexible el modelo lineal</h2>
+
+<div class="comentario">
+Podemos construir modelos lineales más flexibles expandiendo el espacio de entradas con transformaciones y combinaciones de las variables originales de entrada.
+</div>
+
+<p>La idea básica es entonces transformar a nuevas entradas, antes de ajustar un modelo: <span class="math display">\[(x_1,...,x_p) \to (b_1(x),...,b_M (x)).\]</span></p>
+<p>donde típicamente <span class="math inline">\(M\)</span> es mayor que <span class="math inline">\(p\)</span>. Entonces, en lugar de ajustar el modelo lineal en las <span class="math inline">\(x_1,\ldots, x_p\)</span>, que es</p>
+<p><span class="math display">\[ f(x) = \beta_0 + \sum_{i=1}^p \beta_jx_j\]</span></p>
+<p>ajustamos un <em>modelo lineal en las entradas transformadas</em>:</p>
+<p><span class="math display">\[ f(x) = \beta_0 +  \sum_{i=1}^M \beta_jb_j(x).\]</span></p>
+<p>Como cada <span class="math inline">\(b_j\)</span> es una función que toma valores numéricos, podemos considerarla como una <em>entrada derivada</em> de las entradas originales.</p>
+<div id="ejemplo-26" class="section level4 unnumbered">
+<h4>Ejemplo</h4>
+<p>Si <span class="math inline">\(x_1\)</span> es compras totales de un cliente de tarjeta de crédito, y <span class="math inline">\(x_2\)</span> es el número de compras, podemos crear una entrada derivada <span class="math inline">\(b_1(x_1,x_2)=x_1/x_2\)</span> que representa el tamaño promedio por compra. Podríamos entonces poner <span class="math inline">\(b_2(x_1,x_2)=x_1\)</span>, <span class="math inline">\(b_3(x_1,x_2)=x_2\)</span>, y ajustar un modelo lineal usando las entradas derivadas <span class="math inline">\(b_1,b_2, b_3\)</span>.</p>
+<p>Lo conveniente de este enfoque es que lo único que hacemos para hacer más flexible el modelo es transformar en primer lugar las variables de entrada (quizá produciendo más entradas que el número de variables originales). Después construimos un modelo lineal, y todo lo que hemos visto aplica sin cambios: el modelo sigue siendo lineal, pero el espacio de entradas es diferente (generalmente expandido).</p>
+<p>Veremos las siguientes técnicas:</p>
+<ul>
+<li>Incluir variables cualitativas (categóricas). Transformación de variables.</li>
+<li>Interacciones entre variables: incluir términos de la forma <span class="math inline">\(x_1x_2\)</span></li>
+<li>Regresión polinomial: incluír términos de la forma <span class="math inline">\(x_1^2\)</span>, <span class="math inline">\(x_1^3\)</span>, etcétera.</li>
+<li>Splines de regresión.</li>
+</ul>
+</div>
+</div>
+<div id="transformacion-de-entradas" class="section level2">
+<h2><span class="header-section-number">6.2</span> Transformación de entradas</h2>
+<p>Una técnica útil para mejorar el sesgo de modelos de regresión consiste en incluir o sustituir valores transformados de las variables de entrada. Una de las más comunes es usar logaritmo para variables positivas:</p>
+<div id="ejemplo-27" class="section level4 unnumbered">
+<h4>Ejemplo</h4>
+<p>Consideramos predecir el quilataje de un diamante en función de su precio.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(ggplot2)
+<span class="kw">library</span>(dplyr)
+<span class="kw">library</span>(tidyr)
+<span class="kw">set.seed</span>(<span class="dv">231</span>)
+diamonds_muestra &lt;-<span class="st"> </span><span class="kw">sample_n</span>(diamonds, <span class="dv">3000</span>)
+<span class="kw">ggplot</span>(diamonds_muestra, <span class="kw">aes</span>(<span class="dt">x=</span>price, <span class="dt">y=</span>carat)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">method =</span> <span class="st">&#39;lm&#39;</span>)</code></pre></div>
+<p><img src="06-extensiones-lineal_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<p>Nótese que el modelo lineal está sesgado, y produce sobrestimaciones y subestimaciones para distintos valores de <span class="math inline">\(x\)</span>. Aunque podríamos utilizar un método más flexible para este modelo, una opción es transformar entrada y salida con logaritmo:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">diamonds_muestra &lt;-<span class="st"> </span>diamonds_muestra <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">log_price =</span> <span class="kw">log</span>(price), <span class="dt">log_carat =</span> <span class="kw">log</span>(carat))
+<span class="kw">ggplot</span>(diamonds_muestra, <span class="kw">aes</span>(<span class="dt">x=</span>log_price, <span class="dt">y=</span>log_carat)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">method =</span> <span class="st">&#39;lm&#39;</span>)</code></pre></div>
+<p><img src="06-extensiones-lineal_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p>Nota: si tenemos ceros en los datos podemos usar también <span class="math inline">\(\log(x+1)\)</span>. Podemos graficar también en unidades originales:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(diamonds_muestra, <span class="kw">aes</span>(<span class="dt">x=</span>price<span class="op">/</span><span class="dv">1000</span>, <span class="dt">y=</span>carat)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">method =</span> <span class="st">&#39;lm&#39;</span>) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">scale_x_log10</span>(<span class="dt">breaks=</span><span class="dv">2</span><span class="op">^</span><span class="kw">seq</span>(<span class="op">-</span><span class="dv">1</span>,<span class="dv">5</span>,<span class="dv">1</span>)) <span class="op">+</span><span class="st"> </span><span class="kw">scale_y_log10</span>(<span class="dt">breaks=</span><span class="dv">2</span><span class="op">^</span><span class="kw">seq</span>(<span class="op">-</span><span class="dv">2</span>,<span class="dv">5</span>,<span class="dv">1</span>))</code></pre></div>
+<p><img src="06-extensiones-lineal_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+
+<div class="comentario">
+<ul>
+<li>Cuando una variable <em>toma valores positivos y recorre varios órdenes de magnitud</em>, puede ayudar transformar con logaritmo o raíz cuadrada (esto incluye transformar la variable respuesta).</li>
+<li>Menos común: variables que son proporciones <span class="math inline">\(p\)</span> pueden transformarse mediante la transformación inversa de la logística (<span class="math inline">\(x = \log(\frac{p}{1-p})\)</span>.)
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div id="variables-cualitativas" class="section level2">
+<h2><span class="header-section-number">6.3</span> Variables cualitativas</h2>
+<p>Muchas veces queremos usar variables cualitativas como entradas de nuestro modelo. Pero en la expresión</p>
+<p><span class="math display">\[ f(x) = \beta_0 +  \sum_{i=1}^p \beta_jx_j,\]</span> todas las entradas son numéricas. Podemos usar un truco simple para incluir variables cualitativas</p>
+<div id="ejemplo-28" class="section level4 unnumbered">
+<h4>Ejemplo</h4>
+<p>Supongamos que queremos incluir la variable <em>color</em>:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">diamonds_muestra <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(color) <span class="op">%&gt;%</span><span class="st"> </span>count</code></pre></div>
+<pre><code>## # A tibble: 7 x 2
+## # Groups:   color [7]
+##   color     n
+##   &lt;ord&gt; &lt;int&gt;
+## 1     D   383
+## 2     E   542
+## 3     F   533
+## 4     G   645
+## 5     H   471
+## 6     I   270
+## 7     J   156</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(diamonds_muestra, 
+       <span class="kw">aes</span>(<span class="dt">x=</span>price, <span class="dt">y=</span>carat, <span class="dt">colour=</span>color, <span class="dt">group=</span>color)) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">alpha=</span><span class="fl">0.5</span>) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">method=</span><span class="st">&#39;lm&#39;</span>, <span class="dt">se=</span><span class="ot">FALSE</span>, <span class="dt">size=</span><span class="fl">1.5</span>) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">scale_y_log10</span>(<span class="dt">breaks=</span><span class="kw">c</span>(<span class="fl">0.25</span>,<span class="fl">0.5</span>,<span class="dv">1</span>,<span class="dv">2</span>))<span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_x_log10</span>(<span class="dt">breaks=</span><span class="kw">c</span>(<span class="dv">500</span>,<span class="dv">1000</span>,<span class="dv">2000</span>,<span class="dv">4000</span>,<span class="dv">8000</span>))</code></pre></div>
+<p><img src="06-extensiones-lineal_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p>Podemos incluir de manera simple esta variable creando variables <em>dummy</em> o <em>indicadoras</em>, que son variables que toman valores 0 o 1 dependiendo de cada clase:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">diamonds_muestra &lt;-<span class="st"> </span>diamonds_muestra <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">color=</span> <span class="kw">as.character</span>(color))
+datos &lt;-<span class="st"> </span>diamonds_muestra[, <span class="kw">c</span>(<span class="st">&#39;log_carat&#39;</span>, <span class="st">&#39;log_price&#39;</span>, <span class="st">&#39;color&#39;</span>)] 
+<span class="kw">head</span>(datos)</code></pre></div>
+<pre><code>## # A tibble: 6 x 3
+##     log_carat log_price color
+##         &lt;dbl&gt;     &lt;dbl&gt; &lt;chr&gt;
+## 1  0.07696104  8.765771     H
+## 2  0.26236426  8.950792     H
+## 3 -0.23572233  7.948385     G
+## 4 -1.17118298  6.733402     F
+## 5  0.23901690  8.421123     J
+## 6  0.03922071  8.811205     G</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x_e &lt;-<span class="st"> </span><span class="kw">model.matrix</span>( <span class="op">~</span><span class="st">   </span>color, <span class="dt">data =</span> datos)
+<span class="kw">head</span>(x_e, <span class="dv">10</span>)</code></pre></div>
+<pre><code>##    (Intercept) colorE colorF colorG colorH colorI colorJ
+## 1            1      0      0      0      1      0      0
+## 2            1      0      0      0      1      0      0
+## 3            1      0      0      1      0      0      0
+## 4            1      0      1      0      0      0      0
+## 5            1      0      0      0      0      0      1
+## 6            1      0      0      1      0      0      0
+## 7            1      0      1      0      0      0      0
+## 8            1      1      0      0      0      0      0
+## 9            1      0      0      1      0      0      0
+## 10           1      0      1      0      0      0      0</code></pre>
+<p>Y ahora podemos hacer:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">datos_d &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(x_e)
+datos_d<span class="op">$</span>log_carat &lt;-<span class="st"> </span>datos<span class="op">$</span>log_carat
+datos_d<span class="op">$</span>log_price &lt;-<span class="st"> </span>datos<span class="op">$</span>log_price
+datos_d<span class="op">$</span><span class="st">`</span><span class="dt">(Intercept)</span><span class="st">`</span> &lt;-<span class="st"> </span><span class="ot">NULL</span>
+mod_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">lm</span>(log_carat <span class="op">~</span><span class="st"> </span>., <span class="dt">data =</span> datos_d)
+<span class="kw">summary</span>(mod_<span class="dv">1</span>)</code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = log_carat ~ ., data = datos_d)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -0.73747 -0.08570 -0.00132  0.08607  0.78010 
+## 
+## Coefficients:
+##              Estimate Std. Error  t value Pr(&gt;|t|)    
+## (Intercept) -4.711054   0.020670 -227.923  &lt; 2e-16 ***
+## colorE       0.001684   0.009212    0.183 0.854984    
+## colorF       0.027917   0.009245    3.020 0.002551 ** 
+## colorG       0.032919   0.008904    3.697 0.000222 ***
+## colorH       0.109352   0.009518   11.489  &lt; 2e-16 ***
+## colorI       0.184680   0.010983   16.815  &lt; 2e-16 ***
+## colorJ       0.259030   0.013155   19.690  &lt; 2e-16 ***
+## log_price    0.546347   0.002538  215.272  &lt; 2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.1379 on 2992 degrees of freedom
+## Multiple R-squared:  0.9436, Adjusted R-squared:  0.9435 
+## F-statistic:  7152 on 7 and 2992 DF,  p-value: &lt; 2.2e-16</code></pre>
+<p>Nótese que si la variable categórica tiene <span class="math inline">\(K\)</span> clases, solo creamos variables indicadores de las primeras <span class="math inline">\(K-1\)</span> clases, pues la dummy de la última clase tiene información redundante: es decir, si para las primeras <span class="math inline">\(K-1\)</span> clases las variables dummy son cero, entonces ya sabemos que se trata de la última clase <span class="math inline">\(K\)</span>, y no necesitamos incluir una indicadora para la última clase.</p>
+<p>Más fácilmente, la función lm hace la codificación dummy automáticamente. Por ejemplo, para el modelo logarítmico:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">lm</span>(log_carat <span class="op">~</span><span class="st"> </span>log_price <span class="op">+</span><span class="st"> </span>color, <span class="dt">data =</span> diamonds_muestra) </code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = log_carat ~ log_price + color, data = diamonds_muestra)
+## 
+## Coefficients:
+## (Intercept)    log_price       colorE       colorF       colorG  
+##   -4.711054     0.546347     0.001684     0.027917     0.032919  
+##      colorH       colorI       colorJ  
+##    0.109352     0.184680     0.259030</code></pre>
+<p><strong>Observaciones</strong>: - Nótese también que no hay coeficiente para una de las clases, por lo que discutimos arriba. También podemos pensar que el coeficiente de esta clase es 0, y así comparamos con las otras clases. - Cuando tenemos variables dummy, el intercept se interpreta con el nivel esperado cuando las variables cuantitativas valen cero, y la variable categórica toma la clase que se excluyó en la construcción de las indicadoras.</p>
+
+<div class="comentario">
+Podemos incluir variables cualitativas usando este truco de codificación dummy (también llamado a veces <em>one-hot encoding</em>). Ojo: variables con muchas categorías pueden inducir varianza alta en el modelo (dependiendo del tamaño de los datos). En estos casos conviene usar regularización y quizá (si es razonable) usar categorizaciones más gruesas.
+</div>
+
+</div>
+</div>
+<div id="interacciones" class="section level2">
+<h2><span class="header-section-number">6.4</span> Interacciones</h2>
+<p>En el modelo lineal, cada variable contribuye de la misma manera independientemente de los valores de las otras variables. Esta es un simplificación o aproximación útil, pero muchas veces puede producir sesgo demasiado grande en el modelo. Por ejemplo: consideremos los siguientes datos de la relación de mediciones de temperatura y ozono en la atmósfera:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(airquality)</code></pre></div>
+<pre><code>##   Ozone Solar.R Wind Temp Month Day
+## 1    41     190  7.4   67     5   1
+## 2    36     118  8.0   72     5   2
+## 3    12     149 12.6   74     5   3
+## 4    18     313 11.5   62     5   4
+## 5    NA      NA 14.3   56     5   5
+## 6    28      NA 14.9   66     5   6</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">air &lt;-<span class="st"> </span><span class="kw">filter</span>(airquality, <span class="op">!</span><span class="kw">is.na</span>(Ozone) <span class="op">&amp;</span><span class="st"> </span><span class="op">!</span><span class="kw">is.na</span>(Wind) <span class="op">&amp;</span><span class="st"> </span><span class="op">!</span><span class="kw">is.na</span>(Temp))
+<span class="kw">lm</span>(Ozone <span class="op">~</span>Temp, <span class="dt">data =</span> air[<span class="dv">1</span><span class="op">:</span><span class="dv">80</span>,])</code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = Ozone ~ Temp, data = air[1:80, ])
+## 
+## Coefficients:
+## (Intercept)         Temp  
+##    -136.474        2.306</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">9132</span>)
+air &lt;-<span class="st"> </span><span class="kw">sample_n</span>(air, <span class="dv">116</span>)
+<span class="kw">ggplot</span>(air[<span class="dv">1</span><span class="op">:</span><span class="dv">50</span>,], <span class="kw">aes</span>(<span class="dt">x =</span> Temp, <span class="dt">y =</span> Ozone)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">method =</span> <span class="st">&#39;lm&#39;</span>, <span class="dt">se =</span> <span class="ot">FALSE</span>)</code></pre></div>
+<p><img src="06-extensiones-lineal_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+<p>Y notamos un sesgo posible en nuestro modelo. Si coloreamos por velocidad del viento:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cuantiles &lt;-<span class="st"> </span><span class="kw">quantile</span>(air<span class="op">$</span>Wind)
+
+<span class="kw">ggplot</span>(air[<span class="dv">1</span><span class="op">:</span><span class="dv">50</span>,], <span class="kw">aes</span>(<span class="dt">x =</span> Temp, <span class="dt">y =</span> Ozone, <span class="dt">colour=</span> <span class="kw">cut</span>(Wind, cuantiles))) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span><span class="kw">geom_smooth</span>(<span class="dt">method =</span> <span class="st">&#39;lm&#39;</span>, <span class="dt">se =</span> <span class="ot">FALSE</span>)</code></pre></div>
+<p><img src="06-extensiones-lineal_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+<p>Nótese que parece ser que cuando los niveles de viento son altos, entonces hay una relación más fuerte entre temperatura y Ozono. Esto es una <em>interacción</em> de temperatura y viento.</p>
+<p>Podemos hacer los siguiente: incluír un factor adicional, el producto de temperatura con viento:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">air<span class="op">$</span>temp_wind &lt;-<span class="st"> </span>air<span class="op">$</span>Temp<span class="op">*</span>air<span class="op">$</span>Wind
+mod_<span class="dv">0</span> &lt;-<span class="st"> </span><span class="kw">lm</span>(Ozone <span class="op">~</span><span class="st"> </span>Temp, <span class="dt">data =</span> air[<span class="dv">1</span><span class="op">:</span><span class="dv">50</span>,])
+mod_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">lm</span>(Ozone <span class="op">~</span><span class="st"> </span>Temp <span class="op">+</span><span class="st"> </span>Wind, <span class="dt">data =</span> air[<span class="dv">1</span><span class="op">:</span><span class="dv">50</span>,])
+mod_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">lm</span>(Ozone <span class="op">~</span><span class="st"> </span>Temp <span class="op">+</span><span class="st"> </span>Wind <span class="op">+</span><span class="st"> </span>temp_wind, air[<span class="dv">1</span><span class="op">:</span><span class="dv">50</span>,])
+mod_<span class="dv">2</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = Ozone ~ Temp + Wind + temp_wind, data = air[1:50, 
+##     ])
+## 
+## Coefficients:
+## (Intercept)         Temp         Wind    temp_wind  
+##   -317.8272       4.8036      15.9498      -0.2311</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pred_<span class="dv">0</span> &lt;-<span class="st"> </span><span class="kw">predict</span>(mod_<span class="dv">0</span>, <span class="dt">newdata =</span> air[<span class="dv">51</span><span class="op">:</span><span class="dv">116</span>,])
+pred_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">predict</span>(mod_<span class="dv">1</span>, <span class="dt">newdata =</span> air[<span class="dv">51</span><span class="op">:</span><span class="dv">116</span>,])
+pred_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">predict</span>(mod_<span class="dv">2</span>, <span class="dt">newdata =</span> air[<span class="dv">51</span><span class="op">:</span><span class="dv">116</span>,])
+<span class="kw">mean</span>(<span class="kw">abs</span>(pred_<span class="dv">0</span><span class="op">-</span>air[<span class="dv">51</span><span class="op">:</span><span class="dv">116</span>,<span class="st">&#39;Ozone&#39;</span>]))</code></pre></div>
+<pre><code>## [1] 19.88217</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">mean</span>(<span class="kw">abs</span>(pred_<span class="dv">1</span><span class="op">-</span>air[<span class="dv">51</span><span class="op">:</span><span class="dv">116</span>,<span class="st">&#39;Ozone&#39;</span>]))</code></pre></div>
+<pre><code>## [1] 17.13767</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">mean</span>(<span class="kw">abs</span>(pred_<span class="dv">2</span><span class="op">-</span>air[<span class="dv">51</span><span class="op">:</span><span class="dv">116</span>,<span class="st">&#39;Ozone&#39;</span>]))</code></pre></div>
+<pre><code>## [1] 15.52405</code></pre>
+<p>Podemos interpretar el modelo con interacción de la siguiente forma:</p>
+<ul>
+<li>Si <span class="math inline">\(Wind = 5\)</span>, entonces la relación Temperatura Ozono es: <span class="math display">\[ Ozono = -290 + 4.5Temp + 14.6(5) - 0.2(Temp)(5) = -217 + 3.5Temp\]</span></li>
+<li>Si <span class="math inline">\(Wind=10\)</span>, entonces la relación Temperatura Ozono es: <span class="math display">\[ Ozono = -290 + 4.5Temp + 14.6(15) - 0.2(Temp)(15) = -71 + 1.5Temp\]</span></li>
+</ul>
+<p>Incluir interacciones en modelos lineales es buena idea para problemas con un número relativamente chico de variables (por ejemplo, <span class="math inline">\(p &lt; 10\)</span>). En estos casos, conviene comenzar agregando interacciones entre variables que tengan efectos relativamente grandes en la predicción. No es tan buena estrategia para un número grande de variables: por ejemplo, para clasificación de dígitos, hay 256 entradas. Poner todas las interacciones añadiría más de 30 mil variables adicionales, y es difícil escoger algunas para incluir en el modelo a priori.</p>
+<p>Pueden escribirse interacciones en fórmulas de <em>lm</em> y los cálculos se hacen automáticamente:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mod_<span class="dv">3</span> &lt;-<span class="st"> </span><span class="kw">lm</span>(Ozone <span class="op">~</span><span class="st"> </span>Temp <span class="op">+</span><span class="st"> </span>Wind <span class="op">+</span><span class="st"> </span>Temp<span class="op">:</span>Wind, air[<span class="dv">1</span><span class="op">:</span><span class="dv">50</span>,])
+mod_<span class="dv">3</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = Ozone ~ Temp + Wind + Temp:Wind, data = air[1:50, 
+##     ])
+## 
+## Coefficients:
+## (Intercept)         Temp         Wind    Temp:Wind  
+##   -317.8272       4.8036      15.9498      -0.2311</code></pre>
+
+<div class="comentario">
+Podemos incluir interacciones para pares de variables que son importantes en la predicción, o que por conocimiento del dominio sabemos que son factibles. Conviene usar regularización si necesitamos incluir varias interacciones.
+</div>
+
+</div>
+<div id="categorizacion-de-variables" class="section level2">
+<h2><span class="header-section-number">6.5</span> Categorización de variables</h2>
+<p>En categorización de variable, intentamos hacer un ajuste local en distintas partes del espacio de entrada. La idea es contruir cubetas, particionando el rango de una variable dada, y ajustar entonces un modelo usando la variable dummy indicadora de cada cubeta.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dat_wage &lt;-<span class="st"> </span>ISLR<span class="op">::</span>Wage 
+<span class="kw">ggplot</span>(dat_wage, <span class="kw">aes</span>(<span class="dt">x=</span>age, <span class="dt">y=</span>wage)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>()</code></pre></div>
+<p><img src="06-extensiones-lineal_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
+<p>Cuando la relación entre entradas y salida no es lineal, podemos obtener menor sesgo en nuestros modelos usando esta técnica. En este ejemplo, escogimos edades de corte aproximadamente separadas por 10 años, por ejemplo:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#cuantiles_age &lt;- quantile(dat_wage$age, probs=seq(0,1,0.2))</span>
+<span class="co">#cuantiles_age</span>
+dat_wage &lt;-<span class="st"> </span>dat_wage <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">age_cut =</span> <span class="kw">cut</span>(age, <span class="kw">c</span>(<span class="dv">18</span>, <span class="dv">25</span>, <span class="dv">35</span>, <span class="dv">45</span>, <span class="dv">55</span>, <span class="dv">65</span>, <span class="dv">80</span>), <span class="dt">include.lowest=</span><span class="ot">TRUE</span>))
+<span class="kw">head</span>(dat_wage)</code></pre></div>
+<pre><code>##   year age           maritl     race       education             region
+## 1 2006  18 1. Never Married 1. White    1. &lt; HS Grad 2. Middle Atlantic
+## 2 2004  24 1. Never Married 1. White 4. College Grad 2. Middle Atlantic
+## 3 2003  45       2. Married 1. White 3. Some College 2. Middle Atlantic
+## 4 2003  43       2. Married 3. Asian 4. College Grad 2. Middle Atlantic
+## 5 2005  50      4. Divorced 1. White      2. HS Grad 2. Middle Atlantic
+## 6 2008  54       2. Married 1. White 4. College Grad 2. Middle Atlantic
+##         jobclass         health health_ins  logwage      wage age_cut
+## 1  1. Industrial      1. &lt;=Good      2. No 4.318063  75.04315 [18,25]
+## 2 2. Information 2. &gt;=Very Good      2. No 4.255273  70.47602 [18,25]
+## 3  1. Industrial      1. &lt;=Good     1. Yes 4.875061 130.98218 (35,45]
+## 4 2. Information 2. &gt;=Very Good     1. Yes 5.041393 154.68529 (35,45]
+## 5 2. Information      1. &lt;=Good     1. Yes 4.318063  75.04315 (45,55]
+## 6 2. Information 2. &gt;=Very Good     1. Yes 4.845098 127.11574 (45,55]</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mod_age &lt;-<span class="st"> </span><span class="kw">lm</span>(wage <span class="op">~</span><span class="st"> </span>age_cut, <span class="dt">data=</span>dat_wage)
+mod_age</code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = wage ~ age_cut, data = dat_wage)
+## 
+## Coefficients:
+##    (Intercept)  age_cut(25,35]  age_cut(35,45]  age_cut(45,55]  
+##          76.28           27.88           42.79           41.34  
+## age_cut(55,65]  age_cut(65,80]  
+##          42.73           26.27</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dat_wage<span class="op">$</span>pred_wage &lt;-<span class="st"> </span><span class="kw">predict</span>(mod_age)
+<span class="kw">ggplot</span>(dat_wage) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x=</span>age, <span class="dt">y=</span>wage)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">x=</span>age, <span class="dt">y=</span>pred_wage), <span class="dt">colour =</span> <span class="st">&#39;red&#39;</span>, <span class="dt">size=</span><span class="fl">1.1</span>)</code></pre></div>
+<p><img src="06-extensiones-lineal_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
+<ul>
+<li>Podemos escoger los puntos de corte en lugares que son razonables para el problema (rangos en los es razonable modelar como una constante).</li>
+<li>También podemos hacer cortes automáticos usando percentiles de los datos: por ejemplo, cortar en cuatro usando los percentiles 25%, 0.5% y 0.75%. Con más datos es posible incrementar el número de cortes.</li>
+<li>Nótese que cuando hacemos estas categorizaciones estamos incrementando el número de parámetros a estimar del modelo (si hacemos tres cortes, por ejemplo, aumentamos en 3 el número de parámetros).</li>
+</ul>
+
+<div class="comentario">
+Las categorizaciones de variables son útiles cuando sabemos que hay efectos no lineales de la variable subyacente (por ejemplo, edad o nivel socioeconómico), y las categorías son suficientemente chicas para que el modelo localmente constante sea razonable.
+</div>
+
+<p>Muchas veces los splines son mejores opciones:</p>
+</div>
+<div id="splines" class="section level2">
+<h2><span class="header-section-number">6.6</span> Splines</h2>
+<p>En estos ejemplos, también es posible incluir términos cuadráticos para modelar la relación, por ejemplo:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dat_wage<span class="op">$</span>age_<span class="dv">2</span> &lt;-<span class="st"> </span>dat_wage<span class="op">$</span>age<span class="op">^</span><span class="dv">2</span>
+mod_age &lt;-<span class="st"> </span><span class="kw">lm</span>(wage <span class="op">~</span><span class="st"> </span>age <span class="op">+</span><span class="st"> </span>age_<span class="dv">2</span>, <span class="dt">data=</span>dat_wage)
+mod_age</code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = wage ~ age + age_2, data = dat_wage)
+## 
+## Coefficients:
+## (Intercept)          age        age_2  
+##   -10.42522      5.29403     -0.05301</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dat_wage<span class="op">$</span>pred_wage &lt;-<span class="st"> </span><span class="kw">predict</span>(mod_age)
+<span class="kw">ggplot</span>(dat_wage) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x=</span>age, <span class="dt">y=</span>wage)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">x=</span>age, <span class="dt">y=</span>pred_wage), <span class="dt">colour =</span> <span class="st">&#39;red&#39;</span>, <span class="dt">size=</span><span class="fl">1.1</span>)</code></pre></div>
+<p><img src="06-extensiones-lineal_files/figure-html/unnamed-chunk-20-1.png" width="672" /></p>
+<p>Estas dos técnicas para hacer más flexible el modelo lineal tienen algunas deficiencias:</p>
+<ul>
+<li>Muchas veces usar potencias de variables de entrada es una mala idea, pues fácilmente podemos encontrar problemas numéricos (potencias altas pueden dar valores muy chicos o muy grandes).</li>
+<li>La categorización de variables numéricas puede resultar en predictores con discontinuidades, lo cual no siempre es deseable (interpretación).</li>
+</ul>
+<p>Una alternativa es usar <em>splines</em>, que son familias de funciones con buenas propiedades que nos permiten hacer expansiones del espacio de entradas. No las veremos con detalle, pero aquí hay unos ejemplos:</p>
+<p>Por ejemplo, podemos usar B-spines, que construyen “chipotes” en distintos rangos de la variable de entrada (es como hacer categorización, pero con funciones de respuesta suaves):</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(splines2)
+age &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="dv">18</span>,<span class="dv">80</span>, <span class="fl">0.2</span>)
+splines_age  &lt;-<span class="st"> </span><span class="kw">bSpline</span>(age, 
+                         <span class="dt">knots =</span> <span class="kw">c</span>(<span class="dv">25</span>, <span class="dv">35</span>, <span class="dv">45</span>, <span class="dv">55</span>, <span class="dv">65</span>),
+                         <span class="dt">degree =</span> <span class="dv">3</span>)
+<span class="kw">matplot</span>(<span class="dt">x =</span> age, <span class="dt">y =</span> splines_age, <span class="dt">type =</span> <span class="st">&#39;l&#39;</span>)</code></pre></div>
+<p><img src="06-extensiones-lineal_files/figure-html/unnamed-chunk-21-1.png" width="672" /></p>
+<p><strong>Observación</strong>: estos splines son como una versión suave de categorización de variables numéricas. En particular, los splines de grado 0 son justamente funciones que categorizan variables:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">splines_age  &lt;-<span class="st"> </span><span class="kw">bSpline</span>(age, 
+                         <span class="dt">knots =</span> <span class="kw">c</span>(<span class="dv">25</span>, <span class="dv">35</span>, <span class="dv">45</span>, <span class="dv">55</span>, <span class="dv">65</span>),
+                         <span class="dt">degree =</span> <span class="dv">0</span>)
+<span class="kw">matplot</span>(splines_age, <span class="dt">type=</span><span class="st">&#39;l&#39;</span>)</code></pre></div>
+<p><img src="06-extensiones-lineal_files/figure-html/unnamed-chunk-22-1.png" width="672" /></p>
+<p>Por ejemplo: si expandimos el espacio de entradas con estos splines y corremos el modelo:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dat_wage &lt;-<span class="st"> </span>ISLR<span class="op">::</span>Wage 
+splines_age  &lt;-<span class="st"> </span><span class="kw">bSpline</span>(dat_wage<span class="op">$</span>age, 
+                         <span class="dt">knots =</span> <span class="kw">c</span>(<span class="dv">25</span>, <span class="dv">35</span>, <span class="dv">45</span>, <span class="dv">65</span>),
+                         <span class="dt">degree =</span> <span class="dv">3</span>) <span class="op">%&gt;%</span><span class="st"> </span>data.frame
+<span class="kw">colnames</span>(splines_age) &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&#39;spline_&#39;</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">6</span>)
+dat_wage &lt;-<span class="st"> </span><span class="kw">bind_cols</span>(dat_wage, splines_age)
+dat_sp &lt;-<span class="st"> </span>dat_wage <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(wage, <span class="kw">contains</span>(<span class="st">&#39;spline&#39;</span>))
+<span class="kw">head</span>(dat_sp)</code></pre></div>
+<pre><code>##        wage  spline_1    spline_2   spline_3  spline_4   spline_5
+## 1  75.04315 0.0000000 0.000000000 0.00000000 0.0000000 0.00000000
+## 2  70.47602 0.4555974 0.474260292 0.06722689 0.0000000 0.00000000
+## 3 130.98218 0.0000000 0.000000000 0.33333333 0.5925926 0.07407407
+## 4 154.68529 0.0000000 0.001481481 0.44018519 0.5204074 0.03792593
+## 5  75.04315 0.0000000 0.000000000 0.14062500 0.6272321 0.22704082
+## 6 127.11574 0.0000000 0.000000000 0.05545833 0.5406104 0.37417611
+##      spline_6
+## 1 0.000000000
+## 2 0.000000000
+## 3 0.000000000
+## 4 0.000000000
+## 5 0.005102041
+## 6 0.029755102</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mod_age &lt;-<span class="st"> </span><span class="kw">lm</span>(wage <span class="op">~</span>. , <span class="dt">data=</span>dat_sp)
+mod_age</code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = wage ~ ., data = dat_sp)
+## 
+## Coefficients:
+## (Intercept)     spline_1     spline_2     spline_3     spline_4  
+##      65.044        1.464       27.176       54.472       52.121  
+##    spline_5     spline_6  
+##      58.230       31.771</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dat_wage<span class="op">$</span>pred_wage &lt;-<span class="st"> </span><span class="kw">predict</span>(mod_age)
+<span class="kw">ggplot</span>(dat_wage) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x=</span>age, <span class="dt">y=</span>wage)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">x=</span>age, <span class="dt">y=</span>pred_wage), <span class="dt">colour =</span> <span class="st">&#39;red&#39;</span>, <span class="dt">size=</span><span class="fl">1.1</span>)</code></pre></div>
+<p><img src="06-extensiones-lineal_files/figure-html/unnamed-chunk-23-1.png" width="672" /></p>
+<p>O podemos usar i-splines (b-splines integrados), por ejemplo:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">splines_age  &lt;-<span class="st"> </span><span class="kw">iSpline</span>(age, 
+                         <span class="dt">knots =</span> <span class="kw">c</span>(<span class="dv">25</span>, <span class="dv">35</span>, <span class="dv">45</span>, <span class="dv">65</span>),
+                         <span class="dt">degree =</span> <span class="dv">2</span>)
+<span class="kw">matplot</span>(splines_age, <span class="dt">type=</span><span class="st">&#39;l&#39;</span>)</code></pre></div>
+<p><img src="06-extensiones-lineal_files/figure-html/unnamed-chunk-24-1.png" width="672" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dat_wage &lt;-<span class="st"> </span>ISLR<span class="op">::</span>Wage 
+splines_age  &lt;-<span class="st"> </span><span class="kw">iSpline</span>(dat_wage<span class="op">$</span>age, 
+                         <span class="dt">knots =</span> <span class="kw">c</span>(<span class="dv">25</span>, <span class="dv">35</span>, <span class="dv">45</span>, <span class="dv">65</span>),
+                         <span class="dt">degree =</span> <span class="dv">2</span>) <span class="op">%&gt;%</span><span class="st"> </span>data.frame
+<span class="kw">colnames</span>(splines_age) &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&#39;spline_&#39;</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">6</span>)
+dat_wage &lt;-<span class="st"> </span><span class="kw">bind_cols</span>(dat_wage, splines_age)
+dat_sp &lt;-<span class="st"> </span>dat_wage <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(wage, <span class="kw">contains</span>(<span class="st">&#39;spline&#39;</span>))
+<span class="kw">head</span>(dat_sp)</code></pre></div>
+<pre><code>##        wage  spline_1   spline_2  spline_3   spline_4    spline_5 spline_6
+## 1  75.04315 0.0000000 0.00000000 0.0000000 0.00000000 0.000000000        0
+## 2  70.47602 0.5414872 0.06722689 0.0000000 0.00000000 0.000000000        0
+## 3 130.98218 1.0000000 1.00000000 0.6666667 0.07407407 0.000000000        0
+## 4 154.68529 1.0000000 0.99851852 0.5583333 0.03792593 0.000000000        0
+## 5  75.04315 1.0000000 1.00000000 0.8593750 0.23214286 0.005102041        0
+## 6 127.11574 1.0000000 1.00000000 0.9445417 0.40393122 0.029755102        0</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mod_age &lt;-<span class="st"> </span><span class="kw">lm</span>(wage <span class="op">~</span>. , <span class="dt">data=</span>dat_sp)
+mod_age</code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = wage ~ ., data = dat_sp)
+## 
+## Coefficients:
+## (Intercept)     spline_1     spline_2     spline_3     spline_4  
+##      64.643       28.331       26.442       -2.510        7.600  
+##    spline_5     spline_6  
+##     -31.903       -5.441</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dat_wage<span class="op">$</span>pred_wage &lt;-<span class="st"> </span><span class="kw">predict</span>(mod_age)
+<span class="kw">ggplot</span>(dat_wage) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x=</span>age, <span class="dt">y=</span>wage)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">x=</span>age, <span class="dt">y=</span>pred_wage), <span class="dt">colour =</span> <span class="st">&#39;red&#39;</span>, <span class="dt">size=</span><span class="fl">1.1</span>)</code></pre></div>
+<p><img src="06-extensiones-lineal_files/figure-html/unnamed-chunk-25-1.png" width="672" /></p>
+<div id="cuando-usar-estas-tecnicas" class="section level3">
+<h3><span class="header-section-number">6.6.1</span> ¿Cuándo usar estas técnicas?</h3>
+<p>Estas técnicas pueden mejorar considerablemente nuestros modelos lineales, pero a veces puede ser difícil descubrir exactamente que transformaciones pueden ser útiles, y muchas veces requiere conocimiento experto del problema que enfrentamos. En general,</p>
+<ul>
+<li>Es mejor usar regularización al hacer este tipo de trabajo, para protegernos de varianza alta cuando incluimos varias entradas derivadas.</li>
+<li>Es buena idea probar incluir interacciones entre variables que tienen efectos grandes en la predicción, o interacciones que creemos son importantes en nuestro problema (por ejemplo, temperatura y viento en nuestro ejemplo de arriba, o existencia de estacionamiento y tráfico vehicular como en nuestro ejemplo de predicción de ventas de una tienda).</li>
+<li>Gráficas como la de arriba (entrada vs respuesta) pueden ayudarnos a decidir si conviene categorizar alguna variable o añadir un efecto no lineal.</li>
+</ul>
+<p>Este es un trabajo que no es tan fácil, pero para problema con relativamente pocas variables es factible. En situaciones con muchas variables de entrada y muchos datos, existen mejores opciones.</p>
+
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="regularizacion.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="redes-neuronales-parte-1.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"google": false,
+"weibo": false,
+"instapper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/felipegonzalez/aprendizaje-maquina-2017/edit/master/06-extensiones-lineal.Rmd",
+"text": "Edit"
+},
+"download": ["aprendizaje-maquina.pdf", "aprendizaje-maquina.epub"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:" && /^https?:/.test(script.src))
+      script.src  = script.src.replace(/^https?:/, '');
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

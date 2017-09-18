@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html >
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Aprendizaje de máquina</title>
+  <meta name="description" content="Notas y material para el curso de aprendizaje de máquina 2017 (ITAM)">
+  <meta name="generator" content="bookdown 0.5 and GitBook 2.6.7">
+
+  <meta property="og:title" content="Aprendizaje de máquina" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="Notas y material para el curso de aprendizaje de máquina 2017 (ITAM)" />
+  <meta name="github-repo" content="felipegonzalez/aprendizaje-maquina-2017" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Aprendizaje de máquina" />
+  
+  <meta name="twitter:description" content="Notas y material para el curso de aprendizaje de máquina 2017 (ITAM)" />
+  
+
+<meta name="author" content="Felipe González">
+
+
+<meta name="date" content="2017-09-18">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  
+  
+<link rel="prev" href="extensiones-para-regresion-lineal-y-logistica.html">
+
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+<link rel="stylesheet" href="toc.css" type="text/css" />
+<link rel="stylesheet" href="font-awesome.min.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Aprendizaje Máquina</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Temario y referencias</a><ul>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#evaluacion"><i class="fa fa-check"></i>Evaluación</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#software-r-y-rstudio"><i class="fa fa-check"></i>Software: R y Rstudio</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#referencias-principales"><i class="fa fa-check"></i>Referencias principales</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#otras-referencias"><i class="fa fa-check"></i>Otras referencias</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#otros-materiales"><i class="fa fa-check"></i>Otros materiales</a></li>
+</ul></li>
+<li class="chapter" data-level="1" data-path="introduccion.html"><a href="introduccion.html"><i class="fa fa-check"></i><b>1</b> Introducción</a><ul>
+<li class="chapter" data-level="1.1" data-path="introduccion.html"><a href="introduccion.html#que-es-aprendizaje-de-maquina-machine-learning"><i class="fa fa-check"></i><b>1.1</b> ¿Qué es aprendizaje de máquina (machine learning)?</a></li>
+<li class="chapter" data-level="1.2" data-path="introduccion.html"><a href="introduccion.html#aprendizaje-supervisado-1"><i class="fa fa-check"></i><b>1.2</b> Aprendizaje Supervisado</a><ul>
+<li class="chapter" data-level="1.2.1" data-path="introduccion.html"><a href="introduccion.html#proceso-generador-de-datos-modelo-teorico"><i class="fa fa-check"></i><b>1.2.1</b> Proceso generador de datos (modelo teórico)</a></li>
+</ul></li>
+<li class="chapter" data-level="1.3" data-path="introduccion.html"><a href="introduccion.html#predicciones"><i class="fa fa-check"></i><b>1.3</b> Predicciones</a></li>
+<li class="chapter" data-level="1.4" data-path="introduccion.html"><a href="introduccion.html#cuantificacion-de-error-o-precision"><i class="fa fa-check"></i><b>1.4</b> Cuantificación de error o precisión</a></li>
+<li class="chapter" data-level="1.5" data-path="introduccion.html"><a href="introduccion.html#aprendizaje"><i class="fa fa-check"></i><b>1.5</b> Tarea de aprendizaje supervisado</a><ul>
+<li class="chapter" data-level="1.5.1" data-path="introduccion.html"><a href="introduccion.html#observaciones"><i class="fa fa-check"></i><b>1.5.1</b> Observaciones</a></li>
+</ul></li>
+<li class="chapter" data-level="1.6" data-path="introduccion.html"><a href="introduccion.html#por-que-tenemos-errores"><i class="fa fa-check"></i><b>1.6</b> ¿Por qué tenemos errores?</a></li>
+<li class="chapter" data-level="1.7" data-path="introduccion.html"><a href="introduccion.html#como-estimar-f"><i class="fa fa-check"></i><b>1.7</b> ¿Cómo estimar f?</a></li>
+<li class="chapter" data-level="1.8" data-path="introduccion.html"><a href="introduccion.html#resumen"><i class="fa fa-check"></i><b>1.8</b> Resumen</a></li>
+<li class="chapter" data-level="1.9" data-path="introduccion.html"><a href="introduccion.html#tarea"><i class="fa fa-check"></i><b>1.9</b> Tarea</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="regresion.html"><a href="regresion.html"><i class="fa fa-check"></i><b>2</b> Regresión lineal</a><ul>
+<li class="chapter" data-level="2.1" data-path="introduccion.html"><a href="introduccion.html#introduccion"><i class="fa fa-check"></i><b>2.1</b> Introducción</a></li>
+<li class="chapter" data-level="2.2" data-path="regresion.html"><a href="regresion.html#aprendizaje-de-coeficientes-ajuste"><i class="fa fa-check"></i><b>2.2</b> Aprendizaje de coeficientes (ajuste)</a></li>
+<li class="chapter" data-level="2.3" data-path="regresion.html"><a href="regresion.html#descenso-en-gradiente"><i class="fa fa-check"></i><b>2.3</b> Descenso en gradiente</a><ul>
+<li class="chapter" data-level="2.3.1" data-path="regresion.html"><a href="regresion.html#seleccion-de-tamano-de-paso-eta"><i class="fa fa-check"></i><b>2.3.1</b> Selección de tamaño de paso <span class="math inline">\(\eta\)</span></a></li>
+<li class="chapter" data-level="2.3.2" data-path="regresion.html"><a href="regresion.html#funciones-de-varias-variables"><i class="fa fa-check"></i><b>2.3.2</b> Funciones de varias variables</a></li>
+</ul></li>
+<li class="chapter" data-level="2.4" data-path="regresion.html"><a href="regresion.html#descenso-en-gradiente-para-regresion-lineal"><i class="fa fa-check"></i><b>2.4</b> Descenso en gradiente para regresión lineal</a></li>
+<li class="chapter" data-level="2.5" data-path="regresion.html"><a href="regresion.html#normalizacion-de-entradas"><i class="fa fa-check"></i><b>2.5</b> Normalización de entradas</a></li>
+<li class="chapter" data-level="2.6" data-path="regresion.html"><a href="regresion.html#interpretacion-de-modelos-lineales"><i class="fa fa-check"></i><b>2.6</b> Interpretación de modelos lineales</a></li>
+<li class="chapter" data-level="2.7" data-path="regresion.html"><a href="regresion.html#solucion-analitica"><i class="fa fa-check"></i><b>2.7</b> Solución analítica</a></li>
+<li class="chapter" data-level="2.8" data-path="regresion.html"><a href="regresion.html#por-que-el-modelo-lineal-funciona-bien-muchas-veces"><i class="fa fa-check"></i><b>2.8</b> ¿Por qué el modelo lineal funciona bien (muchas veces)?</a><ul>
+<li class="chapter" data-level="2.8.1" data-path="regresion.html"><a href="regresion.html#k-vecinos-mas-cercanos"><i class="fa fa-check"></i><b>2.8.1</b> k vecinos más cercanos</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="regresion.html"><a href="regresion.html#tarea-1"><i class="fa fa-check"></i>Tarea</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="logistica.html"><a href="logistica.html"><i class="fa fa-check"></i><b>3</b> Regresión logística</a><ul>
+<li class="chapter" data-level="3.1" data-path="logistica.html"><a href="logistica.html#el-problema-de-clasificacion"><i class="fa fa-check"></i><b>3.1</b> El problema de clasificación</a><ul>
+<li class="chapter" data-level="" data-path="logistica.html"><a href="logistica.html#que-estimar-en-problemas-de-clasificacion"><i class="fa fa-check"></i>¿Qué estimar en problemas de clasificación?</a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="logistica.html"><a href="logistica.html#estimacion-de-probabilidades-de-clase"><i class="fa fa-check"></i><b>3.2</b> Estimación de probabilidades de clase</a><ul>
+<li class="chapter" data-level="" data-path="logistica.html"><a href="logistica.html#ejemplo-10"><i class="fa fa-check"></i>Ejemplo</a></li>
+<li class="chapter" data-level="3.2.1" data-path="logistica.html"><a href="logistica.html#k-vecinos-mas-cercanos-1"><i class="fa fa-check"></i><b>3.2.1</b> k-vecinos más cercanos</a></li>
+<li class="chapter" data-level="" data-path="logistica.html"><a href="logistica.html#ejemplo-12"><i class="fa fa-check"></i>Ejemplo</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="logistica.html"><a href="logistica.html#error-para-modelos-de-clasificacion"><i class="fa fa-check"></i><b>3.3</b> Error para modelos de clasificación</a><ul>
+<li class="chapter" data-level="3.3.1" data-path="logistica.html"><a href="logistica.html#ejercicio-1"><i class="fa fa-check"></i><b>3.3.1</b> Ejercicio</a></li>
+<li class="chapter" data-level="3.3.2" data-path="logistica.html"><a href="logistica.html#error-de-clasificacion-y-funcion-de-perdida-0-1"><i class="fa fa-check"></i><b>3.3.2</b> Error de clasificación y función de pérdida 0-1</a></li>
+<li class="chapter" data-level="3.3.3" data-path="logistica.html"><a href="logistica.html#discusion-relacion-entre-devianza-y-error-de-clasificacion"><i class="fa fa-check"></i><b>3.3.3</b> Discusión: relación entre devianza y error de clasificación</a></li>
+</ul></li>
+<li class="chapter" data-level="3.4" data-path="logistica.html"><a href="logistica.html#regresion-logistica"><i class="fa fa-check"></i><b>3.4</b> Regresión logística</a><ul>
+<li class="chapter" data-level="3.4.1" data-path="logistica.html"><a href="logistica.html#regresion-logistica-simple"><i class="fa fa-check"></i><b>3.4.1</b> Regresión logística simple</a></li>
+<li class="chapter" data-level="3.4.2" data-path="logistica.html"><a href="logistica.html#funcion-logistica"><i class="fa fa-check"></i><b>3.4.2</b> Función logística</a></li>
+<li class="chapter" data-level="3.4.3" data-path="logistica.html"><a href="logistica.html#regresion-logistica-1"><i class="fa fa-check"></i><b>3.4.3</b> Regresión logística</a></li>
+</ul></li>
+<li class="chapter" data-level="3.5" data-path="logistica.html"><a href="logistica.html#aprendizaje-de-coeficientes-para-regresion-logistica-binomial."><i class="fa fa-check"></i><b>3.5</b> Aprendizaje de coeficientes para regresión logística (binomial).</a></li>
+<li class="chapter" data-level="3.6" data-path="logistica.html"><a href="logistica.html#observaciones-adicionales"><i class="fa fa-check"></i><b>3.6</b> Observaciones adicionales</a></li>
+<li class="chapter" data-level="3.7" data-path="logistica.html"><a href="logistica.html#ejercicio-datos-de-diabetes"><i class="fa fa-check"></i><b>3.7</b> Ejercicio: datos de diabetes</a><ul>
+<li class="chapter" data-level="" data-path="logistica.html"><a href="logistica.html#tarea-2"><i class="fa fa-check"></i>Tarea</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="mas-sobre-problemas-de-clasificacion.html"><a href="mas-sobre-problemas-de-clasificacion.html"><i class="fa fa-check"></i><b>4</b> Más sobre problemas de clasificación</a><ul>
+<li class="chapter" data-level="4.1" data-path="mas-sobre-problemas-de-clasificacion.html"><a href="mas-sobre-problemas-de-clasificacion.html#analisis-de-error-para-clasificadores-binarios"><i class="fa fa-check"></i><b>4.1</b> Análisis de error para clasificadores binarios</a><ul>
+<li class="chapter" data-level="4.1.1" data-path="mas-sobre-problemas-de-clasificacion.html"><a href="mas-sobre-problemas-de-clasificacion.html#punto-de-corte-para-un-clasificador-binario"><i class="fa fa-check"></i><b>4.1.1</b> Punto de corte para un clasificador binario</a></li>
+<li class="chapter" data-level="4.1.2" data-path="mas-sobre-problemas-de-clasificacion.html"><a href="mas-sobre-problemas-de-clasificacion.html#espacio-roc-de-clasificadores"><i class="fa fa-check"></i><b>4.1.2</b> Espacio ROC de clasificadores</a></li>
+</ul></li>
+<li class="chapter" data-level="4.2" data-path="mas-sobre-problemas-de-clasificacion.html"><a href="mas-sobre-problemas-de-clasificacion.html#perfil-de-un-clasificador-binario-y-curvas-roc"><i class="fa fa-check"></i><b>4.2</b> Perfil de un clasificador binario y curvas ROC</a></li>
+<li class="chapter" data-level="4.3" data-path="mas-sobre-problemas-de-clasificacion.html"><a href="mas-sobre-problemas-de-clasificacion.html#regresion-logistica-para-problemas-de-mas-de-2-clases"><i class="fa fa-check"></i><b>4.3</b> Regresión logística para problemas de más de 2 clases</a><ul>
+<li class="chapter" data-level="4.3.1" data-path="mas-sobre-problemas-de-clasificacion.html"><a href="mas-sobre-problemas-de-clasificacion.html#regresion-logistica-multinomial"><i class="fa fa-check"></i><b>4.3.1</b> Regresión logística multinomial</a></li>
+<li class="chapter" data-level="4.3.2" data-path="mas-sobre-problemas-de-clasificacion.html"><a href="mas-sobre-problemas-de-clasificacion.html#interpretacion-de-coeficientes"><i class="fa fa-check"></i><b>4.3.2</b> Interpretación de coeficientes</a></li>
+<li class="chapter" data-level="4.3.3" data-path="mas-sobre-problemas-de-clasificacion.html"><a href="mas-sobre-problemas-de-clasificacion.html#ejemplo-clasificacion-de-digitos-con-regresion-multinomial"><i class="fa fa-check"></i><b>4.3.3</b> Ejemplo: Clasificación de dígitos con regresión multinomial</a></li>
+<li class="chapter" data-level="" data-path="mas-sobre-problemas-de-clasificacion.html"><a href="mas-sobre-problemas-de-clasificacion.html#discusion"><i class="fa fa-check"></i>Discusión</a></li>
+</ul></li>
+<li class="chapter" data-level="4.4" data-path="mas-sobre-problemas-de-clasificacion.html"><a href="mas-sobre-problemas-de-clasificacion.html#descenso-en-gradiente-para-regresion-multinomial-logistica"><i class="fa fa-check"></i><b>4.4</b> Descenso en gradiente para regresión multinomial logística</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="regularizacion.html"><a href="regularizacion.html"><i class="fa fa-check"></i><b>5</b> Regularización</a><ul>
+<li class="chapter" data-level="5.1" data-path="regularizacion.html"><a href="regularizacion.html#sesgo-y-varianza-de-predictores"><i class="fa fa-check"></i><b>5.1</b> Sesgo y varianza de predictores</a><ul>
+<li class="chapter" data-level="5.1.1" data-path="regularizacion.html"><a href="regularizacion.html#sesgo-y-varianza-en-modelos-lineales"><i class="fa fa-check"></i><b>5.1.1</b> Sesgo y varianza en modelos lineales</a></li>
+<li class="chapter" data-level="5.1.2" data-path="regularizacion.html"><a href="regularizacion.html#reduciendo-varianza-de-los-coeficientes"><i class="fa fa-check"></i><b>5.1.2</b> Reduciendo varianza de los coeficientes</a></li>
+</ul></li>
+<li class="chapter" data-level="5.2" data-path="regularizacion.html"><a href="regularizacion.html#regularizacion-ridge"><i class="fa fa-check"></i><b>5.2</b> Regularización ridge</a><ul>
+<li class="chapter" data-level="5.2.1" data-path="regularizacion.html"><a href="regularizacion.html#seleccion-de-coeficiente-de-regularizacion"><i class="fa fa-check"></i><b>5.2.1</b> Selección de coeficiente de regularización</a></li>
+</ul></li>
+<li class="chapter" data-level="5.3" data-path="regularizacion.html"><a href="regularizacion.html#entrenamiento-validacion-y-prueba"><i class="fa fa-check"></i><b>5.3</b> Entrenamiento, Validación y Prueba</a><ul>
+<li class="chapter" data-level="5.3.1" data-path="regularizacion.html"><a href="regularizacion.html#validacion-cruzada"><i class="fa fa-check"></i><b>5.3.1</b> Validación cruzada</a></li>
+<li class="chapter" data-level="" data-path="regularizacion.html"><a href="regularizacion.html#ejercicio-5"><i class="fa fa-check"></i>Ejercicio</a></li>
+</ul></li>
+<li class="chapter" data-level="5.4" data-path="regularizacion.html"><a href="regularizacion.html#regularizacion-lasso"><i class="fa fa-check"></i><b>5.4</b> Regularización lasso</a></li>
+<li class="chapter" data-level="5.5" data-path="regularizacion.html"><a href="regularizacion.html#tarea-3"><i class="fa fa-check"></i><b>5.5</b> Tarea</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="extensiones-para-regresion-lineal-y-logistica.html"><a href="extensiones-para-regresion-lineal-y-logistica.html"><i class="fa fa-check"></i><b>6</b> Extensiones para regresión lineal y logística</a><ul>
+<li class="chapter" data-level="6.1" data-path="extensiones-para-regresion-lineal-y-logistica.html"><a href="extensiones-para-regresion-lineal-y-logistica.html#como-hacer-mas-flexible-el-modelo-lineal"><i class="fa fa-check"></i><b>6.1</b> Cómo hacer más flexible el modelo lineal</a></li>
+<li class="chapter" data-level="6.2" data-path="extensiones-para-regresion-lineal-y-logistica.html"><a href="extensiones-para-regresion-lineal-y-logistica.html#transformacion-de-entradas"><i class="fa fa-check"></i><b>6.2</b> Transformación de entradas</a></li>
+<li class="chapter" data-level="6.3" data-path="extensiones-para-regresion-lineal-y-logistica.html"><a href="extensiones-para-regresion-lineal-y-logistica.html#variables-cualitativas"><i class="fa fa-check"></i><b>6.3</b> Variables cualitativas</a></li>
+<li class="chapter" data-level="6.4" data-path="extensiones-para-regresion-lineal-y-logistica.html"><a href="extensiones-para-regresion-lineal-y-logistica.html#interacciones"><i class="fa fa-check"></i><b>6.4</b> Interacciones</a></li>
+<li class="chapter" data-level="6.5" data-path="extensiones-para-regresion-lineal-y-logistica.html"><a href="extensiones-para-regresion-lineal-y-logistica.html#categorizacion-de-variables"><i class="fa fa-check"></i><b>6.5</b> Categorización de variables</a></li>
+<li class="chapter" data-level="6.6" data-path="extensiones-para-regresion-lineal-y-logistica.html"><a href="extensiones-para-regresion-lineal-y-logistica.html#splines"><i class="fa fa-check"></i><b>6.6</b> Splines</a><ul>
+<li class="chapter" data-level="6.6.1" data-path="extensiones-para-regresion-lineal-y-logistica.html"><a href="extensiones-para-regresion-lineal-y-logistica.html#cuando-usar-estas-tecnicas"><i class="fa fa-check"></i><b>6.6.1</b> ¿Cuándo usar estas técnicas?</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html"><i class="fa fa-check"></i><b>7</b> Redes neuronales (parte 1)</a><ul>
+<li class="chapter" data-level="7.1" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#introduccion-a-redes-neuronales"><i class="fa fa-check"></i><b>7.1</b> Introducción a redes neuronales</a><ul>
+<li class="chapter" data-level="" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#como-construyen-entradas-las-redes-neuronales"><i class="fa fa-check"></i>¿Cómo construyen entradas las redes neuronales?</a></li>
+<li class="chapter" data-level="" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#como-ajustar-los-parametros"><i class="fa fa-check"></i>¿Cómo ajustar los parámetros?</a></li>
+</ul></li>
+<li class="chapter" data-level="7.2" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#interacciones-en-redes-neuronales"><i class="fa fa-check"></i><b>7.2</b> Interacciones en redes neuronales</a></li>
+<li class="chapter" data-level="7.3" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#redes-neuronales-completamente-conexas"><i class="fa fa-check"></i><b>7.3</b> Redes neuronales completamente conexas</a></li>
+<li class="chapter" data-level="7.4" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#feed-forward"><i class="fa fa-check"></i><b>7.4</b> Feed forward</a></li>
+<li class="chapter" data-level="7.5" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#ajuste-de-parametros-introduccion"><i class="fa fa-check"></i><b>7.5</b> Ajuste de parámetros (introducción)</a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Publicado con bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Aprendizaje de máquina</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="redes-neuronales-parte-1" class="section level1">
+<h1><span class="header-section-number">Clase 7</span> Redes neuronales (parte 1)</h1>
+<div id="introduccion-a-redes-neuronales" class="section level2">
+<h2><span class="header-section-number">7.1</span> Introducción a redes neuronales</h2>
+<p>En la parte anterior, vimos cómo hacer más flexibles los métodos de regresión: la idea es construir entradas derivadas a partir de las variables originales, e incluirlas en el modelo de regresión. Este enfoque es bueno cuando tenemos relativamente pocas variables originales de entrada, y tenemos una idea de qué variables derivadas es buena idea incluir (por ejemplo, splines para una variable como edad, interacciones para variables importantes, etc). Sin embargo, si hay una gran cantidad de entradas, esta técnica puede ser prohibitiva en términos de cálculo y trabajo manual.</p>
+<p>Por ejemplo, si tenemos unas 100 entradas numéricas, al crear todas las interacciones <span class="math inline">\(x_i x_j\)</span> y los cuadrados <span class="math inline">\(x_i^2\)</span> terminamos con unas 5150 variables. Para el problema de dígitos (256 entradas o pixeles) terminaríamos con unas 32 mil entradas adicionales. Aún cuando es posible regularizar, en estos casos suena más conveniente construir entradas derivadas a partir de los datos.</p>
+<p>Para hacer esto, consideramos entradas <span class="math inline">\(X_1, . . . , X_p\)</span>, y supongamos que tenemos un problema de clasificación binaria, con <span class="math inline">\(G = 1\)</span> o <span class="math inline">\(G = 0\)</span>. Aunque hay muchas maneras de construir entradas derivadas, una manera simple sería construir <span class="math inline">\(m\)</span> nuevas entradas mediante:</p>
+<p><span class="math display">\[a_k = h \left ( \theta_{k,0} + \sum_{j=1}^p \theta_{k,j}x_j
+\right)\]</span></p>
+<p>para <span class="math inline">\(k=1,\ldots, m\)</span>, donde <span class="math inline">\(h\)</span> es la función logística, y las <span class="math inline">\(\theta\)</span> son parámetros que seleccionaremos más tarde.</p>
+<p>Modelamos ahora la probabilidad de clase 1 con regresión logística -pero en lugar de usar las entradas originales X usamos las entradas derivadas <span class="math inline">\(a_1, . . . , a_m\)</span>: <span class="math display">\[p_1(x) = h \left ( \beta_0 + \sum_{j=1}^m \beta_ja_j
+\right)\]</span></p>
+<p>Podemos representar este esquema con una red dirigida (<span class="math inline">\(m=3\)</span> variables derivadas):</p>
+<p><img src="07-redes-neuronales_files/figure-html/unnamed-chunk-1-1.png" width="500" /></p>
+<p><strong>Observaciones:</strong></p>
+<ul>
+<li>¿Por qué usar <span class="math inline">\(h\)</span> para las entradas derivadas <span class="math inline">\(a_k\)</span>? En primer lugar, nótese que si no transformamos con alguna función no lineal <span class="math inline">\(h\)</span>, el modelo final <span class="math inline">\(p_1\)</span> para la probabilidad condicional es el mismo que el de regresión logística (combinaciones lineales de combinaciones lineales son combinaciones lineales). Sin embargo, al transformar con <span class="math inline">\(h\)</span>, las <span class="math inline">\(x_j\)</span> contribuyen de manera no lineal a las entradas derivadas.</li>
+<li>Las variables <span class="math inline">\(a_k\)</span> que se pueden obtener son similares (para una variable de entrada) a los I-splines que vimos en la parte anterijor.</li>
+<li>Es posible demostrar que si se crean suficientes entradas derivadas (<span class="math inline">\(m\)</span> es suficientemente grande), entonces la función <span class="math inline">\(p_1(x)\)</span> puede aproximar cualquier función continua. La función <span class="math inline">\(h\)</span> (que se llama <strong>función de activación</strong> no es especial: funciones continuas con forma similar a la sigmoide (logística) pueden usarse también (por ejemplo, arcotangente, o lineal rectificada). La idea es que cualquier función se puede aproximar mediante superposición de funciones tipo sigmoide (ver por ejemplo Cybenko 1989, Approximation by Superpositions of a Sigmoidal Function).</li>
+</ul>
+<div id="como-construyen-entradas-las-redes-neuronales" class="section level3 unnumbered">
+<h3>¿Cómo construyen entradas las redes neuronales?</h3>
+<p>Comencemos por un ejemplo simple de clasificación binaria con una sola entrada <span class="math inline">\(x\)</span>. Supondremos que el modelo verdadero está dado por:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">h &lt;-<span class="st"> </span><span class="cf">function</span>(x){
+    <span class="dv">1</span><span class="op">/</span>(<span class="dv">1</span> <span class="op">+</span><span class="st"> </span><span class="kw">exp</span>(<span class="op">-</span>x)) <span class="co"># es lo mismo que exp(x)/(1 + exp(x))</span>
+}
+x &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="op">-</span><span class="dv">2</span>, <span class="dv">2</span>, <span class="fl">0.1</span>)
+p &lt;-<span class="st"> </span><span class="kw">h</span>(<span class="dv">2</span> <span class="op">-</span><span class="st"> </span><span class="dv">3</span> <span class="op">*</span><span class="st"> </span>x<span class="op">^</span><span class="dv">2</span>) <span class="co">#probabilidad condicional de clase 1 (vs. 0)</span>
+<span class="kw">set.seed</span>(<span class="dv">2805721</span>)
+x_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">runif</span>(<span class="dv">30</span>, <span class="op">-</span><span class="dv">2</span>, <span class="dv">2</span>)
+g_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">rbinom</span>(<span class="dv">30</span>, <span class="dv">1</span>, <span class="kw">h</span>(<span class="dv">2</span> <span class="op">-</span><span class="st"> </span><span class="dv">3</span> <span class="op">*</span><span class="st"> </span>x_<span class="dv">1</span><span class="op">^</span><span class="dv">2</span>))
+datos &lt;-<span class="st"> </span><span class="kw">data.frame</span>(x_<span class="dv">1</span>, g_<span class="dv">1</span>)
+dat_p &lt;-<span class="st"> </span><span class="kw">data.frame</span>(x, p)
+g &lt;-<span class="st"> </span><span class="kw">qplot</span>(x, p, <span class="dt">geom=</span><span class="st">&#39;line&#39;</span>)
+g <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>(<span class="dt">data =</span> datos, <span class="kw">aes</span>(<span class="dt">x =</span> x_<span class="dv">1</span>, <span class="dt">y =</span> g_<span class="dv">1</span>), <span class="dt">colour =</span> <span class="st">&#39;red&#39;</span>)</code></pre></div>
+<p><img src="07-redes-neuronales_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<p>donde adicionalmente graficamos 30 datos simulados. Recordamos que queremos ajustar la curva roja, que da la probabilidad condicional de clase. Podríamos ajustar un modelo de regresión logística expandiendo el espacio de entradas agregando <span class="math inline">\(x^2\)</span>, y obtendríamos un ajuste razonable.</p>
+<p>La idea aquí es que podemos crear entradas derivadas de forma automática. Suponamos entonces que pensamos crear dos entradas <span class="math inline">\(a_1\)</span> y <span class="math inline">\(a_2\)</span>, funciones de <span class="math inline">\(x_1\)</span>, y luego predecir <span class="math inline">\(g.1\)</span>, la clase, en función de estas dos entradas. Por ejemplo, podríamos tomar:</p>
+<p><img src="07-redes-neuronales_files/figure-html/unnamed-chunk-3-1.png" width="500" /></p>
+<p>donde hacemos una regresión logística para predecir <span class="math inline">\(G\)</span> mediante <span class="math display">\[p_1(a) = h(\beta_0 + \beta_1a_1+\beta_2 a_2),\]</span> <span class="math inline">\(a_1\)</span> y <span class="math inline">\(a_2\)</span> están dadas por <span class="math display">\[a_1(x)=h(\beta_{1,0} + \beta_{1,1} x_1),\]</span> <span class="math display">\[a_2(x)=h(\beta_{2,0} + \beta_{2,1} x_1).\]</span></p>
+<p>Por ejemplo, podríamos tomar</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">a_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">h</span>( <span class="dv">1</span> <span class="op">+</span><span class="st"> </span><span class="dv">2</span><span class="op">*</span>x)  <span class="co"># 2(x+1/2)</span>
+a_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">h</span>(<span class="op">-</span><span class="dv">1</span> <span class="op">+</span><span class="st"> </span><span class="dv">2</span><span class="op">*</span>x)  <span class="co"># 2(x-1/2) # una es una versión desplazada de otra.</span></code></pre></div>
+<p>Las funciones <span class="math inline">\(a_1\)</span> y <span class="math inline">\(a_2\)</span> dependen de <span class="math inline">\(x\)</span> de la siguiente forma:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dat_a &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">x =</span> x, <span class="dt">a_1 =</span> a_<span class="dv">1</span>, <span class="dt">a_2 =</span> a_<span class="dv">2</span>)
+dat_a_<span class="dv">2</span> &lt;-<span class="st"> </span>dat_a <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">gather</span>(variable, valor, a_<span class="dv">1</span><span class="op">:</span>a_<span class="dv">2</span>)
+<span class="kw">ggplot</span>(dat_a_<span class="dv">2</span>, <span class="kw">aes</span>(<span class="dt">x=</span>x, <span class="dt">y=</span>valor, <span class="dt">colour=</span>variable, <span class="dt">group=</span>variable)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_line</span>()</code></pre></div>
+<p><img src="07-redes-neuronales_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p>Si las escalamos y sumamos, obtenemos</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dat_a &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">x=</span>x, <span class="dt">a_1=</span><span class="op">-</span><span class="dv">4</span><span class="op">+</span><span class="dv">12</span><span class="op">*</span>a_<span class="dv">1</span>, <span class="dt">a_2=</span><span class="op">-</span><span class="dv">12</span><span class="op">*</span>a_<span class="dv">2</span>, <span class="dt">suma=</span><span class="op">-</span><span class="dv">4</span><span class="op">+</span><span class="dv">12</span><span class="op">*</span>a_<span class="dv">1</span><span class="op">-</span><span class="dv">12</span><span class="op">*</span>a_<span class="dv">2</span>)
+dat_a_<span class="dv">2</span> &lt;-<span class="st"> </span>dat_a <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">gather</span>(variable, valor, a_<span class="dv">1</span><span class="op">:</span>suma)
+<span class="kw">ggplot</span>(dat_a_<span class="dv">2</span>, <span class="kw">aes</span>(<span class="dt">x=</span>x, <span class="dt">y=</span>valor, <span class="dt">colour=</span>variable, <span class="dt">group=</span>variable)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_line</span>()</code></pre></div>
+<p><img src="07-redes-neuronales_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p>y finalmente, aplicando <span class="math inline">\(h\)</span>:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dat_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">data.frame</span>(x, <span class="dt">p2=</span><span class="kw">h</span>(<span class="op">-</span><span class="dv">4</span> <span class="op">+</span><span class="st"> </span><span class="dv">12</span><span class="op">*</span>a_<span class="dv">1</span> <span class="op">-</span><span class="st"> </span><span class="dv">12</span><span class="op">*</span>a_<span class="dv">2</span>))
+<span class="kw">ggplot</span>(dat_<span class="dv">2</span>, <span class="kw">aes</span>(<span class="dt">x=</span>x, <span class="dt">y=</span>p2)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_line</span>()<span class="op">+</span>
+<span class="kw">geom_line</span>(<span class="dt">data=</span>dat_p, <span class="kw">aes</span>(<span class="dt">x=</span>x,<span class="dt">y=</span>p), <span class="dt">col=</span><span class="st">&#39;red&#39;</span>) <span class="op">+</span><span class="kw">ylim</span>(<span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>))<span class="op">+</span>
+<span class="st">   </span><span class="kw">geom_point</span>(<span class="dt">data =</span> datos, <span class="kw">aes</span>(<span class="dt">x=</span>x_<span class="dv">1</span>,<span class="dt">y=</span>g_<span class="dv">1</span>))</code></pre></div>
+<p><img src="07-redes-neuronales_files/figure-html/unnamed-chunk-7-1.png" width="672" /> que da un ajuste razonable. Este es un ejemplo de cómo la mezcla de dos funciones logísticas puede replicar esta función con forma de chipote.</p>
+</div>
+<div id="como-ajustar-los-parametros" class="section level3 unnumbered">
+<h3>¿Cómo ajustar los parámetros?</h3>
+<p>Para encontrar los mejores parámetros, minimizamos la devianza sobre los parámetros <span class="math inline">\(\beta_0,\beta_1,\beta_{1,0},\beta_{1,1}, \beta_{2,0},\beta_{2,1}\)</span>.</p>
+<p>Veremos más adelante que conviene hacer esto usando descenso o en gradiente o descenso en gradiente estocástico, pero por el momento usamos la función <em>optim</em> de R para minimizar la devianza. En primer lugar, creamos una función que para todas las entradas calcula los valores de salida. En esta función hacemos <strong>feed-forward</strong> de las entradas a través de la red para calcular la salida</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## esta función calcula los valores de cada nodo en toda la red,
+## para cada entrada
+feed_fow &lt;-<span class="st"> </span><span class="cf">function</span>(beta, x){
+  a_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">h</span>(beta[<span class="dv">1</span>] <span class="op">+</span><span class="st"> </span>beta[<span class="dv">2</span>]<span class="op">*</span>x) <span class="co"># calcula variable 1 de capa oculta</span>
+  a_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">h</span>(beta[<span class="dv">3</span>] <span class="op">+</span><span class="st"> </span>beta[<span class="dv">4</span>]<span class="op">*</span>x) <span class="co"># calcula variable 2 de capa oculta</span>
+  p &lt;-<span class="st"> </span><span class="kw">h</span>(beta[<span class="dv">5</span>]<span class="op">+</span>beta[<span class="dv">6</span>]<span class="op">*</span>a_<span class="dv">1</span> <span class="op">+</span><span class="st"> </span>beta[<span class="dv">7</span>]<span class="op">*</span>a_<span class="dv">2</span>) <span class="co"># calcula capa de salida</span>
+  p
+}</code></pre></div>
+<p>Nótese que simplemente seguimos el diagrama mostrado arriba para hacer los cálculos, combinando linealmente las entradas en cada capa.</p>
+<p>Ahora definimos una función para calcular la devianza. Conviene crear una función que crea funciones, para obtener una función que <em>sólo se evalúa en los parámetros</em> para cada conjunto de datos de entrenamiento fijos:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">devianza_fun &lt;-<span class="st"> </span><span class="cf">function</span>(x, y){
+    <span class="co"># esta función es una fábrica de funciones</span>
+   devianza &lt;-<span class="st"> </span><span class="cf">function</span>(beta){
+         p &lt;-<span class="st"> </span><span class="kw">feed_fow</span>(beta, x)
+      <span class="op">-</span><span class="st"> </span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span><span class="kw">mean</span>(y<span class="op">*</span><span class="kw">log</span>(p) <span class="op">+</span><span class="st"> </span>(<span class="dv">1</span><span class="op">-</span>y)<span class="op">*</span><span class="kw">log</span>(<span class="dv">1</span><span class="op">-</span>p))
+   }
+  devianza
+}</code></pre></div>
+<p>Por ejemplo:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dev &lt;-<span class="st"> </span><span class="kw">devianza_fun</span>(x_<span class="dv">1</span>, g_<span class="dv">1</span>) <span class="co"># crea función dev</span>
+## ahora dev toma solamente los 7 parámetros beta:
+<span class="kw">dev</span>(<span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>))</code></pre></div>
+<pre><code>## [1] 1.386294</code></pre>
+<p>Finalmente, optimizamos la devianza. Para esto usaremos la función <em>optim</em> de R:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">5</span>)
+salida &lt;-<span class="st"> </span><span class="kw">optim</span>(<span class="kw">rnorm</span>(<span class="dv">7</span>), dev, <span class="dt">method=</span><span class="st">&#39;BFGS&#39;</span>) <span class="co"># inicializar al azar punto inicial</span>
+salida</code></pre></div>
+<pre><code>## $par
+## [1] -24.8192568  23.0201169  -8.4364869  -6.7633494   0.9849461 -14.0157655
+## [7] -14.3394673
+## 
+## $value
+## [1] 0.654347
+## 
+## $counts
+## function gradient 
+##      103      100 
+## 
+## $convergence
+## [1] 1
+## 
+## $message
+## NULL</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">beta &lt;-<span class="st"> </span>salida<span class="op">$</span>par</code></pre></div>
+<p>Y ahora podemos graficar con el vector <span class="math inline">\(\beta\)</span> encontrado:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## hacer feed forward con beta encontrados
+p_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">feed_fow</span>(beta, x)
+dat_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">data.frame</span>(x, <span class="dt">p_2 =</span> p_<span class="dv">2</span>)
+<span class="kw">ggplot</span>(dat_<span class="dv">2</span>, <span class="kw">aes</span>(<span class="dt">x =</span> x, <span class="dt">y =</span> p_<span class="dv">2</span>)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_line</span>()<span class="op">+</span>
+<span class="kw">geom_line</span>(<span class="dt">data =</span> dat_p, <span class="kw">aes</span>(<span class="dt">x =</span> x, <span class="dt">y =</span> p), <span class="dt">col=</span><span class="st">&#39;red&#39;</span>) <span class="op">+</span><span class="kw">ylim</span>(<span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>))<span class="op">+</span>
+<span class="st">   </span><span class="kw">geom_point</span>(<span class="dt">data =</span> datos, <span class="kw">aes</span>(<span class="dt">x =</span> x_<span class="dv">1</span>, <span class="dt">y =</span> g_<span class="dv">1</span>))</code></pre></div>
+<p><img src="07-redes-neuronales_files/figure-html/unnamed-chunk-12-1.png" width="672" /> Los coeficientes estimados, que en este caso muchas veces se llaman <em>pesos</em>, son:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">beta</code></pre></div>
+<pre><code>## [1] -24.8192568  23.0201169  -8.4364869  -6.7633494   0.9849461 -14.0157655
+## [7] -14.3394673</code></pre>
+<p>que parecen ser muy grandes. Igualmente, de la figura vemos que el ajuste no parece ser muy estable (esto se puede confirmar corriendo con distintos conjuntos de entrenamiento). Podemos entonces regularizar ligeramente la devianza para resolver este problema. En primer lugar, definimos la devianza regularizada (ridge):</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">devianza_reg &lt;-<span class="st"> </span><span class="cf">function</span>(x, y, lambda){
+    <span class="co"># esta función es una fábrica de funciones</span>
+   devianza &lt;-<span class="st"> </span><span class="cf">function</span>(beta){
+         p &lt;-<span class="st"> </span><span class="kw">feed_fow</span>(beta, x)
+         <span class="co"># en esta regularizacion quitamos sesgos, pero puede hacerse también con sesgos.</span>
+        <span class="op">-</span><span class="st"> </span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span><span class="kw">mean</span>(y<span class="op">*</span><span class="kw">log</span>(p) <span class="op">+</span><span class="st"> </span>(<span class="dv">1</span><span class="op">-</span>y)<span class="op">*</span><span class="kw">log</span>(<span class="dv">1</span><span class="op">-</span>p)) <span class="op">+</span><span class="st"> </span>lambda<span class="op">*</span><span class="kw">sum</span>(beta[<span class="op">-</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">3</span>,<span class="dv">5</span>)]<span class="op">^</span><span class="dv">2</span>) 
+   }
+  devianza
+}</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dev_r &lt;-<span class="st"> </span><span class="kw">devianza_reg</span>(x_<span class="dv">1</span>, g_<span class="dv">1</span>, <span class="fl">0.001</span>) <span class="co"># crea función dev</span>
+<span class="kw">set.seed</span>(<span class="dv">5</span>)
+salida &lt;-<span class="st"> </span><span class="kw">optim</span>(<span class="kw">rnorm</span>(<span class="dv">7</span>), dev_r, <span class="dt">method=</span><span class="st">&#39;BFGS&#39;</span>) <span class="co"># inicializar al azar punto inicial</span>
+salida</code></pre></div>
+<pre><code>## $par
+## [1] -4.826652  4.107146 -4.845864 -4.561488  1.067216 -5.236453 -5.195981
+## 
+## $value
+## [1] 0.8322745
+## 
+## $counts
+## function gradient 
+##      102      100 
+## 
+## $convergence
+## [1] 1
+## 
+## $message
+## NULL</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">beta &lt;-<span class="st"> </span>salida<span class="op">$</span>par
+<span class="kw">dev</span>(beta)</code></pre></div>
+<pre><code>## [1] 0.74018</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">p_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">feed_fow</span>(beta, x)
+dat_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">data.frame</span>(x, <span class="dt">p_2 =</span> p_<span class="dv">2</span>)
+<span class="kw">ggplot</span>(dat_<span class="dv">2</span>, <span class="kw">aes</span>(<span class="dt">x =</span> x, <span class="dt">y =</span> p_<span class="dv">2</span>)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_line</span>()<span class="op">+</span>
+<span class="kw">geom_line</span>(<span class="dt">data =</span> dat_p, <span class="kw">aes</span>(<span class="dt">x =</span> x, <span class="dt">y =</span> p), <span class="dt">col=</span><span class="st">&#39;red&#39;</span>) <span class="op">+</span><span class="kw">ylim</span>(<span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>))<span class="op">+</span>
+<span class="st">   </span><span class="kw">geom_point</span>(<span class="dt">data =</span> datos, <span class="kw">aes</span>(<span class="dt">x =</span> x_<span class="dv">1</span>, <span class="dt">y =</span> g_<span class="dv">1</span>))</code></pre></div>
+<p><img src="07-redes-neuronales_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
+<p>y obtenemos un ajuste mucho más estable. Podemos también usar la función <em>nnet</em> del paquete <em>nnet</em>. Ojo: en <em>nnet</em>, el error es la devianza no está normalizada por número de casos y dividida entre dos:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(nnet)
+<span class="kw">set.seed</span>(<span class="dv">12</span>)
+nn &lt;-<span class="st"> </span><span class="kw">nnet</span>(g_<span class="dv">1</span> <span class="op">~</span><span class="st"> </span>x_<span class="dv">1</span>, <span class="dt">data=</span>datos, <span class="dt">size =</span> <span class="dv">2</span>, <span class="dt">decay=</span><span class="fl">0.0</span>, <span class="dt">entropy =</span> T)</code></pre></div>
+<pre><code>## # weights:  7
+## initial  value 19.318858 
+## iter  10 value 11.967705
+## iter  20 value 10.251964
+## iter  30 value 9.647707
+## iter  40 value 9.573030
+## iter  50 value 9.569389
+## iter  60 value 9.555125
+## iter  70 value 9.546210
+## iter  80 value 9.544512
+## iter  90 value 9.539825
+## iter 100 value 9.535977
+## final  value 9.535977 
+## stopped after 100 iterations</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">nn<span class="op">$</span>wts</code></pre></div>
+<pre><code>## [1] -51.274012  48.789640   8.764849   6.219901 -29.155181 -24.998108
+## [7]  30.125349</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">nn<span class="op">$</span>value</code></pre></div>
+<pre><code>## [1] 9.535977</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="dv">2</span><span class="op">*</span>nn<span class="op">$</span>value<span class="op">/</span><span class="dv">30</span></code></pre></div>
+<pre><code>## [1] 0.6357318</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dev</span>(nn<span class="op">$</span>wts) </code></pre></div>
+<pre><code>## [1] 0.6357318</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">qplot</span>(x, <span class="kw">predict</span>(nn, <span class="dt">newdata=</span><span class="kw">data.frame</span>(<span class="dt">x_1 =</span> x)), <span class="dt">geom=</span><span class="st">&#39;line&#39;</span>)</code></pre></div>
+<p><img src="07-redes-neuronales_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
+<div id="ejercicio-6" class="section level4 unnumbered">
+<h4>Ejercicio</h4>
+<p>Un ejemplo más complejo. Utiliza los siguientes datos, y agrega si es necesario variables derivadas <span class="math inline">\(a_3,a_4\)</span> en la capa oculta.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">h &lt;-<span class="st"> </span><span class="cf">function</span>(x){
+    <span class="kw">exp</span>(x)<span class="op">/</span>(<span class="dv">1</span><span class="op">+</span><span class="kw">exp</span>(x))
+}
+x &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="op">-</span><span class="dv">2</span>,<span class="dv">2</span>,<span class="fl">0.05</span>)
+p &lt;-<span class="st"> </span><span class="kw">h</span>(<span class="dv">3</span> <span class="op">+</span><span class="st"> </span>x<span class="op">-</span><span class="st"> </span><span class="dv">3</span><span class="op">*</span>x<span class="op">^</span><span class="dv">2</span> <span class="op">+</span><span class="st"> </span><span class="dv">3</span><span class="op">*</span><span class="kw">cos</span>(<span class="dv">4</span><span class="op">*</span>x))
+<span class="kw">set.seed</span>(<span class="dv">280572</span>)
+x.<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">runif</span>(<span class="dv">300</span>, <span class="op">-</span><span class="dv">2</span>, <span class="dv">2</span>)
+g.<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">rbinom</span>(<span class="dv">300</span>, <span class="dv">1</span>, <span class="kw">h</span>(<span class="dv">3</span> <span class="op">+</span><span class="st"> </span>x.<span class="dv">2</span><span class="op">-</span><span class="st"> </span><span class="dv">3</span><span class="op">*</span>x.<span class="dv">2</span><span class="op">^</span><span class="dv">2</span> <span class="op">+</span><span class="st"> </span><span class="dv">3</span><span class="op">*</span><span class="kw">cos</span>(<span class="dv">4</span><span class="op">*</span>x.<span class="dv">2</span>)))
+datos &lt;-<span class="st"> </span><span class="kw">data.frame</span>(x.<span class="dv">2</span>,g.<span class="dv">2</span>)
+dat.p &lt;-<span class="st"> </span><span class="kw">data.frame</span>(x,p)
+g &lt;-<span class="st"> </span><span class="kw">qplot</span>(x,p, <span class="dt">geom=</span><span class="st">&#39;line&#39;</span>, <span class="dt">col=</span><span class="st">&#39;red&#39;</span>)
+g <span class="op">+</span><span class="st"> </span><span class="kw">geom_jitter</span>(<span class="dt">data =</span> datos, <span class="kw">aes</span>(<span class="dt">x=</span>x.<span class="dv">2</span>,<span class="dt">y=</span>g.<span class="dv">2</span>), <span class="dt">col =</span><span class="st">&#39;black&#39;</span>,
+  <span class="dt">position =</span><span class="kw">position_jitter</span>(<span class="dt">height=</span><span class="fl">0.05</span>), <span class="dt">alpha=</span><span class="fl">0.4</span>)</code></pre></div>
+<p><img src="07-redes-neuronales_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
+</div>
+</div>
+</div>
+<div id="interacciones-en-redes-neuronales" class="section level2">
+<h2><span class="header-section-number">7.2</span> Interacciones en redes neuronales</h2>
+<p>Es posible capturar interacciones con redes neuronales. Consideremos el siguiente ejemplo simple:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">p &lt;-<span class="st"> </span><span class="cf">function</span>(x1, x2){
+  <span class="kw">h</span>(<span class="op">-</span><span class="dv">4</span> <span class="op">+</span><span class="st"> </span><span class="dv">3</span><span class="op">*</span>x1 <span class="op">+</span><span class="st"> </span><span class="dv">3</span><span class="op">*</span>x2 <span class="op">+</span><span class="st"> </span><span class="op">-</span><span class="dv">6</span><span class="op">*</span>x1<span class="op">*</span>x2)
+}
+dat &lt;-<span class="st"> </span><span class="kw">expand.grid</span>(<span class="dt">x1 =</span> <span class="kw">seq</span>(<span class="op">-</span><span class="dv">1</span>,<span class="dv">2</span>,<span class="fl">0.05</span>), <span class="dt">x2 =</span> <span class="kw">seq</span>(<span class="op">-</span><span class="dv">1</span>, <span class="dv">2</span>, <span class="fl">0.05</span>))
+dat &lt;-<span class="st"> </span>dat <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">p =</span> <span class="kw">p</span>(x1, x2))
+<span class="kw">ggplot</span>(dat, <span class="kw">aes</span>(<span class="dt">x=</span>x1, <span class="dt">y=</span>x2)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_tile</span>(<span class="kw">aes</span>(<span class="dt">fill=</span>p))</code></pre></div>
+<p><img src="07-redes-neuronales_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
+<p>Esta función puede entenderse como un o exclusivo: la probabilidad es alta sólo cuando x1 y x2 tienen valores opuestos (x1 grande pero x2 chica y viceversa). No es posible modelar esta función mediante el modelo logístico (sin interacciones).</p>
+<p>Sin embargo, podemos incluir la interacción en el modelo logístico o intentar usar una red neuronal. Primero simulamos unos datos y probamos el modelo logístico con y sin interacciones:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">12</span>)
+n &lt;-<span class="st"> </span><span class="dv">500</span>
+dat_ent &lt;-<span class="st"> </span><span class="kw">data_frame</span>(<span class="dt">x1=</span><span class="kw">runif</span>(n,<span class="op">-</span><span class="dv">1</span>,<span class="dv">1</span>), <span class="dt">x2 =</span> <span class="kw">runif</span>(n, <span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>)) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">p =</span> <span class="kw">p</span>(x1, x2)) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">y =</span> <span class="kw">rbinom</span>(n, <span class="dv">1</span>, p))
+mod_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">glm</span>(y <span class="op">~</span><span class="st"> </span>x1 <span class="op">+</span><span class="st"> </span>x2, <span class="dt">data =</span> dat_ent, <span class="dt">family =</span> <span class="st">&#39;binomial&#39;</span>)
+mod_<span class="dv">1</span></code></pre></div>
+<pre><code>## 
+## Call:  glm(formula = y ~ x1 + x2, family = &quot;binomial&quot;, data = dat_ent)
+## 
+## Coefficients:
+## (Intercept)           x1           x2  
+##     -2.2565       1.0167       0.5432  
+## 
+## Degrees of Freedom: 499 Total (i.e. Null);  497 Residual
+## Null Deviance:       342.3 
+## Residual Deviance: 324   AIC: 330</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">table</span>(<span class="kw">predict</span>(mod_<span class="dv">1</span>)<span class="op">&gt;</span><span class="st"> </span><span class="fl">0.5</span>, dat_ent<span class="op">$</span>y)</code></pre></div>
+<pre><code>##        
+##           0   1
+##   FALSE 446  54</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mod_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">glm</span>(y <span class="op">~</span><span class="st"> </span>x1 <span class="op">+</span><span class="st"> </span>x2 <span class="op">+</span><span class="st"> </span>x1<span class="op">:</span>x2, <span class="dt">data =</span> dat_ent, <span class="dt">family =</span> <span class="st">&#39;binomial&#39;</span>)
+mod_<span class="dv">2</span></code></pre></div>
+<pre><code>## 
+## Call:  glm(formula = y ~ x1 + x2 + x1:x2, family = &quot;binomial&quot;, data = dat_ent)
+## 
+## Coefficients:
+## (Intercept)           x1           x2        x1:x2  
+##      -4.222        3.454        3.338       -6.403  
+## 
+## Degrees of Freedom: 499 Total (i.e. Null);  496 Residual
+## Null Deviance:       342.3 
+## Residual Deviance: 223.4     AIC: 231.4</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">table</span>(<span class="kw">predict</span>(mod_<span class="dv">2</span>)<span class="op">&gt;</span><span class="st"> </span><span class="fl">0.5</span>, dat_ent<span class="op">$</span>y)</code></pre></div>
+<pre><code>##        
+##           0   1
+##   FALSE 441  39
+##   TRUE    5  15</code></pre>
+<p>Observese la gran diferencia de devianza entre los dos modelos (en este caso, el sobreajuste no es un problema).</p>
+<p>Ahora consideramos qué red neuronal puede ser apropiada</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">551</span>)
+nn &lt;-<span class="st"> </span><span class="kw">nnet</span>(y <span class="op">~</span><span class="st"> </span>x1 <span class="op">+</span><span class="st"> </span>x2, <span class="dt">data=</span>dat_ent, <span class="dt">size =</span> <span class="dv">3</span>, <span class="dt">decay=</span><span class="fl">0.001</span>, 
+           <span class="dt">entropy =</span> T, <span class="dt">maxit=</span><span class="dv">500</span>, <span class="dt">Wts =</span><span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">2</span>,<span class="op">-</span><span class="dv">2</span>,<span class="dv">2</span>,<span class="op">-</span><span class="dv">2</span>,<span class="dv">2</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>))</code></pre></div>
+<pre><code>## # weights:  13
+## initial  value 346.599590 
+## iter  10 value 120.836347
+## iter  20 value 112.271172
+## iter  30 value 111.528027
+## iter  40 value 111.038646
+## iter  50 value 108.080997
+## iter  60 value 106.634784
+## iter  70 value 105.372367
+## iter  80 value 105.172302
+## iter  90 value 105.155662
+## iter 100 value 105.154809
+## final  value 105.154558 
+## converged</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#primera capa</span>
+<span class="kw">matrix</span>(<span class="kw">round</span>(nn<span class="op">$</span>wts[<span class="dv">1</span><span class="op">:</span><span class="dv">9</span>], <span class="dv">1</span>), <span class="dv">3</span>,<span class="dv">3</span>, <span class="dt">byrow=</span>T)</code></pre></div>
+<pre><code>##      [,1] [,2] [,3]
+## [1,]  6.2  5.7 -4.9
+## [2,]  6.4 -5.4  1.7
+## [3,]  0.4 20.7  5.8</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#segunda capa</span>
+<span class="kw">round</span>(nn<span class="op">$</span>wts[<span class="dv">10</span><span class="op">:</span><span class="dv">13</span>], <span class="dv">1</span>)</code></pre></div>
+<pre><code>## [1]   9.4 -12.3  -7.7   8.0</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#2*nn$value</span></code></pre></div>
+<p>Ell cálculo de esta red es:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">feed_fow &lt;-<span class="st"> </span><span class="cf">function</span>(beta, x){
+  a_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">h</span>(beta[<span class="dv">1</span>] <span class="op">+</span><span class="st"> </span>beta[<span class="dv">2</span>]<span class="op">*</span>x[<span class="dv">1</span>] <span class="op">+</span><span class="st"> </span>beta[<span class="dv">3</span>]<span class="op">*</span>x[<span class="dv">2</span>]) 
+  a_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">h</span>(beta[<span class="dv">4</span>] <span class="op">+</span><span class="st"> </span>beta[<span class="dv">5</span>]<span class="op">*</span>x[<span class="dv">1</span>] <span class="op">+</span><span class="st"> </span>beta[<span class="dv">6</span>]<span class="op">*</span>x[<span class="dv">2</span>]) 
+  a_<span class="dv">3</span> &lt;-<span class="st"> </span><span class="kw">h</span>(beta[<span class="dv">7</span>] <span class="op">+</span><span class="st"> </span>beta[<span class="dv">8</span>]<span class="op">*</span>x[<span class="dv">1</span>] <span class="op">+</span><span class="st"> </span>beta[<span class="dv">9</span>]<span class="op">*</span>x[<span class="dv">2</span>])
+  p &lt;-<span class="st"> </span><span class="kw">h</span>(beta[<span class="dv">10</span>]<span class="op">+</span>beta[<span class="dv">11</span>]<span class="op">*</span>a_<span class="dv">1</span> <span class="op">+</span><span class="st"> </span>beta[<span class="dv">12</span>]<span class="op">*</span>a_<span class="dv">2</span> <span class="op">+</span><span class="st"> </span>beta[<span class="dv">13</span>]<span class="op">*</span>a_<span class="dv">3</span>) <span class="co"># calcula capa de salida</span>
+  p
+}</code></pre></div>
+<p>Y vemos que esta red captura la interacción:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">feed_fow</span>(nn<span class="op">$</span>wts, <span class="kw">c</span>(<span class="op">-</span><span class="dv">1</span>,<span class="dv">2</span>))</code></pre></div>
+<pre><code>## [1] 0.8421754</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">feed_fow</span>(nn<span class="op">$</span>wts, <span class="kw">c</span>(<span class="dv">2</span>,<span class="op">-</span><span class="dv">1</span>))</code></pre></div>
+<pre><code>## [1] 0.9940968</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">feed_fow</span>(nn<span class="op">$</span>wts, <span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">2</span>))</code></pre></div>
+<pre><code>## [1] 0.95908</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">feed_fow</span>(nn<span class="op">$</span>wts, <span class="kw">c</span>(<span class="op">-</span><span class="dv">1</span>,<span class="op">-</span><span class="dv">1</span>))</code></pre></div>
+<pre><code>## [1] 2.659283e-05</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dat &lt;-<span class="st"> </span>dat <span class="op">%&gt;%</span><span class="st"> </span>rowwise <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">p_red =</span> <span class="kw">feed_fow</span>(nn<span class="op">$</span>wts, <span class="kw">c</span>(x1, x2)))
+<span class="kw">ggplot</span>(dat, <span class="kw">aes</span>(<span class="dt">x=</span>x1, <span class="dt">y=</span>x2)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_tile</span>(<span class="kw">aes</span>(<span class="dt">fill=</span>p_red))</code></pre></div>
+<p><img src="07-redes-neuronales_files/figure-html/unnamed-chunk-24-1.png" width="672" /></p>
+</div>
+<div id="redes-neuronales-completamente-conexas" class="section level2">
+<h2><span class="header-section-number">7.3</span> Redes neuronales completamente conexas</h2>
+<p>Ahora generalizamos lo que vimos arriba para definir la arquitectura básica de redes neuronales.</p>
+
+<div class="comentario">
+A las variables originales les llamamos <em>capa de entrada</em> de la red, y a la variable de salida <em>capa de salida</em>. Puede haber más de una capa intermedia. A estas les llamamos <em>capas ocultas</em>.
+</div>
+
+<p><img src="07-redes-neuronales_files/figure-html/unnamed-chunk-26-1.png" width="672" /></p>
+Usaremos una notación distinta para simplificar. En primer lugar, denotamos 
+<div class="comentario">
+<span class="math inline">\(\theta_{i,k}^{(l)}=\)</span> peso de entrada <span class="math inline">\(a_{k}^{(l-1)}\)</span> de capa <span class="math inline">\(l-1\)</span> en la entrada <span class="math inline">\(a_{i}^{(l)}\)</span> de la capa <span class="math inline">\(l\)</span>.
+</div>
+
+<p>De modo que de la capa <span class="math inline">\(2\)</span> a la capa <span class="math inline">\(3\)</span>, tenemos:</p>
+<p><span class="math display">\[a_1^3 = h(\theta_{1,0}^{(3)} + \theta_{1,1}^{(3)} a_1^{(2)}+ \theta_{1,2}^{(3)}a_2^{(2)}+ \theta_{1,3}^{(3)} a_3^{(2)})\]</span> <span class="math display">\[a_2^3 = h(\theta_{2,0}^{(3)} + \theta_{2,1}^{(3)} a_1^{(2)}+ \theta_{2,2}^{(3)}a_2^{(2)}+ \theta_{2,3}^{(3)} a_3^{(2)})\]</span></p>
+<p>como se ilustra en la siguiente gráfica:</p>
+<p><img src="07-redes-neuronales_files/figure-html/unnamed-chunk-28-1.png" width="672" /></p>
+<p>Para visualizar las ordenadas (que también se llaman <strong>sesgos</strong> en este contexto), ponemos <span class="math inline">\(a_0^2=1\)</span>. <img src="07-redes-neuronales_files/figure-html/unnamed-chunk-29-1.png" width="672" /></p>
+</div>
+<div id="feed-forward" class="section level2">
+<h2><span class="header-section-number">7.4</span> Feed forward</h2>
+<p>Para calcular los valores de salida de una red a partir de pesos y datos de entrada, usamos el algoritmo feed-forward, calculando capa por capa.</p>
+
+<div class="comentario">
+<p>Cálculo en redes: <strong>Feed-forward</strong></p>
+Para la primera capa, escribimos las variables de entrada: <span class="math display">\[a^{(1)}_j = x_j, j=1\ldots,n_1\]</span> Para la primera capa oculta, o la segunda capa <span class="math display">\[a^{(2)}_j = h\left( \theta_{j,0}^{(2)}+ \sum_{k=1}^{n_1}  \theta_{j,k}^{(2)}  a^{(1)}_k    \right), j=1\ldots,n_2\]</span> para la <span class="math inline">\(l\)</span>-ésima capa: <span class="math display">\[a^{(l)}_j = h\left( \theta_{j,0}^{(l)}+ \sum_{k=1}^{n_{l-1}}  \theta_{j,k}^{(l)}  a^{(l-1)}_k    \right), j=1\ldots,n_{l}\]</span> y así sucesivamente. Para la capa final o capa de salida (para problema binario), suponiendo que tenemos <span class="math inline">\(L\)</span> capas (<span class="math inline">\(L-2\)</span> capas ocultas): <span class="math display">\[p_1 = h\left(    \theta_{1,0}^{(L)}+ \sum_{k=1}^{n_{L-1}}  \theta_{1,k}^{(L)}  a^{(L-1)}_k     \right).\]</span>
+</div>
+
+<p>Nótese que entonces:</p>
+
+<div class="comentario">
+<p>Cada capa se caracteriza por el conjunto de parámetros <span class="math inline">\(\Theta^{(l)}\)</span>, que es una matriz de <span class="math inline">\(n_l\times n_{l-1}\)</span>. La red completa entonces se caracteriza por:</p>
+<ul>
+<li>La estructura elegida (número de capas ocultas y número de nodos en cada capa oculta).</li>
+<li>Las matrices de pesos en cada capa <span class="math inline">\(\Theta^{(1)},\Theta^{(2)},\ldots, \Theta^{(L)}\)</span>
+</div>
+</li>
+</ul>
+<p>Adicionalmente, escribimos en forma vectorial: <span class="math display">\[a^{(l)} = (a^{(l)}_1, a^{(l)}_2, \ldots, a^{(l)}_{n_l})^t\]</span></p>
+<p>Para calcular la salidas, igual que hicimos, antes, propagaremos hacia adelante los valores de las variables de entrada usando los <em>pesos</em>. Agregando entradas adicionales en cada capa <span class="math inline">\(a_0^{l}\)</span>, <span class="math inline">\(l=1,2,\ldots, L-1\)</span>, donde <span class="math inline">\(a_0^{l}=1\)</span>, y agregando a <span class="math inline">\(\Theta^{(l)}\)</span> una columna con las ordenadas al origen (o sesgos) podemos escribir:</p>
+
+<div class="comentario">
+<p><strong>Feed-forward</strong>(matricial)</p>
+<ul>
+<li>Capa 2 <span class="math display">\[ a^{(2)} = h(\Theta^{(1)}a^{(1)})\]</span></li>
+<li>Capa <span class="math inline">\(l\)</span> (oculta) <span class="math display">\[ a^{(l)} = h(\Theta^{(l)}a^{(l-1)})\]</span></li>
+<li>Capa de salida: <span class="math display">\[a^{(L)}= p = h(\Theta^{(L)}a^{(L-1)})\]</span></li>
+</ul>
+</div>
+<p> Podemos hacer una función simple para hacer feed-foward de una capa a la siguiente:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">feed_forward &lt;-<span class="st"> </span><span class="cf">function</span>(a, Theta){
+  <span class="co"># a_{l-1} da los valores de la primera capa, la función debe regresar</span>
+  <span class="co"># los valores de la siguiente capa a_l. Theta da los pesos</span>
+  <span class="kw">h</span>(Theta <span class="op">%*%</span><span class="st"> </span>a)
+}</code></pre></div>
+<p>Por ejemplo, consideremos propagar bajo la siguiente situación: <img src="07-redes-neuronales_files/figure-html/unnamed-chunk-34-1.png" width="672" /></p>
+<p>La matriz de parámetros es</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">Theta =<span class="st"> </span><span class="kw">t</span>(<span class="kw">matrix</span>(<span class="kw">c</span>(<span class="dv">3</span>,<span class="dv">1</span>,<span class="op">-</span><span class="dv">1</span>,<span class="dv">1</span>,<span class="fl">0.5</span>,<span class="dv">2</span>), <span class="dt">byrow=</span>F, <span class="dt">ncol=</span><span class="dv">2</span>))
+Theta</code></pre></div>
+<pre><code>##      [,1] [,2] [,3]
+## [1,]    3  1.0   -1
+## [2,]    1  0.5    2</code></pre>
+<p>Ahora hacemos feed forward:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">feed_forward</span>(<span class="kw">c</span>(<span class="dv">1</span>,<span class="op">-</span><span class="dv">2</span>,<span class="dv">5</span>), <span class="dt">Theta =</span> Theta)</code></pre></div>
+<pre><code>##            [,1]
+## [1,] 0.01798621
+## [2,] 0.99995460</code></pre>
+<p><img src="07-redes-neuronales_files/figure-html/unnamed-chunk-37-1.png" width="672" /></p>
+</div>
+<div id="ajuste-de-parametros-introduccion" class="section level2">
+<h2><span class="header-section-number">7.5</span> Ajuste de parámetros (introducción)</h2>
+<p>Consideramos la versión con regularización ridge (también llamada L2) de la devianza de entrenamiento como nuestro función objetivo:</p>
+
+<div class="comentario">
+<strong>Ajuste de redes neuronales</strong> Para un problema de clasificación binaria con <span class="math inline">\(y_i=0\)</span> o <span class="math inline">\(y_i=1\)</span>, ajustamos los pesos <span class="math inline">\(\Theta^{(1)},\Theta^{(2)},\ldots, \Theta^{(L)}\)</span> de la red minimizando la devianza (penalizada) sobre la muestra de entrenamiento: <span class="math display">\[D(\Theta^{(1)},\ldots,\Theta^{(L-1)}) = -\frac{2}{n}\sum_{i=1}^n y_i\log(p_1(x_i)) +(1-y_i)\log(1-p_1(x_i)) + \lambda \sum_{l=2}^{L} \sum_{k=1}^{n_{l-1}} \sum_{j=1}^{n_l}(\theta_{j,k}^{(l)})^2.\]</span> Este problema en general no es convexo y <em>puede tener múltiples mínimos</em>.
+</div>
+
+<p>Veremos el proceso de ajuste, selección de arquitectura, etc. más adelante. Por el momento hacemos unas observaciones acerca de este problema de minimización:</p>
+<ul>
+<li><p>Hay varios algoritmos para minimizar esta devianza, algunos avanzados incluyendo información de segundo orden (como Newton), pero actualmente la técnica más popular, para redes grandes, es descenso en gradiente. Más específicamente, una variación, que es <em>descenso estocástico</em>.</p></li>
+<li><p>Para redes neuronales, el gradiente se calcula con un algoritmo que se llama <em>back-propagation</em>, que es una aplicación de la regla de la cadena para propagar errores desde la capa de salida a lo largo de todas las capas para ajustar los pesos y sesgos.</p></li>
+<li><p>En estos problemas no buscamos el mínimo global, sino un mínimo local de buen desempeño. Puede haber múltiples mínimos, puntos silla, regiones relativamente planas, precipicios (curvatura alta). Todo esto dificulta el entrenamiento de redes neuronales grandes. Para redes grandes, ni siquiera esperamos a alcanzar un mínimo local, sino que nos detenemos prematuramente cuando obtenemos el mejor desempeño posible.</p></li>
+<li><p>Nótese que la simetría implica que podemos obtener la misma red cambiando pesos entre neuronas y las conexiones correspondientes. Esto implica que necesariamente hay varios mínimos.</p></li>
+<li><p>Para este problema, no tiene sentido comenzar las iteraciones con todos los pesos igual a cero, pues las unidades de la red son simétricas: no hay nada que diferencie una de otra si todos los pesos son iguales. Esto quiere decir que si iteramos, ¡todas las neuronas van a aprender lo mismo!</p></li>
+<li><p>Es importante no comenzar valores de los pesos grandes, pues las funciones logísticas pueden quedar en regiones planas donde la minimización es lenta, o podemos tener gradientes demasiado grandes y produzcan inestabilidad en el cálculo del gradiente.</p></li>
+<li><p>Generalmente los pesos se inicializan al azar con variables independientes gaussianas o uniformes centradas en cero, y con varianza chica (por ejemplo <span class="math inline">\(U(-0.5,0.5)\)</span>). Una recomendación es usar <span class="math inline">\(U(-1/\sqrt(m), 1/\sqrt(m))\)</span> donde <span class="math inline">\(m\)</span> es el número de entradas. En general, hay que experimentar con este parámetro.</p></li>
+</ul>
+<p>El proceso para ajustar una red es entonces:</p>
+<ul>
+<li>Definir número de capas ocultas, número de neuronas por cada capa, y un valor del parámetro de regularización. Estandarizar las entradas.</li>
+<li>Seleccionar parámetros al azar para <span class="math inline">\(\Theta^{(2)},\Theta^{(3)},\ldots, \Theta^{(L)}\)</span>. Se toman, por ejemplo, normales con media 0 y varianza chica.</li>
+<li>Correr un algoritmo de minimización de la devianza mostrada arriba.</li>
+<li>Verificar convergencia del algoritmo a un mínimo local (o el algoritmo no está mejorando).</li>
+<li>Predecir usando el modelo ajustado.</li>
+</ul>
+<p>El proceso de aprendizaje de las redes es más difícil que lo que hemos visto antes. En primer lugar, no está definido del todo, pues típicamente los algoritmos que usamos encuentran mínimos locales, y pueden variar de corrida a corrida.</p>
+<p>Finalmente, podemos probar distintas arquitecturas y valores del parámetros de regularización, para afinar estos parámetros según validación cruzada o una muestra de validación.</p>
+
+<div id="refs" class="references">
+<div>
+<p>Breiman, Leo. 2001. “Statistical Modeling: The Two Cultures (with Comments and a Rejoinder by the Author).” <em>Statist. Sci.</em> 16 (3). The Institute of Mathematical Statistics: 199–231. doi:<a href="https://doi.org/10.1214/ss/1009213726">10.1214/ss/1009213726</a>.</p>
+</div>
+<div>
+<p>James, Gareth, Daniela Witten, Trevor Hastie, and Robert Tibshirani. 2014. <em>An Introduction to Statistical Learning: With Applications in R</em>. Springer Publishing Company, Incorporated. <a href="http://www-bcf.usc.edu/~gareth/ISL/" class="uri">http://www-bcf.usc.edu/~gareth/ISL/</a>.</p>
+</div>
+<div>
+<p>Ng, Andrew. 2017. “Machine Learning.” <a href="https://www.coursera.org/learn/machine-learning" class="uri">https://www.coursera.org/learn/machine-learning</a>.</p>
+</div>
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="extensiones-para-regresion-lineal-y-logistica.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"google": false,
+"weibo": false,
+"instapper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/felipegonzalez/aprendizaje-maquina-2017/edit/master/07-redes-neuronales.Rmd",
+"text": "Edit"
+},
+"download": ["aprendizaje-maquina.pdf", "aprendizaje-maquina.epub"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:" && /^https?:/.test(script.src))
+      script.src  = script.src.replace(/^https?:/, '');
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
