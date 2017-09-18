@@ -444,7 +444,7 @@ con y sin interacciones:
 ```r
 set.seed(12)
 n <- 500
-dat_ent <- data_frame(x1=runif(n,-1,1), x2 = runif(n, -1, 1)) %>%
+dat_ent <- data_frame(x1=runif(n,-1,2), x2 = runif(n, -1, 2)) %>%
   mutate(p = p(x1, x2)) %>%
   mutate(y = rbinom(n, 1, p))
 mod_1 <- glm(y ~ x1 + x2, data = dat_ent, family = 'binomial')
@@ -457,11 +457,11 @@ mod_1
 ## 
 ## Coefficients:
 ## (Intercept)           x1           x2  
-##     -2.2565       1.0167       0.5432  
+##    -1.03473      0.03427      0.06674  
 ## 
 ## Degrees of Freedom: 499 Total (i.e. Null);  497 Residual
-## Null Deviance:	    342.3 
-## Residual Deviance: 324 	AIC: 330
+## Null Deviance:	    585.2 
+## Residual Deviance: 584.8 	AIC: 590.8
 ```
 
 ```r
@@ -471,7 +471,7 @@ table(predict(mod_1)> 0.5, dat_ent$y)
 ```
 ##        
 ##           0   1
-##   FALSE 446  54
+##   FALSE 364 136
 ```
 
 ```r
@@ -485,11 +485,11 @@ mod_2
 ## 
 ## Coefficients:
 ## (Intercept)           x1           x2        x1:x2  
-##      -4.222        3.454        3.338       -6.403  
+##      -4.654        3.368        3.680       -6.630  
 ## 
 ## Degrees of Freedom: 499 Total (i.e. Null);  496 Residual
-## Null Deviance:	    342.3 
-## Residual Deviance: 223.4 	AIC: 231.4
+## Null Deviance:	    585.2 
+## Residual Deviance: 216.3 	AIC: 224.3
 ```
 
 ```r
@@ -499,8 +499,8 @@ table(predict(mod_2)> 0.5, dat_ent$y)
 ```
 ##        
 ##           0   1
-##   FALSE 441  39
-##   TRUE    5  15
+##   FALSE 352  36
+##   TRUE   12 100
 ```
  
  Observese la gran diferencia de devianza entre los dos modelos (en este caso,
@@ -510,25 +510,23 @@ Ahora consideramos qué red neuronal puede ser apropiada
 
 
 ```r
-set.seed(551)
+set.seed(1155)
 nn <- nnet(y ~ x1 + x2, data=dat_ent, size = 3, decay=0.001, 
-           entropy = T, maxit=500, Wts =c(2,2,-2,2,-2,2,0,1,1,0,0,0,0))
+           entropy = T, maxit=500, 
+           Wts = c(1,-1,1,1, 1, -1,0,0,0,0,0,0,0)) #pesos iniciales
 ```
 
 ```
 ## # weights:  13
-## initial  value 346.599590 
-## iter  10 value 120.836347
-## iter  20 value 112.271172
-## iter  30 value 111.528027
-## iter  40 value 111.038646
-## iter  50 value 108.080997
-## iter  60 value 106.634784
-## iter  70 value 105.372367
-## iter  80 value 105.172302
-## iter  90 value 105.155662
-## iter 100 value 105.154809
-## final  value 105.154558 
+## initial  value 346.579590 
+## iter  10 value 132.880360
+## iter  20 value 110.010006
+## iter  30 value 109.064493
+## iter  40 value 108.043036
+## iter  50 value 107.670260
+## iter  60 value 107.629434
+## iter  70 value 107.608274
+## final  value 107.605094 
 ## converged
 ```
 
@@ -539,9 +537,9 @@ matrix(round(nn$wts[1:9], 1), 3,3, byrow=T)
 
 ```
 ##      [,1] [,2] [,3]
-## [1,]  6.2  5.7 -4.9
-## [2,]  6.4 -5.4  1.7
-## [3,]  0.4 20.7  5.8
+## [1,]  1.7 -0.6  2.0
+## [2,]  2.6  3.5 -2.0
+## [3,]  0.3 -2.4 -3.4
 ```
 
 ```r
@@ -550,7 +548,7 @@ round(nn$wts[10:13], 1)
 ```
 
 ```
-## [1]   9.4 -12.3  -7.7   8.0
+## [1]  23.7 -18.9  -9.8  -9.1
 ```
 
 ```r
@@ -578,7 +576,7 @@ feed_fow(nn$wts, c(-1,2))
 ```
 
 ```
-## [1] 0.8421754
+## [1] 0.9894345
 ```
 
 ```r
@@ -586,7 +584,7 @@ feed_fow(nn$wts, c(2,-1))
 ```
 
 ```
-## [1] 0.9940968
+## [1] 0.9996583
 ```
 
 ```r
@@ -594,7 +592,7 @@ feed_fow(nn$wts, c(2,2))
 ```
 
 ```
-## [1] 0.95908
+## [1] 0.008020106
 ```
 
 ```r
@@ -602,7 +600,7 @@ feed_fow(nn$wts, c(-1,-1))
 ```
 
 ```
-## [1] 2.659283e-05
+## [1] 0.02294793
 ```
 
 
