@@ -322,7 +322,7 @@ con y sin interacciones:
 ```{r}
 set.seed(12)
 n <- 500
-dat_ent <- data_frame(x1=runif(n,-1,1), x2 = runif(n, -1, 1)) %>%
+dat_ent <- data_frame(x1=runif(n,-1,2), x2 = runif(n, -1, 2)) %>%
   mutate(p = p(x1, x2)) %>%
   mutate(y = rbinom(n, 1, p))
 mod_1 <- glm(y ~ x1 + x2, data = dat_ent, family = 'binomial')
@@ -339,9 +339,10 @@ table(predict(mod_2)> 0.5, dat_ent$y)
 Ahora consideramos qué red neuronal puede ser apropiada
 
 ```{r}
-set.seed(551)
+set.seed(1155)
 nn <- nnet(y ~ x1 + x2, data=dat_ent, size = 3, decay=0.001, 
-           entropy = T, maxit=500, Wts =c(2,2,-2,2,-2,2,0,1,1,0,0,0,0))
+           entropy = T, maxit=500, 
+           Wts = c(1,-1,1,1, 1, -1,0,0,0,0,0,0,0)) #pesos iniciales
 #primera capa
 matrix(round(nn$wts[1:9], 1), 3,3, byrow=T)
 #segunda capa
