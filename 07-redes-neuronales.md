@@ -423,9 +423,9 @@ ejemplo simple:
 
 ```r
 p <- function(x1, x2){
-  h(-4 + 3*x1 + 3*x2 + -6*x1*x2)
+  h(-8 + 10*x1 + 10*x2 - 15*x1*x2)
 }
-dat <- expand.grid(x1 = seq(-1,2,0.05), x2 = seq(-1, 2, 0.05))
+dat <- expand.grid(x1 = seq(0,1,0.05), x2 = seq(0, 1, 0.05))
 dat <- dat %>% mutate(p = p(x1, x2))
 ggplot(dat, aes(x=x1, y=x2)) + geom_tile(aes(fill=p))
 ```
@@ -444,7 +444,7 @@ con y sin interacciones:
 ```r
 set.seed(12)
 n <- 500
-dat_ent <- data_frame(x1=runif(n,-1,2), x2 = runif(n, -1, 2)) %>%
+dat_ent <- data_frame(x1=runif(n,0,1), x2 = runif(n, 0, 1)) %>%
   mutate(p = p(x1, x2)) %>%
   mutate(y = rbinom(n, 1, p))
 mod_1 <- glm(y ~ x1 + x2, data = dat_ent, family = 'binomial')
@@ -457,11 +457,11 @@ mod_1
 ## 
 ## Coefficients:
 ## (Intercept)           x1           x2  
-##    -1.03473      0.03427      0.06674  
+##     -2.8070       1.9648       0.9625  
 ## 
 ## Degrees of Freedom: 499 Total (i.e. Null);  497 Residual
-## Null Deviance:	    585.2 
-## Residual Deviance: 584.8 	AIC: 590.8
+## Null Deviance:	    529.4 
+## Residual Deviance: 499.7 	AIC: 505.7
 ```
 
 ```r
@@ -471,7 +471,7 @@ table(predict(mod_1)> 0.5, dat_ent$y)
 ```
 ##        
 ##           0   1
-##   FALSE 364 136
+##   FALSE 389 111
 ```
 
 ```r
@@ -485,11 +485,11 @@ mod_2
 ## 
 ## Coefficients:
 ## (Intercept)           x1           x2        x1:x2  
-##      -4.654        3.368        3.680       -6.630  
+##      -9.233       11.637       11.054      -16.168  
 ## 
 ## Degrees of Freedom: 499 Total (i.e. Null);  496 Residual
-## Null Deviance:	    585.2 
-## Residual Deviance: 216.3 	AIC: 224.3
+## Null Deviance:	    529.4 
+## Residual Deviance: 410.2 	AIC: 418.2
 ```
 
 ```r
@@ -499,8 +499,8 @@ table(predict(mod_2)> 0.5, dat_ent$y)
 ```
 ##        
 ##           0   1
-##   FALSE 352  36
-##   TRUE   12 100
+##   FALSE 382  82
+##   TRUE    7  29
 ```
  
  Observese la gran diferencia de devianza entre los dos modelos (en este caso,
@@ -519,14 +519,16 @@ nn <- nnet(y ~ x1 + x2, data=dat_ent, size = 3, decay=0.001,
 ```
 ## # weights:  13
 ## initial  value 346.579590 
-## iter  10 value 132.880360
-## iter  20 value 110.010006
-## iter  30 value 109.064493
-## iter  40 value 108.043036
-## iter  50 value 107.670260
-## iter  60 value 107.629434
-## iter  70 value 107.608274
-## final  value 107.605094 
+## iter  10 value 263.544976
+## iter  20 value 239.050578
+## iter  30 value 230.411092
+## iter  40 value 214.783457
+## iter  50 value 203.001608
+## iter  60 value 201.799499
+## iter  70 value 201.677320
+## iter  80 value 201.626436
+## iter  90 value 201.615071
+## final  value 201.613783 
 ## converged
 ```
 
@@ -537,9 +539,9 @@ matrix(round(nn$wts[1:9], 1), 3,3, byrow=T)
 
 ```
 ##      [,1] [,2] [,3]
-## [1,]  1.7 -0.6  2.0
-## [2,]  2.6  3.5 -2.0
-## [3,]  0.3 -2.4 -3.4
+## [1,]  6.7 -7.8 -6.0
+## [2,] -1.7  1.7 -2.9
+## [3,] -1.9 -4.6  2.4
 ```
 
 ```r
@@ -548,7 +550,7 @@ round(nn$wts[10:13], 1)
 ```
 
 ```
-## [1]  23.7 -18.9  -9.8  -9.1
+## [1] -2.3 -4.2 11.7 12.3
 ```
 
 ```r
@@ -572,35 +574,31 @@ Y vemos que esta red captura la interacción:
 
 
 ```r
-feed_fow(nn$wts, c(-1,2))
+feed_fow(nn$wts, c(0,0))
 ```
 
 ```
-## [1] 0.9894345
-```
-
-```r
-feed_fow(nn$wts, c(2,-1))
-```
-
-```
-## [1] 0.9996583
+## [1] 0.04118065
 ```
 
 ```r
-feed_fow(nn$wts, c(2,2))
+feed_fow(nn$wts, c(0,1))
 ```
 
 ```
-## [1] 0.008020106
+## [1] 0.9276181
 ```
 
 ```r
-feed_fow(nn$wts, c(-1,-1))
+feed_fow(nn$wts, c(1,0))
 ```
 
 ```
-## [1] 0.02294793
+## [1] 0.9208547
+```
+
+```r
+# feed_fow(nn$wts, c(1,1))
 ```
 
 
