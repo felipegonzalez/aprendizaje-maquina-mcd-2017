@@ -1,4 +1,4 @@
-# Redes neuronales
+# Redes neuronales (parte 1)
 
 ## Introducción a redes neuronales
 
@@ -272,14 +272,9 @@ nn$value
 ```{r}
 2*nn$value/30
 dev(nn$wts) 
-qplot(x, predict(nn, newdata=data.frame(x.1=x)), geom='line')
+qplot(x, predict(nn, newdata=data.frame(x_1 = x)), geom='line')
 ```
 
-#### Ejercicio {-}
-Muestra por ejemplo que es posible capturar interacciones entre las
-variables $x_i$ de entrada: considerando dos entradas $x_1,x_2$ y dos
-variables derivadas $a_1,a_2$, construye una salida
-$g=1$ cuando $x_1=1,x_2=0$ o $x_1=0,x_2=1$, pero $g=0$ en otro caso.
 
 
 #### Ejercicio {-}
@@ -300,6 +295,84 @@ dat.p <- data.frame(x,p)
 g <- qplot(x,p, geom='line', col='red')
 g + geom_jitter(data = datos, aes(x=x.2,y=g.2), col ='black',
   position =position_jitter(height=0.05), alpha=0.4)
+```
+
+## Interacciones en redes neuronales
+
+Es posible capturar interacciones con redes neuronales. Consideremos el siguiente
+ejemplo simple:
+
+```{r}
+p <- function(x1, x2){
+  h(-4 + 3*x1 + 3*x2 + -6*x1*x2)
+}
+dat <- expand.grid(x1 = seq(-1,2,0.05), x2 = seq(-1, 2, 0.05))
+dat <- dat %>% mutate(p = p(x1, x2))
+ggplot(dat, aes(x=x1, y=x2)) + geom_tile(aes(fill=p))
+```
+
+Esta función puede entenderse como un o exclusivo: la probabilidad es alta
+sólo cuando x1 y x2 tienen valores opuestos (x1 grande pero x2 chica y viceversa). 
+No es posible modelar esta función mediante el modelo logístico (sin interacciones).
+
+Sin embargo, podemos incluir la interacción en el modelo logístico o intentar
+usar una red neuronal. Primero simulamos unos datos y probamos el modelo logístico
+con y sin interacciones:
+
+```{r}
+set.seed(12)
+n <- 500
+dat_ent <- data_frame(x1=runif(n,-1,1), x2 = runif(n, -1, 1)) %>%
+  mutate(p = p(x1, x2)) %>%
+  mutate(y = rbinom(n, 1, p))
+mod_1 <- glm(y ~ x1 + x2, data = dat_ent, family = 'binomial')
+mod_1
+table(predict(mod_1)> 0.5, dat_ent$y)
+mod_2 <- glm(y ~ x1 + x2 + x1:x2, data = dat_ent, family = 'binomial')
+mod_2
+table(predict(mod_2)> 0.5, dat_ent$y)
+```
+ 
+ Observese la gran diferencia de devianza entre los dos modelos (en este caso,
+ el sobreajuste no es un problema).
+
+Ahora consideramos qué red neuronal puede ser apropiada
+
+```{r}
+set.seed(551)
+nn <- nnet(y ~ x1 + x2, data=dat_ent, size = 3, decay=0.001, 
+           entropy = T, maxit=500, Wts =c(2,2,-2,2,-2,2,0,1,1,0,0,0,0))
+#primera capa
+matrix(round(nn$wts[1:9], 1), 3,3, byrow=T)
+#segunda capa
+round(nn$wts[10:13], 1)
+#2*nn$value
+```
+
+Ell cálculo de esta red es:
+
+```{r}
+feed_fow <- function(beta, x){
+  a_1 <- h(beta[1] + beta[2]*x[1] + beta[3]*x[2]) 
+  a_2 <- h(beta[4] + beta[5]*x[1] + beta[6]*x[2]) 
+  a_3 <- h(beta[7] + beta[8]*x[1] + beta[9]*x[2])
+  p <- h(beta[10]+beta[11]*a_1 + beta[12]*a_2 + beta[13]*a_3) # calcula capa de salida
+  p
+}
+```
+
+Y vemos que esta red captura la interacción:
+
+```{r}
+feed_fow(nn$wts, c(-1,2))
+feed_fow(nn$wts, c(2,-1))
+feed_fow(nn$wts, c(2,2))
+feed_fow(nn$wts, c(-1,-1))
+```
+
+```{r}
+dat <- dat %>% rowwise %>% mutate(p_red = feed_fow(nn$wts, c(x1, x2)))
+ggplot(dat, aes(x=x1, y=x2)) + geom_tile(aes(fill=p_red))
 ```
 
 
@@ -478,7 +551,8 @@ $$D(\Theta^{(1)},\ldots,\Theta^{(L-1)}) = -\frac{2}{n}\sum_{i=1}^n y_i\log(p_1(x
 Este problema en general no es convexo y *puede tener múltiples mínimos*.
 ```
 
-
+Veremos el proceso de ajuste, selección de arquitectura, etc. más adelante.
+Por el momento hacemos unas observaciones acerca de este problema de minimización:
 
 - Hay varios algoritmos para minimizar esta devianza,
 algunos avanzados incluyendo información de segundo orden (como Newton), pero 
@@ -535,10 +609,6 @@ de corrida a corrida.
 
 Finalmente, podemos probar distintas arquitecturas y valores del parámetros de regularización,
 para afinar estos parámetros según validación cruzada o una muestra de validación.
-
-
-
-
 
 
 
