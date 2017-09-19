@@ -1,0 +1,263 @@
+---
+title: "Regresión ridge y lasso"
+author: "Felipe Gonzalez"
+date: "September 8, 2014"
+output: html_document
+---
+
+
+1. Ridge y lasso
+--
+
+```{r}
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(glmnet)
+
+```
+
+Consideremos dos generadores de datos. El primero genera datos 
+con variables correlacionadas: primero simula una variable aleatoria
+normal estándar. Las variables de entrada contienen a $u.1$ como componente
+común, más ruido adicional. La variable respuesta sólo depende de
+esa componente común más ruido aleatorio:
+
+```{r}
+sim.dat.1 <- function(n, p){
+  ## estas son variables latentes
+  u.1 <- rnorm(n, 0, 1)
+  var.list.1 <- lapply(1:(2*p), function(i){
+    10*u.1 +   rnorm(n, 0, 10)
+  })
+
+  dat.x <- data.frame(Reduce('cbind', var.list.1))
+  ## y depende de la componente "latente" u.1, que en teoría deberíamos poder
+  ## extraer combinando las variables de entrada
+  names(dat.x) <- paste0('X',1:(2*p))
+  y <- 20*u.1 + 10 + rnorm(n, 0, sd = 5)
+  dat.x$y <- y
+  dat.x
+}
+```
+
+Por ejemplo:
+```{r, fig.width=5, fig.height=4}
+datos.ej <- sim.dat.1(100, 2)
+head(datos.ej)
+plot(datos.ej)
+```
+
+Todas las variables de entrada tienen información acerca de $y$ (por construcción), 
+pero también
+incluyen otros efectos (ruido en este caso). La mejor estrategia debería
+ponderar todas estas variables de entrada de manera similar.
+
+
+En nuestro segundo conjunto de datos, la respuesta sólo depende de una variable
+de entrada, y todo el resto no tiene información acerca de y:
+
+```{r}
+sim.dat.2 <- function(n, p){
+    #u.1 <- rnorm(n, 0, 10)
+    #u.3 <- rnorm(n, 0, 10)
+  var.list.1 <- lapply(1:(2*p), function(i){
+    rnorm(n, 0, 2)
+  })
+  dat.x <- data.frame(Reduce('cbind', var.list.1))
+    names(dat.x) <- paste0('X',1:(2*p))
+  y <- 30*dat.x[,1] + 10 + rnorm(n, 0, 5)
+  dat.x$y <- y
+  dat.x
+}
+
+```
+
+```{r, fig.width=5, fig.height=4}
+datos.ej <- sim.dat.2(100, 2)
+head(datos.ej)
+plot(datos.ej)
+```
+
+Vamos a probar ridge y lasso para ambos conjuntos de datos.
+En la siguiente función, repetimos el ajuste para distintas muestras de entrenamiento,
+y evaluamos mínimos cuadrados, lasso y ridge (nota: **en estos casos, escogemos
+el grado de encogimiento usando validación cruzada**):
+
+
+```{r}
+simular.errores <- function(n, p, sim.fun, dat.test){
+  dat.1 <- sim.fun(n, p)
+  # mínimos cuadrados
+  mod.mc <- lm(y ~ ., data = dat.1)
+  preds <- predict(mod.mc, newdata = dat.test)
+  error.minc <- (mean((preds-dat.test$y)^2))
+  # ridge (alpha=0)
+  mod.1 <- cv.glmnet(x=as.matrix(dat.1[, 1:(2*p)]), y=dat.1$y, alpha=0, lambda.min.ratio=1e-9)
+  preds.2 <- predict(mod.1, newx = as.matrix(dat.test[,1:(2*p)]))
+  error.ridge <- (mean((preds.2-dat.test$y)^2))
+  #plot(mod.1)
+  # lasso (alpha = 1)
+  mod.2 <- cv.glmnet(x=as.matrix(dat.1[, 1:(2*p)]), y=dat.1$y, alpha=1, lambda.min.ratio=1e-9)
+  preds.2 <- predict(mod.2, newx = as.matrix(dat.test[,1:(2*p)]))
+  error.lasso <- (mean((preds.2-dat.test$y)^2))
+  # devolver tres errores (raíz de error cuadrático medio):
+  sqrt(c(error.minc, error.ridge, error.lasso))
+}
+
+```
+
+
+En primer lugar, probamos con el primer conjunto de datos (tamaño de muestra
+de entrenamiento de 100, y 40 variables de entrada):
+
+```{r, warning=FALSE, message=FALSE, cache=T}
+set.seed(2805)
+dat.test.1 <- sim.dat.1(2000, 20)
+datos.sim.1 <- lapply(1:80, function(i) {
+    simular.errores(100, 20, sim.fun = sim.dat.1, dat.test = dat.test.1)
+  })
+
+sims.1 <- data.frame(Reduce('rbind',datos.sim.1))
+names(sims.1) <- c('min.c','ridge','lasso')
+sims.larga.1  <- sims.1 %>% gather(metodo, error)
+ggplot(sims.larga.1, aes(x=error)) + geom_histogram()+facet_wrap(~metodo, ncol=1)
+```
+
+Donde vemos que típicamente ridge tiene mejor desempeño que lasso, que a su vez
+se desempeña un poco mejor que mínimos cuadrados.
+
+Ahora veamos el desempeño con el segundo conjunto de datos:
+
+```{r, cache=T}
+dat.test.2 <- sim.dat.2(2000, 20)
+datos.sim.2 <- lapply(1:80, function(i) {
+    simular.errores(100, 20, sim.fun = sim.dat.2, dat.test = dat.test.2)
+  })
+
+sims.1 <- data.frame(Reduce('rbind',datos.sim.2))
+names(sims.1) <- c('min.c','ridge','lasso')
+sims.larga.1  <- sims.1 %>% gather(metodo, error) 
+ggplot(sims.larga.1, aes(x=error)) + geom_histogram()+facet_wrap(~metodo, ncol=1)
+```
+
+En este segundo caso, lasso tiene mejor desempeño que ridge, y ridge no presenta
+mejoría clara respecto a mínimos cuadrados.
+
+
+Resumen
+-----
+
+1. Ridge se desempeñó mejor que lasso cuando las variables de entrada estaban correlacionadas, y muchas variables pueden contribuir a la predicción. Lasso se desempeñó mejor en el caso donde el modelo real era ralo, en el sentido de que sólo una variable de 40 tiene información de y.
+2. Experimenta: en muchos casos lasso y ridge tienen desempeño similar, y ambos son
+mejores que mínimos cuadrados.
+
+2. Ridge y lasso ambas regularizan, pero resuelven distintos problemas. Es buena idea probar los dos cuando no estamos seguros de cómo debería ser el predictor (muchas variables ponderadas, o solo unas cuantas).
+
+Más de ridge (encogimiento)
+------
+
+Ridge encoge juntos coeficientes de variables correlacionadas. Por ejemplo:
+
+```{r}
+set.seed(28)
+N <- 50
+u <- rnorm(N,0,1)
+dat.1 <- data.frame(x.1=2*u+rnorm(N), x.2=3*u+rnorm(N), x.3=rnorm(N))
+cor(dat.1)
+dat.1$y <- dat.1$x.1 + dat.1$x.2 - 2*dat.1$x.3 + rnorm(N,0,5)
+```
+
+donde vemos que las primeras dos variables tienen correlación alta, y la tercera
+no está correlacionada con las primeras dos. La respuesta $y$ depende de las variables de entrada como:
+$$y=x_1+x_2-2x_3+\epsilon$$
+
+
+```{r}
+set.seed(2805)
+N <- 50
+u <- rnorm(N,0,1)
+dat.1 <- data.frame(x.1=2*u+rnorm(N), x.2=3*u+rnorm(N), x.3=rnorm(N))
+cor(dat.1)
+dat.1$y <- dat.1$x.1 + dat.1$x.2 - 2*dat.1$x.3 + rnorm(N,0,5)
+
+plot(glmnet(y=dat.1$y, x=as.matrix(dat.1[,1:3]), alpha=0, lambda=exp(seq(-10,10,0.2))), xvar='lambda')
+```
+
+```{r}
+set.seed(2872)
+N <- 50
+u <- rnorm(N,0,1)
+dat.1 <- data.frame(x.1=2*u+rnorm(N), x.2=3*u+rnorm(N), x.3=rnorm(N))
+cor(dat.1)
+dat.1$y <- dat.1$x.1 + dat.1$x.2 - 2*dat.1$x.3 + rnorm(N,0,5)
+
+plot(glmnet(y=dat.1$y, x=as.matrix(dat.1[,1:3]), alpha=0, lambda=exp(seq(-10,10,0.2))), xvar='lambda')
+```
+
+
+
+```{r}
+set.seed(111)
+N <- 50
+u <- rnorm(N,0,1)
+dat.1 <- data.frame(x.1=2*u+rnorm(N), x.2=3*u+rnorm(N), x.3=rnorm(N))
+cor(dat.1)
+dat.1$y <- dat.1$x.1 + dat.1$x.2 - 2*dat.1$x.3 + rnorm(N,0,5)
+
+plot(glmnet(y=dat.1$y, x=as.matrix(dat.1[,1:3]), alpha=0, lambda=exp(seq(-10,10,0.2))), xvar='lambda')
+```
+
+Otro ejemplo de cómo se encogen juntos coeficientes de variables correlacionadas
+podemos verlo en clasificación de dígitos:
+
+Podemos escoger regularización usando validación cruzada:
+
+
+```{r}
+library(MASS)
+library(ElemStatLearn)
+library(dplyr)
+library(tidyr)
+library(glmnet)
+dim(zip.train)
+set.seed(2888)
+zip.train.1 <- zip.train[ zip.train[,1]%in%c(0,3) ,]
+muestra <- sample(1:nrow(zip.train.1), 1000)
+zip.train.2 <- zip.train.1[muestra, ]
+zip.test.1 <- zip.train.1[-muestra, ]
+x <- zip.train.2[, -1]
+y <- zip.train.2[,1] == 3
+mod.1 <- cv.glmnet(y=y, x=x, alpha=0, nfolds=10)
+plot(mod.1)
+
+
+
+```
+
+En esta gráfica, cada punto rojo da la estimación de validación
+cruzada para el modelo correspondiente. El intervalo corresponde al
+error estándar de la estimación por validación cruzada.
+
+El error de prueba para el modelo seleccionado es (error cuadrático medio):
+```{r}
+x.test <- zip.test.1[, -1]
+y.test <- zip.test.1[,1] == 3
+mean((y.test - predict(mod.1, newx = x.test))^2)
+```
+
+
+Podemos ver cómo se comportan los coeficientes en varios modelos:
+
+```{r}
+mod.1 <- cv.glmnet(y=y, x=scale(x), alpha=0, nfolds=10)
+coef.1 <- predict(mod.1, s = exp(-6), type = 'coef')[-1]
+coef.2 <-  predict(mod.1, s = exp(0), type = 'coef')[-1]
+```
+
+```{r}
+image(t(matrix(coef.1, 16, 16, byrow = T))[,16:1])
+image(t(matrix(coef.2, 16, 16, byrow = T))[,16:1])
+```
+
+
