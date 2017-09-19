@@ -392,7 +392,7 @@ qplot(x, predict(nn, newdata=data.frame(x_1 = x)), geom='line')
 
 
 
-#### Ejercicio {-}
+#### Ejercicio {#ejercicio-red}
 Un ejemplo más complejo. Utiliza los siguientes datos, y agrega
 si es necesario variables derivadas $a_3,a_4$ en la capa oculta.
 
@@ -423,9 +423,9 @@ ejemplo simple:
 
 ```r
 p <- function(x1, x2){
-  h(-8 + 10*x1 + 10*x2 - 15*x1*x2)
+  h(-5 + 10*x1 + 10*x2 - 30*x1*x2)
 }
-dat <- expand.grid(x1 = seq(0,1,0.05), x2 = seq(0, 1, 0.05))
+dat <- expand.grid(x1 = seq(0, 1, 0.05), x2 = seq(0, 1, 0.05))
 dat <- dat %>% mutate(p = p(x1, x2))
 ggplot(dat, aes(x=x1, y=x2)) + geom_tile(aes(fill=p))
 ```
@@ -442,7 +442,7 @@ con y sin interacciones:
 
 
 ```r
-set.seed(12)
+set.seed(322)
 n <- 500
 dat_ent <- data_frame(x1=runif(n,0,1), x2 = runif(n, 0, 1)) %>%
   mutate(p = p(x1, x2)) %>%
@@ -457,15 +457,15 @@ mod_1
 ## 
 ## Coefficients:
 ## (Intercept)           x1           x2  
-##     -2.8070       1.9648       0.9625  
+##    -0.01011     -1.47942     -1.19196  
 ## 
 ## Degrees of Freedom: 499 Total (i.e. Null);  497 Residual
 ## Null Deviance:	    529.4 
-## Residual Deviance: 499.7 	AIC: 505.7
+## Residual Deviance: 504.5 	AIC: 510.5
 ```
 
 ```r
-table(predict(mod_1)> 0.5, dat_ent$y)
+table(predict(mod_1) > 0.5, dat_ent$y)
 ```
 
 ```
@@ -485,22 +485,22 @@ mod_2
 ## 
 ## Coefficients:
 ## (Intercept)           x1           x2        x1:x2  
-##      -9.233       11.637       11.054      -16.168  
+##      -4.726        9.641        9.831      -32.466  
 ## 
 ## Degrees of Freedom: 499 Total (i.e. Null);  496 Residual
 ## Null Deviance:	    529.4 
-## Residual Deviance: 410.2 	AIC: 418.2
+## Residual Deviance: 305.6 	AIC: 313.6
 ```
 
 ```r
-table(predict(mod_2)> 0.5, dat_ent$y)
+table(predict(mod_2) > 0.5, dat_ent$y)
 ```
 
 ```
 ##        
 ##           0   1
-##   FALSE 382  82
-##   TRUE    7  29
+##   FALSE 374  60
+##   TRUE   15  51
 ```
  
  Observese la gran diferencia de devianza entre los dos modelos (en este caso,
@@ -510,25 +510,27 @@ Ahora consideramos qué red neuronal puede ser apropiada
 
 
 ```r
-set.seed(1155)
-nn <- nnet(y ~ x1 + x2, data=dat_ent, size = 3, decay=0.001, 
-           entropy = T, maxit=500, 
-           Wts = c(1,-1,1,1, 1, -1,0,0,0,0,0,0,0)) #pesos iniciales
+set.seed(11)
+nn <- nnet(y ~ x1 + x2, data = dat_ent, size = 3, decay = 0.001, 
+           entropy = T, maxit = 500)
 ```
 
 ```
 ## # weights:  13
-## initial  value 346.579590 
-## iter  10 value 263.544976
-## iter  20 value 239.050578
-## iter  30 value 230.411092
-## iter  40 value 214.783457
-## iter  50 value 203.001608
-## iter  60 value 201.799499
-## iter  70 value 201.677320
-## iter  80 value 201.626436
-## iter  90 value 201.615071
-## final  value 201.613783 
+## initial  value 294.186925 
+## iter  10 value 233.560013
+## iter  20 value 195.096851
+## iter  30 value 190.466423
+## iter  40 value 184.454612
+## iter  50 value 170.767082
+## iter  60 value 156.347417
+## iter  70 value 153.521658
+## iter  80 value 153.069566
+## iter  90 value 152.852374
+## iter 100 value 152.835812
+## iter 110 value 152.826924
+## iter 120 value 152.825819
+## final  value 152.825815 
 ## converged
 ```
 
@@ -539,9 +541,9 @@ matrix(round(nn$wts[1:9], 1), 3,3, byrow=T)
 
 ```
 ##      [,1] [,2] [,3]
-## [1,]  6.7 -7.8 -6.0
-## [2,] -1.7  1.7 -2.9
-## [3,] -1.9 -4.6  2.4
+## [1,] -2.2  3.0 -2.4
+## [2,] -8.2  5.9  8.7
+## [3,] -2.7 -1.6  3.6
 ```
 
 ```r
@@ -550,7 +552,7 @@ round(nn$wts[10:13], 1)
 ```
 
 ```
-## [1] -2.3 -4.2 11.7 12.3
+## [1] -5.7 15.1 -8.6 19.8
 ```
 
 ```r
@@ -578,7 +580,7 @@ feed_fow(nn$wts, c(0,0))
 ```
 
 ```
-## [1] 0.04118065
+## [1] 0.04946031
 ```
 
 ```r
@@ -586,7 +588,7 @@ feed_fow(nn$wts, c(0,1))
 ```
 
 ```
-## [1] 0.9276181
+## [1] 0.9560235
 ```
 
 ```r
@@ -594,11 +596,15 @@ feed_fow(nn$wts, c(1,0))
 ```
 
 ```
-## [1] 0.9208547
+## [1] 0.9830594
 ```
 
 ```r
-# feed_fow(nn$wts, c(1,1))
+feed_fow(nn$wts, c(1,1))
+```
+
+```
+## [1] 0.004197137
 ```
 
 
@@ -802,5 +808,11 @@ de corrida a corrida.
 Finalmente, podemos probar distintas arquitecturas y valores del parámetros de regularización,
 para afinar estos parámetros según validación cruzada o una muestra de validación.
 
+### Tarea
+
+- Instalar (keras para R)[https://keras.rstudio.com] (versión CPU).
+- Suscribirse a kaggle (pueden ser equipos de 2 máximo, entonces
+les conviene suscribirse como un equipo).
+- Hacer el ejercicio de arriba \@ref(ejercicio-red)
 
 

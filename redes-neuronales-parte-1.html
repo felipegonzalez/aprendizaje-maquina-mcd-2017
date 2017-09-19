@@ -25,7 +25,7 @@
 <meta name="author" content="Felipe González">
 
 
-<meta name="date" content="2017-09-18">
+<meta name="date" content="2017-09-19">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -215,7 +215,9 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="7.2" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#interacciones-en-redes-neuronales"><i class="fa fa-check"></i><b>7.2</b> Interacciones en redes neuronales</a></li>
 <li class="chapter" data-level="7.3" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#redes-neuronales-completamente-conexas"><i class="fa fa-check"></i><b>7.3</b> Redes neuronales completamente conexas</a></li>
 <li class="chapter" data-level="7.4" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#feed-forward"><i class="fa fa-check"></i><b>7.4</b> Feed forward</a></li>
-<li class="chapter" data-level="7.5" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#ajuste-de-parametros-introduccion"><i class="fa fa-check"></i><b>7.5</b> Ajuste de parámetros (introducción)</a></li>
+<li class="chapter" data-level="7.5" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#ajuste-de-parametros-introduccion"><i class="fa fa-check"></i><b>7.5</b> Ajuste de parámetros (introducción)</a><ul>
+<li class="chapter" data-level="7.5.1" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#tarea-5"><i class="fa fa-check"></i><b>7.5.1</b> Tarea</a></li>
+</ul></li>
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Publicado con bookdown</a></li>
@@ -423,8 +425,8 @@ nn &lt;-<span class="st"> </span><span class="kw">nnet</span>(g_<span class="dv"
 <pre><code>## [1] 0.6357318</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">qplot</span>(x, <span class="kw">predict</span>(nn, <span class="dt">newdata=</span><span class="kw">data.frame</span>(<span class="dt">x_1 =</span> x)), <span class="dt">geom=</span><span class="st">&#39;line&#39;</span>)</code></pre></div>
 <p><img src="07-redes-neuronales_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
-<div id="ejercicio-6" class="section level4 unnumbered">
-<h4>Ejercicio</h4>
+<div id="ejercicio-red" class="section level4">
+<h4><span class="header-section-number">7.1.0.1</span> Ejercicio</h4>
 <p>Un ejemplo más complejo. Utiliza los siguientes datos, y agrega si es necesario variables derivadas <span class="math inline">\(a_3,a_4\)</span> en la capa oculta.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">h &lt;-<span class="st"> </span><span class="cf">function</span>(x){
     <span class="kw">exp</span>(x)<span class="op">/</span>(<span class="dv">1</span><span class="op">+</span><span class="kw">exp</span>(x))
@@ -447,15 +449,15 @@ g <span class="op">+</span><span class="st"> </span><span class="kw">geom_jitter
 <h2><span class="header-section-number">7.2</span> Interacciones en redes neuronales</h2>
 <p>Es posible capturar interacciones con redes neuronales. Consideremos el siguiente ejemplo simple:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">p &lt;-<span class="st"> </span><span class="cf">function</span>(x1, x2){
-  <span class="kw">h</span>(<span class="op">-</span><span class="dv">8</span> <span class="op">+</span><span class="st"> </span><span class="dv">10</span><span class="op">*</span>x1 <span class="op">+</span><span class="st"> </span><span class="dv">10</span><span class="op">*</span>x2 <span class="op">-</span><span class="st"> </span><span class="dv">15</span><span class="op">*</span>x1<span class="op">*</span>x2)
+  <span class="kw">h</span>(<span class="op">-</span><span class="dv">5</span> <span class="op">+</span><span class="st"> </span><span class="dv">10</span><span class="op">*</span>x1 <span class="op">+</span><span class="st"> </span><span class="dv">10</span><span class="op">*</span>x2 <span class="op">-</span><span class="st"> </span><span class="dv">30</span><span class="op">*</span>x1<span class="op">*</span>x2)
 }
-dat &lt;-<span class="st"> </span><span class="kw">expand.grid</span>(<span class="dt">x1 =</span> <span class="kw">seq</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="fl">0.05</span>), <span class="dt">x2 =</span> <span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="fl">0.05</span>))
+dat &lt;-<span class="st"> </span><span class="kw">expand.grid</span>(<span class="dt">x1 =</span> <span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="fl">0.05</span>), <span class="dt">x2 =</span> <span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="fl">0.05</span>))
 dat &lt;-<span class="st"> </span>dat <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">p =</span> <span class="kw">p</span>(x1, x2))
 <span class="kw">ggplot</span>(dat, <span class="kw">aes</span>(<span class="dt">x=</span>x1, <span class="dt">y=</span>x2)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_tile</span>(<span class="kw">aes</span>(<span class="dt">fill=</span>p))</code></pre></div>
 <p><img src="07-redes-neuronales_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
 <p>Esta función puede entenderse como un o exclusivo: la probabilidad es alta sólo cuando x1 y x2 tienen valores opuestos (x1 grande pero x2 chica y viceversa). No es posible modelar esta función mediante el modelo logístico (sin interacciones).</p>
 <p>Sin embargo, podemos incluir la interacción en el modelo logístico o intentar usar una red neuronal. Primero simulamos unos datos y probamos el modelo logístico con y sin interacciones:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">12</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">322</span>)
 n &lt;-<span class="st"> </span><span class="dv">500</span>
 dat_ent &lt;-<span class="st"> </span><span class="kw">data_frame</span>(<span class="dt">x1=</span><span class="kw">runif</span>(n,<span class="dv">0</span>,<span class="dv">1</span>), <span class="dt">x2 =</span> <span class="kw">runif</span>(n, <span class="dv">0</span>, <span class="dv">1</span>)) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">p =</span> <span class="kw">p</span>(x1, x2)) <span class="op">%&gt;%</span>
@@ -467,12 +469,12 @@ mod_<span class="dv">1</span></code></pre></div>
 ## 
 ## Coefficients:
 ## (Intercept)           x1           x2  
-##     -2.8070       1.9648       0.9625  
+##    -0.01011     -1.47942     -1.19196  
 ## 
 ## Degrees of Freedom: 499 Total (i.e. Null);  497 Residual
 ## Null Deviance:       529.4 
-## Residual Deviance: 499.7     AIC: 505.7</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">table</span>(<span class="kw">predict</span>(mod_<span class="dv">1</span>)<span class="op">&gt;</span><span class="st"> </span><span class="fl">0.5</span>, dat_ent<span class="op">$</span>y)</code></pre></div>
+## Residual Deviance: 504.5     AIC: 510.5</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">table</span>(<span class="kw">predict</span>(mod_<span class="dv">1</span>) <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.5</span>, dat_ent<span class="op">$</span>y)</code></pre></div>
 <pre><code>##        
 ##           0   1
 ##   FALSE 389 111</code></pre>
@@ -483,44 +485,46 @@ mod_<span class="dv">2</span></code></pre></div>
 ## 
 ## Coefficients:
 ## (Intercept)           x1           x2        x1:x2  
-##      -9.233       11.637       11.054      -16.168  
+##      -4.726        9.641        9.831      -32.466  
 ## 
 ## Degrees of Freedom: 499 Total (i.e. Null);  496 Residual
 ## Null Deviance:       529.4 
-## Residual Deviance: 410.2     AIC: 418.2</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">table</span>(<span class="kw">predict</span>(mod_<span class="dv">2</span>)<span class="op">&gt;</span><span class="st"> </span><span class="fl">0.5</span>, dat_ent<span class="op">$</span>y)</code></pre></div>
+## Residual Deviance: 305.6     AIC: 313.6</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">table</span>(<span class="kw">predict</span>(mod_<span class="dv">2</span>) <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.5</span>, dat_ent<span class="op">$</span>y)</code></pre></div>
 <pre><code>##        
 ##           0   1
-##   FALSE 382  82
-##   TRUE    7  29</code></pre>
+##   FALSE 374  60
+##   TRUE   15  51</code></pre>
 <p>Observese la gran diferencia de devianza entre los dos modelos (en este caso, el sobreajuste no es un problema).</p>
 <p>Ahora consideramos qué red neuronal puede ser apropiada</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">1155</span>)
-nn &lt;-<span class="st"> </span><span class="kw">nnet</span>(y <span class="op">~</span><span class="st"> </span>x1 <span class="op">+</span><span class="st"> </span>x2, <span class="dt">data=</span>dat_ent, <span class="dt">size =</span> <span class="dv">3</span>, <span class="dt">decay=</span><span class="fl">0.001</span>, 
-           <span class="dt">entropy =</span> T, <span class="dt">maxit=</span><span class="dv">500</span>, 
-           <span class="dt">Wts =</span> <span class="kw">c</span>(<span class="dv">1</span>,<span class="op">-</span><span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>, <span class="dv">1</span>, <span class="op">-</span><span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>)) <span class="co">#pesos iniciales</span></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">11</span>)
+nn &lt;-<span class="st"> </span><span class="kw">nnet</span>(y <span class="op">~</span><span class="st"> </span>x1 <span class="op">+</span><span class="st"> </span>x2, <span class="dt">data =</span> dat_ent, <span class="dt">size =</span> <span class="dv">3</span>, <span class="dt">decay =</span> <span class="fl">0.001</span>, 
+           <span class="dt">entropy =</span> T, <span class="dt">maxit =</span> <span class="dv">500</span>)</code></pre></div>
 <pre><code>## # weights:  13
-## initial  value 346.579590 
-## iter  10 value 263.544976
-## iter  20 value 239.050578
-## iter  30 value 230.411092
-## iter  40 value 214.783457
-## iter  50 value 203.001608
-## iter  60 value 201.799499
-## iter  70 value 201.677320
-## iter  80 value 201.626436
-## iter  90 value 201.615071
-## final  value 201.613783 
+## initial  value 294.186925 
+## iter  10 value 233.560013
+## iter  20 value 195.096851
+## iter  30 value 190.466423
+## iter  40 value 184.454612
+## iter  50 value 170.767082
+## iter  60 value 156.347417
+## iter  70 value 153.521658
+## iter  80 value 153.069566
+## iter  90 value 152.852374
+## iter 100 value 152.835812
+## iter 110 value 152.826924
+## iter 120 value 152.825819
+## final  value 152.825815 
 ## converged</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#primera capa</span>
 <span class="kw">matrix</span>(<span class="kw">round</span>(nn<span class="op">$</span>wts[<span class="dv">1</span><span class="op">:</span><span class="dv">9</span>], <span class="dv">1</span>), <span class="dv">3</span>,<span class="dv">3</span>, <span class="dt">byrow=</span>T)</code></pre></div>
 <pre><code>##      [,1] [,2] [,3]
-## [1,]  6.7 -7.8 -6.0
-## [2,] -1.7  1.7 -2.9
-## [3,] -1.9 -4.6  2.4</code></pre>
+## [1,] -2.2  3.0 -2.4
+## [2,] -8.2  5.9  8.7
+## [3,] -2.7 -1.6  3.6</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#segunda capa</span>
 <span class="kw">round</span>(nn<span class="op">$</span>wts[<span class="dv">10</span><span class="op">:</span><span class="dv">13</span>], <span class="dv">1</span>)</code></pre></div>
-<pre><code>## [1] -2.3 -4.2 11.7 12.3</code></pre>
+<pre><code>## [1] -5.7 15.1 -8.6 19.8</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#2*nn$value</span></code></pre></div>
 <p>Ell cálculo de esta red es:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">feed_fow &lt;-<span class="st"> </span><span class="cf">function</span>(beta, x){
@@ -532,12 +536,13 @@ nn &lt;-<span class="st"> </span><span class="kw">nnet</span>(y <span class="op"
 }</code></pre></div>
 <p>Y vemos que esta red captura la interacción:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">feed_fow</span>(nn<span class="op">$</span>wts, <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">0</span>))</code></pre></div>
-<pre><code>## [1] 0.04118065</code></pre>
+<pre><code>## [1] 0.04946031</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">feed_fow</span>(nn<span class="op">$</span>wts, <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>))</code></pre></div>
-<pre><code>## [1] 0.9276181</code></pre>
+<pre><code>## [1] 0.9560235</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">feed_fow</span>(nn<span class="op">$</span>wts, <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">0</span>))</code></pre></div>
-<pre><code>## [1] 0.9208547</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># feed_fow(nn$wts, c(1,1))</span></code></pre></div>
+<pre><code>## [1] 0.9830594</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">feed_fow</span>(nn<span class="op">$</span>wts, <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">1</span>))</code></pre></div>
+<pre><code>## [1] 0.004197137</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dat &lt;-<span class="st"> </span>dat <span class="op">%&gt;%</span><span class="st"> </span>rowwise <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">p_red =</span> <span class="kw">feed_fow</span>(nn<span class="op">$</span>wts, <span class="kw">c</span>(x1, x2)))
 <span class="kw">ggplot</span>(dat, <span class="kw">aes</span>(<span class="dt">x=</span>x1, <span class="dt">y=</span>x2)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_tile</span>(<span class="kw">aes</span>(<span class="dt">fill=</span>p_red))</code></pre></div>
 <p><img src="07-redes-neuronales_files/figure-html/unnamed-chunk-24-1.png" width="672" /></p>
@@ -640,6 +645,13 @@ Theta</code></pre></div>
 </ul>
 <p>El proceso de aprendizaje de las redes es más difícil que lo que hemos visto antes. En primer lugar, no está definido del todo, pues típicamente los algoritmos que usamos encuentran mínimos locales, y pueden variar de corrida a corrida.</p>
 <p>Finalmente, podemos probar distintas arquitecturas y valores del parámetros de regularización, para afinar estos parámetros según validación cruzada o una muestra de validación.</p>
+<div id="tarea-5" class="section level3">
+<h3><span class="header-section-number">7.5.1</span> Tarea</h3>
+<ul>
+<li>Instalar (keras para R)[<a href="https://keras.rstudio.com" class="uri">https://keras.rstudio.com</a>] (versión CPU).</li>
+<li>Suscribirse a kaggle (pueden ser equipos de 2 máximo, entonces les conviene suscribirse como un equipo).</li>
+<li>Hacer el ejercicio de arriba <a href="redes-neuronales-parte-1.html#ejercicio-red">7.1.0.1</a></li>
+</ul>
 
 <div id="refs" class="references">
 <div>
@@ -650,6 +662,7 @@ Theta</code></pre></div>
 </div>
 <div>
 <p>Ng, Andrew. 2017. “Machine Learning.” <a href="https://www.coursera.org/learn/machine-learning" class="uri">https://www.coursera.org/learn/machine-learning</a>.</p>
+</div>
 </div>
 </div>
 </div>
