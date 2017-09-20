@@ -376,39 +376,68 @@ ggplot(dat, aes(x=x1, y=x2)) + geom_tile(aes(fill=p_red))
 ```
 
 
-## Redes neuronales completamente conexas
+## Cálculo en redes: feed-forward.
 
 Ahora generalizamos lo que vimos arriba para definir la arquitectura
-básica de redes neuronales.
+básica de redes neuronales y cómo se hacen cálculos en las redes.
 
 ```{block2, type='comentario'}
 A las variables originales les llamamos *capa de entrada* de la red,
 y a la variable de salida *capa de salida*. Puede haber más de una 
 capa intermedia. A estas les llamamos *capas ocultas*.
+
+Cuando todas las conexiones posibles de cada capa a la siguiente están presente,
+decimos que la red es *completamente conexa*.
 ```
+
 
 ```{r, echo=FALSE}
  gr <- graph(
    c(1,4,1,5,1,6,2,4,2,5,2,6,2,4,2,5,2,6,3,4,3,5,3,6,4,7,4,8,5,7,5,8,6,7,6,8,7,8,7,9,8,9))
 plot(gr, layout=matrix(c(-1,1,-1,0,-1,-1,0,1,0,0,0,-1,1,0.5,1,-0.5,2,0), byrow=T,ncol=2),
+     vertex.label=c(expression(a[1]^{(1)}), expression(a[2]^{(1)}),expression(a[3]^{(1)}),
+                    expression(a[1]^{(2)}),expression(a[2]^{(2)}),expression(a[3]^{(3)}),
+                    expression(a[1]^{(3)}),expression(a[2]^{(3)}),                        expression(a[1]^{(4)})),
       vertex.size=50, vertex.color=c('salmon'),
      vertex.frame.color=NA, edge.curved=FALSE)
 ```
 
+Como vimos en el ejemplo de arriba, para hacer cálculos en la red empezamos
+con la primera capa, hacemos combinaciones lineales y aplicamos nuestra función
+no lineal $h$. Una vez que calculamos la segunda capa, podemos calcular
+la siguiente de la misma forma: combinaciones lineales y aplicación de $h$. Y así
+sucesivamente hasta que llegamos a la capa final.
 
-Usaremos una notación distinta
-para simplificar. En primer lugar, denotamos
-```{block2, type='comentario'}
-$\theta_{i,k}^{(l)}=$ peso de entrada $a_{k}^{(l-1)}$  de capa $l-1$ 
+## Notación {-}
+
+Sea $L$ el número total de capas. En primer lugar, para un cierto caso de entrada $x = (x_1,x_2,\ldots, x_p)$, 
+denotamos por:
+
+- $a^{(l)}_j$ el valor que toma la unidad $j$ de la capa $l$.
+- En particular, ponemos $a^{(l)}_j = x_j$, que son los valores de las entradas (primera capa)
+- Escribimos también $a^{(l)}_0=1$ para lidiar con los sesgos.
+- Para clasificación binaria, la última capa solo tiene un elemento, que es
+$p_1 = a^{(L)}$. Para un problema de clasificación en $K>2$ clases, tenemos que 
+la última capa es de tamaño $K$:
+$p_1 = a^{(L)}_1, p_2 = a^{(L)}_2,\ldots,  p_K = a^{(L)}_K$
+
+Adicionalmente, escribimos
+
+$\theta_{i,k}^{(l)}=$ es el peso de entrada $a_{k}^{(l-1)}$  de capa $l-1$ 
 en la entrada $a_{i}^{(l)}$ de la capa $l$.
-```
 
-De modo que de la capa $2$ a la capa $3$, tenemos:
+Los sesgos están dados por
+$$\theta_{i,0}^{(l)}$$
 
-$$a_1^3 = h(\theta_{1,0}^{(3)} + \theta_{1,1}^{(3)} a_1^{(2)}+ \theta_{1,2}^{(3)}a_2^{(2)}+ \theta_{1,3}^{(3)} a_3^{(2)})$$
-$$a_2^3 = h(\theta_{2,0}^{(3)} + \theta_{2,1}^{(3)} a_1^{(2)}+ \theta_{2,2}^{(3)}a_2^{(2)}+ \theta_{2,3}^{(3)} a_3^{(2)})$$
+#### Ejemplo {-}
+En nuestro ejemplo, tenemos que en la capa $l=3$ hay dos unidades. Así que
+podemos calcular los valores $a^{(3)}_1$ y $a^{(3)}_2$. Están dados
+por
 
-como se ilustra en la siguiente gráfica:
+$$a_1^{(3)} = h(\theta_{1,0}^{(3)} + \theta_{1,1}^{(3)} a_1^{(2)}+ \theta_{1,2}^{(3)}a_2^{(2)}+ \theta_{1,3}^{(3)} a_3^{(2)})$$
+$$a_2^{(3)} = h(\theta_{2,0}^{(3)} + \theta_{2,1}^{(3)} a_1^{(2)}+ \theta_{2,2}^{(3)}a_2^{(2)}+ \theta_{2,3}^{(3)} a_3^{(2)})$$
+
+Como se ilustra en la siguiente gráfica:
 
 
 ```{r, echo=FALSE}
@@ -439,6 +468,64 @@ ponemos $a_0^2=1$.
    edge.label=c(expression(theta[10]^3),expression(theta[20]^3),
      expression(theta[11]^3),expression(theta[21]^3), expression(theta[12]^3),  expression(theta[22]^3), expression(theta[13]^3), expression(theta[23]^3)))
 ```
+
+
+#### Ejemplo {-}
+
+Consideremos propagar con los siguientes pesos para capa 3 y valores de la
+capa 2 (en gris están los sesgos):
+```{r, echo =FALSE}
+ gr <- graph(
+   c(c(1,4,1,5,2,4,2,5,3,4,3,5)))
+ plot(gr, layout = matrix(c(-4,1,-4,0,-4,-1,0,1,0,-1), byrow=T, ncol=2),
+      vertex.label=c('-2','5','1','a_1 ?','a_2 ?'), vertex.label.cex=1.5,
+      vertex.size=50, vertex.color=c('salmon','salmon','gray','red','red'), vertex.label.cex=3,
+      vertex.label.color='white',vertex.frame.color=NA,
+   edge.label=c(1,2,-1,0.5,3,1))
+```
+
+
+Que en nuestra notación escribimos como
+$$a^{(2)}_0 = 1, a^{(2)}_1 = -2, a^{(2)}_2 = 5$$
+y los pesos son, para la primera unidad:
+$$\theta^{(3)}_{0,1} = 3,  \,\,\, \theta^{(3)}_{1,1} = 1,\,\,\,\theta^{(3)}_{2,1} = -1$$
+y para la segunda unidad
+$$\theta^{(3)}_{0,2} = 1,  \,\,\, \theta^{(3)}_{1,2} = 2,\,\,\,\theta^{(3)}_{2,2} = 0.5$$
+Y ahora queremos calcular los valores que toman las unidades de la capa 3, 
+que son $a^{(3)}_1$ y  $a^{(3)}_2$$
+
+Para hacer feed forward a la siguiente capa, hacemos entonces
+
+$$a^{(3)}_1 = h(3 + a^{(2)}_1 - a^{(2)}_2),$$
+$$a^{(3)}_2 = h(1 + 2a^{(2)}_1 + 0.5a^{(2)}_2),$$
+
+Ponemos los pesos y valores de la capa 2 (incluyendo sesgo):
+
+```{r}
+a_2 <- c(1,-2,5) # ponemos un 1 al principio para el sesgo
+theta_2_1 = c(3,1,-1)
+theta_2_2 = c(1,2,0.5)
+```
+
+y calculamos
+
+```{r}
+a_3 <- c(1, h(sum(theta_2_1*a_2)),h(sum(theta_2_2*a_2))) # ponemos un 1 al principio
+a_3
+```
+
+
+```{r, echo=FALSE}
+gr <- graph(
+   c(c(1,4,1,5,2,4,2,5,3,4,3,5)))
+ plot(gr, layout = matrix(c(-4,1,-4,0,-4,-1,0,1,0,-1), byrow=T, ncol=2),
+      vertex.label=c('-2','5','1','a_1=0.02','a_2=0.37'), 
+      vertex.size=50, vertex.color=c('salmon','salmon','gray','red','red'), vertex.label.cex=1, edge.label.cex=1.5,
+      vertex.label.color='white',vertex.frame.color=NA,
+   edge.label=c(1,2,-1,0.5,3,1))
+```
+
+
 
 ## Feed forward
 
@@ -473,67 +560,200 @@ La red completa entonces se caracteriza por:
 ```
 
 Adicionalmente, escribimos en forma vectorial:
-$$a^{(l)} = (a^{(l)}_1, a^{(l)}_2, \ldots, a^{(l)}_{n_l})^t$$
+$$a^{(l)} = (a^{(l)}_0, a^{(l)}_1, a^{(l)}_2, \ldots, a^{(l)}_{n_l})^t$$
 
 Para calcular la salidas, igual que hicimos, antes, propagaremos hacia
 adelante los valores de las variables de entrada usando los *pesos*.
-Agregando entradas adicionales en cada capa $a_0^{l}$, $l=1,2,\ldots, L-1$,
+Agregando entradas adicionales en cada capa $a_0^{(l)}$, $l=1,2,\ldots, L-1$,
 donde $a_0^{l}=1$, y agregando a $\Theta^{(l)}$ una columna con
 las ordenadas al origen (o sesgos) podemos escribir:
 
 ```{block2, type='comentario'}
 **Feed-forward**(matricial)
 
+- Capa 1 (vector de entradas)
+$$ a^{(1)} = x$$
 - Capa 2
 $$ a^{(2)} = h(\Theta^{(1)}a^{(1)})$$
 - Capa $l$ (oculta)
 $$ a^{(l)} = h(\Theta^{(l)}a^{(l-1)})$$
 - Capa de salida:
 $$a^{(L)}= p = h(\Theta^{(L)}a^{(L-1)})$$
-
-```
-Podemos hacer una función simple para hacer feed-foward de una capa a la siguiente:
-```{r}
-feed_forward <- function(a, Theta){
-  # a_{l-1} da los valores de la primera capa, la función debe regresar
-  # los valores de la siguiente capa a_l. Theta da los pesos
-  h(Theta %*% a)
-}
-```
-
-Por ejemplo, consideremos propagar bajo la siguiente situación:
-```{r, echo =FALSE}
- gr <- graph(
-   c(c(1,4,1,5,2,4,2,5,3,4,3,5)))
- plot(gr, layout = matrix(c(-4,1,-4,0,-4,-1,0,1,0,-1), byrow=T, ncol=2),
-      vertex.label=c('-2','5','1','a_1 ?','a_2 ?'), vertex.label.cex=1.5,
-      vertex.size=50, vertex.color=c('salmon','salmon','gray','red','red'), vertex.label.cex=3,
-      vertex.label.color='white',vertex.frame.color=NA,
-   edge.label=c(1,2,-1,0.5,3,1))
+donde $h$ se aplica componente a componente sobre los vectores correspondientes.
 ```
 
 
-La matriz de parámetros es
-```{r}
-Theta = t(matrix(c(3,1,-1,1,0.5,2), byrow=F, ncol=2))
-Theta
-```
 
-Ahora hacemos feed forward:
+## Backpropagation: cálculo del gradiente
 
-```{r}
-feed_forward(c(1,-2,5), Theta = Theta)
-```
+Más adelante, para ajustar los pesos y sesgos de las redes (valores $\theta$),
+utilizaremos descenso en gradiente y otros algoritmos derivados del gradiente
+(descenso estocástico).
+En esta parte entonces veremos cómo calcular estos gradientes con el algoritmo
+de *back-propagation*, que es una aplicación de la regla de la cadena para derivar.
+Back-propagation resulta en una fórmula recursiva donde propagamos errores de la red
+como gradientes
+desde el final de red (capa de salida) hasta el principio, capa por capa.
+
+
+
+
+Queremos entonces calcular las derivadas de la devianza con respecto a cada
+parámetro $\theta_{j,k}^{(l)}$. Esto nos proporciona el gradiente para
+nuestro algoritmo de descenso.
+
+**Consideramos aquí el problema de clasificación binaria con devianza como función
+de pérdida, y sin regularización**.
+
+Recordamos nuestra notación para la función logística (o sigmoide):
+
+$$h(z)=\frac{1}{1+e^{-z}}.$$
+Necesitaremos su derivada, que está dada por (cálculala):
+$$h'(z) = h(z)(1-h(z))$$
+
+### Cálculo para un caso de entrenamiento
+
+Como hicimos en regresión logística, primero simplificamos el problema 
+y consideramos calcular 
+las parciales *para un solo caso de entrenamiento* $(x,y)$:
+$$ D=- \sum_{j=1}^K y_{j}\log (p_1(x)) + (1-y_{j})\log (1-p_1(x)). $$
+
+Después sumaremos sobre toda la muestra de entrenamiento. Entonces queremos
+calcular 
+$$\frac{\partial D}{\partial \theta_{j,k}^{(l)}}$$
+
+Y escribiremos, con la notación de arriba, 
+$$a^{(l)_j} = h(z^{(l)}_j)$$
+donde 
+$$z^{(l)} = \Theta^{l} a^{(l)},$$
+que coordenada a coordenada se escribe como
+$$z^{(l)}_j =  \sum_{k=0}^{n_{l-1}}  \theta_{j,k}^{(l)}  a^{(l-1)}_k$$
+
+Veamos dónde aparece $\theta_{j,k}^{(l)}$ en la gráfica de la red:
+
+$$ \cdots a^{(l-1)}_k \xrightarrow{\theta_{j,k}^{(l)}} a^{(l)}_j  \cdots \rightarrow  D$$
+
+Entonces, por la regla de la cadena,  podemos escribir
+$$\frac{\partial D}{\partial \theta_{j,k}^{(l)}} =
+\frac{\partial D}{\partial a_j^{(l)}}\frac{\partial a_j^{(l)}}{\partial \theta_{j,k}^{(l)} }
+$$
+
+Y como 
+$$a_j^{(l)} = h(z_j^{(l)}) = h\left (\sum_{k=0}^{n_{l-1}}  \theta_{j,k}^{(l)}  a^{(l-1)}_k \right )$$
+Tenemos por la regla de la cadena que
+\begin{equation}
+\frac{\partial a_j^{(l)}}{\partial \theta_{j,k}^{(l)} } = h'(z_j^{(l)})a_k^{(l-1)}
+\end{equation}
+
+y esta última expresión podemos calcularla pues sólo requiere la derivada de $h$ y
+los valores de los nodos obtenidos en la pasada de feed-forward.
+
+Así que sólo nos queda calcular las parciales
+$$\frac{\partial D}{\partial a_j^{(l)}}$$
+
+Para obtener una fórmula recursiva para esta cantidad (hacia atrás), consideramos
+la estructura de la red en $a_j^{(l)}$:
+
 
 ```{r, echo=FALSE}
-gr <- graph(
-   c(c(1,4,1,5,2,4,2,5,3,4,3,5)))
- plot(gr, layout = matrix(c(-4,1,-4,0,-4,-1,0,1,0,-1), byrow=T, ncol=2),
-      vertex.label=c('-2','5','1','a_1=0.017','a_2=0.999'), 
-      vertex.size=50, vertex.color=c('salmon','salmon','gray','red','red'), vertex.label.cex=1.5, edge.label.cex=1.5,
-      vertex.label.color='white',vertex.frame.color=NA,
-   edge.label=c(1,2,-1,0.5,3,1))
+ gr <- graph(
+   c(1,2,1,3,1,4,2,5,3,5,4,5,1,6,1,7,1,8,1,9,6,5,7,5,8,5,9,5))
+plot(gr, layout=matrix(c(-1,0,0,1,0,0,0,-1,1,0,0,0.6,0,0.3,0,-0.6,0,-0.3), 
+                       byrow=T,ncol=2),
+      vertex.size=c(rep(50,5), rep(1,4)), vertex.color=c(rep('salmon',5),rep('white',5)),
+      vertex.label=c(expression(a[j]^{(l)}), 
+                     expression(a[1]^{(l+1)}),expression(a[s]^{(l+1)}),
+                     expression(a[n]^{(l+1)}),
+                    expression(D), rep('',4)),
+     vertex.frame.color=NA, edge.curved=FALSE)
 ```
+
+
+Ahora nótese que, aplicando regla de la cadena (ojo: queremos obtener
+una fórmula recursiva!):  
+
+$$\frac{\partial D}{\partial a_j^{(l)}}= \sum_{s=1}^{n_l}
+\frac{\partial D}{\partial a_s^{(l+1)}}\frac{\partial  a_s^{(l+1)}}{\partial a_j^{(l)}},$$
+
+y es fácil calcular
+$$\frac{\partial  a_s^{(l+1)}}{\partial a_j^{(l)}}=h'(z_s^{(l+1)})\theta_{s,j}^{(l+1)},$$
+
+de modo que
+
+$$\frac{\partial D}{\partial a_j^{(l)}}= \sum_{s=1}^{n_l}
+\frac{\partial D}{\partial a_s^{(l+1)}} h'(z_s^{(l+1)})\theta_{s,j}^{(l+1)}.$$
+
+Denotaremos
+$$\delta_s^{ (l+1)}=\frac{\partial D}{\partial a_s^{(l+1)}} h'(z_s^{(l+1)})$$
+
+de manera que la ecuación anterior es
+$$\frac{\partial D}{\partial a_j^{(l)}} = \sum_{s=1}^{n_l}
+\delta_s^{(l+1)}\theta_{s,j}^{(l+1)}.$$
+
+**Observación**
+Nótese que $\delta_s^{(l)} =\frac{\partial D}{\partial z_s^{(l+1)}}$, que nos 
+dice a dónde tenemos que mover la entrada derivada
+$z_s^{(l+1)}$ para reducir el error $D$. Cuando este valor es grande,
+implica que la 'contribución' al error del valor actual de $z_s^{(l+1)}$ es grande.
+Como $z_s^{(l+1)}$ es una entrada derivada que depende de parámetros $\theta$,
+esta cantidad también nos ayudará a entender cómo debemos cambiar los
+parámetros $\theta$ para disminuir el error.
+
+
+
+
+Lo único que nos falta calcular entonces son las $\delta_s^{(l)}$. 
+
+Tenemos que si $l=2,\ldots,L-1$, entonces podemos escribir
+como fórmula recursiva:
+
+$$\delta_j^{(l)} = \frac{\partial D}{\partial a_j^{l}} h'(z_j^{(l)})
+= \left (\sum_{s=1}^{n_l} \delta_s^{(l+1)} \theta_{s,j}^{(l+1)}\right ) h'(z_j^{(l)}),$$
+
+y para la última capa, tenemos que (demostrar!)
+
+$$\delta_j^{(L)}=p_j-y_j.$$
+
+Ahora podemos escribir estas ecuaciones en forma vectorial. En primer lugar,
+$$\delta^{(L)}=p-y.$$
+Y además es fácil ver que ($\theta_{*}^{(l+1)}$ *sin* la columna correspondiente al sesgo):
+
+$$\delta^{(l)}=\left( \theta_{*}^{(l+1)}    \right)^t\delta^{(l+1)} \circ h'(z^{(l)})$$
+
+donde $\circ$ denota el producto componente a componente.
+
+finalmente
+$$\frac{\partial D}{\partial \theta_{j,k}^{(l)}} = \delta_j^{(l)}a_k^{(l-1)}$$
+
+Ahora todo ya está calculado. Lo interesante es que las $\delta^()$ se calculan
+de manera recursiva.
+
+```{block2, type='comentario'}
+**Backpropagation**
+Para $i=1,\ldots, n$, tomamos el dato de entrenamiento  $(x^i, y^i)$ y hacemos:
+\begin{enumerate}
+
+1. Ponemos $a^{(1)}=x^i$ (vector de entradas, incluyendo 1).
+2. Calculamos $a^{(2)},a^{(3)},\ldots, a^{(L)}$ usando feed forward.
+3. Calculamos $\delta^{(L)}=a^{ (L)}-y^i$, y luego
+$\delta^{(L-1)},\ldots, \delta^{(2)}$ como en la sección anterior.
+4. Acumulamos
+$\Delta_{j,k}^{(l)}=\Delta_{j,k}^{(l)} + \delta_j^{(l)}a_k^{(l-1)}$.
+
+
+Finalmente, ponemos, si $k\neq 0$,
+$$D_{j,k}^{(l)} = \frac{2}{n}\Delta_{j,k}^{(l)} + \lambda\theta_{j,k}^{(l)}$$
+y si $k=0$,
+$$D_{j,k}^{(l)} = \frac{2}{n}\Delta_{j,k}^{(l)} .$$
+Entonces:
+$$D_{j,k}^{(l)} =\frac{\partial D}{\partial \theta_{j,k}^{(l)}}.$$
+```
+
+
+
+
+
+
 
 
 
@@ -610,11 +830,10 @@ de corrida a corrida.
 Finalmente, podemos probar distintas arquitecturas y valores del parámetros de regularización,
 para afinar estos parámetros según validación cruzada o una muestra de validación.
 
-### Tarea
+### Tarea (para 18 de septiembre) {-}
 
 - Instalar (keras para R)[https://keras.rstudio.com] (versión CPU).
 - Suscribirse a kaggle (pueden ser equipos de 2 máximo, entonces
 les conviene suscribirse como un equipo).
 - Hacer el ejercicio de arriba \@ref(ejercicio-red)
-
 
