@@ -349,7 +349,7 @@ round(nn$wts[10:13], 1)
 #2*nn$value
 ```
 
-Ell cálculo de esta red es:
+El cálculo de esta red es:
 
 ```{r}
 feed_fow <- function(beta, x){
@@ -373,6 +373,33 @@ feed_fow(nn$wts, c(1,1))
 ```{r}
 dat <- dat %>% rowwise %>% mutate(p_red = feed_fow(nn$wts, c(x1, x2)))
 ggplot(dat, aes(x=x1, y=x2)) + geom_tile(aes(fill=p_red))
+```
+
+**Observación**: ¿cómo funciona esta red? Consideremos la capa intermedia
+
+```{r}
+dat_entrada <- data_frame(x_1=c(0,0,1,1), x_2=c(0,1,0,1))
+a_1 <- dat_entrada %>% rowwise() %>% mutate(a_1= h(sum(nn$wts[1:3]*c(1,x_1,x_2) )))
+a_2 <- dat_entrada %>% rowwise() %>% mutate(a_2= h(sum(nn$wts[4:6]*c(1,x_1,x_2) )))
+a_3 <- dat_entrada %>% rowwise() %>% mutate(a_3= h(sum(nn$wts[7:9]*c(1,x_1,x_2) )))
+capa_intermedia <- left_join(a_1, a_2) %>% left_join(a_3)
+a_1
+a_3
+a_2
+```
+
+Y observamos que las unidades $a_1$ y $a_3$ tienen valor alto cuando
+las variables $x_1$ y $x_2$, correspondientemente, tienen valores altos.
+La unidad $a_2$ responde cuando tanto como $x_1$y $x_2$ tienen valores altos.
+
+Para la capa final, tenemos que:
+
+```{r}
+nn$wts[10:13]
+capa_final <- capa_intermedia %>% rowwise() %>% 
+  mutate(p= h(sum(nn$wts[10:13]*c(1,a_1,a_2,a_3) ))) %>%
+  mutate(p=round(p,2))
+capa_final
 ```
 
 
@@ -413,9 +440,10 @@ sucesivamente hasta que llegamos a la capa final.
 Sea $L$ el número total de capas. En primer lugar, para un cierto caso de entrada $x = (x_1,x_2,\ldots, x_p)$, 
 denotamos por:
 
-- $a^{(l)}_j$ el valor que toma la unidad $j$ de la capa $l$.
-- En particular, ponemos $a^{(l)}_j = x_j$, que son los valores de las entradas (primera capa)
-- Escribimos también $a^{(l)}_0=1$ para lidiar con los sesgos.
+- $a^{(l)}_j$ el valor que toma la unidad $j$ de la capa $l$, para $j=0,1,\ldots, n_{l}$, donde
+$n_l$ es el número de unidades de la capa $l$.
+- Ponemos $a^{(l)}_0=1$ para lidiar con los sesgos.
+- En particular, ponemos $a^{(1)}_j = x_j$, que son los valores de las entradas (primera capa)
 - Para clasificación binaria, la última capa solo tiene un elemento, que es
 $p_1 = a^{(L)}$. Para un problema de clasificación en $K>2$ clases, tenemos que 
 la última capa es de tamaño $K$:
@@ -595,7 +623,9 @@ Back-propagation resulta en una fórmula recursiva donde propagamos errores de l
 como gradientes
 desde el final de red (capa de salida) hasta el principio, capa por capa.
 
+Recordamos la devianza (con regularización ridge) es
 
+$$D = -\frac{2}{n}\sum_{i=1}^n y_i\log(p_1(x_i)) +(1-y_i)\log(1-p_1(x_i)) + \lambda \sum_{l=2}^{L} \sum_{k=1}^{n_{l-1}} \sum_{j=1}^{n_l}(\theta_{j,k}^{(l)})^2.$$
 
 
 Queremos entonces calcular las derivadas de la devianza con respecto a cada
@@ -603,9 +633,10 @@ parámetro $\theta_{j,k}^{(l)}$. Esto nos proporciona el gradiente para
 nuestro algoritmo de descenso.
 
 **Consideramos aquí el problema de clasificación binaria con devianza como función
-de pérdida, y sin regularización**.
+de pérdida, y sin regularización**. La parte de la parcial que corresponde al término
+de regularización es fácil de agregar al final.
 
-Recordamos nuestra notación para la función logística (o sigmoide):
+Recordamos también nuestra notación para la función logística (o sigmoide):
 
 $$h(z)=\frac{1}{1+e^{-z}}.$$
 Necesitaremos su derivada, que está dada por (cálculala):
@@ -623,38 +654,61 @@ calcular
 $$\frac{\partial D}{\partial \theta_{j,k}^{(l)}}$$
 
 Y escribiremos, con la notación de arriba, 
-$$a^{(l)_j} = h(z^{(l)}_j)$$
+$$a^{(l)}_j = h(z^{(l)}_j)$$
 donde 
 $$z^{(l)} = \Theta^{l} a^{(l)},$$
 que coordenada a coordenada se escribe como
 $$z^{(l)}_j =  \sum_{k=0}^{n_{l-1}}  \theta_{j,k}^{(l)}  a^{(l-1)}_k$$
 
-Veamos dónde aparece $\theta_{j,k}^{(l)}$ en la gráfica de la red:
+#### Paso 1: Derivar respecto a capa $l$ {-}
+
+Como los valores de cada capa determinan los valores de salida y la devianza,
+podemos escribir (recordemos que $a_0^{(l)}=1$ es constante):
+$$D=D(a_0^{(l)},a_1^{(l)},a_2^{(l)},\ldots, a_{n_{l}}^{(l)})=D(a_1^{(l)},a_2^{(l)},\ldots, a_{n_{l}}^{(l)})$$
+
+Así que por la regla de la cadena para varias variables:
+$$\frac{\partial D}{\partial \theta_{j,k}^{(l)}} =
+\sum_{t=1}^{n_{l}} \frac{\partial D}{\partial a_t^{l}}\frac{\partial a_t^{(l)}}
+{\partial \theta_{j,k}^{(l)} }$$
+
+Pero si vemos dónde aparece $\theta_{j,k}^{(l)}$ en la gráfica de la red:
 
 $$ \cdots a^{(l-1)}_k \xrightarrow{\theta_{j,k}^{(l)}} a^{(l)}_j  \cdots \rightarrow  D$$
+Entonces podemos concluir  que 
+$\frac{\partial a_t^{(l)}}{\partial \theta_{j,k}^{(l)}} =0$ cuando  $t\neq j$ (pues no
+ dependen de $\theta_{j,k}^{(l)}$),
 
-Entonces, por la regla de la cadena,  podemos escribir
-$$\frac{\partial D}{\partial \theta_{j,k}^{(l)}} =
+de lo que se concluye que, para toda $j=1,2,\ldots, n_{l+1}, k=0,1,\ldots, n_{l}$
+\begin{equation}
+\frac{\partial D}{\partial \theta_{j,k}^{(l)}} =
 \frac{\partial D}{\partial a_j^{(l)}}\frac{\partial a_j^{(l)}}{\partial \theta_{j,k}^{(l)} }
-$$
+,
+  (\#eq:parcial)
+\end{equation}
 
-Y como 
+y como 
 $$a_j^{(l)} = h(z_j^{(l)}) = h\left (\sum_{k=0}^{n_{l-1}}  \theta_{j,k}^{(l)}  a^{(l-1)}_k \right )$$
 Tenemos por la regla de la cadena que
 \begin{equation}
-\frac{\partial a_j^{(l)}}{\partial \theta_{j,k}^{(l)} } = h'(z_j^{(l)})a_k^{(l-1)}
+\frac{\partial a_j^{(l)}}{\partial \theta_{j,k}^{(l)} } = h'(z_j^{(l)})a_k^{(l-1)}.
 \end{equation}
 
-y esta última expresión podemos calcularla pues sólo requiere la derivada de $h$ y
+Esta última expresión podemos calcularla pues sólo requiere la derivada de $h$ y
 los valores de los nodos obtenidos en la pasada de feed-forward.
 
-Así que sólo nos queda calcular las parciales
-$$\frac{\partial D}{\partial a_j^{(l)}}$$
+#### Paso 2: Derivar con respecto a capa $l+1$ {-}
 
-Para obtener una fórmula recursiva para esta cantidad (hacia atrás), consideramos
-la estructura de la red en $a_j^{(l)}$:
+Así que sólo nos queda calcular las parciales ($j = 1,\ldots, n_l$)
+$$\frac{\partial D}{\partial a_j^{(l)}}$$ 
 
+Para obtener una fórmula recursiva para esta cantidad (hacia atrás), 
+aplicamos otra vez regla de la cadena, pero con respecto a la capa $l+1$ (ojo: queremos obtener
+una fórmula recursiva!):  
 
+$$\frac{\partial D}{\partial a_j^{(l)}}= \sum_{s=1}^{n_l}
+\frac{\partial D}{\partial a_s^{(l+1)}}\frac{\partial  a_s^{(l+1)}}{\partial a_j^{(l)}},$$
+
+que se puede entender a partir de este diagrama:
 ```{r, echo=FALSE}
  gr <- graph(
    c(1,2,1,3,1,4,2,5,3,5,4,5,1,6,1,7,1,8,1,9,6,5,7,5,8,5,9,5))
@@ -668,14 +722,12 @@ plot(gr, layout=matrix(c(-1,0,0,1,0,0,0,-1,1,0,0,0.6,0,0.3,0,-0.6,0,-0.3),
      vertex.frame.color=NA, edge.curved=FALSE)
 ```
 
+Nótese que la suma empieza en $s=1$, no en $s=0$, pues $a_0^{(l+1)}$ no depende
+de $a_k^{(l)}$.
 
-Ahora nótese que, aplicando regla de la cadena (ojo: queremos obtener
-una fórmula recursiva!):  
+En este caso los elementos de la suma no se anulan necesariamente. Primero
+consideramos la derivada de:
 
-$$\frac{\partial D}{\partial a_j^{(l)}}= \sum_{s=1}^{n_l}
-\frac{\partial D}{\partial a_s^{(l+1)}}\frac{\partial  a_s^{(l+1)}}{\partial a_j^{(l)}},$$
-
-y es fácil calcular
 $$\frac{\partial  a_s^{(l+1)}}{\partial a_j^{(l)}}=h'(z_s^{(l+1)})\theta_{s,j}^{(l+1)},$$
 
 de modo que
@@ -687,64 +739,82 @@ Denotaremos
 $$\delta_s^{ (l+1)}=\frac{\partial D}{\partial a_s^{(l+1)}} h'(z_s^{(l+1)})$$
 
 de manera que la ecuación anterior es
-$$\frac{\partial D}{\partial a_j^{(l)}} = \sum_{s=1}^{n_l}
-\delta_s^{(l+1)}\theta_{s,j}^{(l+1)}.$$
+\begin{equation}
+\frac{\partial D}{\partial a_j^{(l)}} = \sum_{s=1}^{n_{l+1}}
+\delta_s^{(l+1)}\theta_{s,j}^{(l+1)}.
+  (\#eq:delta-def)
+\end{equation}
 
 **Observación**
 Nótese que $\delta_s^{(l)} =\frac{\partial D}{\partial z_s^{(l+1)}}$, que nos 
-dice a dónde tenemos que mover la entrada derivada
-$z_s^{(l+1)}$ para reducir el error $D$. Cuando este valor es grande,
-implica que la 'contribución' al error del valor actual de $z_s^{(l+1)}$ es grande.
+dice *a dónde tenemos que mover la entrada derivada*
+$z_s^{(l+1)}$ *para reducir el error* $D$.
 Como $z_s^{(l+1)}$ es una entrada derivada que depende de parámetros $\theta$,
 esta cantidad también nos ayudará a entender cómo debemos cambiar los
 parámetros $\theta$ para disminuir el error.
 
 
-
+#### Paso 3: Construir fórmula recursiva para $\delta$ {-}
 
 Lo único que nos falta calcular entonces son las $\delta_s^{(l)}$. 
 
-Tenemos que si $l=2,\ldots,L-1$, entonces podemos escribir
+Tenemos que si $l=2,\ldots,L-1$, entonces podemos escribir (usando \@ref(eq:delta-def))
 como fórmula recursiva:
 
-$$\delta_j^{(l)} = \frac{\partial D}{\partial a_j^{l}} h'(z_j^{(l)})
-= \left (\sum_{s=1}^{n_l} \delta_s^{(l+1)} \theta_{s,j}^{(l+1)}\right ) h'(z_j^{(l)}),$$
+\begin{equation}
+\delta_j^{(l)} = \frac{\partial D}{\partial a_j^{l}} h'(z_j^{(l)})
+= \left (\sum_{s=1}^{n_l} \delta_s^{(l+1)} \theta_{s,j}^{(l+1)}\right ) h'(z_j^{(l)}),
+  (\#eq:delta-recursion)
+\end{equation}
+para $j=1,2,\ldots, n_{l}$.
 
 y para la última capa, tenemos que (demostrar!)
 
-$$\delta_j^{(L)}=p_j-y_j.$$
+$$\delta_1^{(L)}=p - y.$$
+
+
+Finalmente, usando \@ref(eq:parcial), obtenemos
+$$\frac{\partial D}{\partial \theta_{j,k}^{(l)}} = \delta_j^{(l)}a_k^{(l-1)},$$
+
+y con esto ya podemos hacer backpropagation para calcular el gradiente
+sobre cada caso de entrenamiento, y solo resta acumular para obtener el gradiente
+sobre la muestra de entrenamiento.
+
+Muchas veces es útil escribir una versión vectorizada (importante para implementar):
+
+#### Paso 4: Versión matricial {-}
 
 Ahora podemos escribir estas ecuaciones en forma vectorial. En primer lugar,
 $$\delta^{(L)}=p-y.$$
-Y además es fácil ver que ($\theta_{*}^{(l+1)}$ *sin* la columna correspondiente al sesgo):
+Y además se puede ver de la ecuación \@ref(eq:delta-recursion) que 
+($\Theta_{*}^{(l+1)}$ denota la matriz de pesos *sin* la columna correspondiente al sesgo):
 
-$$\delta^{(l)}=\left( \theta_{*}^{(l+1)}    \right)^t\delta^{(l+1)} \circ h'(z^{(l)})$$
+\begin{equation}
+\delta^{(l)}=\left( \Theta_{*}^{(l+1)}    \right)^t\delta^{(l+1)} \circ h'(z^{(l)})
+(\#eq:delta-recursion-mat)
+\end{equation}
 
 donde $\circ$ denota el producto componente a componente.
 
-finalmente
-$$\frac{\partial D}{\partial \theta_{j,k}^{(l)}} = \delta_j^{(l)}a_k^{(l-1)}$$
-
-Ahora todo ya está calculado. Lo interesante es que las $\delta^()$ se calculan
+Ahora todo ya está calculado. Lo interesante es que las $\delta^{(l)}$ se calculan
 de manera recursiva.
 
-```{block2, type='comentario'}
-**Backpropagation**
-Para $i=1,\ldots, n$, tomamos el dato de entrenamiento  $(x^i, y^i)$ y hacemos:
-\begin{enumerate}
+## Algoritmo
 
-1. Ponemos $a^{(1)}=x^i$ (vector de entradas, incluyendo 1).
-2. Calculamos $a^{(2)},a^{(3)},\ldots, a^{(L)}$ usando feed forward.
-3. Calculamos $\delta^{(L)}=a^{ (L)}-y^i$, y luego
-$\delta^{(L-1)},\ldots, \delta^{(2)}$ como en la sección anterior.
+```{block2, type='comentario'}
+**Backpropagation** Para problema de clasificación con regularización $\lambda\geq 0 $.
+Para $i=1,\ldots, N$, tomamos el dato de entrenamiento  $(x^{(i)}, y^{(i)})$ y hacemos:
+
+1. Ponemos $a^{(1)}=x^{(i)}$ (vector de entradas, incluyendo 1).
+2. Calculamos $a^{(2)},a^{(3)},\ldots, a^{(L)}$ usando feed forward para la entrada $x^{(i)}$
+3. Calculamos $\delta^{(L)}=a^{ (L)}-y^{(i)}$, y luego
+$\delta^{(L-1)},\ldots, \delta^{(2)}$ según la recursión \@ref(eq:delta-recursion).
 4. Acumulamos
 $\Delta_{j,k}^{(l)}=\Delta_{j,k}^{(l)} + \delta_j^{(l)}a_k^{(l-1)}$.
-
-
-Finalmente, ponemos, si $k\neq 0$,
-$$D_{j,k}^{(l)} = \frac{2}{n}\Delta_{j,k}^{(l)} + \lambda\theta_{j,k}^{(l)}$$
+5. Finalmente, ponemos, si $k\neq 0$,
+$$D_{j,k}^{(l)} = \frac{2}{N}\Delta_{j,k}^{(l)} + 2\lambda\theta_{j,k}^{(l)}$$
 y si $k=0$,
-$$D_{j,k}^{(l)} = \frac{2}{n}\Delta_{j,k}^{(l)} .$$
+$$D_{j,k}^{(l)} = \frac{2}{N}\Delta_{j,k}^{(l)} .$$
 Entonces:
 $$D_{j,k}^{(l)} =\frac{\partial D}{\partial \theta_{j,k}^{(l)}}.$$
 ```
@@ -767,7 +837,7 @@ de la devianza de entrenamiento como nuestro función objetivo:
 Para un problema de clasificación binaria con
 $y_i=0$ o $y_i=1$, ajustamos los pesos $\Theta^{(1)},\Theta^{(2)},\ldots, \Theta^{(L)}$
 de la red minimizando la devianza (penalizada) sobre la muestra de entrenamiento:
-$$D(\Theta^{(1)},\ldots,\Theta^{(L-1)}) = -\frac{2}{n}\sum_{i=1}^n y_i\log(p_1(x_i)) +(1-y_i)\log(1-p_1(x_i)) + \lambda \sum_{l=2}^{L} \sum_{k=1}^{n_{l-1}} \sum_{j=1}^{n_l}(\theta_{j,k}^{(l)})^2.$$
+$$D = -\frac{2}{n}\sum_{i=1}^n y_i\log(p_1(x_i)) +(1-y_i)\log(1-p_1(x_i)) + \lambda \sum_{l=2}^{L} \sum_{k=1}^{n_{l-1}} \sum_{j=1}^{n_l}(\theta_{j,k}^{(l)})^2.$$
 Este problema en general no es convexo y *puede tener múltiples mínimos*.
 ```
 
@@ -776,7 +846,8 @@ Por el momento hacemos unas observaciones acerca de este problema de minimizaci�
 
 - Hay varios algoritmos para minimizar esta devianza,
 algunos avanzados incluyendo información de segundo orden (como Newton), pero 
-actualmente la técnica más popular, para redes grandes, es descenso en gradiente. Más
+actualmente lsa técnicas más populares, para redes grandes, están 
+derivadas de descenso en gradiente. Más
 específicamente, una variación, que es *descenso estocástico*.
 
 - Para redes neuronales, el gradiente se calcula con un algoritmo que se llama
@@ -822,10 +893,6 @@ Se toman, por ejemplo, normales con media 0 y varianza chica.
 - Verificar convergencia del algoritmo a un mínimo local (o el algoritmo no está mejorando).
 - Predecir usando el modelo ajustado. 
 
-El proceso de aprendizaje de las redes es más difícil que lo que hemos
-visto antes. En primer lugar, no está definido del todo, pues típicamente
-los algoritmos que usamos encuentran mínimos locales, y pueden variar
-de corrida a corrida.
 
 Finalmente, podemos probar distintas arquitecturas y valores del parámetros de regularización,
 para afinar estos parámetros según validación cruzada o una muestra de validación.
