@@ -10,7 +10,9 @@ trabajo manual.
 Por ejemplo, si tenemos unas 100 entradas numéricas, al crear todas las interacciones 
 $x_i x_j$ y los cuadrados $x_i^2$ terminamos con unas 5150 variables. Para el problema de dígitos (256 entradas o pixeles) terminaríamos con unas 32 mil entradas adicionales. Aún cuando es posible regularizar, en estos casos suena más conveniente construir entradas derivadas a partir de los datos.
 
-Para hacer esto, consideramos entradas $X_1, . . . , X_p$, y supongamos que tenemos un problema de clasificación binaria, con $G = 1$ o $G = 0$. Aunque hay muchas 
+Para hacer esto, consideramos entradas $X_1, . . . , X_p$, y 
+supongamos que tenemos un problema de clasificación binaria, 
+con $G = 1$ o $G = 0$. Aunque hay muchas 
 maneras de construir entradas derivadas, una
 manera simple sería construir $m$ nuevas entradas mediante:  
 
@@ -29,7 +31,7 @@ $$p_1(x) = h \left ( \beta_0 + \sum_{j=1}^m \beta_ja_j
 Podemos representar este esquema con una red dirigida  ($m=3$ variables derivadas):
 
 
-<img src="07-redes-neuronales_files/figure-html/unnamed-chunk-1-1.png" width="500" />
+<img src="07-redes-neuronales_files/figure-html/unnamed-chunk-2-1.png" width="500" />
 
 **Observaciones:**
 
@@ -74,7 +76,7 @@ g <- qplot(x, p, geom='line')
 g + geom_point(data = datos, aes(x = x_1, y = g_1), colour = 'red')
 ```
 
-<img src="07-redes-neuronales_files/figure-html/unnamed-chunk-2-1.png" width="672" />
+<img src="07-redes-neuronales_files/figure-html/unnamed-chunk-3-1.png" width="480" />
 
 donde adicionalmente graficamos 30 datos simulados.  Recordamos que queremos
 ajustar la curva roja, que da la probabilidad condicional de clase.
@@ -87,7 +89,7 @@ Suponamos entonces que pensamos crear dos entradas $a_1$ y $a_2$, funciones
 de $x_1$, y luego predecir $g.1$, la clase, en función de estas dos entradas.
 Por ejemplo, podríamos tomar:
 
-<img src="07-redes-neuronales_files/figure-html/unnamed-chunk-3-1.png" width="500" />
+<img src="07-redes-neuronales_files/figure-html/unnamed-chunk-4-1.png" width="500" />
 
 donde hacemos una regresión logística para predecir $G$ mediante
 $$p_1(a) = h(\beta_0 + \beta_1a_1+\beta_2 a_2),$$
@@ -111,7 +113,7 @@ dat_a_2 <- dat_a %>% gather(variable, valor, a_1:a_2)
 ggplot(dat_a_2, aes(x=x, y=valor, colour=variable, group=variable)) + geom_line()
 ```
 
-<img src="07-redes-neuronales_files/figure-html/unnamed-chunk-5-1.png" width="672" />
+<img src="07-redes-neuronales_files/figure-html/unnamed-chunk-6-1.png" width="480" />
 
 Si las escalamos y sumamos, obtenemos
 
@@ -121,7 +123,7 @@ dat_a_2 <- dat_a %>% gather(variable, valor, a_1:suma)
 ggplot(dat_a_2, aes(x=x, y=valor, colour=variable, group=variable)) + geom_line()
 ```
 
-<img src="07-redes-neuronales_files/figure-html/unnamed-chunk-6-1.png" width="672" />
+<img src="07-redes-neuronales_files/figure-html/unnamed-chunk-7-1.png" width="480" />
 
 y finalmente,  aplicando $h$:
 
@@ -132,7 +134,7 @@ geom_line(data=dat_p, aes(x=x,y=p), col='red') +ylim(c(0,1))+
    geom_point(data = datos, aes(x=x_1,y=g_1))
 ```
 
-<img src="07-redes-neuronales_files/figure-html/unnamed-chunk-7-1.png" width="672" />
+<img src="07-redes-neuronales_files/figure-html/unnamed-chunk-8-1.png" width="480" />
 que da un ajuste razonable. Este es un ejemplo de cómo
 la mezcla de dos funciones logísticas puede 
 replicar esta función con forma de chipote.
@@ -241,7 +243,7 @@ geom_line(data = dat_p, aes(x = x, y = p), col='red') +ylim(c(0,1))+
    geom_point(data = datos, aes(x = x_1, y = g_1))
 ```
 
-<img src="07-redes-neuronales_files/figure-html/unnamed-chunk-12-1.png" width="672" />
+<img src="07-redes-neuronales_files/figure-html/unnamed-chunk-13-1.png" width="480" />
 Los coeficientes estimados, que en este caso muchas veces se llaman
 *pesos*, son: 
 
@@ -318,7 +320,7 @@ geom_line(data = dat_p, aes(x = x, y = p), col='red') +ylim(c(0,1))+
    geom_point(data = datos, aes(x = x_1, y = g_1))
 ```
 
-<img src="07-redes-neuronales_files/figure-html/unnamed-chunk-15-1.png" width="672" />
+<img src="07-redes-neuronales_files/figure-html/unnamed-chunk-16-1.png" width="480" />
 
 
 y obtenemos un ajuste mucho más estable. Podemos también usar
@@ -388,7 +390,7 @@ dev(nn$wts)
 qplot(x, predict(nn, newdata=data.frame(x_1 = x)), geom='line')
 ```
 
-<img src="07-redes-neuronales_files/figure-html/unnamed-chunk-17-1.png" width="672" />
+<img src="07-redes-neuronales_files/figure-html/unnamed-chunk-18-1.png" width="480" />
 
 
 
@@ -413,7 +415,7 @@ g + geom_jitter(data = datos, aes(x=x.2,y=g.2), col ='black',
   position =position_jitter(height=0.05), alpha=0.4)
 ```
 
-<img src="07-redes-neuronales_files/figure-html/unnamed-chunk-18-1.png" width="672" />
+<img src="07-redes-neuronales_files/figure-html/unnamed-chunk-19-1.png" width="480" />
 
 ## Interacciones en redes neuronales
 
@@ -430,7 +432,7 @@ dat <- dat %>% mutate(p = p(x1, x2))
 ggplot(dat, aes(x=x1, y=x2)) + geom_tile(aes(fill=p))
 ```
 
-<img src="07-redes-neuronales_files/figure-html/unnamed-chunk-19-1.png" width="672" />
+<img src="07-redes-neuronales_files/figure-html/unnamed-chunk-20-1.png" width="480" />
 
 Esta función puede entenderse como un o exclusivo: la probabilidad es alta
 sólo cuando x1 y x2 tienen valores opuestos (x1 grande pero x2 chica y viceversa). 
@@ -613,7 +615,7 @@ dat <- dat %>% rowwise %>% mutate(p_red = feed_fow(nn$wts, c(x1, x2)))
 ggplot(dat, aes(x=x1, y=x2)) + geom_tile(aes(fill=p_red))
 ```
 
-<img src="07-redes-neuronales_files/figure-html/unnamed-chunk-24-1.png" width="672" />
+<img src="07-redes-neuronales_files/figure-html/unnamed-chunk-25-1.png" width="480" />
 
 **Observación**: ¿cómo funciona esta red? Consideremos la capa intermedia
 
@@ -731,7 +733,7 @@ Cuando todas las conexiones posibles de cada capa a la siguiente están presente
 decimos que la red es *completamente conexa*.</div>\EndKnitrBlock{comentario}
 
 
-<img src="07-redes-neuronales_files/figure-html/unnamed-chunk-28-1.png" width="672" />
+<img src="07-redes-neuronales_files/figure-html/unnamed-chunk-29-1.png" width="480" />
 
 Como vimos en el ejemplo de arriba, para hacer cálculos en la red empezamos
 con la primera capa, hacemos combinaciones lineales y aplicamos nuestra función
@@ -772,18 +774,18 @@ $$a_2^{(3)} = h(\theta_{2,0}^{(3)} + \theta_{2,1}^{(3)} a_1^{(2)}+ \theta_{2,2}^
 Como se ilustra en la siguiente gráfica:
 
 
-<img src="07-redes-neuronales_files/figure-html/unnamed-chunk-29-1.png" width="672" />
+<img src="07-redes-neuronales_files/figure-html/unnamed-chunk-30-1.png" width="480" />
 
 Para visualizar las ordenadas (que también se llaman  **sesgos** en este contexto),
 ponemos $a_0^2=1$.
-<img src="07-redes-neuronales_files/figure-html/unnamed-chunk-30-1.png" width="672" />
+<img src="07-redes-neuronales_files/figure-html/unnamed-chunk-31-1.png" width="480" />
 
 
 #### Ejemplo {-}
 
 Consideremos propagar con los siguientes pesos para capa 3 y valores de la
 capa 2 (en gris están los sesgos):
-<img src="07-redes-neuronales_files/figure-html/unnamed-chunk-31-1.png" width="672" />
+<img src="07-redes-neuronales_files/figure-html/unnamed-chunk-32-1.png" width="480" />
 
 
 Que en nuestra notación escribimos como
@@ -822,7 +824,7 @@ a_3
 ```
 
 
-<img src="07-redes-neuronales_files/figure-html/unnamed-chunk-34-1.png" width="672" />
+<img src="07-redes-neuronales_files/figure-html/unnamed-chunk-35-1.png" width="672" />
 
 
 
@@ -873,7 +875,9 @@ $$ a^{(2)} = h(\Theta^{(1)}a^{(1)})$$
 $$ a^{(l)} = h(\Theta^{(l)}a^{(l-1)})$$
 - Capa de salida:
 $$a^{(L)}= p = h(\Theta^{(L)}a^{(L-1)})$$
-donde $h$ se aplica componente a componente sobre los vectores correspondientes.</div>\EndKnitrBlock{comentario}
+donde $h$ se aplica componente a componente sobre los vectores correspondientes. Nótese
+que feed-foward consiste principalmente de mutliplicaciones de matrices con
+algunas aplicaciones de $h$</div>\EndKnitrBlock{comentario}
 
 
 
@@ -974,7 +978,7 @@ $$\frac{\partial D}{\partial a_j^{(l)}}= \sum_{s=1}^{n_l}
 \frac{\partial D}{\partial a_s^{(l+1)}}\frac{\partial  a_s^{(l+1)}}{\partial a_j^{(l)}},$$
 
 que se puede entender a partir de este diagrama:
-<img src="07-redes-neuronales_files/figure-html/unnamed-chunk-38-1.png" width="672" />
+<img src="07-redes-neuronales_files/figure-html/unnamed-chunk-39-1.png" width="672" />
 
 Nótese que la suma empieza en $s=1$, no en $s=0$, pues $a_0^{(l+1)}$ no depende
 de $a_k^{(l)}$.
@@ -1053,7 +1057,7 @@ donde $\circ$ denota el producto componente a componente.
 Ahora todo ya está calculado. Lo interesante es que las $\delta^{(l)}$ se calculan
 de manera recursiva.
 
-## Algoritmo
+### Algoritmo de backpropagation
 
 \BeginKnitrBlock{comentario}<div class="comentario">**Backpropagation** Para problema de clasificación con regularización $\lambda\geq 0 $.
 Para $i=1,\ldots, N$, tomamos el dato de entrenamiento  $(x^{(i)}, y^{(i)})$ y hacemos:
@@ -1069,9 +1073,11 @@ $$D_{j,k}^{(l)} = \frac{2}{N}\Delta_{j,k}^{(l)} + 2\lambda\theta_{j,k}^{(l)}$$
 y si $k=0$,
 $$D_{j,k}^{(l)} = \frac{2}{N}\Delta_{j,k}^{(l)} .$$
 Entonces:
-$$D_{j,k}^{(l)} =\frac{\partial D}{\partial \theta_{j,k}^{(l)}}.$$</div>\EndKnitrBlock{comentario}
+$$D_{j,k}^{(l)} =\frac{\partial D}{\partial \theta_{j,k}^{(l)}}.$$
 
-
+ Nótese
+que back-propagation consiste principalmente de mutliplicaciones de matrices con
+algunas aplicaciones de $h$ y acumulaciones, igual que feed-forward.</div>\EndKnitrBlock{comentario}
 
 
 
@@ -1096,9 +1102,14 @@ Por el momento hacemos unas observaciones acerca de este problema de minimizaci�
 
 - Hay varios algoritmos para minimizar esta devianza,
 algunos avanzados incluyendo información de segundo orden (como Newton), pero 
-actualmente lsa técnicas más populares, para redes grandes, están 
+actualmente las técnicas más populares, para redes grandes, están 
 derivadas de descenso en gradiente. Más
 específicamente, una variación, que es *descenso estocástico*.
+
+- Que el algoritmo depende principalmente de multiplicaciones de matrices y
+acumulaciones implica que puede escalarse de diversas maneras. Una es paralelizando
+sobre la muestra de entrenamiento (y acumular acumulados al final), pero quizá la
+más importante actualmente es la de multiplicaciones de matrices.
 
 - Para redes neuronales, el gradiente se calcula con un algoritmo que se llama
 *back-propagation*, que es una aplicación de la regla de la cadena para propagar
@@ -1147,7 +1158,523 @@ Se toman, por ejemplo, normales con media 0 y varianza chica.
 Finalmente, podemos probar distintas arquitecturas y valores del parámetros de regularización,
 para afinar estos parámetros según validación cruzada o una muestra de validación.
 
-### Tarea (para 18 de septiembre) {-}
+
+### Ejemplo
+
+Consideramos una arquitectura de dos capas para el problema de spam 
+
+
+```r
+if(Sys.info()['nodename'] == 'vainilla.local'){
+  # esto es por mi instalación particular de tensorflow - típicamente
+  # no es necesario que corras esta línea.
+  Sys.setenv(TENSORFLOW_PYTHON="/usr/local/bin/python")
+}
+library(keras)
+```
+
+```
+## 
+## Attaching package: 'keras'
+```
+
+```
+## The following object is masked from 'package:igraph':
+## 
+##     normalize
+```
+
+
+```r
+library(readr)
+library(tidyr)
+library(dplyr)
+spam_entrena <- read_csv('./datos/spam-entrena.csv')
+spam_prueba <- read_csv('./datos/spam-prueba.csv')
+set.seed(293)
+x_ent <- spam_entrena %>% select(-X1, -spam) %>% as.matrix
+x_ent_s <- scale(x_ent)
+x_valid <- spam_prueba %>% select(-X1, -spam) %>% as.matrix 
+x_valid_s <- x_valid %>%
+  scale(center = attr(x_ent_s, 'scaled:center'), scale = attr(x_ent_s,  'scaled:scale'))
+y_ent <- spam_entrena$spam
+y_valid <- spam_prueba$spam
+```
+
+
+Para definir la arquitectura de dos capas con:
+
+- 100 unidades en cada capa
+- función de activación sigmoide,
+- regularización L2 (ridge), 
+- salida logística ($p_1$), escribimos:
+
+
+
+```r
+set.seed(9232)
+modelo_tc <- keras_model_sequential() 
+# no es necesario asignar a nuevo objeto, modelo_tc es modificado al agregar capas
+modelo_tc %>% 
+  layer_dense(units = 100, activation = 'sigmoid', 
+              kernel_regularizer = regularizer_l2(l = 1e-8), 
+              kernel_initializer = initializer_random_uniform(minval = -0.5, maxval = 0.5),
+              input_shape=57) %>%
+  layer_dense(units = 100, activation = 'sigmoid', 
+              kernel_regularizer = regularizer_l2(l = 1e-8), 
+              kernel_initializer = initializer_random_uniform(minval = -0.5, maxval = 0.5)) %>%
+  layer_dense(units = 1, activation = 'sigmoid',
+              kernel_regularizer = regularizer_l2(l = 1e-8),
+              kernel_initializer = initializer_random_uniform(minval = -0.5, maxval = 0.5)
+)
+```
+
+Ahora difinimos la función de pérdida (devianza es equivalente a entropía
+cruzada binaria), y pedimos registrar porcentaje de correctos (accuracy) y compilamos
+en tensorflow:
+
+
+```r
+modelo_tc %>% compile(
+  loss = 'binary_crossentropy',
+  optimizer = optimizer_sgd(lr = 0.8),
+  metrics = c('accuracy'))
+```
+
+Iteramos con descenso en gradiente y monitoreamos el error de validación. Hacemos
+100 iteraciones de descenso en gradiente (épocas=100)
+
+
+```r
+iteraciones <- modelo_tc %>% fit(
+  x_ent_s, y_ent, 
+  epochs = 800, batch_size = 3067, #batch size mismo que nrow(x_ent_s) es descenso en grad.
+  verbose = 0,
+  validation_data = list(x_valid_s, y_valid)
+)
+```
+
+
+```r
+score <- modelo_tc %>% evaluate(x_valid_s, y_valid)
+score
+```
+
+```
+## $loss
+## [1] 0.605041
+## 
+## $acc
+## [1] 0.8252934
+```
+
+```r
+tab_confusion <- table(modelo_tc %>% predict_classes(x_valid_s),y_valid) 
+tab_confusion
+```
+
+```
+##    y_valid
+##       0   1
+##   0 920 261
+##   1   7 346
+```
+
+```r
+prop.table(tab_confusion, 2)
+```
+
+```
+##    y_valid
+##               0           1
+##   0 0.992448759 0.429983526
+##   1 0.007551241 0.570016474
+```
+
+
+```r
+df_iteraciones <- as.data.frame(iteraciones)
+ggplot(df_iteraciones, aes(x=epoch, y=value, colour=data, group=data)) + 
+  geom_line() + geom_point() + facet_wrap(~metric, ncol=1, scales = 'free')
+```
+
+<img src="07-redes-neuronales_files/figure-html/unnamed-chunk-48-1.png" width="480" />
+
+#### Ejercicio {-}
+Corre el ejemplo anterior con distintos parámetros de tasa de aprendizaje,
+número de unidades en las capas de intermedia y regularización (cambia
+arriba verbose=1 para monitorear al correr).
+
+### Hiperparámetros: búsqueda manual
+
+En búsqueda manual intentamos ajustar los parámetros haciendo experimentos
+sucesivos, monitoreando el error de entrenamiento y de validación. Los 
+principios básicos que tenemos que entender son los de sesgo (rigidez) y 
+varianza (flexibilidad) de los modelos y cómo se comportan estas cantidades
+cuando cambiamos parámetros, aunque es también importante experiencia e intuición.
+No hay una receta para hacer este proceso y garantizar llegar a una buena
+solución.
+
+Sin embargo, una guías para el proceso son las siguientes:
+
+- Comenzamos poniendo valores usuales para los parámetros (que sabemos
+de ejemplos similares, o valores como 0.0001 para regularización, 0.1 para
+tasa de aprendizaje, etc.)
+- Corremos algunas iteraciones y observamos en primer lugar que la tasa
+de aprendizaje sea apropiada (es el parámetro más importante!): queremos
+poner valores tan altos como sea posible sin que haya oscilaciones grandes
+del error de entrenamiento. Muchas veces, con una tasa demasiado alta,
+rápidamente llegamos a una región mala con gradientes bajos donde no podemos
+escapar (por ejemplo, con unidades saturadas) y parece que el modelo no
+aprende. Una tasa baja da convergencia
+muy lenta.
+- Otra razón por la que la red puede no aprender es por gradientes se anulan
+en unidades saturadas. Si nos movemos a regiones donde valores de la salida
+de una capa son muy positivos o negativos, podemos saturar las unidades
+sigmoides (que son planas para valores muy positivos o negativos). Este se puede
+componer poniendo valores más chicos para la inicialización de pesos, o reducir
+la tasa de aprendizaje. Para redes de muchas capas, los gradientes también
+pueden explotar (valores muy grandes cuando hacemos backprop sobre la red) y
+llevarnos a regiones malas de saturación.
+- Si el error de entrenamiento es muy alto y similar al de validación, 
+el modelo quizá no tiene capacidad de aprender por sesgo (rigidez). Podemos
+incrementar el número de unidades, disminuir el valor de regularización 
+(penalización L2 ), poner menos capas. También puede ser que 
+la tasa de aprendizaje sea demasiado baja, y nos estamos quedando "atorados"
+en una región relativamente plana donde los gradientes son chicos.
+- Si el error de entrenamiento es bajo, pero el de validación es alto,
+entonces quizá el modelo es demasiado flexible y está sobreajustando. 
+Podemos regularizar más
+incrementando la penalización L2, incrementar el número de unidades por capa
+o de capas.
+- Para redes neuronales grandes y problemas con ruido bajo,
+una estrategia es intentar obtener un error lo más chico
+posible para entrenamiento (la red aprende y/o memoriza), y después se afina
+para que la generalización (error de validación) sea buena.
+- Podemos pensar que el error de validación tiene dos partes: el error de entrenamiento
+ y el margen que hay entre error de entrenamiento y validación. Para reducir el error
+ de validación podemos intentar reducir el error de entrenamiento y/o reducir el margen.
+ Generalmente hay que ir balanceando flexibilidad con rigidez a través de varios
+ parámetros para terminar con un buen ajuste.
+ 
+ 
+ 
+#### Ejercicio {-}
+Haz algunos experimentos con las guías de arriba para el ejemplo de spam.
+
+
+### Hiperparámetros: búsqueda en grid
+
+Los hiperparámetros de un modelo son los que no se aprenden por
+el algoritmo principal. Por ejemplo, en regresión regularizada, los
+coeficientes son parámetros (se aprenden por descenso en gradiente), pero
+el parámetro de regularización $\lambda$ es un hiperparámetro.
+En redes neuronales tenemos más hiperparámetros: por ejemplo el número de capas, 
+el número
+de unidades por capa, y el parámetro de regularización.
+
+La primera técnica para poner los hiperparámetros es **búsqueda en grid**. En
+este método escogemos los valores de cada hiperparámetro y ajustamos modelos
+para todas las posibles combinaciones.
+
+
+
+
+```r
+hiperparams <- expand.grid(lambda = 10^seq(-14,-1, 3), n_capa = c(10, 50, 100, 200),
+                     lr = c(0.01, 0.1, 0.5, 0.9), n_iter = 800, 
+                     init_pesos = c(0.5), stringsAsFactors = FALSE)
+hiperparams$corrida <- 1:nrow(hiperparams)
+head(hiperparams)
+```
+
+```
+##   lambda n_capa   lr n_iter init_pesos corrida
+## 1  1e-14     10 0.01    800        0.5       1
+## 2  1e-11     10 0.01    800        0.5       2
+## 3  1e-08     10 0.01    800        0.5       3
+## 4  1e-05     10 0.01    800        0.5       4
+## 5  1e-02     10 0.01    800        0.5       5
+## 6  1e-14     50 0.01    800        0.5       6
+```
+
+```r
+nrow(hiperparams)
+```
+
+```
+## [1] 80
+```
+
+
+```r
+correr_modelo <- function(params, x_ent_s, y_ent, x_valid_s, y_valid){
+  modelo_tc <- keras_model_sequential() 
+  u <- params[['init_pesos']]
+  modelo_tc %>% 
+    layer_dense(units = params[['n_capa']], activation = 'sigmoid', 
+                kernel_regularizer = regularizer_l2(l = params[['lambda']]), 
+                kernel_initializer = initializer_random_uniform(minval = -u, 
+                                                                maxval = u),
+                input_shape=57) %>% 
+    layer_dense(units = params[['n_capa']], activation = 'sigmoid',
+                kernel_regularizer = regularizer_l2(l = params[['lambda']]),
+                kernel_initializer = initializer_random_uniform(minval = -u, 
+                                                                maxval = u)) %>% 
+    layer_dense(units = 1, activation = 'sigmoid',
+                kernel_regularizer = regularizer_l2(l = params[['lambda']]),
+                kernel_initializer = initializer_random_uniform(minval = -u, 
+                                                                maxval = u)) 
+  modelo_tc %>% compile(
+    loss = 'binary_crossentropy',
+    optimizer = optimizer_sgd(lr =params[['lr']]),
+    metrics = c('accuracy')
+  )
+  history <- modelo_tc %>% fit(
+    x_ent_s, y_ent, 
+    epochs = params[['n_iter']], batch_size = nrow(x_ent_s), 
+    verbose = 0 )
+  score <- modelo_tc %>% evaluate(x_valid_s, y_valid)
+  print(score)
+  score
+}
+```
+
+
+En este ejemplo reducimos artificialmente la muestra de entrenamiento 
+(para poder examinar las salidas más rápidamente)
+
+```r
+set.seed(34321)
+spam_entrena_1 <- sample_n(spam_entrena, 300)
+x_ent <- spam_entrena_1 %>% select(-X1, -spam) %>% as.matrix
+x_ent_s <- scale(x_ent)
+x_valid <- spam_prueba %>% select(-X1, -spam) %>% as.matrix 
+x_valid_s <- x_valid %>%
+  scale(center = attr(x_ent_s, 'scaled:center'), scale = attr(x_ent_s,  'scaled:scale'))
+y_ent <- spam_entrena_1$spam
+y_valid <- spam_prueba$spam
+
+nombres <- names(hiperparams)
+if(!usar_cache) {
+res <- lapply(1:nrow(hiperparams), function(i){
+  params <- as.vector(hiperparams[i,])
+  #names(params) <- nombres
+  #print(params$corrida)
+  salida <- correr_modelo(params, x_ent_s, y_ent, x_valid_s, y_valid)
+  salida
+  }) 
+  hiperparams$loss <- sapply(res, function(item){ item$loss})
+  hiperparams$acc <- sapply(res, function(item){ item$acc})
+  saveRDS(hiperparams, file = './cache_obj/spam-grid.rds')
+} else {
+  hiperparams <- readRDS(file = './cache_obj/spam-grid.rds')
+}
+```
+
+Ordenamos del mejor modelo al peor según la pérdida:
+
+
+```r
+arrange(hiperparams, loss)
+```
+
+```
+##    lambda n_capa   lr n_iter init_pesos corrida       loss       acc
+## 1   1e-11    200 0.10   1000        0.5      37  0.2481583 0.9009126
+## 2   1e-14    100 0.10   1000        0.5      31  0.2562495 0.8970013
+## 3   1e-08    100 0.10   1000        0.5      33  0.2571647 0.8976532
+## 4   1e-14    200 0.10   1000        0.5      36  0.2579564 0.8917862
+## 5   1e-14     50 0.10   1000        0.5      26  0.2582366 0.9009126
+## 6   1e-08     50 0.10   1000        0.5      28  0.2591391 0.8983051
+## 7   1e-11    100 0.10   1000        0.5      32  0.2613895 0.8956975
+## 8   1e-11     50 0.10   1000        0.5      27  0.2686344 0.8885267
+## 9   1e-05     50 0.10   1000        0.5      29  0.2710090 0.8930900
+## 10  1e-05    100 0.10   1000        0.5      34  0.2712956 0.9002608
+## 11  1e-08    200 0.10   1000        0.5      38  0.2731755 0.8885267
+## 12  1e-11     10 0.10   1000        0.5      22  0.2867449 0.8996089
+## 13  1e-05    200 0.10   1000        0.5      39  0.3068338 0.8891786
+## 14  1e-11    200 0.01   1000        0.5      17  0.3193306 0.8917862
+## 15  1e-05     10 0.50   1000        0.5      44  0.3256386 0.8911343
+## 16  1e-05     10 0.10   1000        0.5      24  0.3271994 0.8826597
+## 17  1e-14     10 0.50   1000        0.5      41  0.3317407 0.8937419
+## 18  1e-14    200 0.01   1000        0.5      16  0.3410997 0.8761408
+## 19  1e-08     10 0.50   1000        0.5      43  0.3462382 0.8911343
+## 20  1e-14     10 0.10   1000        0.5      21  0.3477954 0.8631030
+## 21  1e-08    200 0.01   1000        0.5      18  0.3485343 0.8754889
+## 22  1e-11    100 0.50   1000        0.5      52  0.3664196 0.9002608
+## 23  1e-11     50 0.50   1000        0.5      47  0.3706521 0.8924381
+## 24  1e-08     10 0.10   1000        0.5      23  0.3719068 0.8794003
+## 25  1e-11     10 0.50   1000        0.5      42  0.3739281 0.8885267
+## 26  1e-08     50 0.50   1000        0.5      48  0.3848782 0.8970013
+## 27  1e-05    200 0.01   1000        0.5      19  0.3900913 0.8741851
+## 28  1e-05    100 0.50   1000        0.5      54  0.3942697 0.8917862
+## 29  1e-11    200 0.50   1000        0.5      57  0.3944719 0.8924381
+## 30  1e-14    200 0.50   1000        0.5      56  0.4041260 0.8917862
+## 31  1e-14     50 0.50   1000        0.5      46  0.4048893 0.8898305
+## 32  1e-05     50 0.50   1000        0.5      49  0.4051351 0.8930900
+## 33  1e-08    100 0.50   1000        0.5      53  0.4114460 0.8826597
+## 34  1e-11     10 0.90   1000        0.5      62  0.4121712 0.8911343
+## 35  1e-11    100 0.01   1000        0.5      12  0.4145591 0.8500652
+## 36  1e-08    100 0.01   1000        0.5      13  0.4166564 0.8715776
+## 37  1e-05    200 0.50   1000        0.5      59  0.4217554 0.8859192
+## 38  1e-08     10 0.90   1000        0.5      63  0.4308938 0.8950456
+## 39  1e-14    100 0.01   1000        0.5      11  0.4331894 0.8513690
+## 40  1e-08    200 0.50   1000        0.5      58  0.4341628 0.8878748
+## 41  1e-14    100 0.50   1000        0.5      51  0.4395043 0.8904824
+## 42  1e-14     10 0.90   1000        0.5      61  0.4493026 0.8839635
+## 43  1e-05    100 0.01   1000        0.5      14  0.4506414 0.8533246
+## 44  1e-05     10 0.90   1000        0.5      64  0.4521649 0.8859192
+## 45  1e-14     50 0.01   1000        0.5       6  0.5007677 0.8239896
+## 46  1e-14     50 0.90   1000        0.5      66  0.5049587 0.8911343
+## 47  1e-05     50 0.90   1000        0.5      69  0.5063860 0.8852673
+## 48  1e-05    100 0.90   1000        0.5      74  0.5112725 0.8885267
+## 49  1e-11     50 0.01   1000        0.5       7  0.5154028 0.8005215
+## 50  1e-14    100 0.90   1000        0.5      71  0.5317523 0.8839635
+## 51  1e-11    100 0.90   1000        0.5      72  0.5360182 0.8852673
+## 52  1e-11     50 0.90   1000        0.5      67  0.5460550 0.8800522
+## 53  1e-08     50 0.90   1000        0.5      68  0.5462691 0.8820078
+## 54  1e-02     50 0.50   1000        0.5      50  0.5516786 0.8865711
+## 55  1e-05     50 0.01   1000        0.5       9  0.5565895 0.7757497
+## 56  1e-08    100 0.90   1000        0.5      73  0.5627451 0.8774446
+## 57  1e-02     10 0.90   1000        0.5      65  0.5706849 0.8807040
+## 58  1e-02     10 0.50   1000        0.5      45  0.5721383 0.8872229
+## 59  1e-02     50 0.90   1000        0.5      70  0.5810893 0.8318123
+## 60  1e-08     50 0.01   1000        0.5       8  0.5859619 0.7385919
+## 61  1e-02    100 0.50   1000        0.5      55  0.5985074 0.8181226
+## 62  1e-14     10 0.01   1000        0.5       1  0.6505038 0.6043025
+## 63  1e-02     10 0.10   1000        0.5      25  0.6578252 0.7581486
+## 64  1e-05     10 0.01   1000        0.5       4  0.6624338 0.6043025
+## 65  1e-08     10 0.01   1000        0.5       3  0.6625448 0.6043025
+## 66  1e-11     10 0.01   1000        0.5       2  0.6652442 0.6043025
+## 67  1e-02    100 0.90   1000        0.5      75  0.6818743 0.8129074
+## 68  1e-02     50 0.10   1000        0.5      30  0.7229234 0.8937419
+## 69  1e-02    200 0.50   1000        0.5      60  0.7256063 0.7777053
+## 70  1e-02    200 0.90   1000        0.5      80  0.8088126 0.7249022
+## 71  1e-02    100 0.10   1000        0.5      35  1.0643596 0.8865711
+## 72  1e-02     10 0.01   1000        0.5       5  1.1132954 0.6043025
+## 73  1e-02    200 0.10   1000        0.5      40  2.2588023 0.8878748
+## 74  1e-02     50 0.01   1000        0.5      10  3.8415042 0.6734029
+## 75  1e-14    200 0.90   1000        0.5      76  6.3778905 0.6043025
+## 76  1e-11    200 0.90   1000        0.5      77  6.3778905 0.6043025
+## 77  1e-08    200 0.90   1000        0.5      78  6.3779340 0.6043025
+## 78  1e-05    200 0.90   1000        0.5      79  6.4199690 0.6043025
+## 79  1e-02    100 0.01   1000        0.5      15  9.9440924 0.8318123
+## 80  1e-02    200 0.01   1000        0.5      20 31.6675895 0.8578879
+```
+
+Y podemos estudiar la dependencia de la pérdida según distintos parámetros.
+
+
+```r
+ggplot(hiperparams, aes(x = lambda, y = loss, group=n_capa, colour=factor(n_capa))) +
+  geom_line() + geom_point() + facet_wrap(~lr, ncol = 2)  + scale_x_log10() +
+  scale_y_log10()
+```
+
+<img src="07-redes-neuronales_files/figure-html/unnamed-chunk-53-1.png" width="480" />
+
+```r
+ggplot(filter(hiperparams, lambda < 1e-4, !(lr == 0.9 & n_capa==200)), 
+       aes(x = lambda, y = loss, group=n_capa, colour=factor(n_capa))) +
+  geom_line() + geom_point() + facet_wrap(~lr)  + scale_x_log10() 
+```
+
+<img src="07-redes-neuronales_files/figure-html/unnamed-chunk-53-2.png" width="480" />
+
+Por ejemplo:
+
+- lambda mayor a 0.001 es demasiado grande para cualquiera de estos modelo.
+- la tasa de aprendizaje parece ser mejor alrededor de 0.1
+- Para 200 capas, con una tasa de aprendizaje de 0.9 el algoritmo tiene
+problemas para descender.
+- Para menor número de unidades, en general podemos poner una tasa de aprendizaje
+más alta
+- En este ejemplo, podríamos escoger por ejemplo el modelo con 100 unidades y
+poca regularización
+
+
+
+### Hiperparámetros: búsqueda aleatoria
+
+En el ejemplo anterior pudimos ver que muchas de las iteraciones
+son iteraciones desperdiciadas.  Por ejemplo, el mal desempeño de un parámetro
+dado
+produce que no importen los valores de los otros parámetros. Sin embargo,
+corremos todas las combinaciones de los otros parámetros, las cuales todas se
+desempeñan mal.
+
+Especialmente cuando tenemos muchos parámetros, es más hacer eficiente hacer
+**búsqueda aleatoria**. Para hacer esto simulamos al azar valores de los parámetros
+a partir de una distribución de valores que queremos probar.
+
+Por ejemplo, para el número de unidades podríamos usar
+
+```r
+runif(1, 20, 200)
+```
+
+```
+## [1] 108.5708
+```
+
+y para la regularización (donde queremos probar varios órdenes de magnitud) 
+podríamos usar
+
+
+```r
+exp(runif(1, -8,-1))
+```
+
+```
+## [1] 0.009600437
+```
+
+
+
+
+```r
+n_pars <- 50
+set.seed(9123)
+if(!usar_cache){
+    hiperparams <- data_frame(lambda = exp(runif(n_pars, -12, -1)),
+                              n_capa = sample(seq(10,200, by=5), n_pars, replace = T),
+                              lr = runif(n_pars, 0.1,0.5), n_iter = 800,
+                              init_pesos = 0.5)
+    hiperparams$corrida <- 1:nrow(hiperparams)
+  
+    res_aleatorio <- lapply(1:nrow(hiperparams), function(i){
+    params <- as.vector(hiperparams[i,])
+    salida <- correr_modelo(params, x_ent_s, y_ent, x_valid_s, y_valid)
+    salida
+    })
+    hiperparams$loss <- sapply(res_aleatorio, function(item){ item$loss})
+    hiperparams$acc <- sapply(res_aleatorio, function(item){ item$acc})
+    saveRDS(hiperparams, file = './cache_obj/spam-aleatorio.rds')
+  } else {
+    hiperparams <- readRDS(file = './cache_obj/spam-aleatorio.rds')
+  }
+arrange(hiperparams, loss)
+```
+
+```
+## # A tibble: 50 x 8
+##          lambda n_capa        lr n_iter init_pesos corrida      loss
+##           <dbl>  <dbl>     <dbl>  <dbl>      <dbl>   <int>     <dbl>
+##  1 7.289530e-06     85 0.2122924    800        0.5       7 0.2805767
+##  2 7.091724e-06     15 0.3815221    800        0.5      26 0.3048462
+##  3 9.706553e-05     20 0.2870739    800        0.5      25 0.3109668
+##  4 1.058594e-05    175 0.1462802    800        0.5      12 0.3113215
+##  5 4.590335e-04     15 0.4848101    800        0.5      28 0.3683682
+##  6 9.086198e-04     20 0.4228769    800        0.5      21 0.3790317
+##  7 1.935991e-05    170 0.3280060    800        0.5      50 0.3803463
+##  8 6.383074e-06    145 0.4392468    800        0.5      33 0.3830605
+##  9 4.132102e-05    135 0.2779869    800        0.5      19 0.3973518
+## 10 2.886587e-05    160 0.2487041    800        0.5      32 0.3997921
+## # ... with 40 more rows, and 1 more variables: acc <dbl>
+```
+
+## Tarea (para 18 de septiembre) {-}
 
 - Instalar (keras para R)[https://keras.rstudio.com] (versión CPU).
 - Suscribirse a kaggle (pueden ser equipos de 2 máximo, entonces

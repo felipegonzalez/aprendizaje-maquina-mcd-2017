@@ -218,11 +218,15 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="7.4" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#feed-forward"><i class="fa fa-check"></i><b>7.4</b> Feed forward</a></li>
 <li class="chapter" data-level="7.5" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#backpropagation-calculo-del-gradiente"><i class="fa fa-check"></i><b>7.5</b> Backpropagation: cálculo del gradiente</a><ul>
 <li class="chapter" data-level="7.5.1" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#calculo-para-un-caso-de-entrenamiento"><i class="fa fa-check"></i><b>7.5.1</b> Cálculo para un caso de entrenamiento</a></li>
+<li class="chapter" data-level="7.5.2" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#algoritmo-de-backpropagation"><i class="fa fa-check"></i><b>7.5.2</b> Algoritmo de backpropagation</a></li>
 </ul></li>
-<li class="chapter" data-level="7.6" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#algoritmo"><i class="fa fa-check"></i><b>7.6</b> Algoritmo</a></li>
-<li class="chapter" data-level="7.7" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#ajuste-de-parametros-introduccion"><i class="fa fa-check"></i><b>7.7</b> Ajuste de parámetros (introducción)</a><ul>
+<li class="chapter" data-level="7.6" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#ajuste-de-parametros-introduccion"><i class="fa fa-check"></i><b>7.6</b> Ajuste de parámetros (introducción)</a><ul>
+<li class="chapter" data-level="7.6.1" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#ejemplo-31"><i class="fa fa-check"></i><b>7.6.1</b> Ejemplo</a></li>
+<li class="chapter" data-level="7.6.2" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#hiperparametros-busqueda-manual"><i class="fa fa-check"></i><b>7.6.2</b> Hiperparámetros: búsqueda manual</a></li>
+<li class="chapter" data-level="7.6.3" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#hiperparametros-busqueda-en-grid"><i class="fa fa-check"></i><b>7.6.3</b> Hiperparámetros: búsqueda en grid</a></li>
+<li class="chapter" data-level="7.6.4" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#hiperparametros-busqueda-aleatoria"><i class="fa fa-check"></i><b>7.6.4</b> Hiperparámetros: búsqueda aleatoria</a></li>
+</ul></li>
 <li class="chapter" data-level="" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#tarea-para-18-de-septiembre"><i class="fa fa-check"></i>Tarea (para 18 de septiembre)</a></li>
-</ul></li>
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Publicado con bookdown</a></li>
@@ -257,7 +261,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p>Modelamos ahora la probabilidad de clase 1 con regresión logística -pero en lugar de usar las entradas originales X usamos las entradas derivadas <span class="math inline">\(a_1, . . . , a_m\)</span>: <span class="math display">\[p_1(x) = h \left ( \beta_0 + \sum_{j=1}^m \beta_ja_j
 \right)\]</span></p>
 <p>Podemos representar este esquema con una red dirigida (<span class="math inline">\(m=3\)</span> variables derivadas):</p>
-<p><img src="07-redes-neuronales_files/figure-html/unnamed-chunk-1-1.png" width="500" /></p>
+<p><img src="07-redes-neuronales_files/figure-html/unnamed-chunk-2-1.png" width="500" /></p>
 <p><strong>Observaciones:</strong></p>
 <ul>
 <li>¿Por qué usar <span class="math inline">\(h\)</span> para las entradas derivadas <span class="math inline">\(a_k\)</span>? En primer lugar, nótese que si no transformamos con alguna función no lineal <span class="math inline">\(h\)</span>, el modelo final <span class="math inline">\(p_1\)</span> para la probabilidad condicional es el mismo que el de regresión logística (combinaciones lineales de combinaciones lineales son combinaciones lineales). Sin embargo, al transformar con <span class="math inline">\(h\)</span>, las <span class="math inline">\(x_j\)</span> contribuyen de manera no lineal a las entradas derivadas.</li>
@@ -279,10 +283,10 @@ datos &lt;-<span class="st"> </span><span class="kw">data.frame</span>(x_<span c
 dat_p &lt;-<span class="st"> </span><span class="kw">data.frame</span>(x, p)
 g &lt;-<span class="st"> </span><span class="kw">qplot</span>(x, p, <span class="dt">geom=</span><span class="st">&#39;line&#39;</span>)
 g <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>(<span class="dt">data =</span> datos, <span class="kw">aes</span>(<span class="dt">x =</span> x_<span class="dv">1</span>, <span class="dt">y =</span> g_<span class="dv">1</span>), <span class="dt">colour =</span> <span class="st">&#39;red&#39;</span>)</code></pre></div>
-<p><img src="07-redes-neuronales_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<p><img src="07-redes-neuronales_files/figure-html/unnamed-chunk-3-1.png" width="480" /></p>
 <p>donde adicionalmente graficamos 30 datos simulados. Recordamos que queremos ajustar la curva roja, que da la probabilidad condicional de clase. Podríamos ajustar un modelo de regresión logística expandiendo el espacio de entradas agregando <span class="math inline">\(x^2\)</span>, y obtendríamos un ajuste razonable.</p>
 <p>La idea aquí es que podemos crear entradas derivadas de forma automática. Suponamos entonces que pensamos crear dos entradas <span class="math inline">\(a_1\)</span> y <span class="math inline">\(a_2\)</span>, funciones de <span class="math inline">\(x_1\)</span>, y luego predecir <span class="math inline">\(g.1\)</span>, la clase, en función de estas dos entradas. Por ejemplo, podríamos tomar:</p>
-<p><img src="07-redes-neuronales_files/figure-html/unnamed-chunk-3-1.png" width="500" /></p>
+<p><img src="07-redes-neuronales_files/figure-html/unnamed-chunk-4-1.png" width="500" /></p>
 <p>donde hacemos una regresión logística para predecir <span class="math inline">\(G\)</span> mediante <span class="math display">\[p_1(a) = h(\beta_0 + \beta_1a_1+\beta_2 a_2),\]</span> <span class="math inline">\(a_1\)</span> y <span class="math inline">\(a_2\)</span> están dadas por <span class="math display">\[a_1(x)=h(\beta_{1,0} + \beta_{1,1} x_1),\]</span> <span class="math display">\[a_2(x)=h(\beta_{2,0} + \beta_{2,1} x_1).\]</span></p>
 <p>Por ejemplo, podríamos tomar</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">a_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">h</span>( <span class="dv">1</span> <span class="op">+</span><span class="st"> </span><span class="dv">2</span><span class="op">*</span>x)  <span class="co"># 2(x+1/2)</span>
@@ -291,18 +295,18 @@ a_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">h</sp
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dat_a &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">x =</span> x, <span class="dt">a_1 =</span> a_<span class="dv">1</span>, <span class="dt">a_2 =</span> a_<span class="dv">2</span>)
 dat_a_<span class="dv">2</span> &lt;-<span class="st"> </span>dat_a <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">gather</span>(variable, valor, a_<span class="dv">1</span><span class="op">:</span>a_<span class="dv">2</span>)
 <span class="kw">ggplot</span>(dat_a_<span class="dv">2</span>, <span class="kw">aes</span>(<span class="dt">x=</span>x, <span class="dt">y=</span>valor, <span class="dt">colour=</span>variable, <span class="dt">group=</span>variable)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_line</span>()</code></pre></div>
-<p><img src="07-redes-neuronales_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p><img src="07-redes-neuronales_files/figure-html/unnamed-chunk-6-1.png" width="480" /></p>
 <p>Si las escalamos y sumamos, obtenemos</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dat_a &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">x=</span>x, <span class="dt">a_1=</span><span class="op">-</span><span class="dv">4</span><span class="op">+</span><span class="dv">12</span><span class="op">*</span>a_<span class="dv">1</span>, <span class="dt">a_2=</span><span class="op">-</span><span class="dv">12</span><span class="op">*</span>a_<span class="dv">2</span>, <span class="dt">suma=</span><span class="op">-</span><span class="dv">4</span><span class="op">+</span><span class="dv">12</span><span class="op">*</span>a_<span class="dv">1</span><span class="op">-</span><span class="dv">12</span><span class="op">*</span>a_<span class="dv">2</span>)
 dat_a_<span class="dv">2</span> &lt;-<span class="st"> </span>dat_a <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">gather</span>(variable, valor, a_<span class="dv">1</span><span class="op">:</span>suma)
 <span class="kw">ggplot</span>(dat_a_<span class="dv">2</span>, <span class="kw">aes</span>(<span class="dt">x=</span>x, <span class="dt">y=</span>valor, <span class="dt">colour=</span>variable, <span class="dt">group=</span>variable)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_line</span>()</code></pre></div>
-<p><img src="07-redes-neuronales_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p><img src="07-redes-neuronales_files/figure-html/unnamed-chunk-7-1.png" width="480" /></p>
 <p>y finalmente, aplicando <span class="math inline">\(h\)</span>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dat_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">data.frame</span>(x, <span class="dt">p2=</span><span class="kw">h</span>(<span class="op">-</span><span class="dv">4</span> <span class="op">+</span><span class="st"> </span><span class="dv">12</span><span class="op">*</span>a_<span class="dv">1</span> <span class="op">-</span><span class="st"> </span><span class="dv">12</span><span class="op">*</span>a_<span class="dv">2</span>))
 <span class="kw">ggplot</span>(dat_<span class="dv">2</span>, <span class="kw">aes</span>(<span class="dt">x=</span>x, <span class="dt">y=</span>p2)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_line</span>()<span class="op">+</span>
 <span class="kw">geom_line</span>(<span class="dt">data=</span>dat_p, <span class="kw">aes</span>(<span class="dt">x=</span>x,<span class="dt">y=</span>p), <span class="dt">col=</span><span class="st">&#39;red&#39;</span>) <span class="op">+</span><span class="kw">ylim</span>(<span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>))<span class="op">+</span>
 <span class="st">   </span><span class="kw">geom_point</span>(<span class="dt">data =</span> datos, <span class="kw">aes</span>(<span class="dt">x=</span>x_<span class="dv">1</span>,<span class="dt">y=</span>g_<span class="dv">1</span>))</code></pre></div>
-<p><img src="07-redes-neuronales_files/figure-html/unnamed-chunk-7-1.png" width="672" /> que da un ajuste razonable. Este es un ejemplo de cómo la mezcla de dos funciones logísticas puede replicar esta función con forma de chipote.</p>
+<p><img src="07-redes-neuronales_files/figure-html/unnamed-chunk-8-1.png" width="480" /> que da un ajuste razonable. Este es un ejemplo de cómo la mezcla de dos funciones logísticas puede replicar esta función con forma de chipote.</p>
 </div>
 <div id="como-ajustar-los-parametros" class="section level3 unnumbered">
 <h3>¿Cómo ajustar los parámetros?</h3>
@@ -359,7 +363,7 @@ dat_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">dat
 <span class="kw">ggplot</span>(dat_<span class="dv">2</span>, <span class="kw">aes</span>(<span class="dt">x =</span> x, <span class="dt">y =</span> p_<span class="dv">2</span>)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_line</span>()<span class="op">+</span>
 <span class="kw">geom_line</span>(<span class="dt">data =</span> dat_p, <span class="kw">aes</span>(<span class="dt">x =</span> x, <span class="dt">y =</span> p), <span class="dt">col=</span><span class="st">&#39;red&#39;</span>) <span class="op">+</span><span class="kw">ylim</span>(<span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>))<span class="op">+</span>
 <span class="st">   </span><span class="kw">geom_point</span>(<span class="dt">data =</span> datos, <span class="kw">aes</span>(<span class="dt">x =</span> x_<span class="dv">1</span>, <span class="dt">y =</span> g_<span class="dv">1</span>))</code></pre></div>
-<p><img src="07-redes-neuronales_files/figure-html/unnamed-chunk-12-1.png" width="672" /> Los coeficientes estimados, que en este caso muchas veces se llaman <em>pesos</em>, son:</p>
+<p><img src="07-redes-neuronales_files/figure-html/unnamed-chunk-13-1.png" width="480" /> Los coeficientes estimados, que en este caso muchas veces se llaman <em>pesos</em>, son:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">beta</code></pre></div>
 <pre><code>## [1] -24.8192568  23.0201169  -8.4364869  -6.7633494   0.9849461 -14.0157655
 ## [7] -14.3394673</code></pre>
@@ -400,7 +404,7 @@ dat_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">dat
 <span class="kw">ggplot</span>(dat_<span class="dv">2</span>, <span class="kw">aes</span>(<span class="dt">x =</span> x, <span class="dt">y =</span> p_<span class="dv">2</span>)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_line</span>()<span class="op">+</span>
 <span class="kw">geom_line</span>(<span class="dt">data =</span> dat_p, <span class="kw">aes</span>(<span class="dt">x =</span> x, <span class="dt">y =</span> p), <span class="dt">col=</span><span class="st">&#39;red&#39;</span>) <span class="op">+</span><span class="kw">ylim</span>(<span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>))<span class="op">+</span>
 <span class="st">   </span><span class="kw">geom_point</span>(<span class="dt">data =</span> datos, <span class="kw">aes</span>(<span class="dt">x =</span> x_<span class="dv">1</span>, <span class="dt">y =</span> g_<span class="dv">1</span>))</code></pre></div>
-<p><img src="07-redes-neuronales_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
+<p><img src="07-redes-neuronales_files/figure-html/unnamed-chunk-16-1.png" width="480" /></p>
 <p>y obtenemos un ajuste mucho más estable. Podemos también usar la función <em>nnet</em> del paquete <em>nnet</em>. Ojo: en <em>nnet</em>, el error es la devianza no está normalizada por número de casos y dividida entre dos:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(nnet)
 <span class="kw">set.seed</span>(<span class="dv">12</span>)
@@ -429,7 +433,7 @@ nn &lt;-<span class="st"> </span><span class="kw">nnet</span>(g_<span class="dv"
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dev</span>(nn<span class="op">$</span>wts) </code></pre></div>
 <pre><code>## [1] 0.6357318</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">qplot</span>(x, <span class="kw">predict</span>(nn, <span class="dt">newdata=</span><span class="kw">data.frame</span>(<span class="dt">x_1 =</span> x)), <span class="dt">geom=</span><span class="st">&#39;line&#39;</span>)</code></pre></div>
-<p><img src="07-redes-neuronales_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
+<p><img src="07-redes-neuronales_files/figure-html/unnamed-chunk-18-1.png" width="480" /></p>
 <div id="ejercicio-red" class="section level4">
 <h4><span class="header-section-number">7.1.0.1</span> Ejercicio</h4>
 <p>Un ejemplo más complejo. Utiliza los siguientes datos, y agrega si es necesario variables derivadas <span class="math inline">\(a_3,a_4\)</span> en la capa oculta.</p>
@@ -446,7 +450,7 @@ dat.p &lt;-<span class="st"> </span><span class="kw">data.frame</span>(x,p)
 g &lt;-<span class="st"> </span><span class="kw">qplot</span>(x,p, <span class="dt">geom=</span><span class="st">&#39;line&#39;</span>, <span class="dt">col=</span><span class="st">&#39;red&#39;</span>)
 g <span class="op">+</span><span class="st"> </span><span class="kw">geom_jitter</span>(<span class="dt">data =</span> datos, <span class="kw">aes</span>(<span class="dt">x=</span>x.<span class="dv">2</span>,<span class="dt">y=</span>g.<span class="dv">2</span>), <span class="dt">col =</span><span class="st">&#39;black&#39;</span>,
   <span class="dt">position =</span><span class="kw">position_jitter</span>(<span class="dt">height=</span><span class="fl">0.05</span>), <span class="dt">alpha=</span><span class="fl">0.4</span>)</code></pre></div>
-<p><img src="07-redes-neuronales_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
+<p><img src="07-redes-neuronales_files/figure-html/unnamed-chunk-19-1.png" width="480" /></p>
 </div>
 </div>
 </div>
@@ -459,7 +463,7 @@ g <span class="op">+</span><span class="st"> </span><span class="kw">geom_jitter
 dat &lt;-<span class="st"> </span><span class="kw">expand.grid</span>(<span class="dt">x1 =</span> <span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="fl">0.05</span>), <span class="dt">x2 =</span> <span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="fl">0.05</span>))
 dat &lt;-<span class="st"> </span>dat <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">p =</span> <span class="kw">p</span>(x1, x2))
 <span class="kw">ggplot</span>(dat, <span class="kw">aes</span>(<span class="dt">x=</span>x1, <span class="dt">y=</span>x2)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_tile</span>(<span class="kw">aes</span>(<span class="dt">fill=</span>p))</code></pre></div>
-<p><img src="07-redes-neuronales_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
+<p><img src="07-redes-neuronales_files/figure-html/unnamed-chunk-20-1.png" width="480" /></p>
 <p>Esta función puede entenderse como un o exclusivo: la probabilidad es alta sólo cuando x1 y x2 tienen valores opuestos (x1 grande pero x2 chica y viceversa). No es posible modelar esta función mediante el modelo logístico (sin interacciones).</p>
 <p>Sin embargo, podemos incluir la interacción en el modelo logístico o intentar usar una red neuronal. Primero simulamos unos datos y probamos el modelo logístico con y sin interacciones:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">322</span>)
@@ -550,7 +554,7 @@ nn &lt;-<span class="st"> </span><span class="kw">nnet</span>(y <span class="op"
 <pre><code>## [1] 0.004197137</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dat &lt;-<span class="st"> </span>dat <span class="op">%&gt;%</span><span class="st"> </span>rowwise <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">p_red =</span> <span class="kw">feed_fow</span>(nn<span class="op">$</span>wts, <span class="kw">c</span>(x1, x2)))
 <span class="kw">ggplot</span>(dat, <span class="kw">aes</span>(<span class="dt">x=</span>x1, <span class="dt">y=</span>x2)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_tile</span>(<span class="kw">aes</span>(<span class="dt">fill=</span>p_red))</code></pre></div>
-<p><img src="07-redes-neuronales_files/figure-html/unnamed-chunk-24-1.png" width="672" /></p>
+<p><img src="07-redes-neuronales_files/figure-html/unnamed-chunk-25-1.png" width="480" /></p>
 <p><strong>Observación</strong>: ¿cómo funciona esta red? Consideremos la capa intermedia</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dat_entrada &lt;-<span class="st"> </span><span class="kw">data_frame</span>(<span class="dt">x_1=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">1</span>), <span class="dt">x_2=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">1</span>))
 a_<span class="dv">1</span> &lt;-<span class="st"> </span>dat_entrada <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">rowwise</span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">a_1=</span> <span class="kw">h</span>(<span class="kw">sum</span>(nn<span class="op">$</span>wts[<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>]<span class="op">*</span><span class="kw">c</span>(<span class="dv">1</span>,x_<span class="dv">1</span>,x_<span class="dv">2</span>) )))
@@ -620,7 +624,7 @@ capa_final</code></pre></div>
 Cuando todas las conexiones posibles de cada capa a la siguiente están presente, decimos que la red es <em>completamente conexa</em>.
 </div>
 
-<p><img src="07-redes-neuronales_files/figure-html/unnamed-chunk-28-1.png" width="672" /></p>
+<p><img src="07-redes-neuronales_files/figure-html/unnamed-chunk-29-1.png" width="480" /></p>
 <p>Como vimos en el ejemplo de arriba, para hacer cálculos en la red empezamos con la primera capa, hacemos combinaciones lineales y aplicamos nuestra función no lineal <span class="math inline">\(h\)</span>. Una vez que calculamos la segunda capa, podemos calcular la siguiente de la misma forma: combinaciones lineales y aplicación de <span class="math inline">\(h\)</span>. Y así sucesivamente hasta que llegamos a la capa final.</p>
 </div>
 <div id="notacion-1" class="section level2 unnumbered">
@@ -640,12 +644,12 @@ Cuando todas las conexiones posibles de cada capa a la siguiente están presente
 <p>En nuestro ejemplo, tenemos que en la capa <span class="math inline">\(l=3\)</span> hay dos unidades. Así que podemos calcular los valores <span class="math inline">\(a^{(3)}_1\)</span> y <span class="math inline">\(a^{(3)}_2\)</span>. Están dados por</p>
 <p><span class="math display">\[a_1^{(3)} = h(\theta_{1,0}^{(3)} + \theta_{1,1}^{(3)} a_1^{(2)}+ \theta_{1,2}^{(3)}a_2^{(2)}+ \theta_{1,3}^{(3)} a_3^{(2)})\]</span> <span class="math display">\[a_2^{(3)} = h(\theta_{2,0}^{(3)} + \theta_{2,1}^{(3)} a_1^{(2)}+ \theta_{2,2}^{(3)}a_2^{(2)}+ \theta_{2,3}^{(3)} a_3^{(2)})\]</span></p>
 <p>Como se ilustra en la siguiente gráfica:</p>
-<p><img src="07-redes-neuronales_files/figure-html/unnamed-chunk-29-1.png" width="672" /></p>
-<p>Para visualizar las ordenadas (que también se llaman <strong>sesgos</strong> en este contexto), ponemos <span class="math inline">\(a_0^2=1\)</span>. <img src="07-redes-neuronales_files/figure-html/unnamed-chunk-30-1.png" width="672" /></p>
+<p><img src="07-redes-neuronales_files/figure-html/unnamed-chunk-30-1.png" width="480" /></p>
+<p>Para visualizar las ordenadas (que también se llaman <strong>sesgos</strong> en este contexto), ponemos <span class="math inline">\(a_0^2=1\)</span>. <img src="07-redes-neuronales_files/figure-html/unnamed-chunk-31-1.png" width="480" /></p>
 </div>
 <div id="ejemplo-30" class="section level4 unnumbered">
 <h4>Ejemplo</h4>
-<p>Consideremos propagar con los siguientes pesos para capa 3 y valores de la capa 2 (en gris están los sesgos): <img src="07-redes-neuronales_files/figure-html/unnamed-chunk-31-1.png" width="672" /></p>
+<p>Consideremos propagar con los siguientes pesos para capa 3 y valores de la capa 2 (en gris están los sesgos): <img src="07-redes-neuronales_files/figure-html/unnamed-chunk-32-1.png" width="480" /></p>
 <p>Que en nuestra notación escribimos como <span class="math display">\[a^{(2)}_0 = 1, a^{(2)}_1 = -2, a^{(2)}_2 = 5\]</span> y los pesos son, para la primera unidad: <span class="math display">\[\theta^{(3)}_{0,1} = 3,  \,\,\, \theta^{(3)}_{1,1} = 1,\,\,\,\theta^{(3)}_{2,1} = -1\]</span> y para la segunda unidad <span class="math display">\[\theta^{(3)}_{0,2} = 1,  \,\,\, \theta^{(3)}_{1,2} = 2,\,\,\,\theta^{(3)}_{2,2} = 0.5\]</span> Y ahora queremos calcular los valores que toman las unidades de la capa 3, que son <span class="math inline">\(a^{(3)}_1\)</span> y <span class="math inline">\(a^{(3)}_2\)</span>$</p>
 <p>Para hacer feed forward a la siguiente capa, hacemos entonces</p>
 <p><span class="math display">\[a^{(3)}_1 = h(3 + a^{(2)}_1 - a^{(2)}_2),\]</span> <span class="math display">\[a^{(3)}_2 = h(1 + 2a^{(2)}_1 + 0.5a^{(2)}_2),\]</span></p>
@@ -657,7 +661,7 @@ theta_2_<span class="dv">2</span> =<span class="st"> </span><span class="kw">c</
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">a_<span class="dv">3</span> &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>, <span class="kw">h</span>(<span class="kw">sum</span>(theta_2_<span class="dv">1</span><span class="op">*</span>a_<span class="dv">2</span>)),<span class="kw">h</span>(<span class="kw">sum</span>(theta_2_<span class="dv">2</span><span class="op">*</span>a_<span class="dv">2</span>))) <span class="co"># ponemos un 1 al principio</span>
 a_<span class="dv">3</span></code></pre></div>
 <pre><code>## [1] 1.00000000 0.01798621 0.37754067</code></pre>
-<p><img src="07-redes-neuronales_files/figure-html/unnamed-chunk-34-1.png" width="672" /></p>
+<p><img src="07-redes-neuronales_files/figure-html/unnamed-chunk-35-1.png" width="672" /></p>
 </div>
 </div>
 <div id="feed-forward" class="section level2">
@@ -688,7 +692,7 @@ Para la primera capa, escribimos las variables de entrada: <span class="math dis
 <li>Capa 1 (vector de entradas) <span class="math display">\[ a^{(1)} = x\]</span></li>
 <li>Capa 2 <span class="math display">\[ a^{(2)} = h(\Theta^{(1)}a^{(1)})\]</span></li>
 <li>Capa <span class="math inline">\(l\)</span> (oculta) <span class="math display">\[ a^{(l)} = h(\Theta^{(l)}a^{(l-1)})\]</span></li>
-<li>Capa de salida: <span class="math display">\[a^{(L)}= p = h(\Theta^{(L)}a^{(L-1)})\]</span> donde <span class="math inline">\(h\)</span> se aplica componente a componente sobre los vectores correspondientes.
+<li>Capa de salida: <span class="math display">\[a^{(L)}= p = h(\Theta^{(L)}a^{(L-1)})\]</span> donde <span class="math inline">\(h\)</span> se aplica componente a componente sobre los vectores correspondientes. Nótese que feed-foward consiste principalmente de mutliplicaciones de matrices con algunas aplicaciones de <span class="math inline">\(h\)</span>
 </div>
 </li>
 </ul>
@@ -734,7 +738,7 @@ y como <span class="math display">\[a_j^{(l)} = h(z_j^{(l)}) = h\left (\sum_{k=0
 <p>Para obtener una fórmula recursiva para esta cantidad (hacia atrás), aplicamos otra vez regla de la cadena, pero con respecto a la capa <span class="math inline">\(l+1\)</span> (ojo: queremos obtener una fórmula recursiva!):</p>
 <p><span class="math display">\[\frac{\partial D}{\partial a_j^{(l)}}= \sum_{s=1}^{n_l}
 \frac{\partial D}{\partial a_s^{(l+1)}}\frac{\partial  a_s^{(l+1)}}{\partial a_j^{(l)}},\]</span></p>
-<p>que se puede entender a partir de este diagrama: <img src="07-redes-neuronales_files/figure-html/unnamed-chunk-38-1.png" width="672" /></p>
+<p>que se puede entender a partir de este diagrama: <img src="07-redes-neuronales_files/figure-html/unnamed-chunk-39-1.png" width="672" /></p>
 <p>Nótese que la suma empieza en <span class="math inline">\(s=1\)</span>, no en <span class="math inline">\(s=0\)</span>, pues <span class="math inline">\(a_0^{(l+1)}\)</span> no depende de <span class="math inline">\(a_k^{(l)}\)</span>.</p>
 <p>En este caso los elementos de la suma no se anulan necesariamente. Primero consideramos la derivada de:</p>
 <p><span class="math display">\[\frac{\partial  a_s^{(l+1)}}{\partial a_j^{(l)}}=h&#39;(z_s^{(l+1)})\theta_{s,j}^{(l+1)},\]</span></p>
@@ -777,9 +781,8 @@ de manera que la ecuación anterior es
 <p>Ahora todo ya está calculado. Lo interesante es que las <span class="math inline">\(\delta^{(l)}\)</span> se calculan de manera recursiva.</p>
 </div>
 </div>
-</div>
-<div id="algoritmo" class="section level2">
-<h2><span class="header-section-number">7.6</span> Algoritmo</h2>
+<div id="algoritmo-de-backpropagation" class="section level3">
+<h3><span class="header-section-number">7.5.2</span> Algoritmo de backpropagation</h3>
 
 <div class="comentario">
 <p><strong>Backpropagation</strong> Para problema de clasificación con regularización $0 $. Para <span class="math inline">\(i=1,\ldots, N\)</span>, tomamos el dato de entrenamiento <span class="math inline">\((x^{(i)}, y^{(i)})\)</span> y hacemos:</p>
@@ -788,13 +791,15 @@ de manera que la ecuación anterior es
 <li>Calculamos <span class="math inline">\(a^{(2)},a^{(3)},\ldots, a^{(L)}\)</span> usando feed forward para la entrada <span class="math inline">\(x^{(i)}\)</span></li>
 <li>Calculamos <span class="math inline">\(\delta^{(L)}=a^{ (L)}-y^{(i)}\)</span>, y luego <span class="math inline">\(\delta^{(L-1)},\ldots, \delta^{(2)}\)</span> según la recursión <a href="redes-neuronales-parte-1.html#eq:delta-recursion">(7.3)</a>.</li>
 <li>Acumulamos <span class="math inline">\(\Delta_{j,k}^{(l)}=\Delta_{j,k}^{(l)} + \delta_j^{(l)}a_k^{(l-1)}\)</span>.</li>
-<li>Finalmente, ponemos, si <span class="math inline">\(k\neq 0\)</span>, <span class="math display">\[D_{j,k}^{(l)} = \frac{2}{N}\Delta_{j,k}^{(l)} + 2\lambda\theta_{j,k}^{(l)}\]</span> y si <span class="math inline">\(k=0\)</span>, <span class="math display">\[D_{j,k}^{(l)} = \frac{2}{N}\Delta_{j,k}^{(l)} .\]</span> Entonces: <span class="math display">\[D_{j,k}^{(l)} =\frac{\partial D}{\partial \theta_{j,k}^{(l)}}.\]</span>
-</div>
-</li>
+<li>Finalmente, ponemos, si <span class="math inline">\(k\neq 0\)</span>, <span class="math display">\[D_{j,k}^{(l)} = \frac{2}{N}\Delta_{j,k}^{(l)} + 2\lambda\theta_{j,k}^{(l)}\]</span> y si <span class="math inline">\(k=0\)</span>, <span class="math display">\[D_{j,k}^{(l)} = \frac{2}{N}\Delta_{j,k}^{(l)} .\]</span> Entonces: <span class="math display">\[D_{j,k}^{(l)} =\frac{\partial D}{\partial \theta_{j,k}^{(l)}}.\]</span></li>
 </ol>
+Nótese que back-propagation consiste principalmente de mutliplicaciones de matrices con algunas aplicaciones de <span class="math inline">\(h\)</span> y acumulaciones, igual que feed-forward.
+</div>
+
+</div>
 </div>
 <div id="ajuste-de-parametros-introduccion" class="section level2">
-<h2><span class="header-section-number">7.7</span> Ajuste de parámetros (introducción)</h2>
+<h2><span class="header-section-number">7.6</span> Ajuste de parámetros (introducción)</h2>
 <p>Consideramos la versión con regularización ridge (también llamada L2) de la devianza de entrenamiento como nuestro función objetivo:</p>
 
 <div class="comentario">
@@ -803,7 +808,8 @@ de manera que la ecuación anterior es
 
 <p>Veremos el proceso de ajuste, selección de arquitectura, etc. más adelante. Por el momento hacemos unas observaciones acerca de este problema de minimización:</p>
 <ul>
-<li><p>Hay varios algoritmos para minimizar esta devianza, algunos avanzados incluyendo información de segundo orden (como Newton), pero actualmente lsa técnicas más populares, para redes grandes, están derivadas de descenso en gradiente. Más específicamente, una variación, que es <em>descenso estocástico</em>.</p></li>
+<li><p>Hay varios algoritmos para minimizar esta devianza, algunos avanzados incluyendo información de segundo orden (como Newton), pero actualmente las técnicas más populares, para redes grandes, están derivadas de descenso en gradiente. Más específicamente, una variación, que es <em>descenso estocástico</em>.</p></li>
+<li><p>Que el algoritmo depende principalmente de multiplicaciones de matrices y acumulaciones implica que puede escalarse de diversas maneras. Una es paralelizando sobre la muestra de entrenamiento (y acumular acumulados al final), pero quizá la más importante actualmente es la de multiplicaciones de matrices.</p></li>
 <li><p>Para redes neuronales, el gradiente se calcula con un algoritmo que se llama <em>back-propagation</em>, que es una aplicación de la regla de la cadena para propagar errores desde la capa de salida a lo largo de todas las capas para ajustar los pesos y sesgos.</p></li>
 <li><p>En estos problemas no buscamos el mínimo global, sino un mínimo local de buen desempeño. Puede haber múltiples mínimos, puntos silla, regiones relativamente planas, precipicios (curvatura alta). Todo esto dificulta el entrenamiento de redes neuronales grandes. Para redes grandes, ni siquiera esperamos a alcanzar un mínimo local, sino que nos detenemos prematuramente cuando obtenemos el mejor desempeño posible.</p></li>
 <li><p>Nótese que la simetría implica que podemos obtener la misma red cambiando pesos entre neuronas y las conexiones correspondientes. Esto implica que necesariamente hay varios mínimos.</p></li>
@@ -820,8 +826,336 @@ de manera que la ecuación anterior es
 <li>Predecir usando el modelo ajustado.</li>
 </ul>
 <p>Finalmente, podemos probar distintas arquitecturas y valores del parámetros de regularización, para afinar estos parámetros según validación cruzada o una muestra de validación.</p>
-<div id="tarea-para-18-de-septiembre" class="section level3 unnumbered">
-<h3>Tarea (para 18 de septiembre)</h3>
+<div id="ejemplo-31" class="section level3">
+<h3><span class="header-section-number">7.6.1</span> Ejemplo</h3>
+<p>Consideramos una arquitectura de dos capas para el problema de spam</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="cf">if</span>(<span class="kw">Sys.info</span>()[<span class="st">&#39;nodename&#39;</span>] <span class="op">==</span><span class="st"> &#39;vainilla.local&#39;</span>){
+  <span class="co"># esto es por mi instalación particular de tensorflow - típicamente</span>
+  <span class="co"># no es necesario que corras esta línea.</span>
+  <span class="kw">Sys.setenv</span>(<span class="dt">TENSORFLOW_PYTHON=</span><span class="st">&quot;/usr/local/bin/python&quot;</span>)
+}
+<span class="kw">library</span>(keras)</code></pre></div>
+<pre><code>## 
+## Attaching package: &#39;keras&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:igraph&#39;:
+## 
+##     normalize</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(readr)
+<span class="kw">library</span>(tidyr)
+<span class="kw">library</span>(dplyr)
+spam_entrena &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&#39;./datos/spam-entrena.csv&#39;</span>)
+spam_prueba &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&#39;./datos/spam-prueba.csv&#39;</span>)
+<span class="kw">set.seed</span>(<span class="dv">293</span>)
+x_ent &lt;-<span class="st"> </span>spam_entrena <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="op">-</span>X1, <span class="op">-</span>spam) <span class="op">%&gt;%</span><span class="st"> </span>as.matrix
+x_ent_s &lt;-<span class="st"> </span><span class="kw">scale</span>(x_ent)
+x_valid &lt;-<span class="st"> </span>spam_prueba <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="op">-</span>X1, <span class="op">-</span>spam) <span class="op">%&gt;%</span><span class="st"> </span>as.matrix 
+x_valid_s &lt;-<span class="st"> </span>x_valid <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">scale</span>(<span class="dt">center =</span> <span class="kw">attr</span>(x_ent_s, <span class="st">&#39;scaled:center&#39;</span>), <span class="dt">scale =</span> <span class="kw">attr</span>(x_ent_s,  <span class="st">&#39;scaled:scale&#39;</span>))
+y_ent &lt;-<span class="st"> </span>spam_entrena<span class="op">$</span>spam
+y_valid &lt;-<span class="st"> </span>spam_prueba<span class="op">$</span>spam</code></pre></div>
+<p>Para definir la arquitectura de dos capas con:</p>
+<ul>
+<li>100 unidades en cada capa</li>
+<li>función de activación sigmoide,</li>
+<li>regularización L2 (ridge),</li>
+<li>salida logística (<span class="math inline">\(p_1\)</span>), escribimos:</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">9232</span>)
+modelo_tc &lt;-<span class="st"> </span><span class="kw">keras_model_sequential</span>() 
+<span class="co"># no es necesario asignar a nuevo objeto, modelo_tc es modificado al agregar capas</span>
+modelo_tc <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">layer_dense</span>(<span class="dt">units =</span> <span class="dv">100</span>, <span class="dt">activation =</span> <span class="st">&#39;sigmoid&#39;</span>, 
+              <span class="dt">kernel_regularizer =</span> <span class="kw">regularizer_l2</span>(<span class="dt">l =</span> <span class="fl">1e-8</span>), 
+              <span class="dt">kernel_initializer =</span> <span class="kw">initializer_random_uniform</span>(<span class="dt">minval =</span> <span class="op">-</span><span class="fl">0.5</span>, <span class="dt">maxval =</span> <span class="fl">0.5</span>),
+              <span class="dt">input_shape=</span><span class="dv">57</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">layer_dense</span>(<span class="dt">units =</span> <span class="dv">100</span>, <span class="dt">activation =</span> <span class="st">&#39;sigmoid&#39;</span>, 
+              <span class="dt">kernel_regularizer =</span> <span class="kw">regularizer_l2</span>(<span class="dt">l =</span> <span class="fl">1e-8</span>), 
+              <span class="dt">kernel_initializer =</span> <span class="kw">initializer_random_uniform</span>(<span class="dt">minval =</span> <span class="op">-</span><span class="fl">0.5</span>, <span class="dt">maxval =</span> <span class="fl">0.5</span>)) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">layer_dense</span>(<span class="dt">units =</span> <span class="dv">1</span>, <span class="dt">activation =</span> <span class="st">&#39;sigmoid&#39;</span>,
+              <span class="dt">kernel_regularizer =</span> <span class="kw">regularizer_l2</span>(<span class="dt">l =</span> <span class="fl">1e-8</span>),
+              <span class="dt">kernel_initializer =</span> <span class="kw">initializer_random_uniform</span>(<span class="dt">minval =</span> <span class="op">-</span><span class="fl">0.5</span>, <span class="dt">maxval =</span> <span class="fl">0.5</span>)
+)</code></pre></div>
+<p>Ahora difinimos la función de pérdida (devianza es equivalente a entropía cruzada binaria), y pedimos registrar porcentaje de correctos (accuracy) y compilamos en tensorflow:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">modelo_tc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">compile</span>(
+  <span class="dt">loss =</span> <span class="st">&#39;binary_crossentropy&#39;</span>,
+  <span class="dt">optimizer =</span> <span class="kw">optimizer_sgd</span>(<span class="dt">lr =</span> <span class="fl">0.8</span>),
+  <span class="dt">metrics =</span> <span class="kw">c</span>(<span class="st">&#39;accuracy&#39;</span>))</code></pre></div>
+<p>Iteramos con descenso en gradiente y monitoreamos el error de validación. Hacemos 100 iteraciones de descenso en gradiente (épocas=100)</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">iteraciones &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">fit</span>(
+  x_ent_s, y_ent, 
+  <span class="dt">epochs =</span> <span class="dv">800</span>, <span class="dt">batch_size =</span> <span class="dv">3067</span>, <span class="co">#batch size mismo que nrow(x_ent_s) es descenso en grad.</span>
+  <span class="dt">verbose =</span> <span class="dv">0</span>,
+  <span class="dt">validation_data =</span> <span class="kw">list</span>(x_valid_s, y_valid)
+)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">score &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">evaluate</span>(x_valid_s, y_valid)
+score</code></pre></div>
+<pre><code>## $loss
+## [1] 0.605041
+## 
+## $acc
+## [1] 0.8252934</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tab_confusion &lt;-<span class="st"> </span><span class="kw">table</span>(modelo_tc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">predict_classes</span>(x_valid_s),y_valid) 
+tab_confusion</code></pre></div>
+<pre><code>##    y_valid
+##       0   1
+##   0 920 261
+##   1   7 346</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">prop.table</span>(tab_confusion, <span class="dv">2</span>)</code></pre></div>
+<pre><code>##    y_valid
+##               0           1
+##   0 0.992448759 0.429983526
+##   1 0.007551241 0.570016474</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df_iteraciones &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(iteraciones)
+<span class="kw">ggplot</span>(df_iteraciones, <span class="kw">aes</span>(<span class="dt">x=</span>epoch, <span class="dt">y=</span>value, <span class="dt">colour=</span>data, <span class="dt">group=</span>data)) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span><span class="kw">facet_wrap</span>(<span class="op">~</span>metric, <span class="dt">ncol=</span><span class="dv">1</span>, <span class="dt">scales =</span> <span class="st">&#39;free&#39;</span>)</code></pre></div>
+<p><img src="07-redes-neuronales_files/figure-html/unnamed-chunk-48-1.png" width="480" /></p>
+<div id="ejercicio-6" class="section level4 unnumbered">
+<h4>Ejercicio</h4>
+<p>Corre el ejemplo anterior con distintos parámetros de tasa de aprendizaje, número de unidades en las capas de intermedia y regularización (cambia arriba verbose=1 para monitorear al correr).</p>
+</div>
+</div>
+<div id="hiperparametros-busqueda-manual" class="section level3">
+<h3><span class="header-section-number">7.6.2</span> Hiperparámetros: búsqueda manual</h3>
+<p>En búsqueda manual intentamos ajustar los parámetros haciendo experimentos sucesivos, monitoreando el error de entrenamiento y de validación. Los principios básicos que tenemos que entender son los de sesgo (rigidez) y varianza (flexibilidad) de los modelos y cómo se comportan estas cantidades cuando cambiamos parámetros, aunque es también importante experiencia e intuición. No hay una receta para hacer este proceso y garantizar llegar a una buena solución.</p>
+<p>Sin embargo, una guías para el proceso son las siguientes:</p>
+<ul>
+<li>Comenzamos poniendo valores usuales para los parámetros (que sabemos de ejemplos similares, o valores como 0.0001 para regularización, 0.1 para tasa de aprendizaje, etc.)</li>
+<li>Corremos algunas iteraciones y observamos en primer lugar que la tasa de aprendizaje sea apropiada (es el parámetro más importante!): queremos poner valores tan altos como sea posible sin que haya oscilaciones grandes del error de entrenamiento. Muchas veces, con una tasa demasiado alta, rápidamente llegamos a una región mala con gradientes bajos donde no podemos escapar (por ejemplo, con unidades saturadas) y parece que el modelo no aprende. Una tasa baja da convergencia muy lenta.</li>
+<li>Otra razón por la que la red puede no aprender es por gradientes se anulan en unidades saturadas. Si nos movemos a regiones donde valores de la salida de una capa son muy positivos o negativos, podemos saturar las unidades sigmoides (que son planas para valores muy positivos o negativos). Este se puede componer poniendo valores más chicos para la inicialización de pesos, o reducir la tasa de aprendizaje. Para redes de muchas capas, los gradientes también pueden explotar (valores muy grandes cuando hacemos backprop sobre la red) y llevarnos a regiones malas de saturación.</li>
+<li>Si el error de entrenamiento es muy alto y similar al de validación, el modelo quizá no tiene capacidad de aprender por sesgo (rigidez). Podemos incrementar el número de unidades, disminuir el valor de regularización (penalización L2 ), poner menos capas. También puede ser que la tasa de aprendizaje sea demasiado baja, y nos estamos quedando “atorados” en una región relativamente plana donde los gradientes son chicos.</li>
+<li>Si el error de entrenamiento es bajo, pero el de validación es alto, entonces quizá el modelo es demasiado flexible y está sobreajustando. Podemos regularizar más incrementando la penalización L2, incrementar el número de unidades por capa o de capas.</li>
+<li>Para redes neuronales grandes y problemas con ruido bajo, una estrategia es intentar obtener un error lo más chico posible para entrenamiento (la red aprende y/o memoriza), y después se afina para que la generalización (error de validación) sea buena.</li>
+<li>Podemos pensar que el error de validación tiene dos partes: el error de entrenamiento y el margen que hay entre error de entrenamiento y validación. Para reducir el error de validación podemos intentar reducir el error de entrenamiento y/o reducir el margen. Generalmente hay que ir balanceando flexibilidad con rigidez a través de varios parámetros para terminar con un buen ajuste.</li>
+</ul>
+<div id="ejercicio-7" class="section level4 unnumbered">
+<h4>Ejercicio</h4>
+<p>Haz algunos experimentos con las guías de arriba para el ejemplo de spam.</p>
+</div>
+</div>
+<div id="hiperparametros-busqueda-en-grid" class="section level3">
+<h3><span class="header-section-number">7.6.3</span> Hiperparámetros: búsqueda en grid</h3>
+<p>Los hiperparámetros de un modelo son los que no se aprenden por el algoritmo principal. Por ejemplo, en regresión regularizada, los coeficientes son parámetros (se aprenden por descenso en gradiente), pero el parámetro de regularización <span class="math inline">\(\lambda\)</span> es un hiperparámetro. En redes neuronales tenemos más hiperparámetros: por ejemplo el número de capas, el número de unidades por capa, y el parámetro de regularización.</p>
+<p>La primera técnica para poner los hiperparámetros es <strong>búsqueda en grid</strong>. En este método escogemos los valores de cada hiperparámetro y ajustamos modelos para todas las posibles combinaciones.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">hiperparams &lt;-<span class="st"> </span><span class="kw">expand.grid</span>(<span class="dt">lambda =</span> <span class="dv">10</span><span class="op">^</span><span class="kw">seq</span>(<span class="op">-</span><span class="dv">14</span>,<span class="op">-</span><span class="dv">1</span>, <span class="dv">3</span>), <span class="dt">n_capa =</span> <span class="kw">c</span>(<span class="dv">10</span>, <span class="dv">50</span>, <span class="dv">100</span>, <span class="dv">200</span>),
+                     <span class="dt">lr =</span> <span class="kw">c</span>(<span class="fl">0.01</span>, <span class="fl">0.1</span>, <span class="fl">0.5</span>, <span class="fl">0.9</span>), <span class="dt">n_iter =</span> <span class="dv">800</span>, 
+                     <span class="dt">init_pesos =</span> <span class="kw">c</span>(<span class="fl">0.5</span>), <span class="dt">stringsAsFactors =</span> <span class="ot">FALSE</span>)
+hiperparams<span class="op">$</span>corrida &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(hiperparams)
+<span class="kw">head</span>(hiperparams)</code></pre></div>
+<pre><code>##   lambda n_capa   lr n_iter init_pesos corrida
+## 1  1e-14     10 0.01    800        0.5       1
+## 2  1e-11     10 0.01    800        0.5       2
+## 3  1e-08     10 0.01    800        0.5       3
+## 4  1e-05     10 0.01    800        0.5       4
+## 5  1e-02     10 0.01    800        0.5       5
+## 6  1e-14     50 0.01    800        0.5       6</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">nrow</span>(hiperparams)</code></pre></div>
+<pre><code>## [1] 80</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">correr_modelo &lt;-<span class="st"> </span><span class="cf">function</span>(params, x_ent_s, y_ent, x_valid_s, y_valid){
+  modelo_tc &lt;-<span class="st"> </span><span class="kw">keras_model_sequential</span>() 
+  u &lt;-<span class="st"> </span>params[[<span class="st">&#39;init_pesos&#39;</span>]]
+  modelo_tc <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">layer_dense</span>(<span class="dt">units =</span> params[[<span class="st">&#39;n_capa&#39;</span>]], <span class="dt">activation =</span> <span class="st">&#39;sigmoid&#39;</span>, 
+                <span class="dt">kernel_regularizer =</span> <span class="kw">regularizer_l2</span>(<span class="dt">l =</span> params[[<span class="st">&#39;lambda&#39;</span>]]), 
+                <span class="dt">kernel_initializer =</span> <span class="kw">initializer_random_uniform</span>(<span class="dt">minval =</span> <span class="op">-</span>u, 
+                                                                <span class="dt">maxval =</span> u),
+                <span class="dt">input_shape=</span><span class="dv">57</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">layer_dense</span>(<span class="dt">units =</span> params[[<span class="st">&#39;n_capa&#39;</span>]], <span class="dt">activation =</span> <span class="st">&#39;sigmoid&#39;</span>,
+                <span class="dt">kernel_regularizer =</span> <span class="kw">regularizer_l2</span>(<span class="dt">l =</span> params[[<span class="st">&#39;lambda&#39;</span>]]),
+                <span class="dt">kernel_initializer =</span> <span class="kw">initializer_random_uniform</span>(<span class="dt">minval =</span> <span class="op">-</span>u, 
+                                                                <span class="dt">maxval =</span> u)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">layer_dense</span>(<span class="dt">units =</span> <span class="dv">1</span>, <span class="dt">activation =</span> <span class="st">&#39;sigmoid&#39;</span>,
+                <span class="dt">kernel_regularizer =</span> <span class="kw">regularizer_l2</span>(<span class="dt">l =</span> params[[<span class="st">&#39;lambda&#39;</span>]]),
+                <span class="dt">kernel_initializer =</span> <span class="kw">initializer_random_uniform</span>(<span class="dt">minval =</span> <span class="op">-</span>u, 
+                                                                <span class="dt">maxval =</span> u)) 
+  modelo_tc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">compile</span>(
+    <span class="dt">loss =</span> <span class="st">&#39;binary_crossentropy&#39;</span>,
+    <span class="dt">optimizer =</span> <span class="kw">optimizer_sgd</span>(<span class="dt">lr =</span>params[[<span class="st">&#39;lr&#39;</span>]]),
+    <span class="dt">metrics =</span> <span class="kw">c</span>(<span class="st">&#39;accuracy&#39;</span>)
+  )
+  history &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">fit</span>(
+    x_ent_s, y_ent, 
+    <span class="dt">epochs =</span> params[[<span class="st">&#39;n_iter&#39;</span>]], <span class="dt">batch_size =</span> <span class="kw">nrow</span>(x_ent_s), 
+    <span class="dt">verbose =</span> <span class="dv">0</span> )
+  score &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">evaluate</span>(x_valid_s, y_valid)
+  <span class="kw">print</span>(score)
+  score
+}</code></pre></div>
+<p>En este ejemplo reducimos artificialmente la muestra de entrenamiento (para poder examinar las salidas más rápidamente)</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">34321</span>)
+spam_entrena_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">sample_n</span>(spam_entrena, <span class="dv">300</span>)
+x_ent &lt;-<span class="st"> </span>spam_entrena_<span class="dv">1</span> <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="op">-</span>X1, <span class="op">-</span>spam) <span class="op">%&gt;%</span><span class="st"> </span>as.matrix
+x_ent_s &lt;-<span class="st"> </span><span class="kw">scale</span>(x_ent)
+x_valid &lt;-<span class="st"> </span>spam_prueba <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="op">-</span>X1, <span class="op">-</span>spam) <span class="op">%&gt;%</span><span class="st"> </span>as.matrix 
+x_valid_s &lt;-<span class="st"> </span>x_valid <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">scale</span>(<span class="dt">center =</span> <span class="kw">attr</span>(x_ent_s, <span class="st">&#39;scaled:center&#39;</span>), <span class="dt">scale =</span> <span class="kw">attr</span>(x_ent_s,  <span class="st">&#39;scaled:scale&#39;</span>))
+y_ent &lt;-<span class="st"> </span>spam_entrena_<span class="dv">1</span><span class="op">$</span>spam
+y_valid &lt;-<span class="st"> </span>spam_prueba<span class="op">$</span>spam
+
+nombres &lt;-<span class="st"> </span><span class="kw">names</span>(hiperparams)
+<span class="cf">if</span>(<span class="op">!</span>usar_cache) {
+res &lt;-<span class="st"> </span><span class="kw">lapply</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(hiperparams), <span class="cf">function</span>(i){
+  params &lt;-<span class="st"> </span><span class="kw">as.vector</span>(hiperparams[i,])
+  <span class="co">#names(params) &lt;- nombres</span>
+  <span class="co">#print(params$corrida)</span>
+  salida &lt;-<span class="st"> </span><span class="kw">correr_modelo</span>(params, x_ent_s, y_ent, x_valid_s, y_valid)
+  salida
+  }) 
+  hiperparams<span class="op">$</span>loss &lt;-<span class="st"> </span><span class="kw">sapply</span>(res, <span class="cf">function</span>(item){ item<span class="op">$</span>loss})
+  hiperparams<span class="op">$</span>acc &lt;-<span class="st"> </span><span class="kw">sapply</span>(res, <span class="cf">function</span>(item){ item<span class="op">$</span>acc})
+  <span class="kw">saveRDS</span>(hiperparams, <span class="dt">file =</span> <span class="st">&#39;./cache_obj/spam-grid.rds&#39;</span>)
+} <span class="cf">else</span> {
+  hiperparams &lt;-<span class="st"> </span><span class="kw">readRDS</span>(<span class="dt">file =</span> <span class="st">&#39;./cache_obj/spam-grid.rds&#39;</span>)
+}</code></pre></div>
+<p>Ordenamos del mejor modelo al peor según la pérdida:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">arrange</span>(hiperparams, loss)</code></pre></div>
+<pre><code>##    lambda n_capa   lr n_iter init_pesos corrida       loss       acc
+## 1   1e-11    200 0.10   1000        0.5      37  0.2481583 0.9009126
+## 2   1e-14    100 0.10   1000        0.5      31  0.2562495 0.8970013
+## 3   1e-08    100 0.10   1000        0.5      33  0.2571647 0.8976532
+## 4   1e-14    200 0.10   1000        0.5      36  0.2579564 0.8917862
+## 5   1e-14     50 0.10   1000        0.5      26  0.2582366 0.9009126
+## 6   1e-08     50 0.10   1000        0.5      28  0.2591391 0.8983051
+## 7   1e-11    100 0.10   1000        0.5      32  0.2613895 0.8956975
+## 8   1e-11     50 0.10   1000        0.5      27  0.2686344 0.8885267
+## 9   1e-05     50 0.10   1000        0.5      29  0.2710090 0.8930900
+## 10  1e-05    100 0.10   1000        0.5      34  0.2712956 0.9002608
+## 11  1e-08    200 0.10   1000        0.5      38  0.2731755 0.8885267
+## 12  1e-11     10 0.10   1000        0.5      22  0.2867449 0.8996089
+## 13  1e-05    200 0.10   1000        0.5      39  0.3068338 0.8891786
+## 14  1e-11    200 0.01   1000        0.5      17  0.3193306 0.8917862
+## 15  1e-05     10 0.50   1000        0.5      44  0.3256386 0.8911343
+## 16  1e-05     10 0.10   1000        0.5      24  0.3271994 0.8826597
+## 17  1e-14     10 0.50   1000        0.5      41  0.3317407 0.8937419
+## 18  1e-14    200 0.01   1000        0.5      16  0.3410997 0.8761408
+## 19  1e-08     10 0.50   1000        0.5      43  0.3462382 0.8911343
+## 20  1e-14     10 0.10   1000        0.5      21  0.3477954 0.8631030
+## 21  1e-08    200 0.01   1000        0.5      18  0.3485343 0.8754889
+## 22  1e-11    100 0.50   1000        0.5      52  0.3664196 0.9002608
+## 23  1e-11     50 0.50   1000        0.5      47  0.3706521 0.8924381
+## 24  1e-08     10 0.10   1000        0.5      23  0.3719068 0.8794003
+## 25  1e-11     10 0.50   1000        0.5      42  0.3739281 0.8885267
+## 26  1e-08     50 0.50   1000        0.5      48  0.3848782 0.8970013
+## 27  1e-05    200 0.01   1000        0.5      19  0.3900913 0.8741851
+## 28  1e-05    100 0.50   1000        0.5      54  0.3942697 0.8917862
+## 29  1e-11    200 0.50   1000        0.5      57  0.3944719 0.8924381
+## 30  1e-14    200 0.50   1000        0.5      56  0.4041260 0.8917862
+## 31  1e-14     50 0.50   1000        0.5      46  0.4048893 0.8898305
+## 32  1e-05     50 0.50   1000        0.5      49  0.4051351 0.8930900
+## 33  1e-08    100 0.50   1000        0.5      53  0.4114460 0.8826597
+## 34  1e-11     10 0.90   1000        0.5      62  0.4121712 0.8911343
+## 35  1e-11    100 0.01   1000        0.5      12  0.4145591 0.8500652
+## 36  1e-08    100 0.01   1000        0.5      13  0.4166564 0.8715776
+## 37  1e-05    200 0.50   1000        0.5      59  0.4217554 0.8859192
+## 38  1e-08     10 0.90   1000        0.5      63  0.4308938 0.8950456
+## 39  1e-14    100 0.01   1000        0.5      11  0.4331894 0.8513690
+## 40  1e-08    200 0.50   1000        0.5      58  0.4341628 0.8878748
+## 41  1e-14    100 0.50   1000        0.5      51  0.4395043 0.8904824
+## 42  1e-14     10 0.90   1000        0.5      61  0.4493026 0.8839635
+## 43  1e-05    100 0.01   1000        0.5      14  0.4506414 0.8533246
+## 44  1e-05     10 0.90   1000        0.5      64  0.4521649 0.8859192
+## 45  1e-14     50 0.01   1000        0.5       6  0.5007677 0.8239896
+## 46  1e-14     50 0.90   1000        0.5      66  0.5049587 0.8911343
+## 47  1e-05     50 0.90   1000        0.5      69  0.5063860 0.8852673
+## 48  1e-05    100 0.90   1000        0.5      74  0.5112725 0.8885267
+## 49  1e-11     50 0.01   1000        0.5       7  0.5154028 0.8005215
+## 50  1e-14    100 0.90   1000        0.5      71  0.5317523 0.8839635
+## 51  1e-11    100 0.90   1000        0.5      72  0.5360182 0.8852673
+## 52  1e-11     50 0.90   1000        0.5      67  0.5460550 0.8800522
+## 53  1e-08     50 0.90   1000        0.5      68  0.5462691 0.8820078
+## 54  1e-02     50 0.50   1000        0.5      50  0.5516786 0.8865711
+## 55  1e-05     50 0.01   1000        0.5       9  0.5565895 0.7757497
+## 56  1e-08    100 0.90   1000        0.5      73  0.5627451 0.8774446
+## 57  1e-02     10 0.90   1000        0.5      65  0.5706849 0.8807040
+## 58  1e-02     10 0.50   1000        0.5      45  0.5721383 0.8872229
+## 59  1e-02     50 0.90   1000        0.5      70  0.5810893 0.8318123
+## 60  1e-08     50 0.01   1000        0.5       8  0.5859619 0.7385919
+## 61  1e-02    100 0.50   1000        0.5      55  0.5985074 0.8181226
+## 62  1e-14     10 0.01   1000        0.5       1  0.6505038 0.6043025
+## 63  1e-02     10 0.10   1000        0.5      25  0.6578252 0.7581486
+## 64  1e-05     10 0.01   1000        0.5       4  0.6624338 0.6043025
+## 65  1e-08     10 0.01   1000        0.5       3  0.6625448 0.6043025
+## 66  1e-11     10 0.01   1000        0.5       2  0.6652442 0.6043025
+## 67  1e-02    100 0.90   1000        0.5      75  0.6818743 0.8129074
+## 68  1e-02     50 0.10   1000        0.5      30  0.7229234 0.8937419
+## 69  1e-02    200 0.50   1000        0.5      60  0.7256063 0.7777053
+## 70  1e-02    200 0.90   1000        0.5      80  0.8088126 0.7249022
+## 71  1e-02    100 0.10   1000        0.5      35  1.0643596 0.8865711
+## 72  1e-02     10 0.01   1000        0.5       5  1.1132954 0.6043025
+## 73  1e-02    200 0.10   1000        0.5      40  2.2588023 0.8878748
+## 74  1e-02     50 0.01   1000        0.5      10  3.8415042 0.6734029
+## 75  1e-14    200 0.90   1000        0.5      76  6.3778905 0.6043025
+## 76  1e-11    200 0.90   1000        0.5      77  6.3778905 0.6043025
+## 77  1e-08    200 0.90   1000        0.5      78  6.3779340 0.6043025
+## 78  1e-05    200 0.90   1000        0.5      79  6.4199690 0.6043025
+## 79  1e-02    100 0.01   1000        0.5      15  9.9440924 0.8318123
+## 80  1e-02    200 0.01   1000        0.5      20 31.6675895 0.8578879</code></pre>
+<p>Y podemos estudiar la dependencia de la pérdida según distintos parámetros.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(hiperparams, <span class="kw">aes</span>(<span class="dt">x =</span> lambda, <span class="dt">y =</span> loss, <span class="dt">group=</span>n_capa, <span class="dt">colour=</span><span class="kw">factor</span>(n_capa))) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span><span class="kw">facet_wrap</span>(<span class="op">~</span>lr, <span class="dt">ncol =</span> <span class="dv">2</span>)  <span class="op">+</span><span class="st"> </span><span class="kw">scale_x_log10</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_y_log10</span>()</code></pre></div>
+<p><img src="07-redes-neuronales_files/figure-html/unnamed-chunk-53-1.png" width="480" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(<span class="kw">filter</span>(hiperparams, lambda <span class="op">&lt;</span><span class="st"> </span><span class="fl">1e-4</span>, <span class="op">!</span>(lr <span class="op">==</span><span class="st"> </span><span class="fl">0.9</span> <span class="op">&amp;</span><span class="st"> </span>n_capa<span class="op">==</span><span class="dv">200</span>)), 
+       <span class="kw">aes</span>(<span class="dt">x =</span> lambda, <span class="dt">y =</span> loss, <span class="dt">group=</span>n_capa, <span class="dt">colour=</span><span class="kw">factor</span>(n_capa))) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span><span class="kw">facet_wrap</span>(<span class="op">~</span>lr)  <span class="op">+</span><span class="st"> </span><span class="kw">scale_x_log10</span>() </code></pre></div>
+<p><img src="07-redes-neuronales_files/figure-html/unnamed-chunk-53-2.png" width="480" /></p>
+<p>Por ejemplo:</p>
+<ul>
+<li>lambda mayor a 0.001 es demasiado grande para cualquiera de estos modelo.</li>
+<li>la tasa de aprendizaje parece ser mejor alrededor de 0.1</li>
+<li>Para 200 capas, con una tasa de aprendizaje de 0.9 el algoritmo tiene problemas para descender.</li>
+<li>Para menor número de unidades, en general podemos poner una tasa de aprendizaje más alta</li>
+<li>En este ejemplo, podríamos escoger por ejemplo el modelo con 100 unidades y poca regularización</li>
+</ul>
+</div>
+<div id="hiperparametros-busqueda-aleatoria" class="section level3">
+<h3><span class="header-section-number">7.6.4</span> Hiperparámetros: búsqueda aleatoria</h3>
+<p>En el ejemplo anterior pudimos ver que muchas de las iteraciones son iteraciones desperdiciadas. Por ejemplo, el mal desempeño de un parámetro dado produce que no importen los valores de los otros parámetros. Sin embargo, corremos todas las combinaciones de los otros parámetros, las cuales todas se desempeñan mal.</p>
+<p>Especialmente cuando tenemos muchos parámetros, es más hacer eficiente hacer <strong>búsqueda aleatoria</strong>. Para hacer esto simulamos al azar valores de los parámetros a partir de una distribución de valores que queremos probar.</p>
+<p>Por ejemplo, para el número de unidades podríamos usar</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">runif</span>(<span class="dv">1</span>, <span class="dv">20</span>, <span class="dv">200</span>)</code></pre></div>
+<pre><code>## [1] 108.5708</code></pre>
+<p>y para la regularización (donde queremos probar varios órdenes de magnitud) podríamos usar</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">exp</span>(<span class="kw">runif</span>(<span class="dv">1</span>, <span class="op">-</span><span class="dv">8</span>,<span class="op">-</span><span class="dv">1</span>))</code></pre></div>
+<pre><code>## [1] 0.009600437</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">n_pars &lt;-<span class="st"> </span><span class="dv">50</span>
+<span class="kw">set.seed</span>(<span class="dv">9123</span>)
+<span class="cf">if</span>(<span class="op">!</span>usar_cache){
+    hiperparams &lt;-<span class="st"> </span><span class="kw">data_frame</span>(<span class="dt">lambda =</span> <span class="kw">exp</span>(<span class="kw">runif</span>(n_pars, <span class="op">-</span><span class="dv">12</span>, <span class="op">-</span><span class="dv">1</span>)),
+                              <span class="dt">n_capa =</span> <span class="kw">sample</span>(<span class="kw">seq</span>(<span class="dv">10</span>,<span class="dv">200</span>, <span class="dt">by=</span><span class="dv">5</span>), n_pars, <span class="dt">replace =</span> T),
+                              <span class="dt">lr =</span> <span class="kw">runif</span>(n_pars, <span class="fl">0.1</span>,<span class="fl">0.5</span>), <span class="dt">n_iter =</span> <span class="dv">800</span>,
+                              <span class="dt">init_pesos =</span> <span class="fl">0.5</span>)
+    hiperparams<span class="op">$</span>corrida &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(hiperparams)
+  
+    res_aleatorio &lt;-<span class="st"> </span><span class="kw">lapply</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(hiperparams), <span class="cf">function</span>(i){
+    params &lt;-<span class="st"> </span><span class="kw">as.vector</span>(hiperparams[i,])
+    salida &lt;-<span class="st"> </span><span class="kw">correr_modelo</span>(params, x_ent_s, y_ent, x_valid_s, y_valid)
+    salida
+    })
+    hiperparams<span class="op">$</span>loss &lt;-<span class="st"> </span><span class="kw">sapply</span>(res_aleatorio, <span class="cf">function</span>(item){ item<span class="op">$</span>loss})
+    hiperparams<span class="op">$</span>acc &lt;-<span class="st"> </span><span class="kw">sapply</span>(res_aleatorio, <span class="cf">function</span>(item){ item<span class="op">$</span>acc})
+    <span class="kw">saveRDS</span>(hiperparams, <span class="dt">file =</span> <span class="st">&#39;./cache_obj/spam-aleatorio.rds&#39;</span>)
+  } <span class="cf">else</span> {
+    hiperparams &lt;-<span class="st"> </span><span class="kw">readRDS</span>(<span class="dt">file =</span> <span class="st">&#39;./cache_obj/spam-aleatorio.rds&#39;</span>)
+  }
+<span class="kw">arrange</span>(hiperparams, loss)</code></pre></div>
+<pre><code>## # A tibble: 50 x 8
+##          lambda n_capa        lr n_iter init_pesos corrida      loss
+##           &lt;dbl&gt;  &lt;dbl&gt;     &lt;dbl&gt;  &lt;dbl&gt;      &lt;dbl&gt;   &lt;int&gt;     &lt;dbl&gt;
+##  1 7.289530e-06     85 0.2122924    800        0.5       7 0.2805767
+##  2 7.091724e-06     15 0.3815221    800        0.5      26 0.3048462
+##  3 9.706553e-05     20 0.2870739    800        0.5      25 0.3109668
+##  4 1.058594e-05    175 0.1462802    800        0.5      12 0.3113215
+##  5 4.590335e-04     15 0.4848101    800        0.5      28 0.3683682
+##  6 9.086198e-04     20 0.4228769    800        0.5      21 0.3790317
+##  7 1.935991e-05    170 0.3280060    800        0.5      50 0.3803463
+##  8 6.383074e-06    145 0.4392468    800        0.5      33 0.3830605
+##  9 4.132102e-05    135 0.2779869    800        0.5      19 0.3973518
+## 10 2.886587e-05    160 0.2487041    800        0.5      32 0.3997921
+## # ... with 40 more rows, and 1 more variables: acc &lt;dbl&gt;</code></pre>
+</div>
+</div>
+<div id="tarea-para-18-de-septiembre" class="section level2 unnumbered">
+<h2>Tarea (para 18 de septiembre)</h2>
 <ul>
 <li>Instalar (keras para R)[<a href="https://keras.rstudio.com" class="uri">https://keras.rstudio.com</a>] (versión CPU).</li>
 <li>Suscribirse a kaggle (pueden ser equipos de 2 máximo, entonces les conviene suscribirse como un equipo).</li>
@@ -837,7 +1171,6 @@ de manera que la ecuación anterior es
 </div>
 <div>
 <p>Ng, Andrew. 2017. “Machine Learning.” <a href="https://www.coursera.org/learn/machine-learning" class="uri">https://www.coursera.org/learn/machine-learning</a>.</p>
-</div>
 </div>
 </div>
 </div>
