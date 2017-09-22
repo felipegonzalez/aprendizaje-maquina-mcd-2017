@@ -1,0 +1,196 @@
+---
+title: 'Tarea 4: '
+output:
+  html_document: default
+  html_notebook: default
+---
+
+Consideramos 
+datos para detección de spam en e-mail [spambase](https://archive.ics.uci.edu/ml/datasets/spambase).
+
+```{r, message=FALSE, warning=FALSE}
+library(readr)
+library(tidyr)
+library(dplyr)
+library(ggplot2)
+spam_entrena <- read_csv('../datos/spam-entrena.csv')
+spam_prueba <- read_csv('../datos/spam-prueba.csv')
+```
+
+Las variables de entrada son extraídas de emails (los textos de 
+emails fueron procesados para obtener estas entradas). Son frecuencias
+de ocurrencia de palabras (por ejemplo, wffree, wfremove, wfmail son frecuencias
+de las palabras free, remove, mail, etc.), y otras entradas cuentan
+aparición de ciertos caracteres (cfdollar, cfexc son frecuencias de caracteres
+signo de dólar y signo de exclamación).
+
+Queremos predecir con estas entradas si un mail es spam o no
+
+
+```{r}
+table(spam_entrena$spam)
+```
+
+Puedes usar el método que quieras para hacer la estimación. 
+
+1. Construye un modelo solamente usando las variables  de caracteres (cfsc, cfpar, etc). 
+Calcula la curva ROC (entrenamiento y prueba). 
+
+2. Construye un modelo utilizando todas las variables. Calcula la curva ROC (entrenamiento
+y prueba). 
+
+```{r}
+library(ROCR)
+x_entrena <- spam_entrena %>% select(-X1, -spam)
+medias <- attr(scale(x_entrena), 'scaled:center')
+sd <- attr(scale(x_entrena), 'scaled:scale')
+x_ent_s <- data.frame(scale(x_entrena))
+x_ent_s$spam <- spam_entrena$spam
+mod_todas <- glm(spam ~ ., data=x_ent_s, family ='binomial')
+mod_c <- glm(spam ~ ., data=x_ent_s %>% select(cfsc:spam), family ='binomial')
+x_pr <- spam_prueba  %>% select(-X1, -spam)
+x_pr_s <- scale(x_pr, center = medias, scale = sd)
+preds_pr <- predict(mod_todas, newdata = data.frame(x_pr_s), type ='response')
+preds_ent <- predict(mod_todas, newdata = data.frame(x_ent_s), type ='response')
+pred_roc_pr <- prediction(preds_pr, spam_prueba$spam)
+pred_roc_ent <- prediction(preds_ent, spam_entrena$spam)
+perf_roc_ent <- performance(prediction.obj = pred_roc_ent, measure='sens', x.measure ='fpr')
+perf_roc_pr <- performance(prediction.obj = pred_roc_pr, measure='sens', x.measure ='fpr')
+
+plot(perf_roc_ent)
+plot(perf_roc_pr, col='red', add=T)
+```
+**Nota**: algunos coeficientes tienen valores absolutos muy grandes, y algunas probabilidades
+de entrenamiento resultan en valores numéricamente 0 o 1 (como reporta glm). Esto sucede
+cuando, por ejemplo, siempre que una variable $x$ es positiva indica que el caso es positivo
+(o muy predominantemente positivos). Entonces en la optimización, tal coeficiente
+puede irse a infinito, para reflejar probabilidades cercanas a 1 cuando $x>0$.
+
+Por ejemplo,  wfcs >0 indica que el correo no es spam:
+
+```{r}
+table(spam_entrena$spam, spam_entrena$wfcs > 0)
+```
+
+
+
+
+3. Grafica las curvas ROC de prueba de los dos modelos anteriores. ¿Qué modelo es superior?
+
+3. Discute un punto de corte apropiado para hacer un filtro de spam. 
+¿Escogerías especificidad más alta o sensibilidad más alta? Explica discutiendo
+los costos de cada tipo de error (falso positivo o falso negativo). Escoge el punto
+de corte y muestra la matriz de confusión correspondiente (prueba).
+
+Es más importante tener especificidad alta (para no enviar a spam correos genuinos)
+
+```{r}
+
+prop.table(table(preds_pr > 0.9, spam_prueba$spam), 2)
+```
+
+
+Descenso en gradiente:
+
+```{r}
+h <- function(z){
+  exp(z)/(1+exp(z))
+}
+devianza_calc <- function(x, y){
+  dev_fun <- function(beta){
+    p_beta <- h(as.matrix(cbind(1, x)) %*% beta) 
+   -2*mean(y*log(p_beta) + (1-y)*log(1-p_beta))
+  }
+  dev_fun
+}
+
+grad_calc <- function(x_ent, y_ent){
+  x_ent_1 <- as.matrix(cbind(1, x_ent))
+  salida_grad <- function(beta){
+    p_beta <- h(x_ent_1 %*% beta)
+    e <- y_ent - p_beta
+    grad_out <- -2*as.numeric(t(x_ent_1) %*% e)
+    names(grad_out) <- c('Intercept', colnames(x_ent_1)[-1])
+    grad_out
+  }
+  salida_grad
+}
+descenso <- function(n, z_0, eta, h_deriv){
+  z <- matrix(0,n, length(z_0))
+  z[1, ] <- z_0
+  for(i in 1:(n-1)){
+    z[i+1, ] <- z[i, ] - eta * h_deriv(z[i, ])
+  }
+  z
+}
+grad <- grad_calc(x_ent_s %>% select(-spam), spam_entrena$spam)
+iter <- descenso(30000, rep(0,ncol(x_ent_s)), eta=0.001, grad)
+plot(iter[30000,], coef(mod_todas))
+abline(a=0,b=1)
+```
+Sin embargo las prbabilidades son similares en los dos modelos:
+```{r}
+probs_d <- (x_ent_s %>% select(-spam) %>% as.matrix %>% cbind(1,.)) %*% iter[nrow(iter),] %>% h
+plot(probs_d, predict(mod_todas, type = 'response'))
+```
+
+## Regularización ridge
+
+
+```{r}
+library(glmnet)
+spam_ridge_cv <- cv.glmnet(x = x_entrena %>% as.matrix, y = spam_entrena$spam, family = 'binomial',alpha = 0)
+plot(spam_ridge_cv)
+```
+
+Podemos examinar lambdas más chicas:
+
+```{r}
+spam_ridge_cv <- cv.glmnet(x = x_entrena %>% as.matrix, y = spam_entrena$spam, family = 'binomial',alpha = 0, lambda = exp(seq(-15,0,1)))
+plot(spam_ridge_cv)
+spam_ridge_cv$lambda.1se
+```
+
+Según validación cruzada, parece que no obtendremos grandes mejoras en 
+predicción. Seleccionamos un modelo y comparamos probabilidades, donde
+notamos encogimiento general para buena parte de las probabilidades:
+
+```{r}
+preds_ridge <- predict(spam_ridge_cv, lambda=exp(-5), newx = x_entrena %>% as.matrix,
+        type = 'response')
+qplot(probs_d, preds_ridge ) + geom_abline(intercept=0, slope=1, col='red')
+```
+Y comparamos coeficientes (escalamos para hacer la comparación, pues glmnet devuelve
+coeficientes no escalados):
+```{r}
+mod_ridge <- glmnet(x = x_entrena %>% as.matrix %>% scale, 
+                    y = spam_entrena$spam, 
+                    family = 'binomial',alpha = 0, lambda = exp(-5))
+```
+
+Y vemos que los coeficientes de ridge tienen un rango mucho más estrecho (encogimiento):
+
+```{r}
+qplot(predict(mod_ridge, type='coefficients')[,1], coef(mod_todas)) + 
+  geom_abline(colour='red')
+```
+
+Finalmente, comparamos curvas ROC y desempeño:
+```{r}
+plot(perf_roc_pr, col='red')
+pr_ridge <- predict(spam_ridge_cv, lambda = 'lambda.1se',
+                               newx = x_pr %>% as.matrix, type='response')[,1]
+pred <- prediction(pr_ridge, spam_prueba$spam)
+perf <- performance(pred, measure='sens', x.measure ='fpr')
+plot(perf, col='green', add = TRUE)
+
+```
+
+```{r}
+prop.table(table(pr_ridge > 0.5, spam_prueba$spam), 2)
+sum(diag(table(pr_ridge > 0.5, spam_prueba$spam)))/length(pr_ridge)
+```
+
+No obtuvimos ganancias en la predicción, pero el modelo que obtuvimos es más
+parsimonioso, con coeficientes controlados, y menos probabilidades colapsadas
+en valores cercanos 0 y 1.
