@@ -10,7 +10,9 @@ trabajo manual.
 Por ejemplo, si tenemos unas 100 entradas numéricas, al crear todas las interacciones 
 $x_i x_j$ y los cuadrados $x_i^2$ terminamos con unas 5150 variables. Para el problema de dígitos (256 entradas o pixeles) terminaríamos con unas 32 mil entradas adicionales. Aún cuando es posible regularizar, en estos casos suena más conveniente construir entradas derivadas a partir de los datos.
 
-Para hacer esto, consideramos entradas $X_1, . . . , X_p$, y supongamos que tenemos un problema de clasificación binaria, con $G = 1$ o $G = 0$. Aunque hay muchas 
+Para hacer esto, consideramos entradas $X_1, . . . , X_p$, y 
+supongamos que tenemos un problema de clasificación binaria, 
+con $G = 1$ o $G = 0$. Aunque hay muchas 
 maneras de construir entradas derivadas, una
 manera simple sería construir $m$ nuevas entradas mediante:  
 
@@ -27,9 +29,12 @@ $$p_1(x) = h \left ( \beta_0 + \sum_{j=1}^m \beta_ja_j
  
  
 Podemos representar este esquema con una red dirigida  ($m=3$ variables derivadas):
-
+```{r, echo=FALSE, message=FALSE}
+knitr::opts_chunk$set(fig.width=5, fig.asp=0.7) 
+```
 
 ```{r, warning=FALSE, message=FALSE, out.width=500, echo=FALSE, fig.width=5}
+usar_cache = TRUE
 library(igraph)
 library(ggplot2)
 library(dplyr)
@@ -543,7 +548,7 @@ a_3
 ```
 
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, fig.width=7}
 gr <- graph(
    c(c(1,4,1,5,2,4,2,5,3,4,3,5)))
  plot(gr, layout = matrix(c(-4,1,-4,0,-4,-1,0,1,0,-1), byrow=T, ncol=2),
@@ -607,7 +612,9 @@ $$ a^{(2)} = h(\Theta^{(1)}a^{(1)})$$
 $$ a^{(l)} = h(\Theta^{(l)}a^{(l-1)})$$
 - Capa de salida:
 $$a^{(L)}= p = h(\Theta^{(L)}a^{(L-1)})$$
-donde $h$ se aplica componente a componente sobre los vectores correspondientes.
+donde $h$ se aplica componente a componente sobre los vectores correspondientes. Nótese
+que feed-foward consiste principalmente de mutliplicaciones de matrices con
+algunas aplicaciones de $h$
 ```
 
 
@@ -709,7 +716,7 @@ $$\frac{\partial D}{\partial a_j^{(l)}}= \sum_{s=1}^{n_l}
 \frac{\partial D}{\partial a_s^{(l+1)}}\frac{\partial  a_s^{(l+1)}}{\partial a_j^{(l)}},$$
 
 que se puede entender a partir de este diagrama:
-```{r, echo=FALSE}
+```{r, echo=FALSE, fig.width=7}
  gr <- graph(
    c(1,2,1,3,1,4,2,5,3,5,4,5,1,6,1,7,1,8,1,9,6,5,7,5,8,5,9,5))
 plot(gr, layout=matrix(c(-1,0,0,1,0,0,0,-1,1,0,0,0.6,0,0.3,0,-0.6,0,-0.3), 
@@ -799,7 +806,7 @@ donde $\circ$ denota el producto componente a componente.
 Ahora todo ya está calculado. Lo interesante es que las $\delta^{(l)}$ se calculan
 de manera recursiva.
 
-## Algoritmo
+### Algoritmo de backpropagation
 
 ```{block2, type='comentario'}
 **Backpropagation** Para problema de clasificación con regularización $\lambda\geq 0 $.
@@ -817,9 +824,11 @@ y si $k=0$,
 $$D_{j,k}^{(l)} = \frac{2}{N}\Delta_{j,k}^{(l)} .$$
 Entonces:
 $$D_{j,k}^{(l)} =\frac{\partial D}{\partial \theta_{j,k}^{(l)}}.$$
+
+ Nótese
+que back-propagation consiste principalmente de mutliplicaciones de matrices con
+algunas aplicaciones de $h$ y acumulaciones, igual que feed-forward.
 ```
-
-
 
 
 
@@ -846,9 +855,14 @@ Por el momento hacemos unas observaciones acerca de este problema de minimizaci�
 
 - Hay varios algoritmos para minimizar esta devianza,
 algunos avanzados incluyendo información de segundo orden (como Newton), pero 
-actualmente lsa técnicas más populares, para redes grandes, están 
+actualmente las técnicas más populares, para redes grandes, están 
 derivadas de descenso en gradiente. Más
 específicamente, una variación, que es *descenso estocástico*.
+
+- Que el algoritmo depende principalmente de multiplicaciones de matrices y
+acumulaciones implica que puede escalarse de diversas maneras. Una es paralelizando
+sobre la muestra de entrenamiento (y acumular acumulados al final), pero quizá la
+más importante actualmente es la de multiplicaciones de matrices.
 
 - Para redes neuronales, el gradiente se calcula con un algoritmo que se llama
 *back-propagation*, que es una aplicación de la regla de la cadena para propagar
@@ -897,7 +911,334 @@ Se toman, por ejemplo, normales con media 0 y varianza chica.
 Finalmente, podemos probar distintas arquitecturas y valores del parámetros de regularización,
 para afinar estos parámetros según validación cruzada o una muestra de validación.
 
-### Tarea (para 18 de septiembre) {-}
+
+### Ejemplo
+
+Consideramos una arquitectura de dos capas para el problema de spam 
+
+```{r}
+if(Sys.info()['nodename'] == 'vainilla.local'){
+  # esto es por mi instalación particular de tensorflow - típicamente
+  # no es necesario que corras esta línea.
+  Sys.setenv(TENSORFLOW_PYTHON="/usr/local/bin/python")
+}
+library(keras)
+```
+
+```{r, message=FALSE, warning=FALSE}
+library(readr)
+library(tidyr)
+library(dplyr)
+spam_entrena <- read_csv('./datos/spam-entrena.csv')
+spam_prueba <- read_csv('./datos/spam-prueba.csv')
+set.seed(293)
+x_ent <- spam_entrena %>% select(-X1, -spam) %>% as.matrix
+x_ent_s <- scale(x_ent)
+x_valid <- spam_prueba %>% select(-X1, -spam) %>% as.matrix 
+x_valid_s <- x_valid %>%
+  scale(center = attr(x_ent_s, 'scaled:center'), scale = attr(x_ent_s,  'scaled:scale'))
+y_ent <- spam_entrena$spam
+y_valid <- spam_prueba$spam
+```
+
+
+Para definir la arquitectura de dos capas con:
+
+- 100 unidades en cada capa
+- función de activación sigmoide,
+- regularización L2 (ridge), 
+- salida logística ($p_1$), escribimos:
+
+
+```{r}
+set.seed(9232)
+modelo_tc <- keras_model_sequential() 
+# no es necesario asignar a nuevo objeto, modelo_tc es modificado al agregar capas
+modelo_tc %>% 
+  layer_dense(units = 100, activation = 'sigmoid', 
+              kernel_regularizer = regularizer_l2(l = 1e-8), 
+              kernel_initializer = initializer_random_uniform(minval = -0.5, maxval = 0.5),
+              input_shape=57) %>%
+  layer_dense(units = 100, activation = 'sigmoid', 
+              kernel_regularizer = regularizer_l2(l = 1e-8), 
+              kernel_initializer = initializer_random_uniform(minval = -0.5, maxval = 0.5)) %>%
+  layer_dense(units = 1, activation = 'sigmoid',
+              kernel_regularizer = regularizer_l2(l = 1e-8),
+              kernel_initializer = initializer_random_uniform(minval = -0.5, maxval = 0.5)
+)
+```
+
+Ahora difinimos la función de pérdida (devianza es equivalente a entropía
+cruzada binaria), y pedimos registrar porcentaje de correctos (accuracy) y compilamos
+en tensorflow:
+
+```{r}
+modelo_tc %>% compile(
+  loss = 'binary_crossentropy',
+  optimizer = optimizer_sgd(lr = 0.8),
+  metrics = c('accuracy'))
+```
+
+Iteramos con descenso en gradiente y monitoreamos el error de validación. Hacemos
+100 iteraciones de descenso en gradiente (épocas=100)
+
+```{r}
+iteraciones <- modelo_tc %>% fit(
+  x_ent_s, y_ent, 
+  epochs = 800, batch_size = 3067, #batch size mismo que nrow(x_ent_s) es descenso en grad.
+  verbose = 0,
+  validation_data = list(x_valid_s, y_valid)
+)
+```
+
+```{r}
+score <- modelo_tc %>% evaluate(x_valid_s, y_valid)
+score
+tab_confusion <- table(modelo_tc %>% predict_classes(x_valid_s),y_valid) 
+tab_confusion
+prop.table(tab_confusion, 2)
+```
+
+```{r}
+df_iteraciones <- as.data.frame(iteraciones)
+ggplot(df_iteraciones, aes(x=epoch, y=value, colour=data, group=data)) + 
+  geom_line() + geom_point() + facet_wrap(~metric, ncol=1, scales = 'free')
+```
+
+#### Ejercicio {-}
+Corre el ejemplo anterior con distintos parámetros de tasa de aprendizaje,
+número de unidades en las capas de intermedia y regularización (cambia
+arriba verbose=1 para monitorear al correr).
+
+### Hiperparámetros: búsqueda manual
+
+En búsqueda manual intentamos ajustar los parámetros haciendo experimentos
+sucesivos, monitoreando el error de entrenamiento y de validación. Los 
+principios básicos que tenemos que entender son los de sesgo (rigidez) y 
+varianza (flexibilidad) de los modelos y cómo se comportan estas cantidades
+cuando cambiamos parámetros, aunque es también importante experiencia e intuición.
+No hay una receta para hacer este proceso y garantizar llegar a una buena
+solución.
+
+Sin embargo, una guías para el proceso son las siguientes:
+
+- Comenzamos poniendo valores usuales para los parámetros (que sabemos
+de ejemplos similares, o valores como 0.0001 para regularización, 0.1 para
+tasa de aprendizaje, etc.)
+- Corremos algunas iteraciones y observamos en primer lugar que la tasa
+de aprendizaje sea apropiada (es el parámetro más importante!): queremos
+poner valores tan altos como sea posible sin que haya oscilaciones grandes
+del error de entrenamiento. Muchas veces, con una tasa demasiado alta,
+rápidamente llegamos a una región mala con gradientes bajos donde no podemos
+escapar (por ejemplo, con unidades saturadas) y parece que el modelo no
+aprende. Una tasa baja da convergencia
+muy lenta.
+- Otra razón por la que la red puede no aprender es por gradientes se anulan
+en unidades saturadas. Si nos movemos a regiones donde valores de la salida
+de una capa son muy positivos o negativos, podemos saturar las unidades
+sigmoides (que son planas para valores muy positivos o negativos). Este se puede
+componer poniendo valores más chicos para la inicialización de pesos, o reducir
+la tasa de aprendizaje. Para redes de muchas capas, los gradientes también
+pueden explotar (valores muy grandes cuando hacemos backprop sobre la red) y
+llevarnos a regiones malas de saturación.
+- Si el error de entrenamiento es muy alto y similar al de validación, 
+el modelo quizá no tiene capacidad de aprender por sesgo (rigidez). Podemos
+incrementar el número de unidades, disminuir el valor de regularización 
+(penalización L2 ), poner menos capas. También puede ser que 
+la tasa de aprendizaje sea demasiado baja, y nos estamos quedando "atorados"
+en una región relativamente plana donde los gradientes son chicos.
+- Si el error de entrenamiento es bajo, pero el de validación es alto,
+entonces quizá el modelo es demasiado flexible y está sobreajustando. 
+Podemos regularizar más
+incrementando la penalización L2, incrementar el número de unidades por capa
+o de capas.
+- Para redes neuronales grandes y problemas con ruido bajo,
+una estrategia es intentar obtener un error lo más chico
+posible para entrenamiento (la red aprende y/o memoriza), y después se afina
+para que la generalización (error de validación) sea buena.
+- Podemos pensar que el error de validación tiene dos partes: el error de entrenamiento
+ y el margen que hay entre error de entrenamiento y validación. Para reducir el error
+ de validación podemos intentar reducir el error de entrenamiento y/o reducir el margen.
+ Generalmente hay que ir balanceando flexibilidad con rigidez a través de varios
+ parámetros para terminar con un buen ajuste.
+ 
+ 
+ 
+#### Ejercicio {-}
+Haz algunos experimentos con las guías de arriba para el ejemplo de spam.
+
+
+### Hiperparámetros: búsqueda en grid
+
+Los hiperparámetros de un modelo son los que no se aprenden por
+el algoritmo principal. Por ejemplo, en regresión regularizada, los
+coeficientes son parámetros (se aprenden por descenso en gradiente), pero
+el parámetro de regularización $\lambda$ es un hiperparámetro.
+En redes neuronales tenemos más hiperparámetros: por ejemplo el número de capas, 
+el número
+de unidades por capa, y el parámetro de regularización.
+
+La primera técnica para poner los hiperparámetros es **búsqueda en grid**. En
+este método escogemos los valores de cada hiperparámetro y ajustamos modelos
+para todas las posibles combinaciones.
+
+
+
+```{r}
+hiperparams <- expand.grid(lambda = 10^seq(-14,-1, 3), n_capa = c(10, 50, 100, 200),
+                     lr = c(0.01, 0.1, 0.5, 0.9), n_iter = 800, 
+                     init_pesos = c(0.5), stringsAsFactors = FALSE)
+hiperparams$corrida <- 1:nrow(hiperparams)
+head(hiperparams)
+nrow(hiperparams)
+```
+
+```{r}
+correr_modelo <- function(params, x_ent_s, y_ent, x_valid_s, y_valid){
+  modelo_tc <- keras_model_sequential() 
+  u <- params[['init_pesos']]
+  modelo_tc %>% 
+    layer_dense(units = params[['n_capa']], activation = 'sigmoid', 
+                kernel_regularizer = regularizer_l2(l = params[['lambda']]), 
+                kernel_initializer = initializer_random_uniform(minval = -u, 
+                                                                maxval = u),
+                input_shape=57) %>% 
+    layer_dense(units = params[['n_capa']], activation = 'sigmoid',
+                kernel_regularizer = regularizer_l2(l = params[['lambda']]),
+                kernel_initializer = initializer_random_uniform(minval = -u, 
+                                                                maxval = u)) %>% 
+    layer_dense(units = 1, activation = 'sigmoid',
+                kernel_regularizer = regularizer_l2(l = params[['lambda']]),
+                kernel_initializer = initializer_random_uniform(minval = -u, 
+                                                                maxval = u)) 
+  modelo_tc %>% compile(
+    loss = 'binary_crossentropy',
+    optimizer = optimizer_sgd(lr =params[['lr']]),
+    metrics = c('accuracy')
+  )
+  history <- modelo_tc %>% fit(
+    x_ent_s, y_ent, 
+    epochs = params[['n_iter']], batch_size = nrow(x_ent_s), 
+    verbose = 0 )
+  score <- modelo_tc %>% evaluate(x_valid_s, y_valid)
+  print(score)
+  score
+}
+```
+
+
+En este ejemplo reducimos artificialmente la muestra de entrenamiento 
+(para poder examinar las salidas más rápidamente)
+```{r}
+set.seed(34321)
+spam_entrena_1 <- sample_n(spam_entrena, 300)
+x_ent <- spam_entrena_1 %>% select(-X1, -spam) %>% as.matrix
+x_ent_s <- scale(x_ent)
+x_valid <- spam_prueba %>% select(-X1, -spam) %>% as.matrix 
+x_valid_s <- x_valid %>%
+  scale(center = attr(x_ent_s, 'scaled:center'), scale = attr(x_ent_s,  'scaled:scale'))
+y_ent <- spam_entrena_1$spam
+y_valid <- spam_prueba$spam
+
+nombres <- names(hiperparams)
+if(!usar_cache) {
+res <- lapply(1:nrow(hiperparams), function(i){
+  params <- as.vector(hiperparams[i,])
+  #names(params) <- nombres
+  #print(params$corrida)
+  salida <- correr_modelo(params, x_ent_s, y_ent, x_valid_s, y_valid)
+  salida
+  }) 
+  hiperparams$loss <- sapply(res, function(item){ item$loss})
+  hiperparams$acc <- sapply(res, function(item){ item$acc})
+  saveRDS(hiperparams, file = './cache_obj/spam-grid.rds')
+} else {
+  hiperparams <- readRDS(file = './cache_obj/spam-grid.rds')
+}
+```
+
+Ordenamos del mejor modelo al peor según la pérdida:
+
+```{r}
+arrange(hiperparams, loss)
+```
+
+Y podemos estudiar la dependencia de la pérdida según distintos parámetros.
+
+```{r}
+ggplot(hiperparams, aes(x = lambda, y = loss, group=n_capa, colour=factor(n_capa))) +
+  geom_line() + geom_point() + facet_wrap(~lr, ncol = 2)  + scale_x_log10() +
+  scale_y_log10()
+ggplot(filter(hiperparams, lambda < 1e-4, !(lr == 0.9 & n_capa==200)), 
+       aes(x = lambda, y = loss, group=n_capa, colour=factor(n_capa))) +
+  geom_line() + geom_point() + facet_wrap(~lr)  + scale_x_log10() 
+```
+
+Por ejemplo:
+
+- lambda mayor a 0.001 es demasiado grande para cualquiera de estos modelo.
+- la tasa de aprendizaje parece ser mejor alrededor de 0.1
+- Para 200 capas, con una tasa de aprendizaje de 0.9 el algoritmo tiene
+problemas para descender.
+- Para menor número de unidades, en general podemos poner una tasa de aprendizaje
+más alta
+- En este ejemplo, podríamos escoger por ejemplo el modelo con 100 unidades y
+poca regularización
+
+
+
+### Hiperparámetros: búsqueda aleatoria
+
+En el ejemplo anterior pudimos ver que muchas de las iteraciones
+son iteraciones desperdiciadas.  Por ejemplo, el mal desempeño de un parámetro
+dado
+produce que no importen los valores de los otros parámetros. Sin embargo,
+corremos todas las combinaciones de los otros parámetros, las cuales todas se
+desempeñan mal.
+
+Especialmente cuando tenemos muchos parámetros, es más hacer eficiente hacer
+**búsqueda aleatoria**. Para hacer esto simulamos al azar valores de los parámetros
+a partir de una distribución de valores que queremos probar.
+
+Por ejemplo, para el número de unidades podríamos usar
+```{r}
+runif(1, 20, 200)
+```
+
+y para la regularización (donde queremos probar varios órdenes de magnitud) 
+podríamos usar
+
+```{r}
+exp(runif(1, -8,-1))
+```
+
+
+
+```{r}
+n_pars <- 50
+set.seed(9123)
+if(!usar_cache){
+    hiperparams <- data_frame(lambda = exp(runif(n_pars, -12, -1)),
+                              n_capa = sample(seq(10,200, by=5), n_pars, replace = T),
+                              lr = runif(n_pars, 0.1,0.5), n_iter = 800,
+                              init_pesos = 0.5)
+    hiperparams$corrida <- 1:nrow(hiperparams)
+  
+    res_aleatorio <- lapply(1:nrow(hiperparams), function(i){
+    params <- as.vector(hiperparams[i,])
+    salida <- correr_modelo(params, x_ent_s, y_ent, x_valid_s, y_valid)
+    salida
+    })
+    hiperparams$loss <- sapply(res_aleatorio, function(item){ item$loss})
+    hiperparams$acc <- sapply(res_aleatorio, function(item){ item$acc})
+    saveRDS(hiperparams, file = './cache_obj/spam-aleatorio.rds')
+  } else {
+    hiperparams <- readRDS(file = './cache_obj/spam-aleatorio.rds')
+  }
+arrange(hiperparams, loss)
+```
+
+## Tarea (para 18 de septiembre) {-}
 
 - Instalar (keras para R)[https://keras.rstudio.com] (versión CPU).
 - Suscribirse a kaggle (pueden ser equipos de 2 máximo, entonces
