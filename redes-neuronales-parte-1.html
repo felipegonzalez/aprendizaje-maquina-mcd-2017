@@ -7,7 +7,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Aprendizaje de máquina</title>
   <meta name="description" content="Notas y material para el curso de aprendizaje de máquina 2017 (ITAM)">
-  <meta name="generator" content="bookdown 0.5 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown 0.5.1 and GitBook 2.6.7">
 
   <meta property="og:title" content="Aprendizaje de máquina" />
   <meta property="og:type" content="book" />
@@ -25,7 +25,7 @@
 <meta name="author" content="Felipe González">
 
 
-<meta name="date" content="2017-09-19">
+<meta name="date" content="2017-09-22">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -213,10 +213,15 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#como-ajustar-los-parametros"><i class="fa fa-check"></i>¿Cómo ajustar los parámetros?</a></li>
 </ul></li>
 <li class="chapter" data-level="7.2" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#interacciones-en-redes-neuronales"><i class="fa fa-check"></i><b>7.2</b> Interacciones en redes neuronales</a></li>
-<li class="chapter" data-level="7.3" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#redes-neuronales-completamente-conexas"><i class="fa fa-check"></i><b>7.3</b> Redes neuronales completamente conexas</a></li>
+<li class="chapter" data-level="7.3" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#calculo-en-redes-feed-forward."><i class="fa fa-check"></i><b>7.3</b> Cálculo en redes: feed-forward.</a></li>
+<li class="chapter" data-level="" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#notacion-1"><i class="fa fa-check"></i>Notación</a></li>
 <li class="chapter" data-level="7.4" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#feed-forward"><i class="fa fa-check"></i><b>7.4</b> Feed forward</a></li>
-<li class="chapter" data-level="7.5" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#ajuste-de-parametros-introduccion"><i class="fa fa-check"></i><b>7.5</b> Ajuste de parámetros (introducción)</a><ul>
-<li class="chapter" data-level="7.5.1" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#tarea-5"><i class="fa fa-check"></i><b>7.5.1</b> Tarea</a></li>
+<li class="chapter" data-level="7.5" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#backpropagation-calculo-del-gradiente"><i class="fa fa-check"></i><b>7.5</b> Backpropagation: cálculo del gradiente</a><ul>
+<li class="chapter" data-level="7.5.1" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#calculo-para-un-caso-de-entrenamiento"><i class="fa fa-check"></i><b>7.5.1</b> Cálculo para un caso de entrenamiento</a></li>
+</ul></li>
+<li class="chapter" data-level="7.6" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#algoritmo"><i class="fa fa-check"></i><b>7.6</b> Algoritmo</a></li>
+<li class="chapter" data-level="7.7" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#ajuste-de-parametros-introduccion"><i class="fa fa-check"></i><b>7.7</b> Ajuste de parámetros (introducción)</a><ul>
+<li class="chapter" data-level="" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#tarea-para-18-de-septiembre"><i class="fa fa-check"></i>Tarea (para 18 de septiembre)</a></li>
 </ul></li>
 </ul></li>
 <li class="divider"></li>
@@ -526,7 +531,7 @@ nn &lt;-<span class="st"> </span><span class="kw">nnet</span>(y <span class="op"
 <span class="kw">round</span>(nn<span class="op">$</span>wts[<span class="dv">10</span><span class="op">:</span><span class="dv">13</span>], <span class="dv">1</span>)</code></pre></div>
 <pre><code>## [1] -5.7 15.1 -8.6 19.8</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#2*nn$value</span></code></pre></div>
-<p>Ell cálculo de esta red es:</p>
+<p>El cálculo de esta red es:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">feed_fow &lt;-<span class="st"> </span><span class="cf">function</span>(beta, x){
   a_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">h</span>(beta[<span class="dv">1</span>] <span class="op">+</span><span class="st"> </span>beta[<span class="dv">2</span>]<span class="op">*</span>x[<span class="dv">1</span>] <span class="op">+</span><span class="st"> </span>beta[<span class="dv">3</span>]<span class="op">*</span>x[<span class="dv">2</span>]) 
   a_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">h</span>(beta[<span class="dv">4</span>] <span class="op">+</span><span class="st"> </span>beta[<span class="dv">5</span>]<span class="op">*</span>x[<span class="dv">1</span>] <span class="op">+</span><span class="st"> </span>beta[<span class="dv">6</span>]<span class="op">*</span>x[<span class="dv">2</span>]) 
@@ -546,26 +551,114 @@ nn &lt;-<span class="st"> </span><span class="kw">nnet</span>(y <span class="op"
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dat &lt;-<span class="st"> </span>dat <span class="op">%&gt;%</span><span class="st"> </span>rowwise <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">p_red =</span> <span class="kw">feed_fow</span>(nn<span class="op">$</span>wts, <span class="kw">c</span>(x1, x2)))
 <span class="kw">ggplot</span>(dat, <span class="kw">aes</span>(<span class="dt">x=</span>x1, <span class="dt">y=</span>x2)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_tile</span>(<span class="kw">aes</span>(<span class="dt">fill=</span>p_red))</code></pre></div>
 <p><img src="07-redes-neuronales_files/figure-html/unnamed-chunk-24-1.png" width="672" /></p>
+<p><strong>Observación</strong>: ¿cómo funciona esta red? Consideremos la capa intermedia</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dat_entrada &lt;-<span class="st"> </span><span class="kw">data_frame</span>(<span class="dt">x_1=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">1</span>), <span class="dt">x_2=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">1</span>))
+a_<span class="dv">1</span> &lt;-<span class="st"> </span>dat_entrada <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">rowwise</span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">a_1=</span> <span class="kw">h</span>(<span class="kw">sum</span>(nn<span class="op">$</span>wts[<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>]<span class="op">*</span><span class="kw">c</span>(<span class="dv">1</span>,x_<span class="dv">1</span>,x_<span class="dv">2</span>) )))
+a_<span class="dv">2</span> &lt;-<span class="st"> </span>dat_entrada <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">rowwise</span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">a_2=</span> <span class="kw">h</span>(<span class="kw">sum</span>(nn<span class="op">$</span>wts[<span class="dv">4</span><span class="op">:</span><span class="dv">6</span>]<span class="op">*</span><span class="kw">c</span>(<span class="dv">1</span>,x_<span class="dv">1</span>,x_<span class="dv">2</span>) )))
+a_<span class="dv">3</span> &lt;-<span class="st"> </span>dat_entrada <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">rowwise</span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">a_3=</span> <span class="kw">h</span>(<span class="kw">sum</span>(nn<span class="op">$</span>wts[<span class="dv">7</span><span class="op">:</span><span class="dv">9</span>]<span class="op">*</span><span class="kw">c</span>(<span class="dv">1</span>,x_<span class="dv">1</span>,x_<span class="dv">2</span>) )))
+capa_intermedia &lt;-<span class="st"> </span><span class="kw">left_join</span>(a_<span class="dv">1</span>, a_<span class="dv">2</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">left_join</span>(a_<span class="dv">3</span>)</code></pre></div>
+<pre><code>## Joining, by = c(&quot;x_1&quot;, &quot;x_2&quot;)
+## Joining, by = c(&quot;x_1&quot;, &quot;x_2&quot;)</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">a_<span class="dv">1</span></code></pre></div>
+<pre><code>## Source: local data frame [4 x 3]
+## Groups: &lt;by row&gt;
+## 
+## # A tibble: 4 x 3
+##     x_1   x_2        a_1
+##   &lt;dbl&gt; &lt;dbl&gt;      &lt;dbl&gt;
+## 1     0     0 0.10233895
+## 2     0     1 0.01014846
+## 3     1     0 0.68556319
+## 4     1     1 0.16392998</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">a_<span class="dv">3</span></code></pre></div>
+<pre><code>## Source: local data frame [4 x 3]
+## Groups: &lt;by row&gt;
+## 
+## # A tibble: 4 x 3
+##     x_1   x_2        a_3
+##   &lt;dbl&gt; &lt;dbl&gt;      &lt;dbl&gt;
+## 1     0     0 0.06285298
+## 2     0     1 0.70876776
+## 3     1     0 0.01302357
+## 4     1     1 0.32378386</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">a_<span class="dv">2</span></code></pre></div>
+<pre><code>## Source: local data frame [4 x 3]
+## Groups: &lt;by row&gt;
+## 
+## # A tibble: 4 x 3
+##     x_1   x_2          a_2
+##   &lt;dbl&gt; &lt;dbl&gt;        &lt;dbl&gt;
+## 1     0     0 0.0002839063
+## 2     0     1 0.6213605990
+## 3     1     0 0.0959812149
+## 4     1     1 0.9983727125</code></pre>
+<p>Y observamos que las unidades <span class="math inline">\(a_1\)</span> y <span class="math inline">\(a_3\)</span> tienen valor alto cuando las variables <span class="math inline">\(x_1\)</span> y <span class="math inline">\(x_2\)</span>, correspondientemente, tienen valores altos. La unidad <span class="math inline">\(a_2\)</span> responde cuando tanto como <span class="math inline">\(x_1\)</span>y <span class="math inline">\(x_2\)</span> tienen valores altos.</p>
+<p>Para la capa final, tenemos que:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">nn<span class="op">$</span>wts[<span class="dv">10</span><span class="op">:</span><span class="dv">13</span>]</code></pre></div>
+<pre><code>## [1] -5.747250 15.138708 -8.628917 19.801144</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">capa_final &lt;-<span class="st"> </span>capa_intermedia <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">rowwise</span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">p=</span> <span class="kw">h</span>(<span class="kw">sum</span>(nn<span class="op">$</span>wts[<span class="dv">10</span><span class="op">:</span><span class="dv">13</span>]<span class="op">*</span><span class="kw">c</span>(<span class="dv">1</span>,a_<span class="dv">1</span>,a_<span class="dv">2</span>,a_<span class="dv">3</span>) ))) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">p=</span><span class="kw">round</span>(p,<span class="dv">2</span>))
+capa_final</code></pre></div>
+<pre><code>## Source: local data frame [4 x 6]
+## Groups: &lt;by row&gt;
+## 
+## # A tibble: 4 x 6
+##     x_1   x_2        a_1          a_2        a_3     p
+##   &lt;dbl&gt; &lt;dbl&gt;      &lt;dbl&gt;        &lt;dbl&gt;      &lt;dbl&gt; &lt;dbl&gt;
+## 1     0     0 0.10233895 0.0002839063 0.06285298  0.05
+## 2     0     1 0.01014846 0.6213605990 0.70876776  0.96
+## 3     1     0 0.68556319 0.0959812149 0.01302357  0.98
+## 4     1     1 0.16392998 0.9983727125 0.32378386  0.00</code></pre>
 </div>
-<div id="redes-neuronales-completamente-conexas" class="section level2">
-<h2><span class="header-section-number">7.3</span> Redes neuronales completamente conexas</h2>
-<p>Ahora generalizamos lo que vimos arriba para definir la arquitectura básica de redes neuronales.</p>
+<div id="calculo-en-redes-feed-forward." class="section level2">
+<h2><span class="header-section-number">7.3</span> Cálculo en redes: feed-forward.</h2>
+<p>Ahora generalizamos lo que vimos arriba para definir la arquitectura básica de redes neuronales y cómo se hacen cálculos en las redes.</p>
 
 <div class="comentario">
-A las variables originales les llamamos <em>capa de entrada</em> de la red, y a la variable de salida <em>capa de salida</em>. Puede haber más de una capa intermedia. A estas les llamamos <em>capas ocultas</em>.
+<p>A las variables originales les llamamos <em>capa de entrada</em> de la red, y a la variable de salida <em>capa de salida</em>. Puede haber más de una capa intermedia. A estas les llamamos <em>capas ocultas</em>.</p>
+Cuando todas las conexiones posibles de cada capa a la siguiente están presente, decimos que la red es <em>completamente conexa</em>.
 </div>
 
-<p><img src="07-redes-neuronales_files/figure-html/unnamed-chunk-26-1.png" width="672" /></p>
-Usaremos una notación distinta para simplificar. En primer lugar, denotamos 
-<div class="comentario">
-<span class="math inline">\(\theta_{i,k}^{(l)}=\)</span> peso de entrada <span class="math inline">\(a_{k}^{(l-1)}\)</span> de capa <span class="math inline">\(l-1\)</span> en la entrada <span class="math inline">\(a_{i}^{(l)}\)</span> de la capa <span class="math inline">\(l\)</span>.
-</div>
-
-<p>De modo que de la capa <span class="math inline">\(2\)</span> a la capa <span class="math inline">\(3\)</span>, tenemos:</p>
-<p><span class="math display">\[a_1^3 = h(\theta_{1,0}^{(3)} + \theta_{1,1}^{(3)} a_1^{(2)}+ \theta_{1,2}^{(3)}a_2^{(2)}+ \theta_{1,3}^{(3)} a_3^{(2)})\]</span> <span class="math display">\[a_2^3 = h(\theta_{2,0}^{(3)} + \theta_{2,1}^{(3)} a_1^{(2)}+ \theta_{2,2}^{(3)}a_2^{(2)}+ \theta_{2,3}^{(3)} a_3^{(2)})\]</span></p>
-<p>como se ilustra en la siguiente gráfica:</p>
 <p><img src="07-redes-neuronales_files/figure-html/unnamed-chunk-28-1.png" width="672" /></p>
-<p>Para visualizar las ordenadas (que también se llaman <strong>sesgos</strong> en este contexto), ponemos <span class="math inline">\(a_0^2=1\)</span>. <img src="07-redes-neuronales_files/figure-html/unnamed-chunk-29-1.png" width="672" /></p>
+<p>Como vimos en el ejemplo de arriba, para hacer cálculos en la red empezamos con la primera capa, hacemos combinaciones lineales y aplicamos nuestra función no lineal <span class="math inline">\(h\)</span>. Una vez que calculamos la segunda capa, podemos calcular la siguiente de la misma forma: combinaciones lineales y aplicación de <span class="math inline">\(h\)</span>. Y así sucesivamente hasta que llegamos a la capa final.</p>
+</div>
+<div id="notacion-1" class="section level2 unnumbered">
+<h2>Notación</h2>
+<p>Sea <span class="math inline">\(L\)</span> el número total de capas. En primer lugar, para un cierto caso de entrada <span class="math inline">\(x = (x_1,x_2,\ldots, x_p)\)</span>, denotamos por:</p>
+<ul>
+<li><span class="math inline">\(a^{(l)}_j\)</span> el valor que toma la unidad <span class="math inline">\(j\)</span> de la capa <span class="math inline">\(l\)</span>, para <span class="math inline">\(j=0,1,\ldots, n_{l}\)</span>, donde <span class="math inline">\(n_l\)</span> es el número de unidades de la capa <span class="math inline">\(l\)</span>.</li>
+<li>Ponemos <span class="math inline">\(a^{(l)}_0=1\)</span> para lidiar con los sesgos.</li>
+<li>En particular, ponemos <span class="math inline">\(a^{(1)}_j = x_j\)</span>, que son los valores de las entradas (primera capa)</li>
+<li>Para clasificación binaria, la última capa solo tiene un elemento, que es <span class="math inline">\(p_1 = a^{(L)}\)</span>. Para un problema de clasificación en <span class="math inline">\(K&gt;2\)</span> clases, tenemos que la última capa es de tamaño <span class="math inline">\(K\)</span>: <span class="math inline">\(p_1 = a^{(L)}_1, p_2 = a^{(L)}_2,\ldots, p_K = a^{(L)}_K\)</span></li>
+</ul>
+<p>Adicionalmente, escribimos</p>
+<p><span class="math inline">\(\theta_{i,k}^{(l)}=\)</span> es el peso de entrada <span class="math inline">\(a_{k}^{(l-1)}\)</span> de capa <span class="math inline">\(l-1\)</span> en la entrada <span class="math inline">\(a_{i}^{(l)}\)</span> de la capa <span class="math inline">\(l\)</span>.</p>
+<p>Los sesgos están dados por <span class="math display">\[\theta_{i,0}^{(l)}\]</span></p>
+<div id="ejemplo-29" class="section level4 unnumbered">
+<h4>Ejemplo</h4>
+<p>En nuestro ejemplo, tenemos que en la capa <span class="math inline">\(l=3\)</span> hay dos unidades. Así que podemos calcular los valores <span class="math inline">\(a^{(3)}_1\)</span> y <span class="math inline">\(a^{(3)}_2\)</span>. Están dados por</p>
+<p><span class="math display">\[a_1^{(3)} = h(\theta_{1,0}^{(3)} + \theta_{1,1}^{(3)} a_1^{(2)}+ \theta_{1,2}^{(3)}a_2^{(2)}+ \theta_{1,3}^{(3)} a_3^{(2)})\]</span> <span class="math display">\[a_2^{(3)} = h(\theta_{2,0}^{(3)} + \theta_{2,1}^{(3)} a_1^{(2)}+ \theta_{2,2}^{(3)}a_2^{(2)}+ \theta_{2,3}^{(3)} a_3^{(2)})\]</span></p>
+<p>Como se ilustra en la siguiente gráfica:</p>
+<p><img src="07-redes-neuronales_files/figure-html/unnamed-chunk-29-1.png" width="672" /></p>
+<p>Para visualizar las ordenadas (que también se llaman <strong>sesgos</strong> en este contexto), ponemos <span class="math inline">\(a_0^2=1\)</span>. <img src="07-redes-neuronales_files/figure-html/unnamed-chunk-30-1.png" width="672" /></p>
+</div>
+<div id="ejemplo-30" class="section level4 unnumbered">
+<h4>Ejemplo</h4>
+<p>Consideremos propagar con los siguientes pesos para capa 3 y valores de la capa 2 (en gris están los sesgos): <img src="07-redes-neuronales_files/figure-html/unnamed-chunk-31-1.png" width="672" /></p>
+<p>Que en nuestra notación escribimos como <span class="math display">\[a^{(2)}_0 = 1, a^{(2)}_1 = -2, a^{(2)}_2 = 5\]</span> y los pesos son, para la primera unidad: <span class="math display">\[\theta^{(3)}_{0,1} = 3,  \,\,\, \theta^{(3)}_{1,1} = 1,\,\,\,\theta^{(3)}_{2,1} = -1\]</span> y para la segunda unidad <span class="math display">\[\theta^{(3)}_{0,2} = 1,  \,\,\, \theta^{(3)}_{1,2} = 2,\,\,\,\theta^{(3)}_{2,2} = 0.5\]</span> Y ahora queremos calcular los valores que toman las unidades de la capa 3, que son <span class="math inline">\(a^{(3)}_1\)</span> y <span class="math inline">\(a^{(3)}_2\)</span>$</p>
+<p>Para hacer feed forward a la siguiente capa, hacemos entonces</p>
+<p><span class="math display">\[a^{(3)}_1 = h(3 + a^{(2)}_1 - a^{(2)}_2),\]</span> <span class="math display">\[a^{(3)}_2 = h(1 + 2a^{(2)}_1 + 0.5a^{(2)}_2),\]</span></p>
+<p>Ponemos los pesos y valores de la capa 2 (incluyendo sesgo):</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">a_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>,<span class="op">-</span><span class="dv">2</span>,<span class="dv">5</span>) <span class="co"># ponemos un 1 al principio para el sesgo</span>
+theta_2_<span class="dv">1</span> =<span class="st"> </span><span class="kw">c</span>(<span class="dv">3</span>,<span class="dv">1</span>,<span class="op">-</span><span class="dv">1</span>)
+theta_2_<span class="dv">2</span> =<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="fl">0.5</span>)</code></pre></div>
+<p>y calculamos</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">a_<span class="dv">3</span> &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>, <span class="kw">h</span>(<span class="kw">sum</span>(theta_2_<span class="dv">1</span><span class="op">*</span>a_<span class="dv">2</span>)),<span class="kw">h</span>(<span class="kw">sum</span>(theta_2_<span class="dv">2</span><span class="op">*</span>a_<span class="dv">2</span>))) <span class="co"># ponemos un 1 al principio</span>
+a_<span class="dv">3</span></code></pre></div>
+<pre><code>## [1] 1.00000000 0.01798621 0.37754067</code></pre>
+<p><img src="07-redes-neuronales_files/figure-html/unnamed-chunk-34-1.png" width="672" /></p>
+</div>
 </div>
 <div id="feed-forward" class="section level2">
 <h2><span class="header-section-number">7.4</span> Feed forward</h2>
@@ -586,48 +679,131 @@ Para la primera capa, escribimos las variables de entrada: <span class="math dis
 </div>
 </li>
 </ul>
-<p>Adicionalmente, escribimos en forma vectorial: <span class="math display">\[a^{(l)} = (a^{(l)}_1, a^{(l)}_2, \ldots, a^{(l)}_{n_l})^t\]</span></p>
-<p>Para calcular la salidas, igual que hicimos, antes, propagaremos hacia adelante los valores de las variables de entrada usando los <em>pesos</em>. Agregando entradas adicionales en cada capa <span class="math inline">\(a_0^{l}\)</span>, <span class="math inline">\(l=1,2,\ldots, L-1\)</span>, donde <span class="math inline">\(a_0^{l}=1\)</span>, y agregando a <span class="math inline">\(\Theta^{(l)}\)</span> una columna con las ordenadas al origen (o sesgos) podemos escribir:</p>
+<p>Adicionalmente, escribimos en forma vectorial: <span class="math display">\[a^{(l)} = (a^{(l)}_0, a^{(l)}_1, a^{(l)}_2, \ldots, a^{(l)}_{n_l})^t\]</span></p>
+<p>Para calcular la salidas, igual que hicimos, antes, propagaremos hacia adelante los valores de las variables de entrada usando los <em>pesos</em>. Agregando entradas adicionales en cada capa <span class="math inline">\(a_0^{(l)}\)</span>, <span class="math inline">\(l=1,2,\ldots, L-1\)</span>, donde <span class="math inline">\(a_0^{l}=1\)</span>, y agregando a <span class="math inline">\(\Theta^{(l)}\)</span> una columna con las ordenadas al origen (o sesgos) podemos escribir:</p>
 
 <div class="comentario">
 <p><strong>Feed-forward</strong>(matricial)</p>
 <ul>
+<li>Capa 1 (vector de entradas) <span class="math display">\[ a^{(1)} = x\]</span></li>
 <li>Capa 2 <span class="math display">\[ a^{(2)} = h(\Theta^{(1)}a^{(1)})\]</span></li>
 <li>Capa <span class="math inline">\(l\)</span> (oculta) <span class="math display">\[ a^{(l)} = h(\Theta^{(l)}a^{(l-1)})\]</span></li>
-<li>Capa de salida: <span class="math display">\[a^{(L)}= p = h(\Theta^{(L)}a^{(L-1)})\]</span></li>
+<li>Capa de salida: <span class="math display">\[a^{(L)}= p = h(\Theta^{(L)}a^{(L-1)})\]</span> donde <span class="math inline">\(h\)</span> se aplica componente a componente sobre los vectores correspondientes.
+</div>
+</li>
 </ul>
 </div>
-<p> Podemos hacer una función simple para hacer feed-foward de una capa a la siguiente:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">feed_forward &lt;-<span class="st"> </span><span class="cf">function</span>(a, Theta){
-  <span class="co"># a_{l-1} da los valores de la primera capa, la función debe regresar</span>
-  <span class="co"># los valores de la siguiente capa a_l. Theta da los pesos</span>
-  <span class="kw">h</span>(Theta <span class="op">%*%</span><span class="st"> </span>a)
-}</code></pre></div>
-<p>Por ejemplo, consideremos propagar bajo la siguiente situación: <img src="07-redes-neuronales_files/figure-html/unnamed-chunk-34-1.png" width="672" /></p>
-<p>La matriz de parámetros es</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">Theta =<span class="st"> </span><span class="kw">t</span>(<span class="kw">matrix</span>(<span class="kw">c</span>(<span class="dv">3</span>,<span class="dv">1</span>,<span class="op">-</span><span class="dv">1</span>,<span class="dv">1</span>,<span class="fl">0.5</span>,<span class="dv">2</span>), <span class="dt">byrow=</span>F, <span class="dt">ncol=</span><span class="dv">2</span>))
-Theta</code></pre></div>
-<pre><code>##      [,1] [,2] [,3]
-## [1,]    3  1.0   -1
-## [2,]    1  0.5    2</code></pre>
-<p>Ahora hacemos feed forward:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">feed_forward</span>(<span class="kw">c</span>(<span class="dv">1</span>,<span class="op">-</span><span class="dv">2</span>,<span class="dv">5</span>), <span class="dt">Theta =</span> Theta)</code></pre></div>
-<pre><code>##            [,1]
-## [1,] 0.01798621
-## [2,] 0.99995460</code></pre>
-<p><img src="07-redes-neuronales_files/figure-html/unnamed-chunk-37-1.png" width="672" /></p>
+<div id="backpropagation-calculo-del-gradiente" class="section level2">
+<h2><span class="header-section-number">7.5</span> Backpropagation: cálculo del gradiente</h2>
+<p>Más adelante, para ajustar los pesos y sesgos de las redes (valores <span class="math inline">\(\theta\)</span>), utilizaremos descenso en gradiente y otros algoritmos derivados del gradiente (descenso estocástico). En esta parte entonces veremos cómo calcular estos gradientes con el algoritmo de <em>back-propagation</em>, que es una aplicación de la regla de la cadena para derivar. Back-propagation resulta en una fórmula recursiva donde propagamos errores de la red como gradientes desde el final de red (capa de salida) hasta el principio, capa por capa.</p>
+<p>Recordamos la devianza (con regularización ridge) es</p>
+<p><span class="math display">\[D = -\frac{2}{n}\sum_{i=1}^n y_i\log(p_1(x_i)) +(1-y_i)\log(1-p_1(x_i)) + \lambda \sum_{l=2}^{L} \sum_{k=1}^{n_{l-1}} \sum_{j=1}^{n_l}(\theta_{j,k}^{(l)})^2.\]</span></p>
+<p>Queremos entonces calcular las derivadas de la devianza con respecto a cada parámetro <span class="math inline">\(\theta_{j,k}^{(l)}\)</span>. Esto nos proporciona el gradiente para nuestro algoritmo de descenso.</p>
+<p><strong>Consideramos aquí el problema de clasificación binaria con devianza como función de pérdida, y sin regularización</strong>. La parte de la parcial que corresponde al término de regularización es fácil de agregar al final.</p>
+<p>Recordamos también nuestra notación para la función logística (o sigmoide):</p>
+<p><span class="math display">\[h(z)=\frac{1}{1+e^{-z}}.\]</span> Necesitaremos su derivada, que está dada por (cálculala): <span class="math display">\[h&#39;(z) = h(z)(1-h(z))\]</span></p>
+<div id="calculo-para-un-caso-de-entrenamiento" class="section level3">
+<h3><span class="header-section-number">7.5.1</span> Cálculo para un caso de entrenamiento</h3>
+<p>Como hicimos en regresión logística, primero simplificamos el problema y consideramos calcular las parciales <em>para un solo caso de entrenamiento</em> <span class="math inline">\((x,y)\)</span>: <span class="math display">\[ D=- \sum_{j=1}^K y_{j}\log (p_1(x)) + (1-y_{j})\log (1-p_1(x)). \]</span></p>
+<p>Después sumaremos sobre toda la muestra de entrenamiento. Entonces queremos calcular <span class="math display">\[\frac{\partial D}{\partial \theta_{j,k}^{(l)}}\]</span></p>
+<p>Y escribiremos, con la notación de arriba, <span class="math display">\[a^{(l)}_j = h(z^{(l)}_j)\]</span> donde <span class="math display">\[z^{(l)} = \Theta^{l} a^{(l)},\]</span> que coordenada a coordenada se escribe como <span class="math display">\[z^{(l)}_j =  \sum_{k=0}^{n_{l-1}}  \theta_{j,k}^{(l)}  a^{(l-1)}_k\]</span></p>
+<div id="paso-1-derivar-respecto-a-capa-l" class="section level4 unnumbered">
+<h4>Paso 1: Derivar respecto a capa <span class="math inline">\(l\)</span></h4>
+<p>Como los valores de cada capa determinan los valores de salida y la devianza, podemos escribir (recordemos que <span class="math inline">\(a_0^{(l)}=1\)</span> es constante): <span class="math display">\[D=D(a_0^{(l)},a_1^{(l)},a_2^{(l)},\ldots, a_{n_{l}}^{(l)})=D(a_1^{(l)},a_2^{(l)},\ldots, a_{n_{l}}^{(l)})\]</span></p>
+<p>Así que por la regla de la cadena para varias variables: <span class="math display">\[\frac{\partial D}{\partial \theta_{j,k}^{(l)}} =
+\sum_{t=1}^{n_{l}} \frac{\partial D}{\partial a_t^{l}}\frac{\partial a_t^{(l)}}
+{\partial \theta_{j,k}^{(l)} }\]</span></p>
+<p>Pero si vemos dónde aparece <span class="math inline">\(\theta_{j,k}^{(l)}\)</span> en la gráfica de la red:</p>
+<p><span class="math display">\[ \cdots a^{(l-1)}_k \xrightarrow{\theta_{j,k}^{(l)}} a^{(l)}_j  \cdots \rightarrow  D\]</span> Entonces podemos concluir que <span class="math inline">\(\frac{\partial a_t^{(l)}}{\partial \theta_{j,k}^{(l)}} =0\)</span> cuando <span class="math inline">\(t\neq j\)</span> (pues no dependen de <span class="math inline">\(\theta_{j,k}^{(l)}\)</span>),</p>
+de lo que se concluye que, para toda <span class="math inline">\(j=1,2,\ldots, n_{l+1}, k=0,1,\ldots, n_{l}\)</span>
+<span class="math display" id="eq:parcial">\[\begin{equation}
+\frac{\partial D}{\partial \theta_{j,k}^{(l)}} =
+\frac{\partial D}{\partial a_j^{(l)}}\frac{\partial a_j^{(l)}}{\partial \theta_{j,k}^{(l)} }
+,
+  \tag{7.1}
+\end{equation}\]</span>
+y como <span class="math display">\[a_j^{(l)} = h(z_j^{(l)}) = h\left (\sum_{k=0}^{n_{l-1}}  \theta_{j,k}^{(l)}  a^{(l-1)}_k \right )\]</span> Tenemos por la regla de la cadena que
+<span class="math display">\[\begin{equation}
+\frac{\partial a_j^{(l)}}{\partial \theta_{j,k}^{(l)} } = h&#39;(z_j^{(l)})a_k^{(l-1)}.
+\end{equation}\]</span>
+<p>Esta última expresión podemos calcularla pues sólo requiere la derivada de <span class="math inline">\(h\)</span> y los valores de los nodos obtenidos en la pasada de feed-forward.</p>
+</div>
+<div id="paso-2-derivar-con-respecto-a-capa-l1" class="section level4 unnumbered">
+<h4>Paso 2: Derivar con respecto a capa <span class="math inline">\(l+1\)</span></h4>
+<p>Así que sólo nos queda calcular las parciales (<span class="math inline">\(j = 1,\ldots, n_l\)</span>) <span class="math display">\[\frac{\partial D}{\partial a_j^{(l)}}\]</span></p>
+<p>Para obtener una fórmula recursiva para esta cantidad (hacia atrás), aplicamos otra vez regla de la cadena, pero con respecto a la capa <span class="math inline">\(l+1\)</span> (ojo: queremos obtener una fórmula recursiva!):</p>
+<p><span class="math display">\[\frac{\partial D}{\partial a_j^{(l)}}= \sum_{s=1}^{n_l}
+\frac{\partial D}{\partial a_s^{(l+1)}}\frac{\partial  a_s^{(l+1)}}{\partial a_j^{(l)}},\]</span></p>
+<p>que se puede entender a partir de este diagrama: <img src="07-redes-neuronales_files/figure-html/unnamed-chunk-38-1.png" width="672" /></p>
+<p>Nótese que la suma empieza en <span class="math inline">\(s=1\)</span>, no en <span class="math inline">\(s=0\)</span>, pues <span class="math inline">\(a_0^{(l+1)}\)</span> no depende de <span class="math inline">\(a_k^{(l)}\)</span>.</p>
+<p>En este caso los elementos de la suma no se anulan necesariamente. Primero consideramos la derivada de:</p>
+<p><span class="math display">\[\frac{\partial  a_s^{(l+1)}}{\partial a_j^{(l)}}=h&#39;(z_s^{(l+1)})\theta_{s,j}^{(l+1)},\]</span></p>
+<p>de modo que</p>
+<p><span class="math display">\[\frac{\partial D}{\partial a_j^{(l)}}= \sum_{s=1}^{n_l}
+\frac{\partial D}{\partial a_s^{(l+1)}} h&#39;(z_s^{(l+1)})\theta_{s,j}^{(l+1)}.\]</span></p>
+<p>Denotaremos <span class="math display">\[\delta_s^{ (l+1)}=\frac{\partial D}{\partial a_s^{(l+1)}} h&#39;(z_s^{(l+1)})\]</span></p>
+de manera que la ecuación anterior es
+<span class="math display" id="eq:delta-def">\[\begin{equation}
+\frac{\partial D}{\partial a_j^{(l)}} = \sum_{s=1}^{n_{l+1}}
+\delta_s^{(l+1)}\theta_{s,j}^{(l+1)}.
+  \tag{7.2}
+\end{equation}\]</span>
+<p><strong>Observación</strong> Nótese que <span class="math inline">\(\delta_s^{(l)} =\frac{\partial D}{\partial z_s^{(l+1)}}\)</span>, que nos dice <em>a dónde tenemos que mover la entrada derivada</em> <span class="math inline">\(z_s^{(l+1)}\)</span> <em>para reducir el error</em> <span class="math inline">\(D\)</span>. Como <span class="math inline">\(z_s^{(l+1)}\)</span> es una entrada derivada que depende de parámetros <span class="math inline">\(\theta\)</span>, esta cantidad también nos ayudará a entender cómo debemos cambiar los parámetros <span class="math inline">\(\theta\)</span> para disminuir el error.</p>
+</div>
+<div id="paso-3-construir-formula-recursiva-para-delta" class="section level4 unnumbered">
+<h4>Paso 3: Construir fórmula recursiva para <span class="math inline">\(\delta\)</span></h4>
+<p>Lo único que nos falta calcular entonces son las <span class="math inline">\(\delta_s^{(l)}\)</span>.</p>
+<p>Tenemos que si <span class="math inline">\(l=2,\ldots,L-1\)</span>, entonces podemos escribir (usando <a href="redes-neuronales-parte-1.html#eq:delta-def">(7.2)</a>) como fórmula recursiva:</p>
+<span class="math display" id="eq:delta-recursion">\[\begin{equation}
+\delta_j^{(l)} = \frac{\partial D}{\partial a_j^{l}} h&#39;(z_j^{(l)})
+= \left (\sum_{s=1}^{n_l} \delta_s^{(l+1)} \theta_{s,j}^{(l+1)}\right ) h&#39;(z_j^{(l)}),
+  \tag{7.3}
+\end{equation}\]</span>
+<p>para <span class="math inline">\(j=1,2,\ldots, n_{l}\)</span>.</p>
+<p>y para la última capa, tenemos que (demostrar!)</p>
+<p><span class="math display">\[\delta_1^{(L)}=p - y.\]</span></p>
+<p>Finalmente, usando <a href="redes-neuronales-parte-1.html#eq:parcial">(7.1)</a>, obtenemos <span class="math display">\[\frac{\partial D}{\partial \theta_{j,k}^{(l)}} = \delta_j^{(l)}a_k^{(l-1)},\]</span></p>
+<p>y con esto ya podemos hacer backpropagation para calcular el gradiente sobre cada caso de entrenamiento, y solo resta acumular para obtener el gradiente sobre la muestra de entrenamiento.</p>
+<p>Muchas veces es útil escribir una versión vectorizada (importante para implementar):</p>
+</div>
+<div id="paso-4-version-matricial" class="section level4 unnumbered">
+<h4>Paso 4: Versión matricial</h4>
+<p>Ahora podemos escribir estas ecuaciones en forma vectorial. En primer lugar, <span class="math display">\[\delta^{(L)}=p-y.\]</span> Y además se puede ver de la ecuación <a href="redes-neuronales-parte-1.html#eq:delta-recursion">(7.3)</a> que (<span class="math inline">\(\Theta_{*}^{(l+1)}\)</span> denota la matriz de pesos <em>sin</em> la columna correspondiente al sesgo):</p>
+<span class="math display" id="eq:delta-recursion-mat">\[\begin{equation}
+\delta^{(l)}=\left( \Theta_{*}^{(l+1)}    \right)^t\delta^{(l+1)} \circ h&#39;(z^{(l)})
+\tag{7.4}
+\end{equation}\]</span>
+<p>donde <span class="math inline">\(\circ\)</span> denota el producto componente a componente.</p>
+<p>Ahora todo ya está calculado. Lo interesante es que las <span class="math inline">\(\delta^{(l)}\)</span> se calculan de manera recursiva.</p>
+</div>
+</div>
+</div>
+<div id="algoritmo" class="section level2">
+<h2><span class="header-section-number">7.6</span> Algoritmo</h2>
+
+<div class="comentario">
+<p><strong>Backpropagation</strong> Para problema de clasificación con regularización $0 $. Para <span class="math inline">\(i=1,\ldots, N\)</span>, tomamos el dato de entrenamiento <span class="math inline">\((x^{(i)}, y^{(i)})\)</span> y hacemos:</p>
+<ol style="list-style-type: decimal">
+<li>Ponemos <span class="math inline">\(a^{(1)}=x^{(i)}\)</span> (vector de entradas, incluyendo 1).</li>
+<li>Calculamos <span class="math inline">\(a^{(2)},a^{(3)},\ldots, a^{(L)}\)</span> usando feed forward para la entrada <span class="math inline">\(x^{(i)}\)</span></li>
+<li>Calculamos <span class="math inline">\(\delta^{(L)}=a^{ (L)}-y^{(i)}\)</span>, y luego <span class="math inline">\(\delta^{(L-1)},\ldots, \delta^{(2)}\)</span> según la recursión <a href="redes-neuronales-parte-1.html#eq:delta-recursion">(7.3)</a>.</li>
+<li>Acumulamos <span class="math inline">\(\Delta_{j,k}^{(l)}=\Delta_{j,k}^{(l)} + \delta_j^{(l)}a_k^{(l-1)}\)</span>.</li>
+<li>Finalmente, ponemos, si <span class="math inline">\(k\neq 0\)</span>, <span class="math display">\[D_{j,k}^{(l)} = \frac{2}{N}\Delta_{j,k}^{(l)} + 2\lambda\theta_{j,k}^{(l)}\]</span> y si <span class="math inline">\(k=0\)</span>, <span class="math display">\[D_{j,k}^{(l)} = \frac{2}{N}\Delta_{j,k}^{(l)} .\]</span> Entonces: <span class="math display">\[D_{j,k}^{(l)} =\frac{\partial D}{\partial \theta_{j,k}^{(l)}}.\]</span>
+</div>
+</li>
+</ol>
 </div>
 <div id="ajuste-de-parametros-introduccion" class="section level2">
-<h2><span class="header-section-number">7.5</span> Ajuste de parámetros (introducción)</h2>
+<h2><span class="header-section-number">7.7</span> Ajuste de parámetros (introducción)</h2>
 <p>Consideramos la versión con regularización ridge (también llamada L2) de la devianza de entrenamiento como nuestro función objetivo:</p>
 
 <div class="comentario">
-<strong>Ajuste de redes neuronales</strong> Para un problema de clasificación binaria con <span class="math inline">\(y_i=0\)</span> o <span class="math inline">\(y_i=1\)</span>, ajustamos los pesos <span class="math inline">\(\Theta^{(1)},\Theta^{(2)},\ldots, \Theta^{(L)}\)</span> de la red minimizando la devianza (penalizada) sobre la muestra de entrenamiento: <span class="math display">\[D(\Theta^{(1)},\ldots,\Theta^{(L-1)}) = -\frac{2}{n}\sum_{i=1}^n y_i\log(p_1(x_i)) +(1-y_i)\log(1-p_1(x_i)) + \lambda \sum_{l=2}^{L} \sum_{k=1}^{n_{l-1}} \sum_{j=1}^{n_l}(\theta_{j,k}^{(l)})^2.\]</span> Este problema en general no es convexo y <em>puede tener múltiples mínimos</em>.
+<strong>Ajuste de redes neuronales</strong> Para un problema de clasificación binaria con <span class="math inline">\(y_i=0\)</span> o <span class="math inline">\(y_i=1\)</span>, ajustamos los pesos <span class="math inline">\(\Theta^{(1)},\Theta^{(2)},\ldots, \Theta^{(L)}\)</span> de la red minimizando la devianza (penalizada) sobre la muestra de entrenamiento: <span class="math display">\[D = -\frac{2}{n}\sum_{i=1}^n y_i\log(p_1(x_i)) +(1-y_i)\log(1-p_1(x_i)) + \lambda \sum_{l=2}^{L} \sum_{k=1}^{n_{l-1}} \sum_{j=1}^{n_l}(\theta_{j,k}^{(l)})^2.\]</span> Este problema en general no es convexo y <em>puede tener múltiples mínimos</em>.
 </div>
 
 <p>Veremos el proceso de ajuste, selección de arquitectura, etc. más adelante. Por el momento hacemos unas observaciones acerca de este problema de minimización:</p>
 <ul>
-<li><p>Hay varios algoritmos para minimizar esta devianza, algunos avanzados incluyendo información de segundo orden (como Newton), pero actualmente la técnica más popular, para redes grandes, es descenso en gradiente. Más específicamente, una variación, que es <em>descenso estocástico</em>.</p></li>
+<li><p>Hay varios algoritmos para minimizar esta devianza, algunos avanzados incluyendo información de segundo orden (como Newton), pero actualmente lsa técnicas más populares, para redes grandes, están derivadas de descenso en gradiente. Más específicamente, una variación, que es <em>descenso estocástico</em>.</p></li>
 <li><p>Para redes neuronales, el gradiente se calcula con un algoritmo que se llama <em>back-propagation</em>, que es una aplicación de la regla de la cadena para propagar errores desde la capa de salida a lo largo de todas las capas para ajustar los pesos y sesgos.</p></li>
 <li><p>En estos problemas no buscamos el mínimo global, sino un mínimo local de buen desempeño. Puede haber múltiples mínimos, puntos silla, regiones relativamente planas, precipicios (curvatura alta). Todo esto dificulta el entrenamiento de redes neuronales grandes. Para redes grandes, ni siquiera esperamos a alcanzar un mínimo local, sino que nos detenemos prematuramente cuando obtenemos el mejor desempeño posible.</p></li>
 <li><p>Nótese que la simetría implica que podemos obtener la misma red cambiando pesos entre neuronas y las conexiones correspondientes. Esto implica que necesariamente hay varios mínimos.</p></li>
@@ -643,10 +819,9 @@ Theta</code></pre></div>
 <li>Verificar convergencia del algoritmo a un mínimo local (o el algoritmo no está mejorando).</li>
 <li>Predecir usando el modelo ajustado.</li>
 </ul>
-<p>El proceso de aprendizaje de las redes es más difícil que lo que hemos visto antes. En primer lugar, no está definido del todo, pues típicamente los algoritmos que usamos encuentran mínimos locales, y pueden variar de corrida a corrida.</p>
 <p>Finalmente, podemos probar distintas arquitecturas y valores del parámetros de regularización, para afinar estos parámetros según validación cruzada o una muestra de validación.</p>
-<div id="tarea-5" class="section level3">
-<h3><span class="header-section-number">7.5.1</span> Tarea</h3>
+<div id="tarea-para-18-de-septiembre" class="section level3 unnumbered">
+<h3>Tarea (para 18 de septiembre)</h3>
 <ul>
 <li>Instalar (keras para R)[<a href="https://keras.rstudio.com" class="uri">https://keras.rstudio.com</a>] (versión CPU).</li>
 <li>Suscribirse a kaggle (pueden ser equipos de 2 máximo, entonces les conviene suscribirse como un equipo).</li>

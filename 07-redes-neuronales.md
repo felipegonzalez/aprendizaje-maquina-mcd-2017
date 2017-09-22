@@ -559,7 +559,7 @@ round(nn$wts[10:13], 1)
 #2*nn$value
 ```
 
-Ell cálculo de esta red es:
+El cálculo de esta red es:
 
 
 ```r
@@ -615,37 +615,216 @@ ggplot(dat, aes(x=x1, y=x2)) + geom_tile(aes(fill=p_red))
 
 <img src="07-redes-neuronales_files/figure-html/unnamed-chunk-24-1.png" width="672" />
 
+**Observación**: ¿cómo funciona esta red? Consideremos la capa intermedia
 
-## Redes neuronales completamente conexas
+
+```r
+dat_entrada <- data_frame(x_1=c(0,0,1,1), x_2=c(0,1,0,1))
+a_1 <- dat_entrada %>% rowwise() %>% mutate(a_1= h(sum(nn$wts[1:3]*c(1,x_1,x_2) )))
+a_2 <- dat_entrada %>% rowwise() %>% mutate(a_2= h(sum(nn$wts[4:6]*c(1,x_1,x_2) )))
+a_3 <- dat_entrada %>% rowwise() %>% mutate(a_3= h(sum(nn$wts[7:9]*c(1,x_1,x_2) )))
+capa_intermedia <- left_join(a_1, a_2) %>% left_join(a_3)
+```
+
+```
+## Joining, by = c("x_1", "x_2")
+## Joining, by = c("x_1", "x_2")
+```
+
+```r
+a_1
+```
+
+```
+## Source: local data frame [4 x 3]
+## Groups: <by row>
+## 
+## # A tibble: 4 x 3
+##     x_1   x_2        a_1
+##   <dbl> <dbl>      <dbl>
+## 1     0     0 0.10233895
+## 2     0     1 0.01014846
+## 3     1     0 0.68556319
+## 4     1     1 0.16392998
+```
+
+```r
+a_3
+```
+
+```
+## Source: local data frame [4 x 3]
+## Groups: <by row>
+## 
+## # A tibble: 4 x 3
+##     x_1   x_2        a_3
+##   <dbl> <dbl>      <dbl>
+## 1     0     0 0.06285298
+## 2     0     1 0.70876776
+## 3     1     0 0.01302357
+## 4     1     1 0.32378386
+```
+
+```r
+a_2
+```
+
+```
+## Source: local data frame [4 x 3]
+## Groups: <by row>
+## 
+## # A tibble: 4 x 3
+##     x_1   x_2          a_2
+##   <dbl> <dbl>        <dbl>
+## 1     0     0 0.0002839063
+## 2     0     1 0.6213605990
+## 3     1     0 0.0959812149
+## 4     1     1 0.9983727125
+```
+
+Y observamos que las unidades $a_1$ y $a_3$ tienen valor alto cuando
+las variables $x_1$ y $x_2$, correspondientemente, tienen valores altos.
+La unidad $a_2$ responde cuando tanto como $x_1$y $x_2$ tienen valores altos.
+
+Para la capa final, tenemos que:
+
+
+```r
+nn$wts[10:13]
+```
+
+```
+## [1] -5.747250 15.138708 -8.628917 19.801144
+```
+
+```r
+capa_final <- capa_intermedia %>% rowwise() %>% 
+  mutate(p= h(sum(nn$wts[10:13]*c(1,a_1,a_2,a_3) ))) %>%
+  mutate(p=round(p,2))
+capa_final
+```
+
+```
+## Source: local data frame [4 x 6]
+## Groups: <by row>
+## 
+## # A tibble: 4 x 6
+##     x_1   x_2        a_1          a_2        a_3     p
+##   <dbl> <dbl>      <dbl>        <dbl>      <dbl> <dbl>
+## 1     0     0 0.10233895 0.0002839063 0.06285298  0.05
+## 2     0     1 0.01014846 0.6213605990 0.70876776  0.96
+## 3     1     0 0.68556319 0.0959812149 0.01302357  0.98
+## 4     1     1 0.16392998 0.9983727125 0.32378386  0.00
+```
+
+
+## Cálculo en redes: feed-forward.
 
 Ahora generalizamos lo que vimos arriba para definir la arquitectura
-básica de redes neuronales.
+básica de redes neuronales y cómo se hacen cálculos en las redes.
 
 \BeginKnitrBlock{comentario}<div class="comentario">A las variables originales les llamamos *capa de entrada* de la red,
 y a la variable de salida *capa de salida*. Puede haber más de una 
-capa intermedia. A estas les llamamos *capas ocultas*.</div>\EndKnitrBlock{comentario}
+capa intermedia. A estas les llamamos *capas ocultas*.
 
-<img src="07-redes-neuronales_files/figure-html/unnamed-chunk-26-1.png" width="672" />
-
-
-Usaremos una notación distinta
-para simplificar. En primer lugar, denotamos
-\BeginKnitrBlock{comentario}<div class="comentario">$\theta_{i,k}^{(l)}=$ peso de entrada $a_{k}^{(l-1)}$  de capa $l-1$ 
-en la entrada $a_{i}^{(l)}$ de la capa $l$.</div>\EndKnitrBlock{comentario}
-
-De modo que de la capa $2$ a la capa $3$, tenemos:
-
-$$a_1^3 = h(\theta_{1,0}^{(3)} + \theta_{1,1}^{(3)} a_1^{(2)}+ \theta_{1,2}^{(3)}a_2^{(2)}+ \theta_{1,3}^{(3)} a_3^{(2)})$$
-$$a_2^3 = h(\theta_{2,0}^{(3)} + \theta_{2,1}^{(3)} a_1^{(2)}+ \theta_{2,2}^{(3)}a_2^{(2)}+ \theta_{2,3}^{(3)} a_3^{(2)})$$
-
-como se ilustra en la siguiente gráfica:
+Cuando todas las conexiones posibles de cada capa a la siguiente están presente,
+decimos que la red es *completamente conexa*.</div>\EndKnitrBlock{comentario}
 
 
 <img src="07-redes-neuronales_files/figure-html/unnamed-chunk-28-1.png" width="672" />
 
+Como vimos en el ejemplo de arriba, para hacer cálculos en la red empezamos
+con la primera capa, hacemos combinaciones lineales y aplicamos nuestra función
+no lineal $h$. Una vez que calculamos la segunda capa, podemos calcular
+la siguiente de la misma forma: combinaciones lineales y aplicación de $h$. Y así
+sucesivamente hasta que llegamos a la capa final.
+
+## Notación {-}
+
+Sea $L$ el número total de capas. En primer lugar, para un cierto caso de entrada $x = (x_1,x_2,\ldots, x_p)$, 
+denotamos por:
+
+- $a^{(l)}_j$ el valor que toma la unidad $j$ de la capa $l$, para $j=0,1,\ldots, n_{l}$, donde
+$n_l$ es el número de unidades de la capa $l$.
+- Ponemos $a^{(l)}_0=1$ para lidiar con los sesgos.
+- En particular, ponemos $a^{(1)}_j = x_j$, que son los valores de las entradas (primera capa)
+- Para clasificación binaria, la última capa solo tiene un elemento, que es
+$p_1 = a^{(L)}$. Para un problema de clasificación en $K>2$ clases, tenemos que 
+la última capa es de tamaño $K$:
+$p_1 = a^{(L)}_1, p_2 = a^{(L)}_2,\ldots,  p_K = a^{(L)}_K$
+
+Adicionalmente, escribimos
+
+$\theta_{i,k}^{(l)}=$ es el peso de entrada $a_{k}^{(l-1)}$  de capa $l-1$ 
+en la entrada $a_{i}^{(l)}$ de la capa $l$.
+
+Los sesgos están dados por
+$$\theta_{i,0}^{(l)}$$
+
+#### Ejemplo {-}
+En nuestro ejemplo, tenemos que en la capa $l=3$ hay dos unidades. Así que
+podemos calcular los valores $a^{(3)}_1$ y $a^{(3)}_2$. Están dados
+por
+
+$$a_1^{(3)} = h(\theta_{1,0}^{(3)} + \theta_{1,1}^{(3)} a_1^{(2)}+ \theta_{1,2}^{(3)}a_2^{(2)}+ \theta_{1,3}^{(3)} a_3^{(2)})$$
+$$a_2^{(3)} = h(\theta_{2,0}^{(3)} + \theta_{2,1}^{(3)} a_1^{(2)}+ \theta_{2,2}^{(3)}a_2^{(2)}+ \theta_{2,3}^{(3)} a_3^{(2)})$$
+
+Como se ilustra en la siguiente gráfica:
+
+
+<img src="07-redes-neuronales_files/figure-html/unnamed-chunk-29-1.png" width="672" />
+
 Para visualizar las ordenadas (que también se llaman  **sesgos** en este contexto),
 ponemos $a_0^2=1$.
-<img src="07-redes-neuronales_files/figure-html/unnamed-chunk-29-1.png" width="672" />
+<img src="07-redes-neuronales_files/figure-html/unnamed-chunk-30-1.png" width="672" />
+
+
+#### Ejemplo {-}
+
+Consideremos propagar con los siguientes pesos para capa 3 y valores de la
+capa 2 (en gris están los sesgos):
+<img src="07-redes-neuronales_files/figure-html/unnamed-chunk-31-1.png" width="672" />
+
+
+Que en nuestra notación escribimos como
+$$a^{(2)}_0 = 1, a^{(2)}_1 = -2, a^{(2)}_2 = 5$$
+y los pesos son, para la primera unidad:
+$$\theta^{(3)}_{0,1} = 3,  \,\,\, \theta^{(3)}_{1,1} = 1,\,\,\,\theta^{(3)}_{2,1} = -1$$
+y para la segunda unidad
+$$\theta^{(3)}_{0,2} = 1,  \,\,\, \theta^{(3)}_{1,2} = 2,\,\,\,\theta^{(3)}_{2,2} = 0.5$$
+Y ahora queremos calcular los valores que toman las unidades de la capa 3, 
+que son $a^{(3)}_1$ y  $a^{(3)}_2$$
+
+Para hacer feed forward a la siguiente capa, hacemos entonces
+
+$$a^{(3)}_1 = h(3 + a^{(2)}_1 - a^{(2)}_2),$$
+$$a^{(3)}_2 = h(1 + 2a^{(2)}_1 + 0.5a^{(2)}_2),$$
+
+Ponemos los pesos y valores de la capa 2 (incluyendo sesgo):
+
+
+```r
+a_2 <- c(1,-2,5) # ponemos un 1 al principio para el sesgo
+theta_2_1 = c(3,1,-1)
+theta_2_2 = c(1,2,0.5)
+```
+
+y calculamos
+
+
+```r
+a_3 <- c(1, h(sum(theta_2_1*a_2)),h(sum(theta_2_2*a_2))) # ponemos un 1 al principio
+a_3
+```
+
+```
+## [1] 1.00000000 0.01798621 0.37754067
+```
+
+
+<img src="07-redes-neuronales_files/figure-html/unnamed-chunk-34-1.png" width="672" />
+
+
 
 ## Feed forward
 
@@ -676,64 +855,227 @@ La red completa entonces se caracteriza por:
 - Las matrices de pesos en cada capa $\Theta^{(1)},\Theta^{(2)},\ldots, \Theta^{(L)}$</div>\EndKnitrBlock{comentario}
 
 Adicionalmente, escribimos en forma vectorial:
-$$a^{(l)} = (a^{(l)}_1, a^{(l)}_2, \ldots, a^{(l)}_{n_l})^t$$
+$$a^{(l)} = (a^{(l)}_0, a^{(l)}_1, a^{(l)}_2, \ldots, a^{(l)}_{n_l})^t$$
 
 Para calcular la salidas, igual que hicimos, antes, propagaremos hacia
 adelante los valores de las variables de entrada usando los *pesos*.
-Agregando entradas adicionales en cada capa $a_0^{l}$, $l=1,2,\ldots, L-1$,
+Agregando entradas adicionales en cada capa $a_0^{(l)}$, $l=1,2,\ldots, L-1$,
 donde $a_0^{l}=1$, y agregando a $\Theta^{(l)}$ una columna con
 las ordenadas al origen (o sesgos) podemos escribir:
 
 \BeginKnitrBlock{comentario}<div class="comentario">**Feed-forward**(matricial)
 
+- Capa 1 (vector de entradas)
+$$ a^{(1)} = x$$
 - Capa 2
 $$ a^{(2)} = h(\Theta^{(1)}a^{(1)})$$
 - Capa $l$ (oculta)
 $$ a^{(l)} = h(\Theta^{(l)}a^{(l-1)})$$
 - Capa de salida:
 $$a^{(L)}= p = h(\Theta^{(L)}a^{(L-1)})$$
-</div>\EndKnitrBlock{comentario}
-Podemos hacer una función simple para hacer feed-foward de una capa a la siguiente:
-
-```r
-feed_forward <- function(a, Theta){
-  # a_{l-1} da los valores de la primera capa, la función debe regresar
-  # los valores de la siguiente capa a_l. Theta da los pesos
-  h(Theta %*% a)
-}
-```
-
-Por ejemplo, consideremos propagar bajo la siguiente situación:
-<img src="07-redes-neuronales_files/figure-html/unnamed-chunk-34-1.png" width="672" />
+donde $h$ se aplica componente a componente sobre los vectores correspondientes.</div>\EndKnitrBlock{comentario}
 
 
-La matriz de parámetros es
 
-```r
-Theta = t(matrix(c(3,1,-1,1,0.5,2), byrow=F, ncol=2))
-Theta
-```
+## Backpropagation: cálculo del gradiente
 
-```
-##      [,1] [,2] [,3]
-## [1,]    3  1.0   -1
-## [2,]    1  0.5    2
-```
+Más adelante, para ajustar los pesos y sesgos de las redes (valores $\theta$),
+utilizaremos descenso en gradiente y otros algoritmos derivados del gradiente
+(descenso estocástico).
+En esta parte entonces veremos cómo calcular estos gradientes con el algoritmo
+de *back-propagation*, que es una aplicación de la regla de la cadena para derivar.
+Back-propagation resulta en una fórmula recursiva donde propagamos errores de la red
+como gradientes
+desde el final de red (capa de salida) hasta el principio, capa por capa.
 
-Ahora hacemos feed forward:
+Recordamos la devianza (con regularización ridge) es
+
+$$D = -\frac{2}{n}\sum_{i=1}^n y_i\log(p_1(x_i)) +(1-y_i)\log(1-p_1(x_i)) + \lambda \sum_{l=2}^{L} \sum_{k=1}^{n_{l-1}} \sum_{j=1}^{n_l}(\theta_{j,k}^{(l)})^2.$$
 
 
-```r
-feed_forward(c(1,-2,5), Theta = Theta)
-```
+Queremos entonces calcular las derivadas de la devianza con respecto a cada
+parámetro $\theta_{j,k}^{(l)}$. Esto nos proporciona el gradiente para
+nuestro algoritmo de descenso.
 
-```
-##            [,1]
-## [1,] 0.01798621
-## [2,] 0.99995460
-```
+**Consideramos aquí el problema de clasificación binaria con devianza como función
+de pérdida, y sin regularización**. La parte de la parcial que corresponde al término
+de regularización es fácil de agregar al final.
 
-<img src="07-redes-neuronales_files/figure-html/unnamed-chunk-37-1.png" width="672" />
+Recordamos también nuestra notación para la función logística (o sigmoide):
+
+$$h(z)=\frac{1}{1+e^{-z}}.$$
+Necesitaremos su derivada, que está dada por (cálculala):
+$$h'(z) = h(z)(1-h(z))$$
+
+### Cálculo para un caso de entrenamiento
+
+Como hicimos en regresión logística, primero simplificamos el problema 
+y consideramos calcular 
+las parciales *para un solo caso de entrenamiento* $(x,y)$:
+$$ D=- \sum_{j=1}^K y_{j}\log (p_1(x)) + (1-y_{j})\log (1-p_1(x)). $$
+
+Después sumaremos sobre toda la muestra de entrenamiento. Entonces queremos
+calcular 
+$$\frac{\partial D}{\partial \theta_{j,k}^{(l)}}$$
+
+Y escribiremos, con la notación de arriba, 
+$$a^{(l)}_j = h(z^{(l)}_j)$$
+donde 
+$$z^{(l)} = \Theta^{l} a^{(l)},$$
+que coordenada a coordenada se escribe como
+$$z^{(l)}_j =  \sum_{k=0}^{n_{l-1}}  \theta_{j,k}^{(l)}  a^{(l-1)}_k$$
+
+#### Paso 1: Derivar respecto a capa $l$ {-}
+
+Como los valores de cada capa determinan los valores de salida y la devianza,
+podemos escribir (recordemos que $a_0^{(l)}=1$ es constante):
+$$D=D(a_0^{(l)},a_1^{(l)},a_2^{(l)},\ldots, a_{n_{l}}^{(l)})=D(a_1^{(l)},a_2^{(l)},\ldots, a_{n_{l}}^{(l)})$$
+
+Así que por la regla de la cadena para varias variables:
+$$\frac{\partial D}{\partial \theta_{j,k}^{(l)}} =
+\sum_{t=1}^{n_{l}} \frac{\partial D}{\partial a_t^{l}}\frac{\partial a_t^{(l)}}
+{\partial \theta_{j,k}^{(l)} }$$
+
+Pero si vemos dónde aparece $\theta_{j,k}^{(l)}$ en la gráfica de la red:
+
+$$ \cdots a^{(l-1)}_k \xrightarrow{\theta_{j,k}^{(l)}} a^{(l)}_j  \cdots \rightarrow  D$$
+Entonces podemos concluir  que 
+$\frac{\partial a_t^{(l)}}{\partial \theta_{j,k}^{(l)}} =0$ cuando  $t\neq j$ (pues no
+ dependen de $\theta_{j,k}^{(l)}$),
+
+de lo que se concluye que, para toda $j=1,2,\ldots, n_{l+1}, k=0,1,\ldots, n_{l}$
+\begin{equation}
+\frac{\partial D}{\partial \theta_{j,k}^{(l)}} =
+\frac{\partial D}{\partial a_j^{(l)}}\frac{\partial a_j^{(l)}}{\partial \theta_{j,k}^{(l)} }
+,
+  (\#eq:parcial)
+\end{equation}
+
+y como 
+$$a_j^{(l)} = h(z_j^{(l)}) = h\left (\sum_{k=0}^{n_{l-1}}  \theta_{j,k}^{(l)}  a^{(l-1)}_k \right )$$
+Tenemos por la regla de la cadena que
+\begin{equation}
+\frac{\partial a_j^{(l)}}{\partial \theta_{j,k}^{(l)} } = h'(z_j^{(l)})a_k^{(l-1)}.
+\end{equation}
+
+Esta última expresión podemos calcularla pues sólo requiere la derivada de $h$ y
+los valores de los nodos obtenidos en la pasada de feed-forward.
+
+#### Paso 2: Derivar con respecto a capa $l+1$ {-}
+
+Así que sólo nos queda calcular las parciales ($j = 1,\ldots, n_l$)
+$$\frac{\partial D}{\partial a_j^{(l)}}$$ 
+
+Para obtener una fórmula recursiva para esta cantidad (hacia atrás), 
+aplicamos otra vez regla de la cadena, pero con respecto a la capa $l+1$ (ojo: queremos obtener
+una fórmula recursiva!):  
+
+$$\frac{\partial D}{\partial a_j^{(l)}}= \sum_{s=1}^{n_l}
+\frac{\partial D}{\partial a_s^{(l+1)}}\frac{\partial  a_s^{(l+1)}}{\partial a_j^{(l)}},$$
+
+que se puede entender a partir de este diagrama:
+<img src="07-redes-neuronales_files/figure-html/unnamed-chunk-38-1.png" width="672" />
+
+Nótese que la suma empieza en $s=1$, no en $s=0$, pues $a_0^{(l+1)}$ no depende
+de $a_k^{(l)}$.
+
+En este caso los elementos de la suma no se anulan necesariamente. Primero
+consideramos la derivada de:
+
+$$\frac{\partial  a_s^{(l+1)}}{\partial a_j^{(l)}}=h'(z_s^{(l+1)})\theta_{s,j}^{(l+1)},$$
+
+de modo que
+
+$$\frac{\partial D}{\partial a_j^{(l)}}= \sum_{s=1}^{n_l}
+\frac{\partial D}{\partial a_s^{(l+1)}} h'(z_s^{(l+1)})\theta_{s,j}^{(l+1)}.$$
+
+Denotaremos
+$$\delta_s^{ (l+1)}=\frac{\partial D}{\partial a_s^{(l+1)}} h'(z_s^{(l+1)})$$
+
+de manera que la ecuación anterior es
+\begin{equation}
+\frac{\partial D}{\partial a_j^{(l)}} = \sum_{s=1}^{n_{l+1}}
+\delta_s^{(l+1)}\theta_{s,j}^{(l+1)}.
+  (\#eq:delta-def)
+\end{equation}
+
+**Observación**
+Nótese que $\delta_s^{(l)} =\frac{\partial D}{\partial z_s^{(l+1)}}$, que nos 
+dice *a dónde tenemos que mover la entrada derivada*
+$z_s^{(l+1)}$ *para reducir el error* $D$.
+Como $z_s^{(l+1)}$ es una entrada derivada que depende de parámetros $\theta$,
+esta cantidad también nos ayudará a entender cómo debemos cambiar los
+parámetros $\theta$ para disminuir el error.
+
+
+#### Paso 3: Construir fórmula recursiva para $\delta$ {-}
+
+Lo único que nos falta calcular entonces son las $\delta_s^{(l)}$. 
+
+Tenemos que si $l=2,\ldots,L-1$, entonces podemos escribir (usando \@ref(eq:delta-def))
+como fórmula recursiva:
+
+\begin{equation}
+\delta_j^{(l)} = \frac{\partial D}{\partial a_j^{l}} h'(z_j^{(l)})
+= \left (\sum_{s=1}^{n_l} \delta_s^{(l+1)} \theta_{s,j}^{(l+1)}\right ) h'(z_j^{(l)}),
+  (\#eq:delta-recursion)
+\end{equation}
+para $j=1,2,\ldots, n_{l}$.
+
+y para la última capa, tenemos que (demostrar!)
+
+$$\delta_1^{(L)}=p - y.$$
+
+
+Finalmente, usando \@ref(eq:parcial), obtenemos
+$$\frac{\partial D}{\partial \theta_{j,k}^{(l)}} = \delta_j^{(l)}a_k^{(l-1)},$$
+
+y con esto ya podemos hacer backpropagation para calcular el gradiente
+sobre cada caso de entrenamiento, y solo resta acumular para obtener el gradiente
+sobre la muestra de entrenamiento.
+
+Muchas veces es útil escribir una versión vectorizada (importante para implementar):
+
+#### Paso 4: Versión matricial {-}
+
+Ahora podemos escribir estas ecuaciones en forma vectorial. En primer lugar,
+$$\delta^{(L)}=p-y.$$
+Y además se puede ver de la ecuación \@ref(eq:delta-recursion) que 
+($\Theta_{*}^{(l+1)}$ denota la matriz de pesos *sin* la columna correspondiente al sesgo):
+
+\begin{equation}
+\delta^{(l)}=\left( \Theta_{*}^{(l+1)}    \right)^t\delta^{(l+1)} \circ h'(z^{(l)})
+(\#eq:delta-recursion-mat)
+\end{equation}
+
+donde $\circ$ denota el producto componente a componente.
+
+Ahora todo ya está calculado. Lo interesante es que las $\delta^{(l)}$ se calculan
+de manera recursiva.
+
+## Algoritmo
+
+\BeginKnitrBlock{comentario}<div class="comentario">**Backpropagation** Para problema de clasificación con regularización $\lambda\geq 0 $.
+Para $i=1,\ldots, N$, tomamos el dato de entrenamiento  $(x^{(i)}, y^{(i)})$ y hacemos:
+
+1. Ponemos $a^{(1)}=x^{(i)}$ (vector de entradas, incluyendo 1).
+2. Calculamos $a^{(2)},a^{(3)},\ldots, a^{(L)}$ usando feed forward para la entrada $x^{(i)}$
+3. Calculamos $\delta^{(L)}=a^{ (L)}-y^{(i)}$, y luego
+$\delta^{(L-1)},\ldots, \delta^{(2)}$ según la recursión \@ref(eq:delta-recursion).
+4. Acumulamos
+$\Delta_{j,k}^{(l)}=\Delta_{j,k}^{(l)} + \delta_j^{(l)}a_k^{(l-1)}$.
+5. Finalmente, ponemos, si $k\neq 0$,
+$$D_{j,k}^{(l)} = \frac{2}{N}\Delta_{j,k}^{(l)} + 2\lambda\theta_{j,k}^{(l)}$$
+y si $k=0$,
+$$D_{j,k}^{(l)} = \frac{2}{N}\Delta_{j,k}^{(l)} .$$
+Entonces:
+$$D_{j,k}^{(l)} =\frac{\partial D}{\partial \theta_{j,k}^{(l)}}.$$</div>\EndKnitrBlock{comentario}
+
+
+
+
+
+
 
 
 
@@ -746,7 +1088,7 @@ de la devianza de entrenamiento como nuestro función objetivo:
 Para un problema de clasificación binaria con
 $y_i=0$ o $y_i=1$, ajustamos los pesos $\Theta^{(1)},\Theta^{(2)},\ldots, \Theta^{(L)}$
 de la red minimizando la devianza (penalizada) sobre la muestra de entrenamiento:
-$$D(\Theta^{(1)},\ldots,\Theta^{(L-1)}) = -\frac{2}{n}\sum_{i=1}^n y_i\log(p_1(x_i)) +(1-y_i)\log(1-p_1(x_i)) + \lambda \sum_{l=2}^{L} \sum_{k=1}^{n_{l-1}} \sum_{j=1}^{n_l}(\theta_{j,k}^{(l)})^2.$$
+$$D = -\frac{2}{n}\sum_{i=1}^n y_i\log(p_1(x_i)) +(1-y_i)\log(1-p_1(x_i)) + \lambda \sum_{l=2}^{L} \sum_{k=1}^{n_{l-1}} \sum_{j=1}^{n_l}(\theta_{j,k}^{(l)})^2.$$
 Este problema en general no es convexo y *puede tener múltiples mínimos*.</div>\EndKnitrBlock{comentario}
 
 Veremos el proceso de ajuste, selección de arquitectura, etc. más adelante.
@@ -754,7 +1096,8 @@ Por el momento hacemos unas observaciones acerca de este problema de minimizaci�
 
 - Hay varios algoritmos para minimizar esta devianza,
 algunos avanzados incluyendo información de segundo orden (como Newton), pero 
-actualmente la técnica más popular, para redes grandes, es descenso en gradiente. Más
+actualmente lsa técnicas más populares, para redes grandes, están 
+derivadas de descenso en gradiente. Más
 específicamente, una variación, que es *descenso estocástico*.
 
 - Para redes neuronales, el gradiente se calcula con un algoritmo que se llama
@@ -800,19 +1143,14 @@ Se toman, por ejemplo, normales con media 0 y varianza chica.
 - Verificar convergencia del algoritmo a un mínimo local (o el algoritmo no está mejorando).
 - Predecir usando el modelo ajustado. 
 
-El proceso de aprendizaje de las redes es más difícil que lo que hemos
-visto antes. En primer lugar, no está definido del todo, pues típicamente
-los algoritmos que usamos encuentran mínimos locales, y pueden variar
-de corrida a corrida.
 
 Finalmente, podemos probar distintas arquitecturas y valores del parámetros de regularización,
 para afinar estos parámetros según validación cruzada o una muestra de validación.
 
-### Tarea
+### Tarea (para 18 de septiembre) {-}
 
 - Instalar (keras para R)[https://keras.rstudio.com] (versión CPU).
 - Suscribirse a kaggle (pueden ser equipos de 2 máximo, entonces
 les conviene suscribirse como un equipo).
 - Hacer el ejercicio de arriba \@ref(ejercicio-red)
-
 

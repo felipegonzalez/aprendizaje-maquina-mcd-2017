@@ -948,7 +948,7 @@ dev_ent(beta)
 ```
 
 ```
-## [1] 232181.1
+## [1] 236813.5
 ```
 
 Hacemos algunas revisiiones del gradiente:
@@ -963,7 +963,7 @@ beta_2[1000] <- beta[1000] + epsilon
 ```
 
 ```
-## [1] -1083.945
+## [1] -1214.951
 ```
 
 
@@ -972,7 +972,7 @@ grad(beta)[1000]
 ```
 
 ```
-## [1] -1083.946
+## [1] -1214.952
 ```
 
 Ya ahora podemos hacer descenso:
