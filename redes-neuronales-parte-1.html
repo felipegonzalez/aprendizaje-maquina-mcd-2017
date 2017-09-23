@@ -25,7 +25,7 @@
 <meta name="author" content="Felipe González">
 
 
-<meta name="date" content="2017-09-22">
+<meta name="date" content="2017-09-23">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -828,7 +828,7 @@ Nótese que back-propagation consiste principalmente de mutliplicaciones de matr
 <p>Finalmente, podemos probar distintas arquitecturas y valores del parámetros de regularización, para afinar estos parámetros según validación cruzada o una muestra de validación.</p>
 <div id="ejemplo-31" class="section level3">
 <h3><span class="header-section-number">7.6.1</span> Ejemplo</h3>
-<p>Consideramos una arquitectura de dos capas para el problema de spam</p>
+<p>Consideramos una arquitectura de una capas para el problema de spam</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="cf">if</span>(<span class="kw">Sys.info</span>()[<span class="st">&#39;nodename&#39;</span>] <span class="op">==</span><span class="st"> &#39;vainilla.local&#39;</span>){
   <span class="co"># esto es por mi instalación particular de tensorflow - típicamente</span>
   <span class="co"># no es necesario que corras esta línea.</span>
@@ -890,21 +890,21 @@ modelo_tc <span class="op">%&gt;%</span><span class="st"> </span>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">score &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">evaluate</span>(x_valid_s, y_valid)
 score</code></pre></div>
 <pre><code>## $loss
-## [1] 0.605041
+## [1] 0.1788469
 ## 
 ## $acc
-## [1] 0.8252934</code></pre>
+## [1] 0.9354628</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tab_confusion &lt;-<span class="st"> </span><span class="kw">table</span>(modelo_tc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">predict_classes</span>(x_valid_s),y_valid) 
 tab_confusion</code></pre></div>
 <pre><code>##    y_valid
 ##       0   1
-##   0 920 261
-##   1   7 346</code></pre>
+##   0 895  67
+##   1  32 540</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">prop.table</span>(tab_confusion, <span class="dv">2</span>)</code></pre></div>
 <pre><code>##    y_valid
-##               0           1
-##   0 0.992448759 0.429983526
-##   1 0.007551241 0.570016474</code></pre>
+##              0          1
+##   0 0.96548004 0.11037891
+##   1 0.03451996 0.88962109</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df_iteraciones &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(iteraciones)
 <span class="kw">ggplot</span>(df_iteraciones, <span class="kw">aes</span>(<span class="dt">x=</span>epoch, <span class="dt">y=</span>value, <span class="dt">colour=</span>data, <span class="dt">group=</span>data)) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span><span class="kw">facet_wrap</span>(<span class="op">~</span>metric, <span class="dt">ncol=</span><span class="dv">1</span>, <span class="dt">scales =</span> <span class="st">&#39;free&#39;</span>)</code></pre></div>
@@ -929,7 +929,7 @@ tab_confusion</code></pre></div>
 </ul>
 <div id="ejercicio-7" class="section level4 unnumbered">
 <h4>Ejercicio</h4>
-<p>Haz algunos experimentos con las guías de arriba para el ejemplo de spam.</p>
+<p>Haz algunos experimentos con las guías de arriba para el ejemplo de spam. Usa el script scripts/ejercicio-spam-hiperparametros.R</p>
 </div>
 </div>
 <div id="hiperparametros-busqueda-en-grid" class="section level3">

@@ -1161,7 +1161,7 @@ para afinar estos parámetros según validación cruzada o una muestra de valida
 
 ### Ejemplo
 
-Consideramos una arquitectura de dos capas para el problema de spam 
+Consideramos una arquitectura de una capas para el problema de spam 
 
 
 ```r
@@ -1262,10 +1262,10 @@ score
 
 ```
 ## $loss
-## [1] 0.605041
+## [1] 0.1788469
 ## 
 ## $acc
-## [1] 0.8252934
+## [1] 0.9354628
 ```
 
 ```r
@@ -1276,8 +1276,8 @@ tab_confusion
 ```
 ##    y_valid
 ##       0   1
-##   0 920 261
-##   1   7 346
+##   0 895  67
+##   1  32 540
 ```
 
 ```r
@@ -1286,9 +1286,9 @@ prop.table(tab_confusion, 2)
 
 ```
 ##    y_valid
-##               0           1
-##   0 0.992448759 0.429983526
-##   1 0.007551241 0.570016474
+##              0          1
+##   0 0.96548004 0.11037891
+##   1 0.03451996 0.88962109
 ```
 
 
@@ -1360,7 +1360,8 @@ para que la generalización (error de validación) sea buena.
  
  
 #### Ejercicio {-}
-Haz algunos experimentos con las guías de arriba para el ejemplo de spam.
+Haz algunos experimentos con las guías de arriba para el ejemplo de spam. Usa
+el script scripts/ejercicio-spam-hiperparametros.R
 
 
 ### Hiperparámetros: búsqueda en grid
