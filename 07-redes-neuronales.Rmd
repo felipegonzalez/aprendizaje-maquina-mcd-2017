@@ -33,7 +33,7 @@ Podemos representar este esquema con una red dirigida  ($m=3$ variables derivada
 knitr::opts_chunk$set(fig.width=5, fig.asp=0.7) 
 ```
 
-```{r, warning=FALSE, message=FALSE, out.width=500, echo=FALSE, fig.width=5}
+```{r, warning=FALSE, message=FALSE, out.width=600, echo=FALSE, fig.width=5, fig.asp=1}
 usar_cache = TRUE
 library(igraph)
 library(ggplot2)
@@ -100,7 +100,7 @@ Suponamos entonces que pensamos crear dos entradas $a_1$ y $a_2$, funciones
 de $x_1$, y luego predecir $g.1$, la clase, en función de estas dos entradas.
 Por ejemplo, podríamos tomar:
 
-```{r, out.width=500, echo=FALSE, fig.width=5}
+```{r, out.width=500, echo=FALSE, fig.width=7, fig.asp=1}
  gr <- graph(c(1,2,1,3,2,4,3,4))
  plot(gr, layout = matrix(c(-2,0,0,1,0,-1,2,0), byrow=T, ncol=2),
       vertex.label=c('X1','a_1','a_2','p1'), 
@@ -423,7 +423,7 @@ decimos que la red es *completamente conexa*.
 ```
 
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, fig.width=7}
  gr <- graph(
    c(1,4,1,5,1,6,2,4,2,5,2,6,2,4,2,5,2,6,3,4,3,5,3,6,4,7,4,8,5,7,5,8,6,7,6,8,7,8,7,9,8,9))
 plot(gr, layout=matrix(c(-1,1,-1,0,-1,-1,0,1,0,0,0,-1,1,0.5,1,-0.5,2,0), byrow=T,ncol=2),
@@ -473,7 +473,7 @@ $$a_2^{(3)} = h(\theta_{2,0}^{(3)} + \theta_{2,1}^{(3)} a_1^{(2)}+ \theta_{2,2}^
 Como se ilustra en la siguiente gráfica:
 
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, fig.width=7}
  gr <- graph(
    c(c(1,4,1,5,2,4,2,5,3,4,3,5)))
  plot(gr, layout = matrix(c(-4,1,-4,0,-4,-1,0,1,0,-1), byrow=T, ncol=2),
@@ -488,7 +488,7 @@ Como se ilustra en la siguiente gráfica:
 
 Para visualizar las ordenadas (que también se llaman  **sesgos** en este contexto),
 ponemos $a_0^2=1$.
-```{r, echo=FALSE}
+```{r, echo=FALSE, fig.width=7}
  gr <- graph(
    c(c(1,5,1,6,2,5,2,6,3,5,3,6,4,5,4,6)))
  plot(gr, layout = matrix(c(-4,3,-4,1,-4,0,-4,-1,0,1,0,-1), byrow=T, ncol=2),
@@ -507,7 +507,7 @@ ponemos $a_0^2=1$.
 
 Consideremos propagar con los siguientes pesos para capa 3 y valores de la
 capa 2 (en gris están los sesgos):
-```{r, echo =FALSE}
+```{r, echo =FALSE, fig.width=7}
  gr <- graph(
    c(c(1,4,1,5,2,4,2,5,3,4,3,5)))
  plot(gr, layout = matrix(c(-4,1,-4,0,-4,-1,0,1,0,-1), byrow=T, ncol=2),
@@ -929,22 +929,22 @@ library(keras)
 library(readr)
 library(tidyr)
 library(dplyr)
-spam_entrena <- read_csv('./datos/spam-entrena.csv')
-spam_prueba <- read_csv('./datos/spam-prueba.csv')
+diabetes_ent <- MASS::Pima.tr
+diabetes_pr <- MASS::Pima.te
 set.seed(293)
-x_ent <- spam_entrena %>% select(-X1, -spam) %>% as.matrix
+x_ent <- diabetes_ent %>% select(-type) %>% as.matrix
 x_ent_s <- scale(x_ent)
-x_valid <- spam_prueba %>% select(-X1, -spam) %>% as.matrix 
+x_valid <- diabetes_pr %>% select(-type) %>% as.matrix 
 x_valid_s <- x_valid %>%
   scale(center = attr(x_ent_s, 'scaled:center'), scale = attr(x_ent_s,  'scaled:scale'))
-y_ent <- spam_entrena$spam
-y_valid <- spam_prueba$spam
+y_ent <- as.numeric(diabetes_ent$type == 'Yes')
+y_valid <- as.numeric(diabetes_pr$type == 'Yes')
 ```
 
 
 Para definir la arquitectura de dos capas con:
 
-- 100 unidades en cada capa
+- 10 unidades en cada capa
 - función de activación sigmoide,
 - regularización L2 (ridge), 
 - salida logística ($p_1$), escribimos:
@@ -955,15 +955,15 @@ set.seed(9232)
 modelo_tc <- keras_model_sequential() 
 # no es necesario asignar a nuevo objeto, modelo_tc es modificado al agregar capas
 modelo_tc %>% 
-  layer_dense(units = 100, activation = 'sigmoid', 
-              kernel_regularizer = regularizer_l2(l = 1e-8), 
+  layer_dense(units = 10, activation = 'sigmoid', 
+              kernel_regularizer = regularizer_l2(l = 1e-4), 
               kernel_initializer = initializer_random_uniform(minval = -0.5, maxval = 0.5),
-              input_shape=57) %>%
-  layer_dense(units = 100, activation = 'sigmoid', 
-              kernel_regularizer = regularizer_l2(l = 1e-8), 
+              input_shape=7) %>%
+  layer_dense(units = 10, activation = 'sigmoid', 
+              kernel_regularizer = regularizer_l2(l = 1e-4), 
               kernel_initializer = initializer_random_uniform(minval = -0.5, maxval = 0.5)) %>%
   layer_dense(units = 1, activation = 'sigmoid',
-              kernel_regularizer = regularizer_l2(l = 1e-8),
+              kernel_regularizer = regularizer_l2(l = 1e-4),
               kernel_initializer = initializer_random_uniform(minval = -0.5, maxval = 0.5)
 )
 ```
@@ -975,7 +975,7 @@ en tensorflow:
 ```{r}
 modelo_tc %>% compile(
   loss = 'binary_crossentropy',
-  optimizer = optimizer_sgd(lr = 0.8),
+  optimizer = optimizer_sgd(lr = 0.5),
   metrics = c('accuracy'))
 ```
 
@@ -985,7 +985,8 @@ Iteramos con descenso en gradiente y monitoreamos el error de validación. Hacem
 ```{r}
 iteraciones <- modelo_tc %>% fit(
   x_ent_s, y_ent, 
-  epochs = 800, batch_size = 3067, #batch size mismo que nrow(x_ent_s) es descenso en grad.
+  #batch size mismo que nrow(x_ent_s) es descenso en grad.
+  epochs = 500, batch_size = nrow(x_ent_s), 
   verbose = 0,
   validation_data = list(x_valid_s, y_valid)
 )
@@ -1086,8 +1087,8 @@ para todas las posibles combinaciones.
 
 
 ```{r}
-hiperparams <- expand.grid(lambda = 10^seq(-14,-1, 3), n_capa = c(10, 50, 100, 200),
-                     lr = c(0.01, 0.1, 0.5, 0.9), n_iter = 800, 
+hiperparams <- expand.grid(lambda = 10^seq(-12,-1, 1), n_capa = c(2, 5, 10, 20, 50),
+                     lr = c(0.1, 0.5, 0.9), n_iter = 1000, 
                      init_pesos = c(0.5), stringsAsFactors = FALSE)
 hiperparams$corrida <- 1:nrow(hiperparams)
 head(hiperparams)
@@ -1103,7 +1104,7 @@ correr_modelo <- function(params, x_ent_s, y_ent, x_valid_s, y_valid){
                 kernel_regularizer = regularizer_l2(l = params[['lambda']]), 
                 kernel_initializer = initializer_random_uniform(minval = -u, 
                                                                 maxval = u),
-                input_shape=57) %>% 
+                input_shape=7) %>% 
     layer_dense(units = params[['n_capa']], activation = 'sigmoid',
                 kernel_regularizer = regularizer_l2(l = params[['lambda']]),
                 kernel_initializer = initializer_random_uniform(minval = -u, 
@@ -1128,18 +1129,9 @@ correr_modelo <- function(params, x_ent_s, y_ent, x_valid_s, y_valid){
 ```
 
 
-En este ejemplo reducimos artificialmente la muestra de entrenamiento 
-(para poder examinar las salidas más rápidamente)
+
 ```{r}
 set.seed(34321)
-spam_entrena_1 <- sample_n(spam_entrena, 300)
-x_ent <- spam_entrena_1 %>% select(-X1, -spam) %>% as.matrix
-x_ent_s <- scale(x_ent)
-x_valid <- spam_prueba %>% select(-X1, -spam) %>% as.matrix 
-x_valid_s <- x_valid %>%
-  scale(center = attr(x_ent_s, 'scaled:center'), scale = attr(x_ent_s,  'scaled:scale'))
-y_ent <- spam_entrena_1$spam
-y_valid <- spam_prueba$spam
 
 nombres <- names(hiperparams)
 if(!usar_cache) {
@@ -1150,42 +1142,46 @@ res <- lapply(1:nrow(hiperparams), function(i){
   salida <- correr_modelo(params, x_ent_s, y_ent, x_valid_s, y_valid)
   salida
   }) 
-  hiperparams$loss <- sapply(res, function(item){ item$loss})
-  hiperparams$acc <- sapply(res, function(item){ item$acc})
-  saveRDS(hiperparams, file = './cache_obj/spam-grid.rds')
+  hiperparams$loss <- sapply(res, function(item){ item$loss })
+  hiperparams$acc <- sapply(res, function(item){ item$acc })
+  saveRDS(hiperparams, file = './cache_obj/diabetes-grid.rds')
 } else {
-  hiperparams <- readRDS(file = './cache_obj/spam-grid.rds')
+  hiperparams <- readRDS(file = './cache_obj/diabetes-grid.rds')
 }
 ```
 
 Ordenamos del mejor modelo al peor según la pérdida:
 
 ```{r}
-arrange(hiperparams, loss)
+arrange(hiperparams, loss) %>% head(10)
 ```
 
-Y podemos estudiar la dependencia de la pérdida según distintos parámetros.
+Y podemos estudiar la dependencia de la pérdida según distintos parámetros (ojo:
+los resultados son ruidosos por la muestra de validación relativamente chica
+y por el proceso de ajuste. Por ejemplo, los pesos aleatorios al arranque).
 
 ```{r}
 ggplot(hiperparams, aes(x = lambda, y = loss, group=n_capa, colour=factor(n_capa))) +
-  geom_line() + geom_point() + facet_wrap(~lr, ncol = 2)  + scale_x_log10() +
-  scale_y_log10()
-ggplot(filter(hiperparams, lambda < 1e-4, !(lr == 0.9 & n_capa==200)), 
+  geom_line() + geom_point() + facet_wrap(~lr, ncol = 2)  + scale_x_log10() 
+```
+
+```{r}
+ggplot(filter(hiperparams, lr==0.1, n_capa > 10, lambda < 1e-4), 
        aes(x = lambda, y = loss, group=n_capa, colour=factor(n_capa))) +
-  geom_line() + geom_point() + facet_wrap(~lr)  + scale_x_log10() 
+  geom_line() + geom_point() + facet_wrap(~lr, ncol = 2)  + scale_x_log10() 
 ```
 
 Por ejemplo:
 
 - lambda mayor a 0.001 es demasiado grande para cualquiera de estos modelo.
-- la tasa de aprendizaje parece ser mejor alrededor de 0.1
-- Para 200 capas, con una tasa de aprendizaje de 0.9 el algoritmo tiene
+- la tasa de aprendizaje parece ser mejor alrededor de 0.1 para los modelos más grandes,
+ y 0.5 para los modelos más chicos
+- Para los modelos con muchas unidades, una tasa de aprendizaje de 0.9 el algoritmo tiene
 problemas para descender.
-- Para menor número de unidades, en general podemos poner una tasa de aprendizaje
-más alta
 - En este ejemplo, podríamos escoger por ejemplo el modelo con 100 unidades y
 poca regularización
-
+- Nótese por ejemplo que desperdiciamos iteraciones cuando la regularización es
+alta.
 
 
 ### Hiperparámetros: búsqueda aleatoria
@@ -1216,12 +1212,12 @@ exp(runif(1, -8,-1))
 
 
 ```{r}
-n_pars <- 50
-set.seed(9123)
+n_pars <- 120
+set.seed(913)
 if(!usar_cache){
-    hiperparams <- data_frame(lambda = exp(runif(n_pars, -12, -1)),
-                              n_capa = sample(seq(10,200, by=5), n_pars, replace = T),
-                              lr = runif(n_pars, 0.1,0.5), n_iter = 800,
+    hiperparams <- data_frame(lambda = 10^(runif(n_pars, -12, -1)),
+                              n_capa = sample(c(2, 5, 10, 20, 50), n_pars, replace = T),
+                              lr = runif(n_pars, 0.01, 0.9), n_iter = 1000,
                               init_pesos = 0.5)
     hiperparams$corrida <- 1:nrow(hiperparams)
   
@@ -1232,14 +1228,28 @@ if(!usar_cache){
     })
     hiperparams$loss <- sapply(res_aleatorio, function(item){ item$loss})
     hiperparams$acc <- sapply(res_aleatorio, function(item){ item$acc})
-    saveRDS(hiperparams, file = './cache_obj/spam-aleatorio.rds')
+    saveRDS(hiperparams, file = './cache_obj/diabetes-aleatorio.rds')
   } else {
-    hiperparams <- readRDS(file = './cache_obj/spam-aleatorio.rds')
+    hiperparams <- readRDS(file = './cache_obj/diabetes-aleatorio.rds')
   }
+```
+
+```{r}
 arrange(hiperparams, loss)
 ```
 
-## Tarea (para 18 de septiembre) {-}
+```{r}
+hiperparams$lr_grupo <- cut(hiperparams$lr, breaks=c(0,0.1,0.25,0.5, 0.75,1))
+ ggplot(hiperparams, aes(x = lambda, y = loss, 
+                         colour=lr_grupo,
+                         size = n_capa)) +
+    geom_point(alpha = 0.75) + scale_x_log10() 
+```
+
+
+
+
+## Tarea (para 25 de septiembre) {-}
 
 - Instalar (keras para R)[https://keras.rstudio.com] (versión CPU).
 - Suscribirse a kaggle (pueden ser equipos de 2 máximo, entonces
