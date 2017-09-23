@@ -31,7 +31,7 @@ $$p_1(x) = h \left ( \beta_0 + \sum_{j=1}^m \beta_ja_j
 Podemos representar este esquema con una red dirigida  ($m=3$ variables derivadas):
 
 
-<img src="07-redes-neuronales_files/figure-html/unnamed-chunk-2-1.png" width="500" />
+<img src="07-redes-neuronales_files/figure-html/unnamed-chunk-2-1.png" width="600" />
 
 **Observaciones:**
 
@@ -733,7 +733,7 @@ Cuando todas las conexiones posibles de cada capa a la siguiente están presente
 decimos que la red es *completamente conexa*.</div>\EndKnitrBlock{comentario}
 
 
-<img src="07-redes-neuronales_files/figure-html/unnamed-chunk-29-1.png" width="480" />
+<img src="07-redes-neuronales_files/figure-html/unnamed-chunk-29-1.png" width="672" />
 
 Como vimos en el ejemplo de arriba, para hacer cálculos en la red empezamos
 con la primera capa, hacemos combinaciones lineales y aplicamos nuestra función
@@ -774,18 +774,18 @@ $$a_2^{(3)} = h(\theta_{2,0}^{(3)} + \theta_{2,1}^{(3)} a_1^{(2)}+ \theta_{2,2}^
 Como se ilustra en la siguiente gráfica:
 
 
-<img src="07-redes-neuronales_files/figure-html/unnamed-chunk-30-1.png" width="480" />
+<img src="07-redes-neuronales_files/figure-html/unnamed-chunk-30-1.png" width="672" />
 
 Para visualizar las ordenadas (que también se llaman  **sesgos** en este contexto),
 ponemos $a_0^2=1$.
-<img src="07-redes-neuronales_files/figure-html/unnamed-chunk-31-1.png" width="480" />
+<img src="07-redes-neuronales_files/figure-html/unnamed-chunk-31-1.png" width="672" />
 
 
 #### Ejemplo {-}
 
 Consideremos propagar con los siguientes pesos para capa 3 y valores de la
 capa 2 (en gris están los sesgos):
-<img src="07-redes-neuronales_files/figure-html/unnamed-chunk-32-1.png" width="480" />
+<img src="07-redes-neuronales_files/figure-html/unnamed-chunk-32-1.png" width="672" />
 
 
 Que en nuestra notación escribimos como
@@ -1189,22 +1189,22 @@ library(keras)
 library(readr)
 library(tidyr)
 library(dplyr)
-spam_entrena <- read_csv('./datos/spam-entrena.csv')
-spam_prueba <- read_csv('./datos/spam-prueba.csv')
+diabetes_ent <- MASS::Pima.tr
+diabetes_pr <- MASS::Pima.te
 set.seed(293)
-x_ent <- spam_entrena %>% select(-X1, -spam) %>% as.matrix
+x_ent <- diabetes_ent %>% select(-type) %>% as.matrix
 x_ent_s <- scale(x_ent)
-x_valid <- spam_prueba %>% select(-X1, -spam) %>% as.matrix 
+x_valid <- diabetes_pr %>% select(-type) %>% as.matrix 
 x_valid_s <- x_valid %>%
   scale(center = attr(x_ent_s, 'scaled:center'), scale = attr(x_ent_s,  'scaled:scale'))
-y_ent <- spam_entrena$spam
-y_valid <- spam_prueba$spam
+y_ent <- as.numeric(diabetes_ent$type == 'Yes')
+y_valid <- as.numeric(diabetes_pr$type == 'Yes')
 ```
 
 
 Para definir la arquitectura de dos capas con:
 
-- 100 unidades en cada capa
+- 10 unidades en cada capa
 - función de activación sigmoide,
 - regularización L2 (ridge), 
 - salida logística ($p_1$), escribimos:
@@ -1216,15 +1216,15 @@ set.seed(9232)
 modelo_tc <- keras_model_sequential() 
 # no es necesario asignar a nuevo objeto, modelo_tc es modificado al agregar capas
 modelo_tc %>% 
-  layer_dense(units = 100, activation = 'sigmoid', 
-              kernel_regularizer = regularizer_l2(l = 1e-8), 
+  layer_dense(units = 10, activation = 'sigmoid', 
+              kernel_regularizer = regularizer_l2(l = 1e-4), 
               kernel_initializer = initializer_random_uniform(minval = -0.5, maxval = 0.5),
-              input_shape=57) %>%
-  layer_dense(units = 100, activation = 'sigmoid', 
-              kernel_regularizer = regularizer_l2(l = 1e-8), 
+              input_shape=7) %>%
+  layer_dense(units = 10, activation = 'sigmoid', 
+              kernel_regularizer = regularizer_l2(l = 1e-4), 
               kernel_initializer = initializer_random_uniform(minval = -0.5, maxval = 0.5)) %>%
   layer_dense(units = 1, activation = 'sigmoid',
-              kernel_regularizer = regularizer_l2(l = 1e-8),
+              kernel_regularizer = regularizer_l2(l = 1e-4),
               kernel_initializer = initializer_random_uniform(minval = -0.5, maxval = 0.5)
 )
 ```
@@ -1237,7 +1237,7 @@ en tensorflow:
 ```r
 modelo_tc %>% compile(
   loss = 'binary_crossentropy',
-  optimizer = optimizer_sgd(lr = 0.8),
+  optimizer = optimizer_sgd(lr = 0.5),
   metrics = c('accuracy'))
 ```
 
@@ -1248,7 +1248,8 @@ Iteramos con descenso en gradiente y monitoreamos el error de validación. Hacem
 ```r
 iteraciones <- modelo_tc %>% fit(
   x_ent_s, y_ent, 
-  epochs = 800, batch_size = 3067, #batch size mismo que nrow(x_ent_s) es descenso en grad.
+  #batch size mismo que nrow(x_ent_s) es descenso en grad.
+  epochs = 500, batch_size = nrow(x_ent_s), 
   verbose = 0,
   validation_data = list(x_valid_s, y_valid)
 )
@@ -1262,10 +1263,10 @@ score
 
 ```
 ## $loss
-## [1] 0.1788469
+## [1] 0.4348451
 ## 
 ## $acc
-## [1] 0.9354628
+## [1] 0.7981928
 ```
 
 ```r
@@ -1276,8 +1277,8 @@ tab_confusion
 ```
 ##    y_valid
 ##       0   1
-##   0 895  67
-##   1  32 540
+##   0 196  40
+##   1  27  69
 ```
 
 ```r
@@ -1286,9 +1287,9 @@ prop.table(tab_confusion, 2)
 
 ```
 ##    y_valid
-##              0          1
-##   0 0.96548004 0.11037891
-##   1 0.03451996 0.88962109
+##             0         1
+##   0 0.8789238 0.3669725
+##   1 0.1210762 0.6330275
 ```
 
 
@@ -1382,21 +1383,21 @@ para todas las posibles combinaciones.
 
 
 ```r
-hiperparams <- expand.grid(lambda = 10^seq(-14,-1, 3), n_capa = c(10, 50, 100, 200),
-                     lr = c(0.01, 0.1, 0.5, 0.9), n_iter = 800, 
+hiperparams <- expand.grid(lambda = 10^seq(-12,-1, 1), n_capa = c(2, 5, 10, 20, 50),
+                     lr = c(0.1, 0.5, 0.9), n_iter = 1000, 
                      init_pesos = c(0.5), stringsAsFactors = FALSE)
 hiperparams$corrida <- 1:nrow(hiperparams)
 head(hiperparams)
 ```
 
 ```
-##   lambda n_capa   lr n_iter init_pesos corrida
-## 1  1e-14     10 0.01    800        0.5       1
-## 2  1e-11     10 0.01    800        0.5       2
-## 3  1e-08     10 0.01    800        0.5       3
-## 4  1e-05     10 0.01    800        0.5       4
-## 5  1e-02     10 0.01    800        0.5       5
-## 6  1e-14     50 0.01    800        0.5       6
+##   lambda n_capa  lr n_iter init_pesos corrida
+## 1  1e-12      2 0.1   1000        0.5       1
+## 2  1e-11      2 0.1   1000        0.5       2
+## 3  1e-10      2 0.1   1000        0.5       3
+## 4  1e-09      2 0.1   1000        0.5       4
+## 5  1e-08      2 0.1   1000        0.5       5
+## 6  1e-07      2 0.1   1000        0.5       6
 ```
 
 ```r
@@ -1404,7 +1405,7 @@ nrow(hiperparams)
 ```
 
 ```
-## [1] 80
+## [1] 180
 ```
 
 
@@ -1417,7 +1418,7 @@ correr_modelo <- function(params, x_ent_s, y_ent, x_valid_s, y_valid){
                 kernel_regularizer = regularizer_l2(l = params[['lambda']]), 
                 kernel_initializer = initializer_random_uniform(minval = -u, 
                                                                 maxval = u),
-                input_shape=57) %>% 
+                input_shape=7) %>% 
     layer_dense(units = params[['n_capa']], activation = 'sigmoid',
                 kernel_regularizer = regularizer_l2(l = params[['lambda']]),
                 kernel_initializer = initializer_random_uniform(minval = -u, 
@@ -1442,19 +1443,10 @@ correr_modelo <- function(params, x_ent_s, y_ent, x_valid_s, y_valid){
 ```
 
 
-En este ejemplo reducimos artificialmente la muestra de entrenamiento 
-(para poder examinar las salidas más rápidamente)
+
 
 ```r
 set.seed(34321)
-spam_entrena_1 <- sample_n(spam_entrena, 300)
-x_ent <- spam_entrena_1 %>% select(-X1, -spam) %>% as.matrix
-x_ent_s <- scale(x_ent)
-x_valid <- spam_prueba %>% select(-X1, -spam) %>% as.matrix 
-x_valid_s <- x_valid %>%
-  scale(center = attr(x_ent_s, 'scaled:center'), scale = attr(x_ent_s,  'scaled:scale'))
-y_ent <- spam_entrena_1$spam
-y_valid <- spam_prueba$spam
 
 nombres <- names(hiperparams)
 if(!usar_cache) {
@@ -1465,11 +1457,11 @@ res <- lapply(1:nrow(hiperparams), function(i){
   salida <- correr_modelo(params, x_ent_s, y_ent, x_valid_s, y_valid)
   salida
   }) 
-  hiperparams$loss <- sapply(res, function(item){ item$loss})
-  hiperparams$acc <- sapply(res, function(item){ item$acc})
-  saveRDS(hiperparams, file = './cache_obj/spam-grid.rds')
+  hiperparams$loss <- sapply(res, function(item){ item$loss })
+  hiperparams$acc <- sapply(res, function(item){ item$acc })
+  saveRDS(hiperparams, file = './cache_obj/diabetes-grid.rds')
 } else {
-  hiperparams <- readRDS(file = './cache_obj/spam-grid.rds')
+  hiperparams <- readRDS(file = './cache_obj/diabetes-grid.rds')
 }
 ```
 
@@ -1477,123 +1469,55 @@ Ordenamos del mejor modelo al peor según la pérdida:
 
 
 ```r
-arrange(hiperparams, loss)
+arrange(hiperparams, loss) %>% head(10)
 ```
 
 ```
-##    lambda n_capa   lr n_iter init_pesos corrida       loss       acc
-## 1   1e-11    200 0.10   1000        0.5      37  0.2481583 0.9009126
-## 2   1e-14    100 0.10   1000        0.5      31  0.2562495 0.8970013
-## 3   1e-08    100 0.10   1000        0.5      33  0.2571647 0.8976532
-## 4   1e-14    200 0.10   1000        0.5      36  0.2579564 0.8917862
-## 5   1e-14     50 0.10   1000        0.5      26  0.2582366 0.9009126
-## 6   1e-08     50 0.10   1000        0.5      28  0.2591391 0.8983051
-## 7   1e-11    100 0.10   1000        0.5      32  0.2613895 0.8956975
-## 8   1e-11     50 0.10   1000        0.5      27  0.2686344 0.8885267
-## 9   1e-05     50 0.10   1000        0.5      29  0.2710090 0.8930900
-## 10  1e-05    100 0.10   1000        0.5      34  0.2712956 0.9002608
-## 11  1e-08    200 0.10   1000        0.5      38  0.2731755 0.8885267
-## 12  1e-11     10 0.10   1000        0.5      22  0.2867449 0.8996089
-## 13  1e-05    200 0.10   1000        0.5      39  0.3068338 0.8891786
-## 14  1e-11    200 0.01   1000        0.5      17  0.3193306 0.8917862
-## 15  1e-05     10 0.50   1000        0.5      44  0.3256386 0.8911343
-## 16  1e-05     10 0.10   1000        0.5      24  0.3271994 0.8826597
-## 17  1e-14     10 0.50   1000        0.5      41  0.3317407 0.8937419
-## 18  1e-14    200 0.01   1000        0.5      16  0.3410997 0.8761408
-## 19  1e-08     10 0.50   1000        0.5      43  0.3462382 0.8911343
-## 20  1e-14     10 0.10   1000        0.5      21  0.3477954 0.8631030
-## 21  1e-08    200 0.01   1000        0.5      18  0.3485343 0.8754889
-## 22  1e-11    100 0.50   1000        0.5      52  0.3664196 0.9002608
-## 23  1e-11     50 0.50   1000        0.5      47  0.3706521 0.8924381
-## 24  1e-08     10 0.10   1000        0.5      23  0.3719068 0.8794003
-## 25  1e-11     10 0.50   1000        0.5      42  0.3739281 0.8885267
-## 26  1e-08     50 0.50   1000        0.5      48  0.3848782 0.8970013
-## 27  1e-05    200 0.01   1000        0.5      19  0.3900913 0.8741851
-## 28  1e-05    100 0.50   1000        0.5      54  0.3942697 0.8917862
-## 29  1e-11    200 0.50   1000        0.5      57  0.3944719 0.8924381
-## 30  1e-14    200 0.50   1000        0.5      56  0.4041260 0.8917862
-## 31  1e-14     50 0.50   1000        0.5      46  0.4048893 0.8898305
-## 32  1e-05     50 0.50   1000        0.5      49  0.4051351 0.8930900
-## 33  1e-08    100 0.50   1000        0.5      53  0.4114460 0.8826597
-## 34  1e-11     10 0.90   1000        0.5      62  0.4121712 0.8911343
-## 35  1e-11    100 0.01   1000        0.5      12  0.4145591 0.8500652
-## 36  1e-08    100 0.01   1000        0.5      13  0.4166564 0.8715776
-## 37  1e-05    200 0.50   1000        0.5      59  0.4217554 0.8859192
-## 38  1e-08     10 0.90   1000        0.5      63  0.4308938 0.8950456
-## 39  1e-14    100 0.01   1000        0.5      11  0.4331894 0.8513690
-## 40  1e-08    200 0.50   1000        0.5      58  0.4341628 0.8878748
-## 41  1e-14    100 0.50   1000        0.5      51  0.4395043 0.8904824
-## 42  1e-14     10 0.90   1000        0.5      61  0.4493026 0.8839635
-## 43  1e-05    100 0.01   1000        0.5      14  0.4506414 0.8533246
-## 44  1e-05     10 0.90   1000        0.5      64  0.4521649 0.8859192
-## 45  1e-14     50 0.01   1000        0.5       6  0.5007677 0.8239896
-## 46  1e-14     50 0.90   1000        0.5      66  0.5049587 0.8911343
-## 47  1e-05     50 0.90   1000        0.5      69  0.5063860 0.8852673
-## 48  1e-05    100 0.90   1000        0.5      74  0.5112725 0.8885267
-## 49  1e-11     50 0.01   1000        0.5       7  0.5154028 0.8005215
-## 50  1e-14    100 0.90   1000        0.5      71  0.5317523 0.8839635
-## 51  1e-11    100 0.90   1000        0.5      72  0.5360182 0.8852673
-## 52  1e-11     50 0.90   1000        0.5      67  0.5460550 0.8800522
-## 53  1e-08     50 0.90   1000        0.5      68  0.5462691 0.8820078
-## 54  1e-02     50 0.50   1000        0.5      50  0.5516786 0.8865711
-## 55  1e-05     50 0.01   1000        0.5       9  0.5565895 0.7757497
-## 56  1e-08    100 0.90   1000        0.5      73  0.5627451 0.8774446
-## 57  1e-02     10 0.90   1000        0.5      65  0.5706849 0.8807040
-## 58  1e-02     10 0.50   1000        0.5      45  0.5721383 0.8872229
-## 59  1e-02     50 0.90   1000        0.5      70  0.5810893 0.8318123
-## 60  1e-08     50 0.01   1000        0.5       8  0.5859619 0.7385919
-## 61  1e-02    100 0.50   1000        0.5      55  0.5985074 0.8181226
-## 62  1e-14     10 0.01   1000        0.5       1  0.6505038 0.6043025
-## 63  1e-02     10 0.10   1000        0.5      25  0.6578252 0.7581486
-## 64  1e-05     10 0.01   1000        0.5       4  0.6624338 0.6043025
-## 65  1e-08     10 0.01   1000        0.5       3  0.6625448 0.6043025
-## 66  1e-11     10 0.01   1000        0.5       2  0.6652442 0.6043025
-## 67  1e-02    100 0.90   1000        0.5      75  0.6818743 0.8129074
-## 68  1e-02     50 0.10   1000        0.5      30  0.7229234 0.8937419
-## 69  1e-02    200 0.50   1000        0.5      60  0.7256063 0.7777053
-## 70  1e-02    200 0.90   1000        0.5      80  0.8088126 0.7249022
-## 71  1e-02    100 0.10   1000        0.5      35  1.0643596 0.8865711
-## 72  1e-02     10 0.01   1000        0.5       5  1.1132954 0.6043025
-## 73  1e-02    200 0.10   1000        0.5      40  2.2588023 0.8878748
-## 74  1e-02     50 0.01   1000        0.5      10  3.8415042 0.6734029
-## 75  1e-14    200 0.90   1000        0.5      76  6.3778905 0.6043025
-## 76  1e-11    200 0.90   1000        0.5      77  6.3778905 0.6043025
-## 77  1e-08    200 0.90   1000        0.5      78  6.3779340 0.6043025
-## 78  1e-05    200 0.90   1000        0.5      79  6.4199690 0.6043025
-## 79  1e-02    100 0.01   1000        0.5      15  9.9440924 0.8318123
-## 80  1e-02    200 0.01   1000        0.5      20 31.6675895 0.8578879
+##    lambda n_capa  lr n_iter init_pesos corrida      loss       acc
+## 1   1e-09     50 0.1   1000        0.5      40 0.4303269 0.7951807
+## 2   1e-08     50 0.1   1000        0.5      41 0.4303941 0.8042169
+## 3   1e-09     20 0.1   1000        0.5      28 0.4311181 0.7951807
+## 4   1e-10     50 0.1   1000        0.5      39 0.4311976 0.8072289
+## 5   1e-06     50 0.1   1000        0.5      43 0.4314318 0.8012048
+## 6   1e-11     50 0.1   1000        0.5      38 0.4320411 0.7981928
+## 7   1e-11     20 0.1   1000        0.5      26 0.4320854 0.8012048
+## 8   1e-08     20 0.1   1000        0.5      29 0.4322517 0.7921687
+## 9   1e-12     20 0.1   1000        0.5      25 0.4324023 0.7981928
+## 10  1e-12     50 0.1   1000        0.5      37 0.4328103 0.7951807
 ```
 
-Y podemos estudiar la dependencia de la pérdida según distintos parámetros.
+Y podemos estudiar la dependencia de la pérdida según distintos parámetros (ojo:
+los resultados son ruidosos por la muestra de validación relativamente chica
+y por el proceso de ajuste. Por ejemplo, los pesos aleatorios al arranque).
 
 
 ```r
 ggplot(hiperparams, aes(x = lambda, y = loss, group=n_capa, colour=factor(n_capa))) +
-  geom_line() + geom_point() + facet_wrap(~lr, ncol = 2)  + scale_x_log10() +
-  scale_y_log10()
+  geom_line() + geom_point() + facet_wrap(~lr, ncol = 2)  + scale_x_log10() 
 ```
 
 <img src="07-redes-neuronales_files/figure-html/unnamed-chunk-53-1.png" width="480" />
 
+
 ```r
-ggplot(filter(hiperparams, lambda < 1e-4, !(lr == 0.9 & n_capa==200)), 
+ggplot(filter(hiperparams, lr==0.1, n_capa > 10, lambda < 1e-4), 
        aes(x = lambda, y = loss, group=n_capa, colour=factor(n_capa))) +
-  geom_line() + geom_point() + facet_wrap(~lr)  + scale_x_log10() 
+  geom_line() + geom_point() + facet_wrap(~lr, ncol = 2)  + scale_x_log10() 
 ```
 
-<img src="07-redes-neuronales_files/figure-html/unnamed-chunk-53-2.png" width="480" />
+<img src="07-redes-neuronales_files/figure-html/unnamed-chunk-54-1.png" width="480" />
 
 Por ejemplo:
 
 - lambda mayor a 0.001 es demasiado grande para cualquiera de estos modelo.
-- la tasa de aprendizaje parece ser mejor alrededor de 0.1
-- Para 200 capas, con una tasa de aprendizaje de 0.9 el algoritmo tiene
+- la tasa de aprendizaje parece ser mejor alrededor de 0.1 para los modelos más grandes,
+ y 0.5 para los modelos más chicos
+- Para los modelos con muchas unidades, una tasa de aprendizaje de 0.9 el algoritmo tiene
 problemas para descender.
-- Para menor número de unidades, en general podemos poner una tasa de aprendizaje
-más alta
 - En este ejemplo, podríamos escoger por ejemplo el modelo con 100 unidades y
 poca regularización
-
+- Nótese por ejemplo que desperdiciamos iteraciones cuando la regularización es
+alta.
 
 
 ### Hiperparámetros: búsqueda aleatoria
@@ -1616,7 +1540,7 @@ runif(1, 20, 200)
 ```
 
 ```
-## [1] 108.5708
+## [1] 30.75713
 ```
 
 y para la regularización (donde queremos probar varios órdenes de magnitud) 
@@ -1628,19 +1552,19 @@ exp(runif(1, -8,-1))
 ```
 
 ```
-## [1] 0.009600437
+## [1] 0.0006036878
 ```
 
 
 
 
 ```r
-n_pars <- 50
-set.seed(9123)
+n_pars <- 120
+set.seed(913)
 if(!usar_cache){
-    hiperparams <- data_frame(lambda = exp(runif(n_pars, -12, -1)),
-                              n_capa = sample(seq(10,200, by=5), n_pars, replace = T),
-                              lr = runif(n_pars, 0.1,0.5), n_iter = 800,
+    hiperparams <- data_frame(lambda = 10^(runif(n_pars, -12, -1)),
+                              n_capa = sample(c(2, 5, 10, 20, 50), n_pars, replace = T),
+                              lr = runif(n_pars, 0.01, 0.9), n_iter = 1000,
                               init_pesos = 0.5)
     hiperparams$corrida <- 1:nrow(hiperparams)
   
@@ -1651,31 +1575,49 @@ if(!usar_cache){
     })
     hiperparams$loss <- sapply(res_aleatorio, function(item){ item$loss})
     hiperparams$acc <- sapply(res_aleatorio, function(item){ item$acc})
-    saveRDS(hiperparams, file = './cache_obj/spam-aleatorio.rds')
+    saveRDS(hiperparams, file = './cache_obj/diabetes-aleatorio.rds')
   } else {
-    hiperparams <- readRDS(file = './cache_obj/spam-aleatorio.rds')
+    hiperparams <- readRDS(file = './cache_obj/diabetes-aleatorio.rds')
   }
+```
+
+
+```r
 arrange(hiperparams, loss)
 ```
 
 ```
-## # A tibble: 50 x 8
+## # A tibble: 120 x 8
 ##          lambda n_capa        lr n_iter init_pesos corrida      loss
 ##           <dbl>  <dbl>     <dbl>  <dbl>      <dbl>   <int>     <dbl>
-##  1 7.289530e-06     85 0.2122924    800        0.5       7 0.2805767
-##  2 7.091724e-06     15 0.3815221    800        0.5      26 0.3048462
-##  3 9.706553e-05     20 0.2870739    800        0.5      25 0.3109668
-##  4 1.058594e-05    175 0.1462802    800        0.5      12 0.3113215
-##  5 4.590335e-04     15 0.4848101    800        0.5      28 0.3683682
-##  6 9.086198e-04     20 0.4228769    800        0.5      21 0.3790317
-##  7 1.935991e-05    170 0.3280060    800        0.5      50 0.3803463
-##  8 6.383074e-06    145 0.4392468    800        0.5      33 0.3830605
-##  9 4.132102e-05    135 0.2779869    800        0.5      19 0.3973518
-## 10 2.886587e-05    160 0.2487041    800        0.5      32 0.3997921
-## # ... with 40 more rows, and 1 more variables: acc <dbl>
+##  1 1.518909e-11      5 0.3885715   1000        0.5     114 0.4260046
+##  2 7.141982e-08     20 0.2355711   1000        0.5      84 0.4301984
+##  3 6.356920e-11     10 0.2123126   1000        0.5     104 0.4305419
+##  4 1.537123e-10     20 0.1666970   1000        0.5       8 0.4310389
+##  5 5.311588e-11     20 0.2148620   1000        0.5     109 0.4310853
+##  6 5.223951e-07     20 0.1463193   1000        0.5     105 0.4314119
+##  7 8.950678e-06     10 0.4195664   1000        0.5       9 0.4319558
+##  8 4.782147e-10     50 0.1281259   1000        0.5      19 0.4322640
+##  9 4.042696e-12     10 0.1924461   1000        0.5      55 0.4327587
+## 10 3.544342e-06     20 0.3409109   1000        0.5      68 0.4328053
+## # ... with 110 more rows, and 1 more variables: acc <dbl>
 ```
 
-## Tarea (para 18 de septiembre) {-}
+
+```r
+hiperparams$lr_grupo <- cut(hiperparams$lr, breaks=c(0,0.1,0.25,0.5, 0.75,1))
+ ggplot(hiperparams, aes(x = lambda, y = loss, 
+                         colour=lr_grupo,
+                         size = n_capa)) +
+    geom_point(alpha = 0.75) + scale_x_log10() 
+```
+
+<img src="07-redes-neuronales_files/figure-html/unnamed-chunk-59-1.png" width="480" />
+
+
+
+
+## Tarea (para 25 de septiembre) {-}
 
 - Instalar (keras para R)[https://keras.rstudio.com] (versión CPU).
 - Suscribirse a kaggle (pueden ser equipos de 2 máximo, entonces
