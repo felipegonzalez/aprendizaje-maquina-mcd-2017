@@ -914,7 +914,7 @@ para afinar estos parámetros según validación cruzada o una muestra de valida
 
 ### Ejemplo
 
-Consideramos una arquitectura de dos capas para el problema de spam 
+Consideramos una arquitectura de una capas para el problema de spam 
 
 ```{r}
 if(Sys.info()['nodename'] == 'vainilla.local'){
@@ -1065,7 +1065,8 @@ para que la generalización (error de validación) sea buena.
  
  
 #### Ejercicio {-}
-Haz algunos experimentos con las guías de arriba para el ejemplo de spam.
+Haz algunos experimentos con las guías de arriba para el ejemplo de spam. Usa
+el script scripts/ejercicio-spam-hiperparametros.R
 
 
 ### Hiperparámetros: búsqueda en grid
