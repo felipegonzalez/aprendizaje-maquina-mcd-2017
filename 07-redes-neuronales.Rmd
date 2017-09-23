@@ -1062,7 +1062,7 @@ para que la generalización (error de validación) sea buena.
  de validación podemos intentar reducir el error de entrenamiento y/o reducir el margen.
  Generalmente hay que ir balanceando flexibilidad con rigidez a través de varios
  parámetros para terminar con un buen ajuste.
- 
+
  
  
 #### Ejercicio {-}
