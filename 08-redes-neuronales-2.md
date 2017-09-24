@@ -1,0 +1,991 @@
+# Redes neuronales (parte 2)
+
+
+
+## Descenso estocástico
+
+El algoritmo más popular para ajustar redes grandes es descenso estocástico, que
+es una modificación de nuestro algoritmo de descenso en gradiente. Antes de presentar
+las razones para usarlo, veremos cómo funciona para problemas con regresión
+lineal o logística.
+
+
+\BeginKnitrBlock{comentario}<div class="comentario">En **descenso estocástico**, el cálculo del gradiente se hace sobre una submuestra
+relativamente chica de la muestra de entrenamiento. En este contexto, a esta submuestra
+se le llama un **minilote**. En cada iteración, nos movemos en 
+la dirección de descenso de ese minilote. 
+
+La muestra de entrenamiento se divide entonces (al azar)
+en minilotes, y recorremos todos los minilotes haciendo una actualización de nuestros
+parámetros en cada minilote. Un recorrido sobre todos los minilotes se llama
+una **época** (las iteraciones se entienden sobre los minilotes).</div>\EndKnitrBlock{comentario}
+
+Antes de escribir el algoritmo mostramos una implementación para regresión logística.
+Usamos las mismas funciones para calcular devianza y gradiente.
+
+
+```r
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+h <- function(x){1/(1+exp(-x))}
+# la devianza es la misma
+devianza_calc <- function(x, y){
+  dev_fun <- function(beta){
+    p_beta <- h(as.matrix(cbind(1, x)) %*% beta) 
+   -2*mean(y*log(p_beta) + (1-y)*log(1-p_beta))
+  }
+  dev_fun
+}
+# el cálculo del gradiente es el mismo, pero x_ent y y_ent serán diferentes
+grad_calc <- function(x_ent, y_ent){
+  salida_grad <- function(beta){
+    p_beta <- h(as.matrix(cbind(1, x_ent)) %*% beta) 
+    e <- y_ent - p_beta
+    grad_out <- -2*as.numeric(t(cbind(1,x_ent)) %*% e)/nrow(x_ent)
+    names(grad_out) <- c('Intercept', colnames(x_ent))
+    grad_out
+  }
+  salida_grad
+}
+```
+
+Y comparamos los dos algoritmos:
+
+
+```r
+descenso <- function(n, z_0, eta, h_deriv){
+  z <- matrix(0,n, length(z_0))
+  z[1, ] <- z_0
+  for(i in 1:(n-1)){
+    z[i+1, ] <- z[i, ] - eta * h_deriv(z[i, ])
+  }
+  z
+}
+# esta implementación es solo para este ejemplo:
+descenso_estocástico <- function(n_epocas, z_0, eta, minilotes){
+  #minilotes es una lista
+  m <- length(minilotes)
+  z <- matrix(0, m*n_epocas, length(z_0))
+  z[1, ] <- z_0
+  for(i in 1:(m*n_epocas-1)){
+    k <- i %% m + 1
+    if(i %% m == 0){
+      #comenzar nueva época y reordenar minilotes al azar
+      minilotes <- minilotes[sample(1:m, m)]
+    }
+    h_deriv <- grad_calc(minilotes[[k]]$x, minilotes[[k]]$y)
+    z[i+1, ] <- z[i, ] - eta * h_deriv(z[i, ])
+  }
+  z
+}
+```
+
+
+Usaremos el ejemplo simulado de regresión para hacer algunos experimentos:
+
+
+```r
+p_1 <- function(x){
+  ifelse(x < 30, 0.9, 0.9 - 0.007 * (x - 15))
+}
+
+set.seed(19233)
+sim_datos <- function(n){
+  x <- pmin(rexp(n, 1/30), 100)
+  probs <- p_1(x)
+  g <- rbinom(length(x), 1, probs)
+  # con dos variables de ruido:
+  dat <- data_frame(x_1 = (x - mean(x))/sd(x), 
+                    x_2 = rnorm(length(x),0,1),
+                    x_3 = rnorm(length(x),0,1),
+                    p_1 = probs, g )
+  dat %>% select(x_1, x_2, x_3, g) 
+}
+dat_ent <- sim_datos(50)
+dat_valid <- sim_datos(1000)
+glm(g ~ x_1 + x_2+ x_3 , data = dat_ent, family = 'binomial') %>% coef
+```
+
+```
+## (Intercept)         x_1         x_2         x_3 
+##   1.2888612  -1.2881545   0.3311722  -0.6105063
+```
+Hacemos descenso en gradiente:
+
+
+```r
+iteraciones_descenso <- descenso(600, rep(0,4), 0.8,
+         h_deriv = grad_calc(x_ent = as.matrix(dat_ent[,c('x_1','x_2','x_3'), drop =FALSE]), 
+                             y_ent=dat_ent$g)) %>%
+  data.frame %>% rename(beta_1 = X2, beta_2 = X3)
+ggplot(iteraciones_descenso, aes(x=beta_1, y=beta_2)) + geom_point()
+```
+
+<img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-6-1.png" width="480" />
+
+Y ahora hacemos descenso estocástico. Vamos a hacer minilotes de tamaño 5:
+
+
+```r
+dat_ent$minilote <- rep(1:10, each=5)
+split_ml <- split(dat_ent %>% sample_n(nrow(dat_ent)), dat_ent$minilote) 
+minilotes <- lapply(split_ml, function(dat_ml){
+  list(x = as.matrix(dat_ml[, c('x_1','x_2','x_3'), drop=FALSE]),
+       y = dat_ml$g)
+})
+length(minilotes)
+```
+
+```
+## [1] 10
+```
+
+```r
+iter_estocastico <- descenso_estocástico(60, rep(0, 4), 0.1, minilotes) %>%
+  data.frame %>% rename(beta_0 = X1, beta_1 = X2, beta_2 = X3)
+ggplot(iteraciones_descenso, aes(x=beta_1, y=beta_2)) + geom_path() +
+  geom_point() +
+  geom_path(data = iter_estocastico, colour ='red') +
+  geom_point(data = iter_estocastico, colour ='red')
+```
+
+<img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-7-1.png" width="480" />
+
+Podemos ver cómo se ve la devianza de entrenamiento:
+
+
+```r
+dev_ent <- devianza_calc(x = as.matrix(dat_ent[,c('x_1','x_2','x_3'), drop =FALSE]), 
+                             y=dat_ent$g)
+dev_valid <- devianza_calc(x = as.matrix(dat_valid[,c('x_1','x_2','x_3'), drop =FALSE]),
+                             y=dat_valid$g)
+
+dat_dev <- data_frame(iteracion = 1:nrow(iteraciones_descenso)) %>%
+  mutate(descenso = apply(iteraciones_descenso, 1, dev_ent),
+        descenso_estocastico = apply(iter_estocastico, 1, dev_ent)) %>%
+  gather(algoritmo, dev_ent, -iteracion) %>% mutate(tipo ='entrenamiento')
+
+dat_dev_valid <- data_frame(iteracion = 1:nrow(iteraciones_descenso)) %>%
+  mutate(descenso = apply(iteraciones_descenso, 1, dev_valid),
+         descenso_estocastico = apply(iter_estocastico, 1, dev_valid)) %>%
+  gather(algoritmo, dev_ent, -iteracion) %>% mutate(tipo ='validación')
+dat_dev <- bind_rows(dat_dev, dat_dev_valid)
+ggplot(filter(dat_dev, tipo=='entrenamiento'), 
+       aes(x=iteracion, y=dev_ent, colour=algoritmo)) + geom_line() +
+  geom_point() + facet_wrap(~tipo)
+```
+
+<img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-8-1.png" width="480" />
+
+y vemos que descenso estocástico también converge a una buena solución.
+
+## Algoritmo de descenso estocástico
+
+\BeginKnitrBlock{comentario}<div class="comentario">**Descenso estocástico**.
+Separamos al azar los datos de entrenamiento en $n$ minilotes de tamaño $m$.
+
+- Para épocas $e =1,2,\ldots, n_e$
+  - Calcular el gradiente sobre el minilote y hacer actualización, sucesivamente
+  para cada uno de los minilotes $k=1,2,\ldots, n/m$:
+$$\beta_{i+1} = \beta_{i} - \eta\sum_{j=1}^m \nabla D^{(k)}_j (\beta_i)$$
+donde $D^{(k)}_j (\beta_i)$ es la devianza para el $j$-ésimo caso del minilote
+$k$.
+- Repetir para la siguiente época</div>\EndKnitrBlock{comentario}
+
+## ¿Por qué usar descenso estocástico?
+
+Las propiedades importantes de descenso estocástico son:
+
+1. Cada minilote actúa como una muestra de validación: hemos entrenado con los minilotes
+anteriores, y el nuevo minilote nos propone la nueva dirección (en la primera vuelta el
+algoritmo no ha visto ese minilote). Esto quiere decir que, al menos en la primera
+pasada, descenso estocástico intenta minimizar el error de predicción.
+
+2. Muchas veces no es necesario usar todos los datos para encontrar una buena dirección de descenso. Podemos ver la dirección de descenso en gradiente como un valor esperado sobre la muestra de entrenamiento.
+Una **submuestra (minilote) puede ser suficiente para estimar ese valor esperado**, con
+costo menor de cómputo
+
+3. Cada actualización de descenso en gradiente puede ser muy costosa (aunque se pueda 
+paralelizar el cálculo de la suma de la devianza) pero  el 
+**tiempo de iteración para descenso estocástico
+no crece con el número de casos totales**. Podemos tener convergencia 
+incluso con tamaños muy grandes de conjuntos de entrenamiento (por ejemplo, antes
+de procesar todos los datos de entrenamiento). Descenso estocástico *escala* bien
+en este sentido: el factor limitante es el tamaño de minilote y el número de iteraciones.
+
+4. Escogemos minilotes no tan chicos por ventajas
+computacionales: es más eficiente (por ejemplo en GPUs) hacer minilotes más grandes
+(generalmente en potencias de 2, como 32, 64, 128, 256, 512), por ejemplo, 
+por paralelización de multiplicación de matrices en GPU).
+
+5. Entre las desventajas (comparado con descenso usual) 
+es que descenso estocástico no converge - alrededor de un 
+mínimo, típicamente oscila alrededor de él.
+
+
+#### Ejemplo{-}
+En el ejemplo anterior nota que las direcciones de descenso de descenso estocástico
+son muy razonables (punto 2). Nota también que obtenemos
+una buena aproximación a la solución
+con menos cómputo (punto 3 - mismo número de iteraciones, pero cada iteración
+con un minilote). 
+
+
+
+```r
+ggplot(filter(dat_dev, iteracion >= 1), 
+       aes(x=iteracion, y=dev_ent, colour=algoritmo)) + geom_line() + geom_point(size=0.5)+
+  facet_wrap(~tipo)
+```
+
+<img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-10-1.png" width="672" />
+
+En esta gráfica vemos que la solución de descenso estocástico puede
+ser superior
+a la optimizada con descenso en gradiente, pues
+descenso en gradiente rápidamente sobreajusta. 
+De modo que la varianza inducida
+por el proceso de ajuste por minilotes no necesariamente es una debilidad: muchas 
+veces nos
+previene de caer en soluciones sobreajustadas
+
+## Escogiendo la tasa de aprendizaje
+
+Para escoger la tasa, monitoreamos las curvas de error de entrenamiento y de
+validación. Si la tasa es muy grande, habrá oscilaciones grandes y muchas veces incrementos
+grandes en la función objectivo (error de entrenamiento). 
+Algunas oscilaciones suaves no tienen problema -es la naturaleza estocástica
+del algoritmo. Si la tasa
+es muy baja, el aprendizaje es lento y podemos quedarnos en un valor demasiado alto.
+
+Conviene monitorear las primeras iteraciones y escoger una tasa más alta que
+la mejor que tengamos
+acutalmente, pero no tan alta que cause inestabilidad. Una gráfica como la siguiente
+es útil. En este ejemplo, incluso podríamos detenernos antes para evitar el 
+sobreajuste de la última parte de las iteraciones:
+
+
+```r
+ggplot(filter(dat_dev, algoritmo=='descenso_estocastico'), 
+       aes(x=iteracion, y=dev_ent, colour=tipo)) + geom_line() + geom_point()
+```
+
+<img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-11-1.png" width="480" />
+
+
+Por ejemplo: tasa demasiado alta:
+
+```r
+iter_estocastico <- descenso_estocástico(20, rep(0,4), 0.9, minilotes) %>%
+  data.frame %>% rename(beta_0 = X1, beta_1 = X2)
+dev_ent <- devianza_calc(x = as.matrix(dat_ent[,c('x_1','x_2','x_3'), drop =FALSE]), 
+                             y=dat_ent$g)
+dev_valid <- devianza_calc(x = as.matrix(dat_valid[,c('x_1','x_2','x_3'), drop =FALSE]), 
+                             y=dat_valid$g)
+dat_dev <- data_frame(iteracion = 1:nrow(iter_estocastico)) %>%
+   mutate(entrena = apply(iter_estocastico, 1, dev_ent), 
+  validacion = apply(iter_estocastico, 1, dev_valid)) %>%
+  gather(tipo, devianza, entrena:validacion)
+ggplot(dat_dev, 
+       aes(x=iteracion, y=devianza, colour=tipo)) + geom_line() + geom_point()
+```
+
+<img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-12-1.png" width="480" />
+
+
+Tasa demasiado chica ( o hacer más iteraciones):
+
+```r
+iter_estocastico <- descenso_estocástico(20, rep(0,4), 0.01, minilotes) %>%
+  data.frame %>% rename(beta_0 = X1, beta_1 = X2)
+dev_ent <- devianza_calc(x = as.matrix(dat_ent[,c('x_1','x_2','x_3'), drop =FALSE]), 
+                             y=dat_ent$g)
+dev_valid <- devianza_calc(x = as.matrix(dat_valid[,c('x_1','x_2','x_3'), drop =FALSE]), 
+                             y=dat_valid$g)
+dat_dev <- data_frame(iteracion = 1:nrow(iter_estocastico)) %>%
+   mutate(entrena = apply(iter_estocastico, 1, dev_ent), 
+  validacion = apply(iter_estocastico, 1, dev_valid)) %>%
+  gather(tipo, devianza, entrena:validacion)
+ggplot(dat_dev, 
+       aes(x=iteracion, y=devianza, colour=tipo)) + geom_line() 
+```
+
+<img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-13-1.png" width="480" />
+
+## Mejoras al algoritmo de descenso estocástico.
+
+### Decaimiento de tasa de aprendizaje
+
+Hay muchos algoritmos derivados de descenso estocástico. La primera mejora consiste en reducir gradualmente la tasa de aprendizaje
+para aprender rápido al principio, pero filtrar el ruido de la
+estimación de minilotes más adelante en las iteraciones
+
+
+```r
+descenso_estocástico <- function(n_epocas, z_0, eta, minilotes, decaimiento = 0.0){
+  m <- length(minilotes)
+  z <- matrix(0, m*n_epocas, length(z_0))
+  z[1, ] <- z_0
+  for(i in 1:(m*n_epocas-1)){
+    indice_mlote <- i %% m + 1
+    h_deriv <- grad_calc(minilotes[[indice_mlote]]$x, minilotes[[indice_mlote]]$y)
+    z[i+1, ] <- z[i, ] - eta * h_deriv(z[i, ])
+    eta <- eta*(1-decaimiento)
+  }
+  z
+}
+```
+
+Y ahora vemos qué pasa con decaimiento:
+
+
+```r
+iter_estocastico <- descenso_estocástico(20, c(0,0, 0, 0), 0.1, 
+                                         minilotes, decaimiento = 0.02) %>%
+  data.frame %>% rename(beta_0 = X1, beta_1 = X2)
+dev_ent <- devianza_calc(x = as.matrix(dat_ent[,c('x_1','x_2','x_3'), drop =FALSE]), 
+                             y=dat_ent$g)
+dev_valid <- devianza_calc(x = as.matrix(dat_valid[,c('x_1','x_2','x_3'), drop =FALSE]), 
+                             y=dat_valid$g)
+dat_dev <- data_frame(iteracion = 1:nrow(iter_estocastico)) %>%
+   mutate(entrena = apply(iter_estocastico, 1, dev_ent), 
+  validacion = apply(iter_estocastico, 1, dev_valid)) %>%
+  gather(tipo, devianza, entrena:validacion)
+ggplot(filter(dat_dev, iteracion>10), 
+       aes(x=iteracion, y=devianza, colour=tipo)) + geom_line() + geom_point()
+```
+
+<img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-15-1.png" width="480" />
+Generalmente se escoge este parámetro con un valor bajo (en aplicaciones
+de redes bastante menor a 0.01). Un 
+valor alto puede provocar que el algoritmo se detenga en
+lugar con función pérdida alta (lejos de un óptimo)
+
+### Momento
+
+También es posible utilizar una idea adicional que acelera
+la convergencia. La idea es que muchas veces la aleatoriedad
+del algoritmo puede producir iteraciones en direcciones que
+no son buenas (pues la estimación del gradiente es mala). Esto 
+es parte del algoritmo. Sin embargo, si en varias iteraciones
+hemos observado movimientos en direcciones consistentes,
+quizá deberíamos movernos en esas direcciones consistentes,
+y reducir el peso de la dirección del minilote (que nos puede
+llevar en una dirección mala).
+
+Esto es similar al movimiento de una canica en una superficie:
+la dirección de su movimiento está dada en parte por
+la dirección de descenso (el gradiente) y en parte la velocidad actual
+de la canica. La canica se mueve en un promedio de estas dos direcciones
+
+\BeginKnitrBlock{comentario}<div class="comentario">**Descenso estocástico con momento**
+Separamos al azar los datos de entrenamiento en $n$ minilotes de tamaño $m$.
+
+- Para épocas $e =1,2,\ldots, n_e$
+  - Calcular el gradiente sobre el minilote y hacer actualización, sucesivamente
+  para cada uno de los minilotes $k=1,2,\ldots, n/m$:
+$$\beta_{i+1} = \beta_{i} + v,$$
+$$v= \alpha v - (1-\alpha)\eta\sum_{j=1}^m \nabla D^{(k)}_j$$
+donde $D^{(k)}_j (\beta_i)$ es la devianza para el $j$-ésimo caso del minilote
+$k$. A $v$ se llama la *velocidad*
+- Repetir para la siguiente época</div>\EndKnitrBlock{comentario}
+
+
+```r
+descenso_estocástico <- function(n_epocas, z_0, eta, 
+                                 minilotes, momento=0.0, decaimiento=0.0){
+  m <- length(minilotes)
+  z <- matrix(0, m*n_epocas, length(z_0))
+  z[1, ] <- z_0
+  v <- 0
+  for(i in 1:(m*n_epocas-1)){
+    indice_mlote <- i %% m + 1
+    h_deriv <- grad_calc(minilotes[[indice_mlote]]$x, minilotes[[indice_mlote]]$y)
+    z[i+1, ] <- z[i, ] + v
+    v <- momento*v -  (1-momento)*eta * h_deriv(z[i, ])
+    eta <- eta*(1-decaimiento)
+  }
+  z
+}
+```
+
+Y ahora vemos que usando momento el algoritmo es más parecido a descenso en gradiente
+usual (pues tenemos cierta memoria de direcciones anteriores de descenso):
+
+
+```r
+iter_estocastico <- descenso_estocástico(20, c(-1,-0.5, 0, 0), 0.1, minilotes, momento = 0.9, decaimiento = 0) %>%
+  data.frame %>% rename(beta_0 = X1, beta_1 = X2)
+dev_ent <- devianza_calc(x = as.matrix(dat_ent[,c('x_1','x_2','x_3'), drop =FALSE]), 
+                             y=dat_ent$g)
+dev_valid <- devianza_calc(x = as.matrix(dat_valid[,c('x_1','x_2','x_3'), drop =FALSE]), 
+                             y=dat_valid$g)
+dat_dev <- data_frame(iteracion = 1:nrow(iter_estocastico)) %>%
+   mutate(entrena = apply(iter_estocastico, 1, dev_ent), 
+  validacion = apply(iter_estocastico, 1, dev_valid)) %>%
+  gather(tipo, devianza, entrena:validacion)
+ggplot(dat_dev, 
+       aes(x=iteracion, y=devianza, colour=tipo)) + geom_line() + geom_point()
+```
+
+<img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-18-1.png" width="480" />
+
+Nótese cómo llegamos más rápido a una buena solución (comparado
+con el ejemplo sin momento). Adicionalmente, error de entrenamiento
+y validación lucen más suaves, producto de promediar 
+velocidades a lo largo de iteraciones.
+
+Valores típicos para momento son 0,0.5,0.9 o 0.99.
+
+### Otras variaciones
+
+Otras variaciones incluyen usar una tasa adaptativa de aprendizaje
+por cada parámetro (algoritmos adagrad, rmsprop, adam y adamax), o 
+actualizaciones un poco diferentes (nesterov). Los más comunes
+son descenso estocástico, descenso estocástico con momento,
+y adam.
+
+
+## Ajuste de redes con descenso estocástico
+
+Ahora usamos keras (con base en tensorflow) para hacer
+el trabajo que hicimos con nuestros pruebas de concepto de
+descenso estocástico. 
+Así tendremos más velocidad con código más robusto.
+
+
+
+```r
+if(Sys.info()['nodename'] == 'vainilla.local'){
+  # esto es por mi instalación particular de tensorflow - típicamente
+  # no es necesario que corras esta línea.
+  Sys.setenv(TENSORFLOW_PYTHON="/usr/local/bin/python")
+}
+library(keras)
+```
+
+
+```r
+set.seed(213)
+x_ent <- as.matrix(dat_ent[,c('x_1','x_2','x_3')])
+x_valid <-  as.matrix(dat_valid[,c('x_1','x_2','x_3')])
+y_ent <- dat_ent$g
+y_valid <- dat_valid$g
+modelo <- keras_model_sequential() 
+modelo %>%
+  layer_dense(units = 1, 
+              activation = 'sigmoid',
+              input_shape = c(3))
+
+modelo %>% compile(loss = 'binary_crossentropy',
+                   optimizer = optimizer_sgd(lr = 0.9, momentum = 0,
+                                             decay = 0),
+  metrics = c('accuracy')
+)
+
+history <- modelo %>% 
+  fit(x_ent, y_ent, 
+      epochs = 30, batch_size = 64, 
+      shuffle = FALSE,
+      validation_data = list(x_valid, y_valid))
+```
+
+Podemos ver el progreso del algoritmo por época
+
+
+```r
+aprendizaje <- as.data.frame(history)
+ggplot(aprendizaje, 
+       aes(x=epoch, y=value, colour=data, group=data)) +
+  facet_wrap(~metric, ncol = 1) + geom_line() + geom_point(size = 0.5)
+```
+
+<img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-21-1.png" width="480" />
+
+
+```r
+get_weights(modelo)
+```
+
+```
+## [[1]]
+##            [,1]
+## [1,] -1.2285520
+## [2,]  0.2823278
+## [3,] -0.5508137
+## 
+## [[2]]
+## [1] 1.242378
+```
+
+Y verificamos que concuerda con la salida de *glm*:
+
+
+```r
+mod_logistico <- glm(g ~ x_1 + x_2+ x_3, data = dat_ent, family = 'binomial') 
+coef(mod_logistico)
+```
+
+```
+## (Intercept)         x_1         x_2         x_3 
+##   1.2888612  -1.2881545   0.3311722  -0.6105063
+```
+
+```r
+0.5*mod_logistico$deviance/nrow(dat_ent)
+```
+
+```
+## [1] 0.4301508
+```
+
+
+
+
+#### Ejemplo {-}
+
+Ahora hacemos algunos ejemplos para redes totalmente conexas. Usaremos los
+datos de reconocimiento de dígitos.
+
+
+```r
+library(readr)
+digitos_entrena <- read_csv('./datos/zip-train.csv')
+digitos_prueba <- read_csv('./datos/zip-test.csv')
+names(digitos_entrena)[1] <- 'digito'
+names(digitos_entrena)[2:257] <- paste0('pixel_', 1:256)
+names(digitos_prueba)[1] <- 'digito'
+names(digitos_prueba)[2:257] <- paste0('pixel_', 1:256)
+dim(digitos_entrena)
+```
+
+```
+## [1] 7291  257
+```
+
+```r
+table(digitos_entrena$digito)
+```
+
+```
+## 
+##    0    1    2    3    4    5    6    7    8    9 
+## 1194 1005  731  658  652  556  664  645  542  644
+```
+
+Ponemos el rango entre [0,2] (pixeles positivos)
+
+
+```r
+x_train <- digitos_entrena %>% select(contains('pixel')) %>% as.matrix + 1
+x_train <- x_train
+x_test <- digitos_prueba %>% select(contains('pixel')) %>% as.matrix + 1
+x_test <- x_test
+```
+
+Para hacer un problema logístico, intentamos separar 3 del resto de los dígitos
+
+```r
+#dim(x_train) <- c(nrow(x_train), 16, 16, 1)
+#dim(x_test) <- c(nrow(x_test), 16, 16, 1)
+y_train <- to_categorical(digitos_entrena$digito)
+y_test <- to_categorical(digitos_prueba$digito)
+```
+
+
+
+
+```r
+modelo_tc <- keras_model_sequential() 
+modelo_tc %>% 
+  layer_dense(units = 200, activation = 'sigmoid', 
+              kernel_regularizer = regularizer_l2(l = 1e-6), input_shape=256) %>% 
+  layer_dense(units = 200, activation = 'sigmoid',
+              kernel_regularizer = regularizer_l2(l = 1e-6)) %>% 
+  layer_dense(units = 10, activation = 'softmax',
+              kernel_regularizer = regularizer_l2(l = 1e-6))
+```
+
+
+
+```r
+modelo_tc %>% compile(
+  loss = 'categorical_crossentropy',
+  optimizer = optimizer_sgd(lr = 0.5, momentum = 0.0, decay = 1e-6),
+  metrics = c('accuracy' ,'categorical_crossentropy')
+)
+history <- modelo_tc %>% fit(
+  x_train, y_train, 
+  epochs = 100, batch_size = 256, 
+  validation_data = list(x_test, y_test)
+)
+score <- modelo_tc %>% evaluate(x_test, y_test)
+score
+```
+
+```
+## $loss
+## [1] 0.2925296
+## 
+## $acc
+## [1] 0.9332337
+## 
+## $categorical_crossentropy
+## [1] 0.2914781
+```
+
+
+
+Podemos también intentar con el ejemplo de spam:
+
+
+```r
+library(readr)
+library(tidyr)
+library(dplyr)
+spam_entrena <- read_csv('./datos/spam-entrena.csv') #%>% sample_n(2000)
+spam_prueba <- read_csv('./datos/spam-prueba.csv')
+set.seed(293)
+x_ent <- spam_entrena %>% select(-X1, -spam) %>% as.matrix
+x_ent_s <- scale(x_ent)
+x_valid <- spam_prueba %>% select(-X1, -spam) %>% as.matrix 
+x_valid_s <- x_valid %>%
+  scale(center = attr(x_ent_s, 'scaled:center'), scale = attr(x_ent_s,  'scaled:scale'))
+y_ent <- spam_entrena$spam
+y_valid <- spam_prueba$spam
+```
+
+
+
+
+
+```r
+modelo_tc <- keras_model_sequential() 
+modelo_tc %>% 
+  layer_dense(units = 200, activation = 'sigmoid', 
+              kernel_regularizer = regularizer_l2(l = 1e-3), input_shape=57) %>% 
+  layer_dense(units = 1, activation = 'sigmoid')
+```
+
+
+
+```r
+modelo_tc %>% compile(
+  loss = 'binary_crossentropy',
+  optimizer = optimizer_sgd(lr = 0.3, momentum = 0.5, decay = 1e-4),
+  metrics = c('accuracy', 'binary_crossentropy')
+)
+history <- modelo_tc %>% fit(
+  x_ent_s, y_ent, 
+  epochs = 50, batch_size = 256, 
+  validation_data = list(x_valid_s, y_valid)
+)
+score <- modelo_tc %>% evaluate(x_valid_s, y_valid)
+tab_confusion <- table(modelo_tc %>% predict_classes(x_valid_s),y_valid) 
+tab_confusion
+```
+
+```
+##    y_valid
+##       0   1
+##   0 897  90
+##   1  30 517
+```
+
+```r
+prop.table(tab_confusion, 2)
+```
+
+```
+##    y_valid
+##              0          1
+##   0 0.96763754 0.14827018
+##   1 0.03236246 0.85172982
+```
+
+
+## Activaciones relu
+
+Recientemente se ha descubierto que hay una unidad más conveniente para las
+activaciones de las unidades, en lugar de la función sigmoide
+
+\BeginKnitrBlock{comentario}<div class="comentario">Activaciones lineales rectificadas (relu)
+
+La función relu es
+\begin{equation}
+h(z) = 
+\begin{cases}
+z &\, z>0\\
+0 &\, z<=0
+\end{cases}
+\end{equation}
+
+Estas generalmente sustituyen a las unidades sigmoidales en capas ocultas</div>\EndKnitrBlock{comentario}
+
+
+```r
+h_relu <- function(z) ifelse(z > 0, z, 0)
+h_logistica <- function(z) 4/(1+exp(-z)) #mult por 4 para comparar más fácilmente
+curve(h_relu, -5,5)
+curve(h_logistica, add=T, col='red')
+```
+
+<img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-33-1.png" width="480" />
+
+
+La razón del exito de estas activaciones no está del todo clara, aunque
+generalmente se cita el hecho de que una unidad saturada (valores de entrada
+muy positivos o muy negativos) es problemática en optimización, y las unidades
+tienen menos ese problema pues no se saturan para valores positivos.
+
+**Pregunta**: ¿cómo cambiaría el algoritmo de feed-forward con estas unidades? 
+¿y más importante, el de back-prop?
+
+
+#### Ejemplo {-}
+
+
+
+```r
+modelo_tc <- keras_model_sequential() 
+modelo_tc %>% 
+  layer_dense(units = 200, activation = 'relu', 
+              kernel_regularizer = regularizer_l2(l = 1e-3), input_shape=256) %>% 
+ layer_dense(units = 200, activation = 'relu',
+              kernel_regularizer = regularizer_l2(l = 1e-3)) %>% 
+  layer_dense(units = 10, activation = 'softmax',
+              kernel_regularizer = regularizer_l2(l = 1e-3))
+```
+
+
+
+```r
+modelo_tc %>% compile(
+  loss = 'categorical_crossentropy',
+  optimizer = optimizer_sgd(lr = 0.2, momentum = 0.0, decay = 0),
+  metrics = c('accuracy', 'categorical_crossentropy')
+)
+history <- modelo_tc %>% fit(
+  x_train, y_train, 
+  epochs = 100, batch_size = 256, 
+  validation_data = list(x_test, y_test)
+)
+score <- modelo_tc %>% evaluate(x_test, y_test)
+score
+```
+
+```
+## $loss
+## [1] 0.3508996
+## 
+## $acc
+## [1] 0.9436971
+## 
+## $categorical_crossentropy
+## [1] 0.2301577
+```
+
+
+## Dropout para regularización
+
+Un método más nuevo y exitoso para regularizar es el *dropout*. Consiste en perturbar
+la red en cada pasada de entrenamiento (feed-forward y backprop), eliminando
+al azar algunas de las entradas de cada capa.
+
+La idea general es que algunas unidades y pesos pueden acoplarse fuertemente (y de manera
+compleja) para hacer
+las predicciones. Si estas unidades aprendieron ese acoplamento demasiado 
+fuerte para el conjunto de entrenamiento, entonces puede ser nuevos datos,
+con perturbaciones,  puedan producir predicciones malas
+(mala generalización). O de otra forma: perturbaciones en los datos
+de entrada producen conjuntos de unidades que dejan de funcionar correctamente.
+
+Una manera de evitar esa depedencia es eliminando al azar unidades (incluyendo
+de entrenamiento) en cada pasada de entrenamiento.Introducir ruido en el entrenamiento
+parece en principio ser mala idea, pero es una técnica útil que veremos tiene aplicación
+en más tipos de modelos (árboles aleatorios, por ejemplo, bagging de predictores).
+Podemos pensar que si incluimos ruido apropiadamente, entonces rompemos patrones
+poco útiles que nuestros predictores pueden mejorar.
+
+Otra manera de ver dropout es considerar que en cada pasada de minibatch,
+escogemos una arquitectura diferente, y entrenamos. El resultado final
+será entonces un promedio de todas esas arquitecturas que probamos. Este
+promedio reduce varianza de las salidas de las unidades. Esta reducción de varianza
+está acompañada de un aumento del sesgo, pues esta operación impone restricciones
+en la estructura de los pesos.
+
+\BeginKnitrBlock{comentario}<div class="comentario">*Dropout*
+
+- En cada iteración (minibatch), seleccionamos con cierta probablidad $p$
+eliminar cada una de las unidades (independientemente en cada capa, y posiblemente
+con distintas $p$ en cada capa). Hacemos forward-feed y back-propagation poniendo
+en 0 las unidades eliminadas.
+- Escalar pesos: `ara predecir (prueba), usamos todas las unidades. Si una unidad
+tiene peso $\theta$ en una capa después de entrenar, 
+y la probablidad de que esa capa no se haya hecho
+0 es $1-p$, entonces usamos $(1-p)\theta$ como peso para hacer predicciones.</div>\EndKnitrBlock{comentario}
+
+
+
+### Acoplamiento de unidades
+
+#### Ejemplo {-}
+El ejemplo más simple es cuando eliminamos al azar entradas (unidades de entrada).
+Por ejemplo, en regresión logística
+
+
+```r
+library(readr)
+dat_grasa <- read_csv(file = 'datos/bodyfat.csv')
+set.seed(127)
+dat_grasa <- sample_n(dat_grasa, nrow(dat_grasa))
+```
+
+
+```r
+modelo_1 <- keras_model_sequential()
+modelo_1 %>%
+  layer_dense(units = 100, activation='sigmoid', input_shape=13) %>%
+  layer_dense(units = 1, activation = 'linear')
+modelo_1 %>% compile(loss = 'mean_absolute_error',
+                      optimizer = optimizer_sgd(lr = 0.2, momentum = 0,
+                                             decay = 0),
+                     metrics=c('mean_absolute_error'))
+
+history_1 <- modelo_1 %>% 
+  fit(dat_grasa %>% select(-grasacorp) %>% as.matrix %>% scale, 
+      dat_grasa$grasacorp, 
+      epochs = 50, batch_size = 100, 
+      verbose = 1,
+      validation_split=0.5)
+tail(as.data.frame(history_1) %>% filter(data=='validation'))
+```
+
+```
+##     epoch    value metric       data
+## 95     45 4.067806   loss validation
+## 96     46 3.803698   loss validation
+## 97     47 3.969129   loss validation
+## 98     48 3.813908   loss validation
+## 99     49 3.890460   loss validation
+## 100    50 3.781731   loss validation
+```
+
+```r
+modelo_2 <- keras_model_sequential()
+modelo_2 %>%
+  layer_reshape(input_shape=13, target_shape=13) %>%
+  layer_dropout(0.25) %>%
+  layer_dense(units=100, activation='sigmoid') %>%
+  layer_dense(units = 1, 
+              activation = 'linear')
+modelo_2 %>% compile(loss = 'mean_absolute_error',
+                   optimizer = optimizer_sgd(lr = 0.2, momentum = 0,
+                                             decay = 0),
+  metrics = c('mean_absolute_error'))
+
+history_2 <- modelo_2 %>% 
+  fit(dat_grasa %>% select(-grasacorp) %>% as.matrix %>% scale, 
+      dat_grasa$grasacorp, 
+      epochs = 50, batch_size = 100, 
+      verbose = 1,
+      validation_split=0.5)
+tail(as.data.frame(history_2))
+```
+
+```
+##     epoch    value metric     data
+## 195    45 3.969029   loss training
+## 196    46 4.330746   loss training
+## 197    47 4.199509   loss training
+## 198    48 4.062214   loss training
+## 199    49 4.015920   loss training
+## 200    50 3.922994   loss training
+```
+
+Podemos examinar qué pasa con cada unidad de la capa oculta en cada caso:
+
+
+```r
+pred_1 <- keras_model_sequential()
+pred_1 %>% layer_dense(units = 100, activation='sigmoid', input_shape=13,
+                       weights = get_weights(modelo_1)[1:2]) %>%
+          layer_dense(units = 1, activation='linear', weights = get_weights(modelo_1)[3:4])
+
+x_grasa <- dat_grasa %>% select(-grasacorp) %>% as.matrix %>% scale
+dim(aa <- predict_proba(pred_1, x = x_grasa))
+```
+
+```
+## [1] 252   1
+```
+
+```r
+hist(cor(aa), breaks=50)
+```
+
+<img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-40-1.png" width="480" />
+
+```r
+pred_1 <- keras_model_sequential()
+pred_1 %>% layer_dense(units = 100, activation='sigmoid', input_shape=13,
+                       weights = get_weights(modelo_2)[1:2])
+x_grasa <- dat_grasa %>% select(-grasacorp) %>% as.matrix %>% scale
+dim(aa <- predict_proba(pred_1, x = x_grasa))
+```
+
+```
+## [1] 252 100
+```
+
+```r
+hist(cor(aa), breaks=50)
+```
+
+<img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-40-2.png" width="480" />
+
+### Ejemplo {-}
+
+
+
+```r
+modelo_tc <- keras_model_sequential() 
+modelo_tc %>% 
+  layer_reshape(input_shape=256, target_shape=256) %>%
+  layer_dropout(rate=0.3) %>%
+  layer_dense(units = 200, activation = 'relu') %>% 
+  layer_dropout(rate = 0.3) %>%
+  layer_dense(units = 200, activation = 'relu') %>%
+  layer_dropout(rate = 0.3) %>%
+  layer_dense(units = 10, activation = 'softmax',
+              kernel_regularizer = regularizer_l2(l = 1e-4))
+```
+
+
+
+```r
+modelo_tc %>% compile(
+  loss = 'categorical_crossentropy',
+  optimizer = optimizer_sgd(lr = 0.2, momentum = 0.5, decay = 0.0001),
+  metrics = c('accuracy', 'categorical_crossentropy')
+)
+history <- modelo_tc %>% fit(
+  x_train, y_train, 
+  epochs = 100, batch_size = 256, 
+  validation_data = list(x_test, y_test)
+)
+score <- modelo_tc %>% evaluate(x_test, y_test)
+score
+```
+
+```
+## $loss
+## [1] 0.192189
+## 
+## $acc
+## [1] 0.9526657
+## 
+## $categorical_crossentropy
+## [1] 0.1881322
+```

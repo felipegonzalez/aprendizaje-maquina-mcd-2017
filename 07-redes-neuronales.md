@@ -1263,10 +1263,10 @@ score
 
 ```
 ## $loss
-## [1] 0.4348451
+## [1] 0.4365973
 ## 
 ## $acc
-## [1] 0.7981928
+## [1] 0.7951807
 ```
 
 ```r
@@ -1277,8 +1277,8 @@ tab_confusion
 ```
 ##    y_valid
 ##       0   1
-##   0 196  40
-##   1  27  69
+##   0 195  40
+##   1  28  69
 ```
 
 ```r
@@ -1288,8 +1288,8 @@ prop.table(tab_confusion, 2)
 ```
 ##    y_valid
 ##             0         1
-##   0 0.8789238 0.3669725
-##   1 0.1210762 0.6330275
+##   0 0.8744395 0.3669725
+##   1 0.1255605 0.6330275
 ```
 
 
@@ -1357,7 +1357,7 @@ para que la generalización (error de validación) sea buena.
  de validación podemos intentar reducir el error de entrenamiento y/o reducir el margen.
  Generalmente hay que ir balanceando flexibilidad con rigidez a través de varios
  parámetros para terminar con un buen ajuste.
- 
+
  
  
 #### Ejercicio {-}
