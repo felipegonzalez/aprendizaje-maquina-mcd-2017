@@ -511,12 +511,12 @@ get_weights(modelo)
 ```
 ## [[1]]
 ##            [,1]
-## [1,] -1.2285520
-## [2,]  0.2823278
-## [3,] -0.5508137
+## [1,] -1.2426209
+## [2,]  0.2977479
+## [3,] -0.5316454
 ## 
 ## [[2]]
-## [1] 1.242378
+## [1] 1.239555
 ```
 
 Y verificamos que concuerda con la salida de *glm*:
@@ -626,13 +626,13 @@ score
 
 ```
 ## $loss
-## [1] 0.2925296
+## [1] 0.2893996
 ## 
 ## $acc
-## [1] 0.9332337
+## [1] 0.9322372
 ## 
 ## $categorical_crossentropy
-## [1] 0.2914781
+## [1] 0.2883518
 ```
 
 
@@ -689,8 +689,8 @@ tab_confusion
 ```
 ##    y_valid
 ##       0   1
-##   0 897  90
-##   1  30 517
+##   0 897  89
+##   1  30 518
 ```
 
 ```r
@@ -700,8 +700,8 @@ prop.table(tab_confusion, 2)
 ```
 ##    y_valid
 ##              0          1
-##   0 0.96763754 0.14827018
-##   1 0.03236246 0.85172982
+##   0 0.96763754 0.14662273
+##   1 0.03236246 0.85337727
 ```
 
 
@@ -740,7 +740,7 @@ muy positivos o muy negativos) es problemática en optimización, y las unidades
 tienen menos ese problema pues no se saturan para valores positivos.
 
 **Pregunta**: ¿cómo cambiaría el algoritmo de feed-forward con estas unidades? 
-¿y más importante, el de back-prop?
+¿el de back-prop?
 
 
 #### Ejemplo {-}
@@ -777,187 +777,203 @@ score
 
 ```
 ## $loss
-## [1] 0.3508996
+## [1] 0.3501208
 ## 
 ## $acc
-## [1] 0.9436971
+## [1] 0.9407075
 ## 
 ## $categorical_crossentropy
-## [1] 0.2301577
+## [1] 0.230238
 ```
 
 
 ## Dropout para regularización
 
 Un método más nuevo y exitoso para regularizar es el *dropout*. Consiste en perturbar
-la red en cada pasada de entrenamiento (feed-forward y backprop), eliminando
-al azar algunas de las entradas de cada capa.
+la red en cada pasada de entrenamiento de minibatch (feed-forward y backprop), eliminando
+*al azar* algunas de las entradas de cada capa.
 
-La idea general es que algunas unidades y pesos pueden acoplarse fuertemente (y de manera
-compleja) para hacer
-las predicciones. Si estas unidades aprendieron ese acoplamento demasiado 
-fuerte para el conjunto de entrenamiento, entonces puede ser nuevos datos,
-con perturbaciones,  puedan producir predicciones malas
-(mala generalización). O de otra forma: perturbaciones en los datos
-de entrada producen conjuntos de unidades que dejan de funcionar correctamente.
-
-Una manera de evitar esa depedencia es eliminando al azar unidades (incluyendo
-de entrenamiento) en cada pasada de entrenamiento.Introducir ruido en el entrenamiento
-parece en principio ser mala idea, pero es una técnica útil que veremos tiene aplicación
-en más tipos de modelos (árboles aleatorios, por ejemplo, bagging de predictores).
-Podemos pensar que si incluimos ruido apropiadamente, entonces rompemos patrones
-poco útiles que nuestros predictores pueden mejorar.
-
-Otra manera de ver dropout es considerar que en cada pasada de minibatch,
-escogemos una arquitectura diferente, y entrenamos. El resultado final
-será entonces un promedio de todas esas arquitecturas que probamos. Este
-promedio reduce varianza de las salidas de las unidades. Esta reducción de varianza
-está acompañada de un aumento del sesgo, pues esta operación impone restricciones
-en la estructura de los pesos.
+El objeto es que al introducir ruido en el proceso de entrenamiento evitamos
+sobreajuste, pues en cada paso de la iteración estamos limitando el 
+número de unidades que la red puede usar para ajustar las respuestas. Dropout
+entonces busca una reducción en el sobreajuste que sea más provechosa que
+el consecuente aumento en el sesgo.
 
 \BeginKnitrBlock{comentario}<div class="comentario">*Dropout*
 
 - En cada iteración (minibatch), seleccionamos con cierta probablidad $p$
 eliminar cada una de las unidades (independientemente en cada capa, y posiblemente
-con distintas $p$ en cada capa). Hacemos forward-feed y back-propagation poniendo
+con distintas $p$ en cada capa), es decir, hacemos su salida igual a 0. 
+Hacemos forward-feed y back-propagation poniendo
 en 0 las unidades eliminadas.
-- Escalar pesos: `ara predecir (prueba), usamos todas las unidades. Si una unidad
+- Escalar pesos: para predecir (prueba), usamos todas las unidades. Si una unidad
 tiene peso $\theta$ en una capa después de entrenar, 
 y la probablidad de que esa capa no se haya hecho
-0 es $1-p$, entonces usamos $(1-p)\theta$ como peso para hacer predicciones.</div>\EndKnitrBlock{comentario}
+0 es $1-p$, entonces usamos $(1-p)\theta$ como peso para hacer predicciones.
+- Si hacemos dropout de la capa de entrada, generalmente se usan valores chicos
+alrededor de $0.2$. En capas intermedias se usan generalmente valores más grandes
+alrededor de $0.5$.</div>\EndKnitrBlock{comentario}
+
+ Podemos hacer dropout de la capa de entrada. En este caso, estamos evitando
+que el modelo dependa fuertemente de variables individuales. Por ejemplo, en
+procesamiento de imágenes, no queremos que por sobreajuste algunas predicciones
+estén ligadas fuertemente a un solo pixel (aún cuando en entrenamiento puede
+ser que un pixel separe bien los casos que nos interesa clasificar).
 
 
+#### Ejemplo: dropout y regularización {-}
+Consideremos el problema de separar 9 y 3 del resto de dígitos zip.
+Queremos comparar el desempeño de una red sin y con dropout (tanto de entradas
+como de capa oculta) y entender parcialmente cómo se comportan los pesos
+aprendidos:
 
-### Acoplamiento de unidades
-
-#### Ejemplo {-}
-El ejemplo más simple es cuando eliminamos al azar entradas (unidades de entrada).
-Por ejemplo, en regresión logística
 
 
 ```r
-library(readr)
-dat_grasa <- read_csv(file = 'datos/bodyfat.csv')
-set.seed(127)
-dat_grasa <- sample_n(dat_grasa, nrow(dat_grasa))
+set.seed(2923)
+entrena_3 <- digitos_entrena %>% sample_n(nrow(digitos_entrena)) %>%
+  sample_n(2000)
+x_train_3 <- entrena_3 %>% select(-digito) %>% as.matrix + 1
+y_train_3 <- (entrena_3$digito %in% c(9,3)) %>% as.numeric
+set.seed(12)
+modelo_sin_reg <- keras_model_sequential() 
+modelo_sin_reg  %>% 
+  layer_dense(units = 30, activation = 'relu', input_shape = 256) %>%
+  layer_dense(units = 1, activation = 'sigmoid')
+set.seed(12)
+modelo_dropout <- keras_model_sequential() 
+modelo_dropout  %>% 
+  layer_reshape(input_shape=256, target_shape=256) %>%
+  layer_dropout(0.5) %>%
+  layer_dense(units = 30, activation = 'relu', input_shape = 256) %>%
+  layer_dropout(0.5) %>%
+  layer_dense(units = 1, activation = 'sigmoid')
 ```
+
+
+El modelo sin regularización sobreajusta:
 
 
 ```r
-modelo_1 <- keras_model_sequential()
-modelo_1 %>%
-  layer_dense(units = 100, activation='sigmoid', input_shape=13) %>%
-  layer_dense(units = 1, activation = 'linear')
-modelo_1 %>% compile(loss = 'mean_absolute_error',
-                      optimizer = optimizer_sgd(lr = 0.2, momentum = 0,
-                                             decay = 0),
-                     metrics=c('mean_absolute_error'))
-
-history_1 <- modelo_1 %>% 
-  fit(dat_grasa %>% select(-grasacorp) %>% as.matrix %>% scale, 
-      dat_grasa$grasacorp, 
-      epochs = 50, batch_size = 100, 
-      verbose = 1,
-      validation_split=0.5)
-tail(as.data.frame(history_1) %>% filter(data=='validation'))
+modelo_sin_reg %>% compile(loss = 'binary_crossentropy', optimizer = optimizer_sgd(lr = 0.9),
+  metrics = c('accuracy')
+)
+history_1 <- modelo_sin_reg %>% fit(x_train_3/2, y_train_3, verbose=1,
+  epochs = 500, batch_size = 250, validation_split = 0.5
+)
+hist_1 <- as.data.frame(history_1)
+ggplot(hist_1, aes(x=epoch, y=value, colour=data)) + geom_line() + 
+  facet_wrap(~metric, scales = 'free')
 ```
 
-```
-##     epoch    value metric       data
-## 95     45 4.067806   loss validation
-## 96     46 3.803698   loss validation
-## 97     47 3.969129   loss validation
-## 98     48 3.813908   loss validation
-## 99     49 3.890460   loss validation
-## 100    50 3.781731   loss validation
-```
+<img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-38-1.png" width="480" />
 
-```r
-modelo_2 <- keras_model_sequential()
-modelo_2 %>%
-  layer_reshape(input_shape=13, target_shape=13) %>%
-  layer_dropout(0.25) %>%
-  layer_dense(units=100, activation='sigmoid') %>%
-  layer_dense(units = 1, 
-              activation = 'linear')
-modelo_2 %>% compile(loss = 'mean_absolute_error',
-                   optimizer = optimizer_sgd(lr = 0.2, momentum = 0,
-                                             decay = 0),
-  metrics = c('mean_absolute_error'))
-
-history_2 <- modelo_2 %>% 
-  fit(dat_grasa %>% select(-grasacorp) %>% as.matrix %>% scale, 
-      dat_grasa$grasacorp, 
-      epochs = 50, batch_size = 100, 
-      verbose = 1,
-      validation_split=0.5)
-tail(as.data.frame(history_2))
-```
-
-```
-##     epoch    value metric     data
-## 195    45 3.969029   loss training
-## 196    46 4.330746   loss training
-## 197    47 4.199509   loss training
-## 198    48 4.062214   loss training
-## 199    49 4.015920   loss training
-## 200    50 3.922994   loss training
-```
-
-Podemos examinar qué pasa con cada unidad de la capa oculta en cada caso:
+Y parecen ruidosas las unidades que aprendió en la capa oculta (algunas no
+aprendieron o aprendieron cosas irrelevantes):
 
 
 ```r
-pred_1 <- keras_model_sequential()
-pred_1 %>% layer_dense(units = 100, activation='sigmoid', input_shape=13,
-                       weights = get_weights(modelo_1)[1:2]) %>%
-          layer_dense(units = 1, activation='linear', weights = get_weights(modelo_1)[3:4])
-
-x_grasa <- dat_grasa %>% select(-grasacorp) %>% as.matrix %>% scale
-dim(aa <- predict_proba(pred_1, x = x_grasa))
+par(mfcol=c(5,6),
+          oma = c(5,4,0,0) + 0.1,
+          mar = c(0,0,0,0) + 0.1)
+for(i in 1:30){
+image(matrix(get_weights(modelo_sin_reg)[[1]][,i], 16, 16, byrow=F)[,16:1],
+      axes = FALSE, col = grey(seq(0, 1, length = 256)))
+}
 ```
 
-```
-## [1] 252   1
-```
+<img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-39-1.png" width="672" />
+
+
+Ahora ajustamos el modelo con dropout:
+
+
 
 ```r
-hist(cor(aa), breaks=50)
+modelo_dropout %>% compile(loss = 'binary_crossentropy', optimizer = optimizer_sgd(lr = 0.6,
+                                                                                   momentum=0.0),
+  metrics = c('accuracy')
+)
+history_2 <- modelo_dropout %>% fit(x_train_3/2, y_train_3, verbose=1,
+  epochs = 500, batch_size = 200, validation_split = 0.5
+)
+
+hist_2 <- as.data.frame(history_2)
+ggplot(hist_2, aes(x=epoch, y=value, colour=data)) + geom_line() + 
+  facet_wrap(~metric, scales = 'free')
 ```
 
 <img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-40-1.png" width="480" />
 
-```r
-pred_1 <- keras_model_sequential()
-pred_1 %>% layer_dense(units = 100, activation='sigmoid', input_shape=13,
-                       weights = get_weights(modelo_2)[1:2])
-x_grasa <- dat_grasa %>% select(-grasacorp) %>% as.matrix %>% scale
-dim(aa <- predict_proba(pred_1, x = x_grasa))
-```
+El desempeño es mejor, y parecen ser más útiles los patrones que aprendió
+el capa oculta:
 
-```
-## [1] 252 100
-```
 
 ```r
-hist(cor(aa), breaks=50)
+par(mfcol=c(5,6),
+          oma = c(5,4,0,0) + 0.1,
+          mar = c(0,0,0,0) + 0.1)
+for(i in 1:30){
+image(matrix(get_weights(modelo_dropout)[[1]][,i], 16, 16, byrow=F)[,16:1],
+      axes = FALSE, col = grey(seq(0, 1, length = 256)))
+}
 ```
 
-<img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-40-2.png" width="480" />
+<img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-41-1.png" width="480" />
+
+
+
+Algunas maneras en que podemos pensar en la regularización de dropout:
+
+- Unidades con valores muy grandes producen efectos grandes en las capas siguientes.
+Pero en dropout esto es más difícil que pase, pues esas unidades con efectos demasiado grandes
+no siempre están en los modelos que ajustamos.
+
+- Puede ser que una unidad haga mucho trabajo, y prevenga a otras de aprender
+algo útil que podría mejorar las prediccines.
+
+
+- Dropout busca que cada unidad calcule algo importante por sí sola, y 
+dependa menos de otras unidades para hacer algo útil.
+Algunas unidades y pesos pueden acoplarse fuertemente (y de manera
+compleja) para hacer
+las predicciones. Si estas unidades aprendieron ese acoplamento demasiado 
+fuerte para el conjunto de entrenamiento, entonces puede ser nuevos datos,
+con perturbaciones,  puedan producir predicciones malas
+(mala generalización). Con dropout buscamos que la unidades capturen información
+útil en general, no necesariamente en acoplamiento fuerte con otras unidades.
+
+- Podemos pensar que en cada pasada de minibatch,
+escogemos una arquitectura diferente, y entrenamos. El resultado final
+será entonces es un tipo de  promedio de todas esas arquitecturas que probamos. Este
+promedio reduce varianza de las salidas de las unidades.
+
+
+
+
+El paso de escalamiento es importante para el funcionamiento correcto del método.
+La idea intuitiva es que el peso de una unidad  es 0 con probabilidad
+$p$ y $\theta$ con probabilidad $1-p$. Tomamos el valor esperado como peso para
+la red completa, que es $p0+(1-p)\theta$. Ver [@Srivastava:2014:DSW:2627435.2670313]
+
+
+
 
 ### Ejemplo {-}
 
+Experimenta en este ejemplo con distintos valores de dropout, y verifica 
+intuitivamente sus efectos de regularización.
 
 
 ```r
 modelo_tc <- keras_model_sequential() 
 modelo_tc %>% 
   layer_reshape(input_shape=256, target_shape=256) %>%
-  layer_dropout(rate=0.3) %>%
+  layer_dropout(rate=0.2) %>%
   layer_dense(units = 200, activation = 'relu') %>% 
-  layer_dropout(rate = 0.3) %>%
+  layer_dropout(rate = 0.5) %>%
   layer_dense(units = 200, activation = 'relu') %>%
-  layer_dropout(rate = 0.3) %>%
+  layer_dropout(rate = 0.5) %>%
   layer_dense(units = 10, activation = 'softmax',
               kernel_regularizer = regularizer_l2(l = 1e-4))
 ```
@@ -967,7 +983,7 @@ modelo_tc %>%
 ```r
 modelo_tc %>% compile(
   loss = 'categorical_crossentropy',
-  optimizer = optimizer_sgd(lr = 0.2, momentum = 0.5, decay = 0.0001),
+  optimizer = optimizer_sgd(lr = 0.3, momentum = 0.5, decay = 0.0001),
   metrics = c('accuracy', 'categorical_crossentropy')
 )
 history <- modelo_tc %>% fit(
@@ -981,11 +997,11 @@ score
 
 ```
 ## $loss
-## [1] 0.192189
+## [1] 0.2078793
 ## 
 ## $acc
-## [1] 0.9526657
+## [1] 0.9531639
 ## 
 ## $categorical_crossentropy
-## [1] 0.1881322
+## [1] 0.2039328
 ```

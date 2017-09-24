@@ -241,8 +241,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="8.6" data-path="redes-neuronales-parte-2.html"><a href="redes-neuronales-parte-2.html#ajuste-de-redes-con-descenso-estocastico"><i class="fa fa-check"></i><b>8.6</b> Ajuste de redes con descenso estocástico</a></li>
 <li class="chapter" data-level="8.7" data-path="redes-neuronales-parte-2.html"><a href="redes-neuronales-parte-2.html#activaciones-relu"><i class="fa fa-check"></i><b>8.7</b> Activaciones relu</a></li>
 <li class="chapter" data-level="8.8" data-path="redes-neuronales-parte-2.html"><a href="redes-neuronales-parte-2.html#dropout-para-regularizacion"><i class="fa fa-check"></i><b>8.8</b> Dropout para regularización</a><ul>
-<li class="chapter" data-level="8.8.1" data-path="redes-neuronales-parte-2.html"><a href="redes-neuronales-parte-2.html#acoplamiento-de-unidades"><i class="fa fa-check"></i><b>8.8.1</b> Acoplamiento de unidades</a></li>
-<li class="chapter" data-level="" data-path="redes-neuronales-parte-2.html"><a href="redes-neuronales-parte-2.html#ejemplo-36"><i class="fa fa-check"></i>Ejemplo</a></li>
+<li class="chapter" data-level="" data-path="redes-neuronales-parte-2.html"><a href="redes-neuronales-parte-2.html#ejemplo-35"><i class="fa fa-check"></i>Ejemplo</a></li>
 </ul></li>
 </ul></li>
 <li class="divider"></li>
@@ -586,12 +585,12 @@ history &lt;-<span class="st"> </span>modelo <span class="op">%&gt;%</span><span
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">get_weights</span>(modelo)</code></pre></div>
 <pre><code>## [[1]]
 ##            [,1]
-## [1,] -1.2285520
-## [2,]  0.2823278
-## [3,] -0.5508137
+## [1,] -1.2426209
+## [2,]  0.2977479
+## [3,] -0.5316454
 ## 
 ## [[2]]
-## [1] 1.242378</code></pre>
+## [1] 1.239555</code></pre>
 <p>Y verificamos que concuerda con la salida de <em>glm</em>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mod_logistico &lt;-<span class="st"> </span><span class="kw">glm</span>(g <span class="op">~</span><span class="st"> </span>x_<span class="dv">1</span> <span class="op">+</span><span class="st"> </span>x_<span class="dv">2</span><span class="op">+</span><span class="st"> </span>x_<span class="dv">3</span>, <span class="dt">data =</span> dat_ent, <span class="dt">family =</span> <span class="st">&#39;binomial&#39;</span>) 
 <span class="kw">coef</span>(mod_logistico)</code></pre></div>
@@ -646,13 +645,13 @@ history &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><s
 score &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">evaluate</span>(x_test, y_test)
 score</code></pre></div>
 <pre><code>## $loss
-## [1] 0.2925296
+## [1] 0.2893996
 ## 
 ## $acc
-## [1] 0.9332337
+## [1] 0.9322372
 ## 
 ## $categorical_crossentropy
-## [1] 0.2914781</code></pre>
+## [1] 0.2883518</code></pre>
 <p>Podemos también intentar con el ejemplo de spam:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(readr)
 <span class="kw">library</span>(tidyr)
@@ -687,13 +686,13 @@ tab_confusion &lt;-<span class="st"> </span><span class="kw">table</span>(modelo
 tab_confusion</code></pre></div>
 <pre><code>##    y_valid
 ##       0   1
-##   0 897  90
-##   1  30 517</code></pre>
+##   0 897  89
+##   1  30 518</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">prop.table</span>(tab_confusion, <span class="dv">2</span>)</code></pre></div>
 <pre><code>##    y_valid
 ##              0          1
-##   0 0.96763754 0.14827018
-##   1 0.03236246 0.85172982</code></pre>
+##   0 0.96763754 0.14662273
+##   1 0.03236246 0.85337727</code></pre>
 </div>
 </div>
 <div id="activaciones-relu" class="section level2">
@@ -719,7 +718,7 @@ h_logistica &lt;-<span class="st"> </span><span class="cf">function</span>(z) <s
 <span class="kw">curve</span>(h_logistica, <span class="dt">add=</span>T, <span class="dt">col=</span><span class="st">&#39;red&#39;</span>)</code></pre></div>
 <p><img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-33-1.png" width="480" /></p>
 <p>La razón del exito de estas activaciones no está del todo clara, aunque generalmente se cita el hecho de que una unidad saturada (valores de entrada muy positivos o muy negativos) es problemática en optimización, y las unidades tienen menos ese problema pues no se saturan para valores positivos.</p>
-<p><strong>Pregunta</strong>: ¿cómo cambiaría el algoritmo de feed-forward con estas unidades? ¿y más importante, el de back-prop?</p>
+<p><strong>Pregunta</strong>: ¿cómo cambiaría el algoritmo de feed-forward con estas unidades? ¿el de back-prop?</p>
 <div id="ejemplo-34" class="section level4 unnumbered">
 <h4>Ejemplo</h4>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">modelo_tc &lt;-<span class="st"> </span><span class="kw">keras_model_sequential</span>() 
@@ -743,124 +742,118 @@ history &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><s
 score &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">evaluate</span>(x_test, y_test)
 score</code></pre></div>
 <pre><code>## $loss
-## [1] 0.3508996
+## [1] 0.3501208
 ## 
 ## $acc
-## [1] 0.9436971
+## [1] 0.9407075
 ## 
 ## $categorical_crossentropy
-## [1] 0.2301577</code></pre>
+## [1] 0.230238</code></pre>
 </div>
 </div>
 <div id="dropout-para-regularizacion" class="section level2">
 <h2><span class="header-section-number">8.8</span> Dropout para regularización</h2>
-<p>Un método más nuevo y exitoso para regularizar es el <em>dropout</em>. Consiste en perturbar la red en cada pasada de entrenamiento (feed-forward y backprop), eliminando al azar algunas de las entradas de cada capa.</p>
-<p>La idea general es que algunas unidades y pesos pueden acoplarse fuertemente (y de manera compleja) para hacer las predicciones. Si estas unidades aprendieron ese acoplamento demasiado fuerte para el conjunto de entrenamiento, entonces puede ser nuevos datos, con perturbaciones, puedan producir predicciones malas (mala generalización). O de otra forma: perturbaciones en los datos de entrada producen conjuntos de unidades que dejan de funcionar correctamente.</p>
-<p>Una manera de evitar esa depedencia es eliminando al azar unidades (incluyendo de entrenamiento) en cada pasada de entrenamiento.Introducir ruido en el entrenamiento parece en principio ser mala idea, pero es una técnica útil que veremos tiene aplicación en más tipos de modelos (árboles aleatorios, por ejemplo, bagging de predictores). Podemos pensar que si incluimos ruido apropiadamente, entonces rompemos patrones poco útiles que nuestros predictores pueden mejorar.</p>
-<p>Otra manera de ver dropout es considerar que en cada pasada de minibatch, escogemos una arquitectura diferente, y entrenamos. El resultado final será entonces un promedio de todas esas arquitecturas que probamos. Este promedio reduce varianza de las salidas de las unidades. Esta reducción de varianza está acompañada de un aumento del sesgo, pues esta operación impone restricciones en la estructura de los pesos.</p>
+<p>Un método más nuevo y exitoso para regularizar es el <em>dropout</em>. Consiste en perturbar la red en cada pasada de entrenamiento de minibatch (feed-forward y backprop), eliminando <em>al azar</em> algunas de las entradas de cada capa.</p>
+<p>El objeto es que al introducir ruido en el proceso de entrenamiento evitamos sobreajuste, pues en cada paso de la iteración estamos limitando el número de unidades que la red puede usar para ajustar las respuestas. Dropout entonces busca una reducción en el sobreajuste que sea más provechosa que el consecuente aumento en el sesgo.</p>
 
 <div class="comentario">
 <p><em>Dropout</em></p>
 <ul>
-<li>En cada iteración (minibatch), seleccionamos con cierta probablidad <span class="math inline">\(p\)</span> eliminar cada una de las unidades (independientemente en cada capa, y posiblemente con distintas <span class="math inline">\(p\)</span> en cada capa). Hacemos forward-feed y back-propagation poniendo en 0 las unidades eliminadas.</li>
-<li>Escalar pesos: `ara predecir (prueba), usamos todas las unidades. Si una unidad tiene peso <span class="math inline">\(\theta\)</span> en una capa después de entrenar, y la probablidad de que esa capa no se haya hecho 0 es <span class="math inline">\(1-p\)</span>, entonces usamos <span class="math inline">\((1-p)\theta\)</span> como peso para hacer predicciones.
+<li>En cada iteración (minibatch), seleccionamos con cierta probablidad <span class="math inline">\(p\)</span> eliminar cada una de las unidades (independientemente en cada capa, y posiblemente con distintas <span class="math inline">\(p\)</span> en cada capa), es decir, hacemos su salida igual a 0. Hacemos forward-feed y back-propagation poniendo en 0 las unidades eliminadas.</li>
+<li>Escalar pesos: para predecir (prueba), usamos todas las unidades. Si una unidad tiene peso <span class="math inline">\(\theta\)</span> en una capa después de entrenar, y la probablidad de que esa capa no se haya hecho 0 es <span class="math inline">\(1-p\)</span>, entonces usamos <span class="math inline">\((1-p)\theta\)</span> como peso para hacer predicciones.</li>
+<li>Si hacemos dropout de la capa de entrada, generalmente se usan valores chicos alrededor de <span class="math inline">\(0.2\)</span>. En capas intermedias se usan generalmente valores más grandes alrededor de <span class="math inline">\(0.5\)</span>.
 </div>
 </li>
 </ul>
-<div id="acoplamiento-de-unidades" class="section level3">
-<h3><span class="header-section-number">8.8.1</span> Acoplamiento de unidades</h3>
-<div id="ejemplo-35" class="section level4 unnumbered">
-<h4>Ejemplo</h4>
-<p>El ejemplo más simple es cuando eliminamos al azar entradas (unidades de entrada). Por ejemplo, en regresión logística</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(readr)
-dat_grasa &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="dt">file =</span> <span class="st">&#39;datos/bodyfat.csv&#39;</span>)
-<span class="kw">set.seed</span>(<span class="dv">127</span>)
-dat_grasa &lt;-<span class="st"> </span><span class="kw">sample_n</span>(dat_grasa, <span class="kw">nrow</span>(dat_grasa))</code></pre></div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">modelo_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">keras_model_sequential</span>()
-modelo_<span class="dv">1</span> <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">layer_dense</span>(<span class="dt">units =</span> <span class="dv">100</span>, <span class="dt">activation=</span><span class="st">&#39;sigmoid&#39;</span>, <span class="dt">input_shape=</span><span class="dv">13</span>) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">layer_dense</span>(<span class="dt">units =</span> <span class="dv">1</span>, <span class="dt">activation =</span> <span class="st">&#39;linear&#39;</span>)
-modelo_<span class="dv">1</span> <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">compile</span>(<span class="dt">loss =</span> <span class="st">&#39;mean_absolute_error&#39;</span>,
-                      <span class="dt">optimizer =</span> <span class="kw">optimizer_sgd</span>(<span class="dt">lr =</span> <span class="fl">0.2</span>, <span class="dt">momentum =</span> <span class="dv">0</span>,
-                                             <span class="dt">decay =</span> <span class="dv">0</span>),
-                     <span class="dt">metrics=</span><span class="kw">c</span>(<span class="st">&#39;mean_absolute_error&#39;</span>))
+<p>Podemos hacer dropout de la capa de entrada. En este caso, estamos evitando que el modelo dependa fuertemente de variables individuales. Por ejemplo, en procesamiento de imágenes, no queremos que por sobreajuste algunas predicciones estén ligadas fuertemente a un solo pixel (aún cuando en entrenamiento puede ser que un pixel separe bien los casos que nos interesa clasificar).</p>
+<div id="ejemplo-dropout-y-regularizacion" class="section level4 unnumbered">
+<h4>Ejemplo: dropout y regularización</h4>
+<p>Consideremos el problema de separar 9 y 3 del resto de dígitos zip. Queremos comparar el desempeño de una red sin y con dropout (tanto de entradas como de capa oculta) y entender parcialmente cómo se comportan los pesos aprendidos:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">2923</span>)
+entrena_<span class="dv">3</span> &lt;-<span class="st"> </span>digitos_entrena <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">sample_n</span>(<span class="kw">nrow</span>(digitos_entrena)) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">sample_n</span>(<span class="dv">2000</span>)
+x_train_<span class="dv">3</span> &lt;-<span class="st"> </span>entrena_<span class="dv">3</span> <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="op">-</span>digito) <span class="op">%&gt;%</span><span class="st"> </span>as.matrix <span class="op">+</span><span class="st"> </span><span class="dv">1</span>
+y_train_<span class="dv">3</span> &lt;-<span class="st"> </span>(entrena_<span class="dv">3</span><span class="op">$</span>digito <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="dv">9</span>,<span class="dv">3</span>)) <span class="op">%&gt;%</span><span class="st"> </span>as.numeric
+<span class="kw">set.seed</span>(<span class="dv">12</span>)
+modelo_sin_reg &lt;-<span class="st"> </span><span class="kw">keras_model_sequential</span>() 
+modelo_sin_reg  <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">layer_dense</span>(<span class="dt">units =</span> <span class="dv">30</span>, <span class="dt">activation =</span> <span class="st">&#39;relu&#39;</span>, <span class="dt">input_shape =</span> <span class="dv">256</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">layer_dense</span>(<span class="dt">units =</span> <span class="dv">1</span>, <span class="dt">activation =</span> <span class="st">&#39;sigmoid&#39;</span>)
+<span class="kw">set.seed</span>(<span class="dv">12</span>)
+modelo_dropout &lt;-<span class="st"> </span><span class="kw">keras_model_sequential</span>() 
+modelo_dropout  <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">layer_reshape</span>(<span class="dt">input_shape=</span><span class="dv">256</span>, <span class="dt">target_shape=</span><span class="dv">256</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">layer_dropout</span>(<span class="fl">0.5</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">layer_dense</span>(<span class="dt">units =</span> <span class="dv">30</span>, <span class="dt">activation =</span> <span class="st">&#39;relu&#39;</span>, <span class="dt">input_shape =</span> <span class="dv">256</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">layer_dropout</span>(<span class="fl">0.5</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">layer_dense</span>(<span class="dt">units =</span> <span class="dv">1</span>, <span class="dt">activation =</span> <span class="st">&#39;sigmoid&#39;</span>)</code></pre></div>
+<p>El modelo sin regularización sobreajusta:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">modelo_sin_reg <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">compile</span>(<span class="dt">loss =</span> <span class="st">&#39;binary_crossentropy&#39;</span>, <span class="dt">optimizer =</span> <span class="kw">optimizer_sgd</span>(<span class="dt">lr =</span> <span class="fl">0.9</span>),
+  <span class="dt">metrics =</span> <span class="kw">c</span>(<span class="st">&#39;accuracy&#39;</span>)
+)
+history_<span class="dv">1</span> &lt;-<span class="st"> </span>modelo_sin_reg <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">fit</span>(x_train_<span class="dv">3</span><span class="op">/</span><span class="dv">2</span>, y_train_<span class="dv">3</span>, <span class="dt">verbose=</span><span class="dv">1</span>,
+  <span class="dt">epochs =</span> <span class="dv">500</span>, <span class="dt">batch_size =</span> <span class="dv">250</span>, <span class="dt">validation_split =</span> <span class="fl">0.5</span>
+)
+hist_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(history_<span class="dv">1</span>)
+<span class="kw">ggplot</span>(hist_<span class="dv">1</span>, <span class="kw">aes</span>(<span class="dt">x=</span>epoch, <span class="dt">y=</span>value, <span class="dt">colour=</span>data)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>metric, <span class="dt">scales =</span> <span class="st">&#39;free&#39;</span>)</code></pre></div>
+<p><img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-38-1.png" width="480" /></p>
+<p>Y parecen ruidosas las unidades que aprendió en la capa oculta (algunas no aprendieron o aprendieron cosas irrelevantes):</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">par</span>(<span class="dt">mfcol=</span><span class="kw">c</span>(<span class="dv">5</span>,<span class="dv">6</span>),
+          <span class="dt">oma =</span> <span class="kw">c</span>(<span class="dv">5</span>,<span class="dv">4</span>,<span class="dv">0</span>,<span class="dv">0</span>) <span class="op">+</span><span class="st"> </span><span class="fl">0.1</span>,
+          <span class="dt">mar =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>) <span class="op">+</span><span class="st"> </span><span class="fl">0.1</span>)
+<span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="dv">30</span>){
+<span class="kw">image</span>(<span class="kw">matrix</span>(<span class="kw">get_weights</span>(modelo_sin_reg)[[<span class="dv">1</span>]][,i], <span class="dv">16</span>, <span class="dv">16</span>, <span class="dt">byrow=</span>F)[,<span class="dv">16</span><span class="op">:</span><span class="dv">1</span>],
+      <span class="dt">axes =</span> <span class="ot">FALSE</span>, <span class="dt">col =</span> <span class="kw">grey</span>(<span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dt">length =</span> <span class="dv">256</span>)))
+}</code></pre></div>
+<p><img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-39-1.png" width="672" /></p>
+<p>Ahora ajustamos el modelo con dropout:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">modelo_dropout <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">compile</span>(<span class="dt">loss =</span> <span class="st">&#39;binary_crossentropy&#39;</span>, <span class="dt">optimizer =</span> <span class="kw">optimizer_sgd</span>(<span class="dt">lr =</span> <span class="fl">0.6</span>,
+                                                                                   <span class="dt">momentum=</span><span class="fl">0.0</span>),
+  <span class="dt">metrics =</span> <span class="kw">c</span>(<span class="st">&#39;accuracy&#39;</span>)
+)
+history_<span class="dv">2</span> &lt;-<span class="st"> </span>modelo_dropout <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">fit</span>(x_train_<span class="dv">3</span><span class="op">/</span><span class="dv">2</span>, y_train_<span class="dv">3</span>, <span class="dt">verbose=</span><span class="dv">1</span>,
+  <span class="dt">epochs =</span> <span class="dv">500</span>, <span class="dt">batch_size =</span> <span class="dv">200</span>, <span class="dt">validation_split =</span> <span class="fl">0.5</span>
+)
 
-history_<span class="dv">1</span> &lt;-<span class="st"> </span>modelo_<span class="dv">1</span> <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">fit</span>(dat_grasa <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="op">-</span>grasacorp) <span class="op">%&gt;%</span><span class="st"> </span>as.matrix <span class="op">%&gt;%</span><span class="st"> </span>scale, 
-      dat_grasa<span class="op">$</span>grasacorp, 
-      <span class="dt">epochs =</span> <span class="dv">50</span>, <span class="dt">batch_size =</span> <span class="dv">100</span>, 
-      <span class="dt">verbose =</span> <span class="dv">1</span>,
-      <span class="dt">validation_split=</span><span class="fl">0.5</span>)
-<span class="kw">tail</span>(<span class="kw">as.data.frame</span>(history_<span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(data<span class="op">==</span><span class="st">&#39;validation&#39;</span>))</code></pre></div>
-<pre><code>##     epoch    value metric       data
-## 95     45 4.067806   loss validation
-## 96     46 3.803698   loss validation
-## 97     47 3.969129   loss validation
-## 98     48 3.813908   loss validation
-## 99     49 3.890460   loss validation
-## 100    50 3.781731   loss validation</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">modelo_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">keras_model_sequential</span>()
-modelo_<span class="dv">2</span> <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">layer_reshape</span>(<span class="dt">input_shape=</span><span class="dv">13</span>, <span class="dt">target_shape=</span><span class="dv">13</span>) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">layer_dropout</span>(<span class="fl">0.25</span>) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">layer_dense</span>(<span class="dt">units=</span><span class="dv">100</span>, <span class="dt">activation=</span><span class="st">&#39;sigmoid&#39;</span>) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">layer_dense</span>(<span class="dt">units =</span> <span class="dv">1</span>, 
-              <span class="dt">activation =</span> <span class="st">&#39;linear&#39;</span>)
-modelo_<span class="dv">2</span> <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">compile</span>(<span class="dt">loss =</span> <span class="st">&#39;mean_absolute_error&#39;</span>,
-                   <span class="dt">optimizer =</span> <span class="kw">optimizer_sgd</span>(<span class="dt">lr =</span> <span class="fl">0.2</span>, <span class="dt">momentum =</span> <span class="dv">0</span>,
-                                             <span class="dt">decay =</span> <span class="dv">0</span>),
-  <span class="dt">metrics =</span> <span class="kw">c</span>(<span class="st">&#39;mean_absolute_error&#39;</span>))
-
-history_<span class="dv">2</span> &lt;-<span class="st"> </span>modelo_<span class="dv">2</span> <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">fit</span>(dat_grasa <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="op">-</span>grasacorp) <span class="op">%&gt;%</span><span class="st"> </span>as.matrix <span class="op">%&gt;%</span><span class="st"> </span>scale, 
-      dat_grasa<span class="op">$</span>grasacorp, 
-      <span class="dt">epochs =</span> <span class="dv">50</span>, <span class="dt">batch_size =</span> <span class="dv">100</span>, 
-      <span class="dt">verbose =</span> <span class="dv">1</span>,
-      <span class="dt">validation_split=</span><span class="fl">0.5</span>)
-<span class="kw">tail</span>(<span class="kw">as.data.frame</span>(history_<span class="dv">2</span>))</code></pre></div>
-<pre><code>##     epoch    value metric     data
-## 195    45 3.969029   loss training
-## 196    46 4.330746   loss training
-## 197    47 4.199509   loss training
-## 198    48 4.062214   loss training
-## 199    49 4.015920   loss training
-## 200    50 3.922994   loss training</code></pre>
-<p>Podemos examinar qué pasa con cada unidad de la capa oculta en cada caso:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pred_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">keras_model_sequential</span>()
-pred_<span class="dv">1</span> <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">layer_dense</span>(<span class="dt">units =</span> <span class="dv">100</span>, <span class="dt">activation=</span><span class="st">&#39;sigmoid&#39;</span>, <span class="dt">input_shape=</span><span class="dv">13</span>,
-                       <span class="dt">weights =</span> <span class="kw">get_weights</span>(modelo_<span class="dv">1</span>)[<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>]) <span class="op">%&gt;%</span>
-<span class="st">          </span><span class="kw">layer_dense</span>(<span class="dt">units =</span> <span class="dv">1</span>, <span class="dt">activation=</span><span class="st">&#39;linear&#39;</span>, <span class="dt">weights =</span> <span class="kw">get_weights</span>(modelo_<span class="dv">1</span>)[<span class="dv">3</span><span class="op">:</span><span class="dv">4</span>])
-
-x_grasa &lt;-<span class="st"> </span>dat_grasa <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="op">-</span>grasacorp) <span class="op">%&gt;%</span><span class="st"> </span>as.matrix <span class="op">%&gt;%</span><span class="st"> </span>scale
-<span class="kw">dim</span>(aa &lt;-<span class="st"> </span><span class="kw">predict_proba</span>(pred_<span class="dv">1</span>, <span class="dt">x =</span> x_grasa))</code></pre></div>
-<pre><code>## [1] 252   1</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">hist</span>(<span class="kw">cor</span>(aa), <span class="dt">breaks=</span><span class="dv">50</span>)</code></pre></div>
+hist_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(history_<span class="dv">2</span>)
+<span class="kw">ggplot</span>(hist_<span class="dv">2</span>, <span class="kw">aes</span>(<span class="dt">x=</span>epoch, <span class="dt">y=</span>value, <span class="dt">colour=</span>data)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>metric, <span class="dt">scales =</span> <span class="st">&#39;free&#39;</span>)</code></pre></div>
 <p><img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-40-1.png" width="480" /></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pred_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">keras_model_sequential</span>()
-pred_<span class="dv">1</span> <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">layer_dense</span>(<span class="dt">units =</span> <span class="dv">100</span>, <span class="dt">activation=</span><span class="st">&#39;sigmoid&#39;</span>, <span class="dt">input_shape=</span><span class="dv">13</span>,
-                       <span class="dt">weights =</span> <span class="kw">get_weights</span>(modelo_<span class="dv">2</span>)[<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>])
-x_grasa &lt;-<span class="st"> </span>dat_grasa <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="op">-</span>grasacorp) <span class="op">%&gt;%</span><span class="st"> </span>as.matrix <span class="op">%&gt;%</span><span class="st"> </span>scale
-<span class="kw">dim</span>(aa &lt;-<span class="st"> </span><span class="kw">predict_proba</span>(pred_<span class="dv">1</span>, <span class="dt">x =</span> x_grasa))</code></pre></div>
-<pre><code>## [1] 252 100</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">hist</span>(<span class="kw">cor</span>(aa), <span class="dt">breaks=</span><span class="dv">50</span>)</code></pre></div>
-<p><img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-40-2.png" width="480" /></p>
+<p>El desempeño es mejor, y parecen ser más útiles los patrones que aprendió el capa oculta:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">par</span>(<span class="dt">mfcol=</span><span class="kw">c</span>(<span class="dv">5</span>,<span class="dv">6</span>),
+          <span class="dt">oma =</span> <span class="kw">c</span>(<span class="dv">5</span>,<span class="dv">4</span>,<span class="dv">0</span>,<span class="dv">0</span>) <span class="op">+</span><span class="st"> </span><span class="fl">0.1</span>,
+          <span class="dt">mar =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>) <span class="op">+</span><span class="st"> </span><span class="fl">0.1</span>)
+<span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="dv">30</span>){
+<span class="kw">image</span>(<span class="kw">matrix</span>(<span class="kw">get_weights</span>(modelo_dropout)[[<span class="dv">1</span>]][,i], <span class="dv">16</span>, <span class="dv">16</span>, <span class="dt">byrow=</span>F)[,<span class="dv">16</span><span class="op">:</span><span class="dv">1</span>],
+      <span class="dt">axes =</span> <span class="ot">FALSE</span>, <span class="dt">col =</span> <span class="kw">grey</span>(<span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dt">length =</span> <span class="dv">256</span>)))
+}</code></pre></div>
+<p><img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-41-1.png" width="480" /></p>
+<p>Algunas maneras en que podemos pensar en la regularización de dropout:</p>
+<ul>
+<li><p>Unidades con valores muy grandes producen efectos grandes en las capas siguientes. Pero en dropout esto es más difícil que pase, pues esas unidades con efectos demasiado grandes no siempre están en los modelos que ajustamos.</p></li>
+<li><p>Puede ser que una unidad haga mucho trabajo, y prevenga a otras de aprender algo útil que podría mejorar las prediccines.</p></li>
+<li><p>Dropout busca que cada unidad calcule algo importante por sí sola, y dependa menos de otras unidades para hacer algo útil. Algunas unidades y pesos pueden acoplarse fuertemente (y de manera compleja) para hacer las predicciones. Si estas unidades aprendieron ese acoplamento demasiado fuerte para el conjunto de entrenamiento, entonces puede ser nuevos datos, con perturbaciones, puedan producir predicciones malas (mala generalización). Con dropout buscamos que la unidades capturen información útil en general, no necesariamente en acoplamiento fuerte con otras unidades.</p></li>
+<li><p>Podemos pensar que en cada pasada de minibatch, escogemos una arquitectura diferente, y entrenamos. El resultado final será entonces es un tipo de promedio de todas esas arquitecturas que probamos. Este promedio reduce varianza de las salidas de las unidades.</p></li>
+</ul>
+<p>El paso de escalamiento es importante para el funcionamiento correcto del método. La idea intuitiva es que el peso de una unidad es 0 con probabilidad <span class="math inline">\(p\)</span> y <span class="math inline">\(\theta\)</span> con probabilidad <span class="math inline">\(1-p\)</span>. Tomamos el valor esperado como peso para la red completa, que es <span class="math inline">\(p0+(1-p)\theta\)</span>. Ver <span class="citation">(<span class="citeproc-not-found" data-reference-id="Srivastava:2014:DSW:2627435.2670313"><strong>???</strong></span>)</span></p>
 </div>
-</div>
-<div id="ejemplo-36" class="section level3 unnumbered">
+<div id="ejemplo-35" class="section level3 unnumbered">
 <h3>Ejemplo</h3>
+<p>Experimenta en este ejemplo con distintos valores de dropout, y verifica intuitivamente sus efectos de regularización.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">modelo_tc &lt;-<span class="st"> </span><span class="kw">keras_model_sequential</span>() 
 modelo_tc <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">layer_reshape</span>(<span class="dt">input_shape=</span><span class="dv">256</span>, <span class="dt">target_shape=</span><span class="dv">256</span>) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">layer_dropout</span>(<span class="dt">rate=</span><span class="fl">0.3</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">layer_dropout</span>(<span class="dt">rate=</span><span class="fl">0.2</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">layer_dense</span>(<span class="dt">units =</span> <span class="dv">200</span>, <span class="dt">activation =</span> <span class="st">&#39;relu&#39;</span>) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">layer_dropout</span>(<span class="dt">rate =</span> <span class="fl">0.3</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">layer_dropout</span>(<span class="dt">rate =</span> <span class="fl">0.5</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">layer_dense</span>(<span class="dt">units =</span> <span class="dv">200</span>, <span class="dt">activation =</span> <span class="st">&#39;relu&#39;</span>) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">layer_dropout</span>(<span class="dt">rate =</span> <span class="fl">0.3</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">layer_dropout</span>(<span class="dt">rate =</span> <span class="fl">0.5</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">layer_dense</span>(<span class="dt">units =</span> <span class="dv">10</span>, <span class="dt">activation =</span> <span class="st">&#39;softmax&#39;</span>,
               <span class="dt">kernel_regularizer =</span> <span class="kw">regularizer_l2</span>(<span class="dt">l =</span> <span class="fl">1e-4</span>))</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">modelo_tc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">compile</span>(
   <span class="dt">loss =</span> <span class="st">&#39;categorical_crossentropy&#39;</span>,
-  <span class="dt">optimizer =</span> <span class="kw">optimizer_sgd</span>(<span class="dt">lr =</span> <span class="fl">0.2</span>, <span class="dt">momentum =</span> <span class="fl">0.5</span>, <span class="dt">decay =</span> <span class="fl">0.0001</span>),
+  <span class="dt">optimizer =</span> <span class="kw">optimizer_sgd</span>(<span class="dt">lr =</span> <span class="fl">0.3</span>, <span class="dt">momentum =</span> <span class="fl">0.5</span>, <span class="dt">decay =</span> <span class="fl">0.0001</span>),
   <span class="dt">metrics =</span> <span class="kw">c</span>(<span class="st">&#39;accuracy&#39;</span>, <span class="st">&#39;categorical_crossentropy&#39;</span>)
 )
 history &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">fit</span>(
@@ -871,13 +864,13 @@ history &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><s
 score &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">evaluate</span>(x_test, y_test)
 score</code></pre></div>
 <pre><code>## $loss
-## [1] 0.192189
+## [1] 0.2078793
 ## 
 ## $acc
-## [1] 0.9526657
+## [1] 0.9531639
 ## 
 ## $categorical_crossentropy
-## [1] 0.1881322</code></pre>
+## [1] 0.2039328</code></pre>
 
 <div id="refs" class="references">
 <div>
