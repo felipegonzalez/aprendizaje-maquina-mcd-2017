@@ -543,9 +543,7 @@ Y definimos un modelo con 2 capas de 200 unidades cada una
 y regularización L2- Nótese que usamos softmax en la última capa,
 que es la función (ver parte de regresión multinomial) cuya
 salida $k$ está dada por
-```{r}
-p_k = \frac{exp(z_k)}\frac{\sum_j exp(z_j)}
-```
+$$p_k = \frac{exp(z_k)}{\sum_j exp(z_j)}$$
 donde $z=(z_1,\ldots, z_K)$ (estas son las combinaciones lineales
 de las unidades de la capa anterior).
 
