@@ -58,7 +58,7 @@ correr_modelo <- function(params, x_ent_s, y_ent,  valid_prop=0.2){
   modelo_tc %>% compile(
     loss = 'binary_crossentropy',
     optimizer = optimizer_sgd(lr =params[['lr']]),
-    metrics = c('accuracy')
+    metrics = c('accuracy', 'binary_crossentropy')
   )
   history <- modelo_tc %>% fit(
     x_ent_s, y_ent, 
