@@ -1161,7 +1161,7 @@ para afinar estos parámetros según validación cruzada o una muestra de valida
 
 ### Ejemplo
 
-Consideramos una arquitectura de una capas para el problema de spam 
+Consideramos una arquitectura de dos capas para el problema de diabetes 
 
 
 ```r
@@ -1183,6 +1183,7 @@ library(keras)
 ## 
 ##     normalize
 ```
+Escalamos y preparamos los datos:
 
 
 ```r
@@ -1263,10 +1264,10 @@ score
 
 ```
 ## $loss
-## [1] 0.4353315
+## [1] 0.439243
 ## 
 ## $acc
-## [1] 0.7951807
+## [1] 0.7921687
 ```
 
 ```r
@@ -1277,8 +1278,8 @@ tab_confusion
 ```
 ##    y_valid
 ##       0   1
-##   0 192  37
-##   1  31  72
+##   0 193  39
+##   1  30  70
 ```
 
 ```r
@@ -1288,9 +1289,12 @@ prop.table(tab_confusion, 2)
 ```
 ##    y_valid
 ##             0         1
-##   0 0.8609865 0.3394495
-##   1 0.1390135 0.6605505
+##   0 0.8654709 0.3577982
+##   1 0.1345291 0.6422018
 ```
+
+Es importante monitorear las curvas de aprendizaje (entrenamiento y
+validación) para diagnosticar mejoras:
 
 
 ```r
@@ -1383,7 +1387,7 @@ para todas las posibles combinaciones.
 
 
 ```r
-hiperparams <- expand.grid(lambda = 10^seq(-12,-1, 1), n_capa = c(2, 5, 10, 20, 50),
+hiperparams <- expand.grid(lambda = 10^seq(-9,-1, 1), n_capa = c(5, 10, 20, 50),
                      lr = c(0.1, 0.5, 0.9), n_iter = 1000, 
                      init_pesos = c(0.5), stringsAsFactors = FALSE)
 hiperparams$corrida <- 1:nrow(hiperparams)
@@ -1392,12 +1396,12 @@ head(hiperparams)
 
 ```
 ##   lambda n_capa  lr n_iter init_pesos corrida
-## 1  1e-12      2 0.1   1000        0.5       1
-## 2  1e-11      2 0.1   1000        0.5       2
-## 3  1e-10      2 0.1   1000        0.5       3
-## 4  1e-09      2 0.1   1000        0.5       4
-## 5  1e-08      2 0.1   1000        0.5       5
-## 6  1e-07      2 0.1   1000        0.5       6
+## 1  1e-09      5 0.1   1000        0.5       1
+## 2  1e-08      5 0.1   1000        0.5       2
+## 3  1e-07      5 0.1   1000        0.5       3
+## 4  1e-06      5 0.1   1000        0.5       4
+## 5  1e-05      5 0.1   1000        0.5       5
+## 6  1e-04      5 0.1   1000        0.5       6
 ```
 
 ```r
@@ -1405,7 +1409,7 @@ nrow(hiperparams)
 ```
 
 ```
-## [1] 180
+## [1] 108
 ```
 
 
@@ -1419,10 +1423,10 @@ correr_modelo <- function(params, x_ent_s, y_ent, x_valid_s, y_valid){
                 kernel_initializer = initializer_random_uniform(minval = -u, 
                                                                 maxval = u),
                 input_shape=7) %>% 
-    layer_dense(units = params[['n_capa']], activation = 'sigmoid',
-                kernel_regularizer = regularizer_l2(l = params[['lambda']]),
-                kernel_initializer = initializer_random_uniform(minval = -u, 
-                                                                maxval = u)) %>% 
+  #  layer_dense(units = params[['n_capa']], activation = 'sigmoid',
+  #              kernel_regularizer = regularizer_l2(l = params[['lambda']]),
+  #              kernel_initializer = initializer_random_uniform(minval = -u, 
+  #                                                              maxval = u)) %>% 
     layer_dense(units = 1, activation = 'sigmoid',
                 kernel_regularizer = regularizer_l2(l = params[['lambda']]),
                 kernel_initializer = initializer_random_uniform(minval = -u, 
@@ -1430,7 +1434,7 @@ correr_modelo <- function(params, x_ent_s, y_ent, x_valid_s, y_valid){
   modelo_tc %>% compile(
     loss = 'binary_crossentropy',
     optimizer = optimizer_sgd(lr =params[['lr']]),
-    metrics = c('accuracy')
+    metrics = c('accuracy', 'binary_crossentropy')
   )
   history <- modelo_tc %>% fit(
     x_ent_s, y_ent, 
@@ -1457,6 +1461,7 @@ res <- lapply(1:nrow(hiperparams), function(i){
   salida <- correr_modelo(params, x_ent_s, y_ent, x_valid_s, y_valid)
   salida
   }) 
+  hiperparams$binary_crossentropy <- sapply(res, function(item){ item$binary_crossentropy })
   hiperparams$loss <- sapply(res, function(item){ item$loss })
   hiperparams$acc <- sapply(res, function(item){ item$acc })
   saveRDS(hiperparams, file = './cache_obj/diabetes-grid.rds')
@@ -1469,21 +1474,32 @@ Ordenamos del mejor modelo al peor según la pérdida:
 
 
 ```r
-arrange(hiperparams, loss) %>% head(10)
+arrange(hiperparams, binary_crossentropy) %>% head(10)
 ```
 
 ```
-##    lambda n_capa  lr n_iter init_pesos corrida      loss       acc
-## 1   1e-09     50 0.1   1000        0.5      40 0.4303269 0.7951807
-## 2   1e-08     50 0.1   1000        0.5      41 0.4303941 0.8042169
-## 3   1e-09     20 0.1   1000        0.5      28 0.4311181 0.7951807
-## 4   1e-10     50 0.1   1000        0.5      39 0.4311976 0.8072289
-## 5   1e-06     50 0.1   1000        0.5      43 0.4314318 0.8012048
-## 6   1e-11     50 0.1   1000        0.5      38 0.4320411 0.7981928
-## 7   1e-11     20 0.1   1000        0.5      26 0.4320854 0.8012048
-## 8   1e-08     20 0.1   1000        0.5      29 0.4322517 0.7921687
-## 9   1e-12     20 0.1   1000        0.5      25 0.4324023 0.7981928
-## 10  1e-12     50 0.1   1000        0.5      37 0.4328103 0.7951807
+##    lambda n_capa  lr n_iter init_pesos corrida binary_crossentropy
+## 1   1e-09     10 0.1   1000        0.5      10           0.4288144
+## 2   1e-08      5 0.1   1000        0.5       2           0.4298817
+## 3   1e-08     20 0.1   1000        0.5      20           0.4303028
+## 4   1e-08     10 0.1   1000        0.5      11           0.4303874
+## 5   1e-07     10 0.1   1000        0.5      12           0.4305910
+## 6   1e-06     20 0.1   1000        0.5      22           0.4312452
+## 7   1e-05     10 0.1   1000        0.5      14           0.4312888
+## 8   1e-07     20 0.1   1000        0.5      21           0.4320093
+## 9   1e-07     50 0.1   1000        0.5      30           0.4320917
+## 10  1e-06     50 0.1   1000        0.5      31           0.4321587
+##         loss       acc
+## 1  0.4288144 0.7981928
+## 2  0.4298819 0.8012048
+## 3  0.4303031 0.8012048
+## 4  0.4303876 0.8012048
+## 5  0.4305927 0.8042169
+## 6  0.4312678 0.8012048
+## 7  0.4314596 0.8012048
+## 8  0.4320115 0.8042169
+## 9  0.4320959 0.8012048
+## 10 0.4321982 0.7981928
 ```
 
 Y podemos estudiar la dependencia de la pérdida según distintos parámetros (ojo:
@@ -1492,8 +1508,10 @@ y por el proceso de ajuste. Por ejemplo, los pesos aleatorios al arranque).
 
 
 ```r
-ggplot(hiperparams, aes(x = lambda, y = loss, group=n_capa, colour=factor(n_capa))) +
-  geom_line() + geom_point() + facet_wrap(~lr, ncol = 2)  + scale_x_log10() 
+ggplot(hiperparams, aes(x = lambda, y = binary_crossentropy, 
+                        group=n_capa, colour=factor(n_capa))) +
+  geom_line() + geom_point() + facet_wrap(~lr, ncol = 2)  + 
+  scale_x_log10() 
 ```
 
 <img src="07-redes-neuronales_files/figure-html/unnamed-chunk-53-1.png" width="480" />
@@ -1501,7 +1519,8 @@ ggplot(hiperparams, aes(x = lambda, y = loss, group=n_capa, colour=factor(n_capa
 
 ```r
 ggplot(filter(hiperparams, lr==0.1, n_capa > 10, lambda < 1e-4), 
-       aes(x = lambda, y = loss, group=n_capa, colour=factor(n_capa))) +
+       aes(x = lambda, y = binary_crossentropy, 
+           group=n_capa, colour=factor(n_capa))) +
   geom_line() + geom_point() + facet_wrap(~lr, ncol = 2)  + scale_x_log10() 
 ```
 
@@ -1510,14 +1529,11 @@ ggplot(filter(hiperparams, lr==0.1, n_capa > 10, lambda < 1e-4),
 Por ejemplo:
 
 - lambda mayor a 0.001 es demasiado grande para cualquiera de estos modelo.
-- la tasa de aprendizaje parece ser mejor alrededor de 0.1 para los modelos más grandes,
- y 0.5 para los modelos más chicos
-- Para los modelos con muchas unidades, una tasa de aprendizaje de 0.9 el algoritmo tiene
-problemas para descender.
-- En este ejemplo, podríamos escoger por ejemplo el modelo con 100 unidades y
-poca regularización
+- la tasa de aprendizaje parece ser mejor alrededor de 0.1 para estos modelos -
+esto puede ser consecuencia de la regularización por pararnos antes de sobreajuste.
 - Nótese por ejemplo que desperdiciamos iteraciones cuando la regularización es
-alta.
+alta, y el rango de número de unidades que probamos tampoco parece producir
+muchas diferencias
 
 
 ### Hiperparámetros: búsqueda aleatoria
@@ -1559,13 +1575,13 @@ exp(runif(1, -8,-1))
 
 
 ```r
-n_pars <- 120
+n_pars <- 100
 set.seed(913)
 if(!usar_cache){
-    hiperparams <- data_frame(lambda = 10^(runif(n_pars, -12, -1)),
+    hiperparams <- data_frame(lambda = 10^(runif(n_pars, -10, -1)),
                               n_capa = sample(c(2, 5, 10, 20, 50), n_pars, replace = T),
                               lr = runif(n_pars, 0.01, 0.9), n_iter = 1000,
-                              init_pesos = 0.5)
+                              init_pesos = runif(n_pars, 0.2,0.7))
     hiperparams$corrida <- 1:nrow(hiperparams)
   
     res_aleatorio <- lapply(1:nrow(hiperparams), function(i){
@@ -1574,6 +1590,7 @@ if(!usar_cache){
     salida
     })
     hiperparams$loss <- sapply(res_aleatorio, function(item){ item$loss})
+    hiperparams$binary_crossentropy <- sapply(res_aleatorio, function(item){ item$binary_crossentropy})
     hiperparams$acc <- sapply(res_aleatorio, function(item){ item$acc})
     saveRDS(hiperparams, file = './cache_obj/diabetes-aleatorio.rds')
   } else {
@@ -1583,33 +1600,36 @@ if(!usar_cache){
 
 
 ```r
-arrange(hiperparams, loss)
+arrange(hiperparams, binary_crossentropy)
 ```
 
 ```
-## # A tibble: 120 x 8
-##          lambda n_capa        lr n_iter init_pesos corrida      loss
-##           <dbl>  <dbl>     <dbl>  <dbl>      <dbl>   <int>     <dbl>
-##  1 1.518909e-11      5 0.3885715   1000        0.5     114 0.4260046
-##  2 7.141982e-08     20 0.2355711   1000        0.5      84 0.4301984
-##  3 6.356920e-11     10 0.2123126   1000        0.5     104 0.4305419
-##  4 1.537123e-10     20 0.1666970   1000        0.5       8 0.4310389
-##  5 5.311588e-11     20 0.2148620   1000        0.5     109 0.4310853
-##  6 5.223951e-07     20 0.1463193   1000        0.5     105 0.4314119
-##  7 8.950678e-06     10 0.4195664   1000        0.5       9 0.4319558
-##  8 4.782147e-10     50 0.1281259   1000        0.5      19 0.4322640
-##  9 4.042696e-12     10 0.1924461   1000        0.5      55 0.4327587
-## 10 3.544342e-06     20 0.3409109   1000        0.5      68 0.4328053
-## # ... with 110 more rows, and 1 more variables: acc <dbl>
+## # A tibble: 100 x 9
+##          lambda n_capa         lr n_iter init_pesos corrida      loss
+##           <dbl>  <dbl>      <dbl>  <dbl>      <dbl>   <int>     <dbl>
+##  1 1.557467e-08      5 0.39449976   1000  0.3677915      19 0.4278859
+##  2 1.778047e-09      5 0.24924917   1000  0.5504638       2 0.4296006
+##  3 4.801019e-04     10 0.17805261   1000  0.3146846      67 0.4382751
+##  4 4.089486e-10     20 0.32910360   1000  0.4952716      37 0.4316516
+##  5 6.355566e-07     50 0.09925637   1000  0.6199004      69 0.4319281
+##  6 3.474533e-07     10 0.31243237   1000  0.4618183       7 0.4322901
+##  7 3.135937e-10     20 0.13151933   1000  0.2840034      55 0.4323465
+##  8 6.467834e-05     20 0.12685442   1000  0.5140470      23 0.4340249
+##  9 2.284078e-05     20 0.24400867   1000  0.5521355      68 0.4332621
+## 10 1.391978e-08     10 0.08317381   1000  0.5076250      60 0.4326821
+## # ... with 90 more rows, and 2 more variables: binary_crossentropy <dbl>,
+## #   acc <dbl>
 ```
 
 
 ```r
 hiperparams$lr_grupo <- cut(hiperparams$lr, breaks=c(0,0.1,0.25,0.5, 0.75,1))
- ggplot(hiperparams, aes(x = lambda, y = loss, 
+hiperparams$init_grupo <- cut(hiperparams$init_pesos, breaks=c(0.2,0.5,0.8))
+ ggplot(hiperparams, aes(x = lambda, y = binary_crossentropy, 
                          colour=lr_grupo,
                          size = n_capa)) +
-    geom_point(alpha = 0.75) + scale_x_log10() 
+    geom_point(alpha = 0.75) + scale_x_log10() +
+   facet_wrap(~init_grupo, ncol=1)
 ```
 
 <img src="07-redes-neuronales_files/figure-html/unnamed-chunk-59-1.png" width="480" />

@@ -25,7 +25,7 @@
 <meta name="author" content="Felipe González">
 
 
-<meta name="date" content="2017-09-24">
+<meta name="date" content="2017-09-25">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -844,7 +844,7 @@ Nótese que back-propagation consiste principalmente de mutliplicaciones de matr
 <p>Finalmente, podemos probar distintas arquitecturas y valores del parámetros de regularización, para afinar estos parámetros según validación cruzada o una muestra de validación.</p>
 <div id="ejemplo-31" class="section level3">
 <h3><span class="header-section-number">7.6.1</span> Ejemplo</h3>
-<p>Consideramos una arquitectura de una capas para el problema de spam</p>
+<p>Consideramos una arquitectura de dos capas para el problema de diabetes</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="cf">if</span>(<span class="kw">Sys.info</span>()[<span class="st">&#39;nodename&#39;</span>] <span class="op">==</span><span class="st"> &#39;vainilla.local&#39;</span>){
   <span class="co"># esto es por mi instalación particular de tensorflow - típicamente</span>
   <span class="co"># no es necesario que corras esta línea.</span>
@@ -856,6 +856,7 @@ Nótese que back-propagation consiste principalmente de mutliplicaciones de matr
 <pre><code>## The following object is masked from &#39;package:igraph&#39;:
 ## 
 ##     normalize</code></pre>
+<p>Escalamos y preparamos los datos:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(readr)
 <span class="kw">library</span>(tidyr)
 <span class="kw">library</span>(dplyr)
@@ -907,21 +908,22 @@ modelo_tc <span class="op">%&gt;%</span><span class="st"> </span>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">score &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">evaluate</span>(x_valid_s, y_valid)
 score</code></pre></div>
 <pre><code>## $loss
-## [1] 0.4353315
+## [1] 0.439243
 ## 
 ## $acc
-## [1] 0.7951807</code></pre>
+## [1] 0.7921687</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tab_confusion &lt;-<span class="st"> </span><span class="kw">table</span>(modelo_tc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">predict_classes</span>(x_valid_s),y_valid) 
 tab_confusion</code></pre></div>
 <pre><code>##    y_valid
 ##       0   1
-##   0 192  37
-##   1  31  72</code></pre>
+##   0 193  39
+##   1  30  70</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">prop.table</span>(tab_confusion, <span class="dv">2</span>)</code></pre></div>
 <pre><code>##    y_valid
 ##             0         1
-##   0 0.8609865 0.3394495
-##   1 0.1390135 0.6605505</code></pre>
+##   0 0.8654709 0.3577982
+##   1 0.1345291 0.6422018</code></pre>
+<p>Es importante monitorear las curvas de aprendizaje (entrenamiento y validación) para diagnosticar mejoras:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df_iteraciones &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(iteraciones)
 <span class="kw">ggplot</span>(df_iteraciones, <span class="kw">aes</span>(<span class="dt">x=</span>epoch, <span class="dt">y=</span>value, <span class="dt">colour=</span>data, <span class="dt">group=</span>data)) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span><span class="kw">facet_wrap</span>(<span class="op">~</span>metric, <span class="dt">ncol=</span><span class="dv">1</span>, <span class="dt">scales =</span> <span class="st">&#39;free&#39;</span>)</code></pre></div>
@@ -953,20 +955,20 @@ tab_confusion</code></pre></div>
 <h3><span class="header-section-number">7.6.3</span> Hiperparámetros: búsqueda en grid</h3>
 <p>Los hiperparámetros de un modelo son los que no se aprenden por el algoritmo principal. Por ejemplo, en regresión regularizada, los coeficientes son parámetros (se aprenden por descenso en gradiente), pero el parámetro de regularización <span class="math inline">\(\lambda\)</span> es un hiperparámetro. En redes neuronales tenemos más hiperparámetros: por ejemplo el número de capas, el número de unidades por capa, y el parámetro de regularización.</p>
 <p>La primera técnica para poner los hiperparámetros es <strong>búsqueda en grid</strong>. En este método escogemos los valores de cada hiperparámetro y ajustamos modelos para todas las posibles combinaciones.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">hiperparams &lt;-<span class="st"> </span><span class="kw">expand.grid</span>(<span class="dt">lambda =</span> <span class="dv">10</span><span class="op">^</span><span class="kw">seq</span>(<span class="op">-</span><span class="dv">12</span>,<span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>), <span class="dt">n_capa =</span> <span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">5</span>, <span class="dv">10</span>, <span class="dv">20</span>, <span class="dv">50</span>),
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">hiperparams &lt;-<span class="st"> </span><span class="kw">expand.grid</span>(<span class="dt">lambda =</span> <span class="dv">10</span><span class="op">^</span><span class="kw">seq</span>(<span class="op">-</span><span class="dv">9</span>,<span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>), <span class="dt">n_capa =</span> <span class="kw">c</span>(<span class="dv">5</span>, <span class="dv">10</span>, <span class="dv">20</span>, <span class="dv">50</span>),
                      <span class="dt">lr =</span> <span class="kw">c</span>(<span class="fl">0.1</span>, <span class="fl">0.5</span>, <span class="fl">0.9</span>), <span class="dt">n_iter =</span> <span class="dv">1000</span>, 
                      <span class="dt">init_pesos =</span> <span class="kw">c</span>(<span class="fl">0.5</span>), <span class="dt">stringsAsFactors =</span> <span class="ot">FALSE</span>)
 hiperparams<span class="op">$</span>corrida &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(hiperparams)
 <span class="kw">head</span>(hiperparams)</code></pre></div>
 <pre><code>##   lambda n_capa  lr n_iter init_pesos corrida
-## 1  1e-12      2 0.1   1000        0.5       1
-## 2  1e-11      2 0.1   1000        0.5       2
-## 3  1e-10      2 0.1   1000        0.5       3
-## 4  1e-09      2 0.1   1000        0.5       4
-## 5  1e-08      2 0.1   1000        0.5       5
-## 6  1e-07      2 0.1   1000        0.5       6</code></pre>
+## 1  1e-09      5 0.1   1000        0.5       1
+## 2  1e-08      5 0.1   1000        0.5       2
+## 3  1e-07      5 0.1   1000        0.5       3
+## 4  1e-06      5 0.1   1000        0.5       4
+## 5  1e-05      5 0.1   1000        0.5       5
+## 6  1e-04      5 0.1   1000        0.5       6</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">nrow</span>(hiperparams)</code></pre></div>
-<pre><code>## [1] 180</code></pre>
+<pre><code>## [1] 108</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">correr_modelo &lt;-<span class="st"> </span><span class="cf">function</span>(params, x_ent_s, y_ent, x_valid_s, y_valid){
   modelo_tc &lt;-<span class="st"> </span><span class="kw">keras_model_sequential</span>() 
   u &lt;-<span class="st"> </span>params[[<span class="st">&#39;init_pesos&#39;</span>]]
@@ -976,10 +978,10 @@ hiperparams<span class="op">$</span>corrida &lt;-<span class="st"> </span><span 
                 <span class="dt">kernel_initializer =</span> <span class="kw">initializer_random_uniform</span>(<span class="dt">minval =</span> <span class="op">-</span>u, 
                                                                 <span class="dt">maxval =</span> u),
                 <span class="dt">input_shape=</span><span class="dv">7</span>) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">    </span><span class="kw">layer_dense</span>(<span class="dt">units =</span> params[[<span class="st">&#39;n_capa&#39;</span>]], <span class="dt">activation =</span> <span class="st">&#39;sigmoid&#39;</span>,
-                <span class="dt">kernel_regularizer =</span> <span class="kw">regularizer_l2</span>(<span class="dt">l =</span> params[[<span class="st">&#39;lambda&#39;</span>]]),
-                <span class="dt">kernel_initializer =</span> <span class="kw">initializer_random_uniform</span>(<span class="dt">minval =</span> <span class="op">-</span>u, 
-                                                                <span class="dt">maxval =</span> u)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="co">#  layer_dense(units = params[[&#39;n_capa&#39;]], activation = &#39;sigmoid&#39;,</span>
+<span class="st">  </span><span class="co">#              kernel_regularizer = regularizer_l2(l = params[[&#39;lambda&#39;]]),</span>
+<span class="st">  </span><span class="co">#              kernel_initializer = initializer_random_uniform(minval = -u, </span>
+<span class="st">  </span><span class="co">#                                                              maxval = u)) %&gt;% </span>
 <span class="st">    </span><span class="kw">layer_dense</span>(<span class="dt">units =</span> <span class="dv">1</span>, <span class="dt">activation =</span> <span class="st">&#39;sigmoid&#39;</span>,
                 <span class="dt">kernel_regularizer =</span> <span class="kw">regularizer_l2</span>(<span class="dt">l =</span> params[[<span class="st">&#39;lambda&#39;</span>]]),
                 <span class="dt">kernel_initializer =</span> <span class="kw">initializer_random_uniform</span>(<span class="dt">minval =</span> <span class="op">-</span>u, 
@@ -987,7 +989,7 @@ hiperparams<span class="op">$</span>corrida &lt;-<span class="st"> </span><span 
   modelo_tc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">compile</span>(
     <span class="dt">loss =</span> <span class="st">&#39;binary_crossentropy&#39;</span>,
     <span class="dt">optimizer =</span> <span class="kw">optimizer_sgd</span>(<span class="dt">lr =</span>params[[<span class="st">&#39;lr&#39;</span>]]),
-    <span class="dt">metrics =</span> <span class="kw">c</span>(<span class="st">&#39;accuracy&#39;</span>)
+    <span class="dt">metrics =</span> <span class="kw">c</span>(<span class="st">&#39;accuracy&#39;</span>, <span class="st">&#39;binary_crossentropy&#39;</span>)
   )
   history &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">fit</span>(
     x_ent_s, y_ent, 
@@ -1008,6 +1010,7 @@ res &lt;-<span class="st"> </span><span class="kw">lapply</span>(<span class="dv
   salida &lt;-<span class="st"> </span><span class="kw">correr_modelo</span>(params, x_ent_s, y_ent, x_valid_s, y_valid)
   salida
   }) 
+  hiperparams<span class="op">$</span>binary_crossentropy &lt;-<span class="st"> </span><span class="kw">sapply</span>(res, <span class="cf">function</span>(item){ item<span class="op">$</span>binary_crossentropy })
   hiperparams<span class="op">$</span>loss &lt;-<span class="st"> </span><span class="kw">sapply</span>(res, <span class="cf">function</span>(item){ item<span class="op">$</span>loss })
   hiperparams<span class="op">$</span>acc &lt;-<span class="st"> </span><span class="kw">sapply</span>(res, <span class="cf">function</span>(item){ item<span class="op">$</span>acc })
   <span class="kw">saveRDS</span>(hiperparams, <span class="dt">file =</span> <span class="st">&#39;./cache_obj/diabetes-grid.rds&#39;</span>)
@@ -1015,33 +1018,45 @@ res &lt;-<span class="st"> </span><span class="kw">lapply</span>(<span class="dv
   hiperparams &lt;-<span class="st"> </span><span class="kw">readRDS</span>(<span class="dt">file =</span> <span class="st">&#39;./cache_obj/diabetes-grid.rds&#39;</span>)
 }</code></pre></div>
 <p>Ordenamos del mejor modelo al peor según la pérdida:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">arrange</span>(hiperparams, loss) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">head</span>(<span class="dv">10</span>)</code></pre></div>
-<pre><code>##    lambda n_capa  lr n_iter init_pesos corrida      loss       acc
-## 1   1e-09     50 0.1   1000        0.5      40 0.4303269 0.7951807
-## 2   1e-08     50 0.1   1000        0.5      41 0.4303941 0.8042169
-## 3   1e-09     20 0.1   1000        0.5      28 0.4311181 0.7951807
-## 4   1e-10     50 0.1   1000        0.5      39 0.4311976 0.8072289
-## 5   1e-06     50 0.1   1000        0.5      43 0.4314318 0.8012048
-## 6   1e-11     50 0.1   1000        0.5      38 0.4320411 0.7981928
-## 7   1e-11     20 0.1   1000        0.5      26 0.4320854 0.8012048
-## 8   1e-08     20 0.1   1000        0.5      29 0.4322517 0.7921687
-## 9   1e-12     20 0.1   1000        0.5      25 0.4324023 0.7981928
-## 10  1e-12     50 0.1   1000        0.5      37 0.4328103 0.7951807</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">arrange</span>(hiperparams, binary_crossentropy) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">head</span>(<span class="dv">10</span>)</code></pre></div>
+<pre><code>##    lambda n_capa  lr n_iter init_pesos corrida binary_crossentropy
+## 1   1e-09     10 0.1   1000        0.5      10           0.4288144
+## 2   1e-08      5 0.1   1000        0.5       2           0.4298817
+## 3   1e-08     20 0.1   1000        0.5      20           0.4303028
+## 4   1e-08     10 0.1   1000        0.5      11           0.4303874
+## 5   1e-07     10 0.1   1000        0.5      12           0.4305910
+## 6   1e-06     20 0.1   1000        0.5      22           0.4312452
+## 7   1e-05     10 0.1   1000        0.5      14           0.4312888
+## 8   1e-07     20 0.1   1000        0.5      21           0.4320093
+## 9   1e-07     50 0.1   1000        0.5      30           0.4320917
+## 10  1e-06     50 0.1   1000        0.5      31           0.4321587
+##         loss       acc
+## 1  0.4288144 0.7981928
+## 2  0.4298819 0.8012048
+## 3  0.4303031 0.8012048
+## 4  0.4303876 0.8012048
+## 5  0.4305927 0.8042169
+## 6  0.4312678 0.8012048
+## 7  0.4314596 0.8012048
+## 8  0.4320115 0.8042169
+## 9  0.4320959 0.8012048
+## 10 0.4321982 0.7981928</code></pre>
 <p>Y podemos estudiar la dependencia de la pérdida según distintos parámetros (ojo: los resultados son ruidosos por la muestra de validación relativamente chica y por el proceso de ajuste. Por ejemplo, los pesos aleatorios al arranque).</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(hiperparams, <span class="kw">aes</span>(<span class="dt">x =</span> lambda, <span class="dt">y =</span> loss, <span class="dt">group=</span>n_capa, <span class="dt">colour=</span><span class="kw">factor</span>(n_capa))) <span class="op">+</span>
-<span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span><span class="kw">facet_wrap</span>(<span class="op">~</span>lr, <span class="dt">ncol =</span> <span class="dv">2</span>)  <span class="op">+</span><span class="st"> </span><span class="kw">scale_x_log10</span>() </code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(hiperparams, <span class="kw">aes</span>(<span class="dt">x =</span> lambda, <span class="dt">y =</span> binary_crossentropy, 
+                        <span class="dt">group=</span>n_capa, <span class="dt">colour=</span><span class="kw">factor</span>(n_capa))) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span><span class="kw">facet_wrap</span>(<span class="op">~</span>lr, <span class="dt">ncol =</span> <span class="dv">2</span>)  <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">scale_x_log10</span>() </code></pre></div>
 <p><img src="07-redes-neuronales_files/figure-html/unnamed-chunk-53-1.png" width="480" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(<span class="kw">filter</span>(hiperparams, lr<span class="op">==</span><span class="fl">0.1</span>, n_capa <span class="op">&gt;</span><span class="st"> </span><span class="dv">10</span>, lambda <span class="op">&lt;</span><span class="st"> </span><span class="fl">1e-4</span>), 
-       <span class="kw">aes</span>(<span class="dt">x =</span> lambda, <span class="dt">y =</span> loss, <span class="dt">group=</span>n_capa, <span class="dt">colour=</span><span class="kw">factor</span>(n_capa))) <span class="op">+</span>
+       <span class="kw">aes</span>(<span class="dt">x =</span> lambda, <span class="dt">y =</span> binary_crossentropy, 
+           <span class="dt">group=</span>n_capa, <span class="dt">colour=</span><span class="kw">factor</span>(n_capa))) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span><span class="kw">facet_wrap</span>(<span class="op">~</span>lr, <span class="dt">ncol =</span> <span class="dv">2</span>)  <span class="op">+</span><span class="st"> </span><span class="kw">scale_x_log10</span>() </code></pre></div>
 <p><img src="07-redes-neuronales_files/figure-html/unnamed-chunk-54-1.png" width="480" /></p>
 <p>Por ejemplo:</p>
 <ul>
 <li>lambda mayor a 0.001 es demasiado grande para cualquiera de estos modelo.</li>
-<li>la tasa de aprendizaje parece ser mejor alrededor de 0.1 para los modelos más grandes, y 0.5 para los modelos más chicos</li>
-<li>Para los modelos con muchas unidades, una tasa de aprendizaje de 0.9 el algoritmo tiene problemas para descender.</li>
-<li>En este ejemplo, podríamos escoger por ejemplo el modelo con 100 unidades y poca regularización</li>
-<li>Nótese por ejemplo que desperdiciamos iteraciones cuando la regularización es alta.</li>
+<li>la tasa de aprendizaje parece ser mejor alrededor de 0.1 para estos modelos - esto puede ser consecuencia de la regularización por pararnos antes de sobreajuste.</li>
+<li>Nótese por ejemplo que desperdiciamos iteraciones cuando la regularización es alta, y el rango de número de unidades que probamos tampoco parece producir muchas diferencias</li>
 </ul>
 </div>
 <div id="hiperparametros-busqueda-aleatoria" class="section level3">
@@ -1054,13 +1069,13 @@ res &lt;-<span class="st"> </span><span class="kw">lapply</span>(<span class="dv
 <p>y para la regularización (donde queremos probar varios órdenes de magnitud) podríamos usar</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">exp</span>(<span class="kw">runif</span>(<span class="dv">1</span>, <span class="op">-</span><span class="dv">8</span>,<span class="op">-</span><span class="dv">1</span>))</code></pre></div>
 <pre><code>## [1] 0.0006036878</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">n_pars &lt;-<span class="st"> </span><span class="dv">120</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">n_pars &lt;-<span class="st"> </span><span class="dv">100</span>
 <span class="kw">set.seed</span>(<span class="dv">913</span>)
 <span class="cf">if</span>(<span class="op">!</span>usar_cache){
-    hiperparams &lt;-<span class="st"> </span><span class="kw">data_frame</span>(<span class="dt">lambda =</span> <span class="dv">10</span><span class="op">^</span>(<span class="kw">runif</span>(n_pars, <span class="op">-</span><span class="dv">12</span>, <span class="op">-</span><span class="dv">1</span>)),
+    hiperparams &lt;-<span class="st"> </span><span class="kw">data_frame</span>(<span class="dt">lambda =</span> <span class="dv">10</span><span class="op">^</span>(<span class="kw">runif</span>(n_pars, <span class="op">-</span><span class="dv">10</span>, <span class="op">-</span><span class="dv">1</span>)),
                               <span class="dt">n_capa =</span> <span class="kw">sample</span>(<span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">5</span>, <span class="dv">10</span>, <span class="dv">20</span>, <span class="dv">50</span>), n_pars, <span class="dt">replace =</span> T),
                               <span class="dt">lr =</span> <span class="kw">runif</span>(n_pars, <span class="fl">0.01</span>, <span class="fl">0.9</span>), <span class="dt">n_iter =</span> <span class="dv">1000</span>,
-                              <span class="dt">init_pesos =</span> <span class="fl">0.5</span>)
+                              <span class="dt">init_pesos =</span> <span class="kw">runif</span>(n_pars, <span class="fl">0.2</span>,<span class="fl">0.7</span>))
     hiperparams<span class="op">$</span>corrida &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(hiperparams)
   
     res_aleatorio &lt;-<span class="st"> </span><span class="kw">lapply</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(hiperparams), <span class="cf">function</span>(i){
@@ -1069,31 +1084,35 @@ res &lt;-<span class="st"> </span><span class="kw">lapply</span>(<span class="dv
     salida
     })
     hiperparams<span class="op">$</span>loss &lt;-<span class="st"> </span><span class="kw">sapply</span>(res_aleatorio, <span class="cf">function</span>(item){ item<span class="op">$</span>loss})
+    hiperparams<span class="op">$</span>binary_crossentropy &lt;-<span class="st"> </span><span class="kw">sapply</span>(res_aleatorio, <span class="cf">function</span>(item){ item<span class="op">$</span>binary_crossentropy})
     hiperparams<span class="op">$</span>acc &lt;-<span class="st"> </span><span class="kw">sapply</span>(res_aleatorio, <span class="cf">function</span>(item){ item<span class="op">$</span>acc})
     <span class="kw">saveRDS</span>(hiperparams, <span class="dt">file =</span> <span class="st">&#39;./cache_obj/diabetes-aleatorio.rds&#39;</span>)
   } <span class="cf">else</span> {
     hiperparams &lt;-<span class="st"> </span><span class="kw">readRDS</span>(<span class="dt">file =</span> <span class="st">&#39;./cache_obj/diabetes-aleatorio.rds&#39;</span>)
   }</code></pre></div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">arrange</span>(hiperparams, loss)</code></pre></div>
-<pre><code>## # A tibble: 120 x 8
-##          lambda n_capa        lr n_iter init_pesos corrida      loss
-##           &lt;dbl&gt;  &lt;dbl&gt;     &lt;dbl&gt;  &lt;dbl&gt;      &lt;dbl&gt;   &lt;int&gt;     &lt;dbl&gt;
-##  1 1.518909e-11      5 0.3885715   1000        0.5     114 0.4260046
-##  2 7.141982e-08     20 0.2355711   1000        0.5      84 0.4301984
-##  3 6.356920e-11     10 0.2123126   1000        0.5     104 0.4305419
-##  4 1.537123e-10     20 0.1666970   1000        0.5       8 0.4310389
-##  5 5.311588e-11     20 0.2148620   1000        0.5     109 0.4310853
-##  6 5.223951e-07     20 0.1463193   1000        0.5     105 0.4314119
-##  7 8.950678e-06     10 0.4195664   1000        0.5       9 0.4319558
-##  8 4.782147e-10     50 0.1281259   1000        0.5      19 0.4322640
-##  9 4.042696e-12     10 0.1924461   1000        0.5      55 0.4327587
-## 10 3.544342e-06     20 0.3409109   1000        0.5      68 0.4328053
-## # ... with 110 more rows, and 1 more variables: acc &lt;dbl&gt;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">arrange</span>(hiperparams, binary_crossentropy)</code></pre></div>
+<pre><code>## # A tibble: 100 x 9
+##          lambda n_capa         lr n_iter init_pesos corrida      loss
+##           &lt;dbl&gt;  &lt;dbl&gt;      &lt;dbl&gt;  &lt;dbl&gt;      &lt;dbl&gt;   &lt;int&gt;     &lt;dbl&gt;
+##  1 1.557467e-08      5 0.39449976   1000  0.3677915      19 0.4278859
+##  2 1.778047e-09      5 0.24924917   1000  0.5504638       2 0.4296006
+##  3 4.801019e-04     10 0.17805261   1000  0.3146846      67 0.4382751
+##  4 4.089486e-10     20 0.32910360   1000  0.4952716      37 0.4316516
+##  5 6.355566e-07     50 0.09925637   1000  0.6199004      69 0.4319281
+##  6 3.474533e-07     10 0.31243237   1000  0.4618183       7 0.4322901
+##  7 3.135937e-10     20 0.13151933   1000  0.2840034      55 0.4323465
+##  8 6.467834e-05     20 0.12685442   1000  0.5140470      23 0.4340249
+##  9 2.284078e-05     20 0.24400867   1000  0.5521355      68 0.4332621
+## 10 1.391978e-08     10 0.08317381   1000  0.5076250      60 0.4326821
+## # ... with 90 more rows, and 2 more variables: binary_crossentropy &lt;dbl&gt;,
+## #   acc &lt;dbl&gt;</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">hiperparams<span class="op">$</span>lr_grupo &lt;-<span class="st"> </span><span class="kw">cut</span>(hiperparams<span class="op">$</span>lr, <span class="dt">breaks=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="fl">0.1</span>,<span class="fl">0.25</span>,<span class="fl">0.5</span>, <span class="fl">0.75</span>,<span class="dv">1</span>))
- <span class="kw">ggplot</span>(hiperparams, <span class="kw">aes</span>(<span class="dt">x =</span> lambda, <span class="dt">y =</span> loss, 
+hiperparams<span class="op">$</span>init_grupo &lt;-<span class="st"> </span><span class="kw">cut</span>(hiperparams<span class="op">$</span>init_pesos, <span class="dt">breaks=</span><span class="kw">c</span>(<span class="fl">0.2</span>,<span class="fl">0.5</span>,<span class="fl">0.8</span>))
+ <span class="kw">ggplot</span>(hiperparams, <span class="kw">aes</span>(<span class="dt">x =</span> lambda, <span class="dt">y =</span> binary_crossentropy, 
                          <span class="dt">colour=</span>lr_grupo,
                          <span class="dt">size =</span> n_capa)) <span class="op">+</span>
-<span class="st">    </span><span class="kw">geom_point</span>(<span class="dt">alpha =</span> <span class="fl">0.75</span>) <span class="op">+</span><span class="st"> </span><span class="kw">scale_x_log10</span>() </code></pre></div>
+<span class="st">    </span><span class="kw">geom_point</span>(<span class="dt">alpha =</span> <span class="fl">0.75</span>) <span class="op">+</span><span class="st"> </span><span class="kw">scale_x_log10</span>() <span class="op">+</span>
+<span class="st">   </span><span class="kw">facet_wrap</span>(<span class="op">~</span>init_grupo, <span class="dt">ncol=</span><span class="dv">1</span>)</code></pre></div>
 <p><img src="07-redes-neuronales_files/figure-html/unnamed-chunk-59-1.png" width="480" /></p>
 </div>
 </div>

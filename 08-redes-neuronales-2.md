@@ -141,16 +141,21 @@ length(minilotes)
 ## [1] 10
 ```
 
+Ahora iteramos. Nótese cómo descenso en gradiente tiene un patrón aleatorio
+de avance hacia el mínimo, y una vez que llega a una región oscila
+alrededor de este mínimo.
+
+
 ```r
 iter_estocastico <- descenso_estocástico(60, rep(0, 4), 0.1, minilotes) %>%
   data.frame %>% rename(beta_0 = X1, beta_1 = X2, beta_2 = X3)
 ggplot(iteraciones_descenso, aes(x=beta_1, y=beta_2)) + geom_path() +
   geom_point() +
-  geom_path(data = iter_estocastico, colour ='red') +
-  geom_point(data = iter_estocastico, colour ='red')
+  geom_path(data = iter_estocastico, colour ='red', alpha=0.5) +
+  geom_point(data = iter_estocastico, colour ='red', alpha=0.5)
 ```
 
-<img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-7-1.png" width="480" />
+<img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-8-1.png" width="480" />
 
 Podemos ver cómo se ve la devianza de entrenamiento:
 
@@ -160,7 +165,6 @@ dev_ent <- devianza_calc(x = as.matrix(dat_ent[,c('x_1','x_2','x_3'), drop =FALS
                              y=dat_ent$g)
 dev_valid <- devianza_calc(x = as.matrix(dat_valid[,c('x_1','x_2','x_3'), drop =FALSE]),
                              y=dat_valid$g)
-
 dat_dev <- data_frame(iteracion = 1:nrow(iteraciones_descenso)) %>%
   mutate(descenso = apply(iteraciones_descenso, 1, dev_ent),
         descenso_estocastico = apply(iter_estocastico, 1, dev_ent)) %>%
@@ -170,13 +174,14 @@ dat_dev_valid <- data_frame(iteracion = 1:nrow(iteraciones_descenso)) %>%
   mutate(descenso = apply(iteraciones_descenso, 1, dev_valid),
          descenso_estocastico = apply(iter_estocastico, 1, dev_valid)) %>%
   gather(algoritmo, dev_ent, -iteracion) %>% mutate(tipo ='validación')
+
 dat_dev <- bind_rows(dat_dev, dat_dev_valid)
 ggplot(filter(dat_dev, tipo=='entrenamiento'), 
        aes(x=iteracion, y=dev_ent, colour=algoritmo)) + geom_line() +
   geom_point() + facet_wrap(~tipo)
 ```
 
-<img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-8-1.png" width="480" />
+<img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-9-1.png" width="480" />
 
 y vemos que descenso estocástico también converge a una buena solución.
 
@@ -191,7 +196,8 @@ Separamos al azar los datos de entrenamiento en $n$ minilotes de tamaño $m$.
 $$\beta_{i+1} = \beta_{i} - \eta\sum_{j=1}^m \nabla D^{(k)}_j (\beta_i)$$
 donde $D^{(k)}_j (\beta_i)$ es la devianza para el $j$-ésimo caso del minilote
 $k$.
-- Repetir para la siguiente época</div>\EndKnitrBlock{comentario}
+- Repetir para la siguiente época (opcional: reordenar antes al azar los
+minibatches, para evitar ciclos).</div>\EndKnitrBlock{comentario}
 
 ## ¿Por qué usar descenso estocástico?
 
@@ -209,7 +215,8 @@ costo menor de cómputo
 3. Cada actualización de descenso en gradiente puede ser muy costosa (aunque se pueda 
 paralelizar el cálculo de la suma de la devianza) pero  el 
 **tiempo de iteración para descenso estocástico
-no crece con el número de casos totales**. Podemos tener convergencia 
+no crece con el número de casos totales**. Podemos tener obtener
+buenos ajustes
 incluso con tamaños muy grandes de conjuntos de entrenamiento (por ejemplo, antes
 de procesar todos los datos de entrenamiento). Descenso estocástico *escala* bien
 en este sentido: el factor limitante es el tamaño de minilote y el número de iteraciones.
@@ -221,7 +228,9 @@ por paralelización de multiplicación de matrices en GPU).
 
 5. Entre las desventajas (comparado con descenso usual) 
 es que descenso estocástico no converge - alrededor de un 
-mínimo, típicamente oscila alrededor de él.
+mínimo, típicamente oscila alrededor de él. Para problemas
+convexos y con conjuntos de entrenamiento chicos, descenso
+usual típicamente es más rápido (referencia?).
 
 
 #### Ejemplo{-}
@@ -239,7 +248,7 @@ ggplot(filter(dat_dev, iteracion >= 1),
   facet_wrap(~tipo)
 ```
 
-<img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-10-1.png" width="672" />
+<img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-11-1.png" width="672" />
 
 En esta gráfica vemos que la solución de descenso estocástico puede
 ser superior
@@ -248,7 +257,7 @@ descenso en gradiente rápidamente sobreajusta.
 De modo que la varianza inducida
 por el proceso de ajuste por minilotes no necesariamente es una debilidad: muchas 
 veces nos
-previene de caer en soluciones sobreajustadas
+previene de caer en soluciones sobreajustadas. 
 
 ## Escogiendo la tasa de aprendizaje
 
@@ -271,7 +280,7 @@ ggplot(filter(dat_dev, algoritmo=='descenso_estocastico'),
        aes(x=iteracion, y=dev_ent, colour=tipo)) + geom_line() + geom_point()
 ```
 
-<img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-11-1.png" width="480" />
+<img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-12-1.png" width="480" />
 
 
 Por ejemplo: tasa demasiado alta:
@@ -291,7 +300,7 @@ ggplot(dat_dev,
        aes(x=iteracion, y=devianza, colour=tipo)) + geom_line() + geom_point()
 ```
 
-<img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-12-1.png" width="480" />
+<img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-13-1.png" width="480" />
 
 
 Tasa demasiado chica ( o hacer más iteraciones):
@@ -311,7 +320,7 @@ ggplot(dat_dev,
        aes(x=iteracion, y=devianza, colour=tipo)) + geom_line() 
 ```
 
-<img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-13-1.png" width="480" />
+<img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-14-1.png" width="480" />
 
 ## Mejoras al algoritmo de descenso estocástico.
 
@@ -356,7 +365,7 @@ ggplot(filter(dat_dev, iteracion>10),
        aes(x=iteracion, y=devianza, colour=tipo)) + geom_line() + geom_point()
 ```
 
-<img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-15-1.png" width="480" />
+<img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-16-1.png" width="480" />
 Generalmente se escoge este parámetro con un valor bajo (en aplicaciones
 de redes bastante menor a 0.01). Un 
 valor alto puede provocar que el algoritmo se detenga en
@@ -386,7 +395,7 @@ Separamos al azar los datos de entrenamiento en $n$ minilotes de tamaño $m$.
   - Calcular el gradiente sobre el minilote y hacer actualización, sucesivamente
   para cada uno de los minilotes $k=1,2,\ldots, n/m$:
 $$\beta_{i+1} = \beta_{i} + v,$$
-$$v= \alpha v - (1-\alpha)\eta\sum_{j=1}^m \nabla D^{(k)}_j$$
+$$v= \alpha v - \eta\sum_{j=1}^m \nabla D^{(k)}_j$$
 donde $D^{(k)}_j (\beta_i)$ es la devianza para el $j$-ésimo caso del minilote
 $k$. A $v$ se llama la *velocidad*
 - Repetir para la siguiente época</div>\EndKnitrBlock{comentario}
@@ -403,7 +412,7 @@ descenso_estocástico <- function(n_epocas, z_0, eta,
     indice_mlote <- i %% m + 1
     h_deriv <- grad_calc(minilotes[[indice_mlote]]$x, minilotes[[indice_mlote]]$y)
     z[i+1, ] <- z[i, ] + v
-    v <- momento*v -  (1-momento)*eta * h_deriv(z[i, ])
+    v <- momento*v -  eta * h_deriv(z[i, ])
     eta <- eta*(1-decaimiento)
   }
   z
@@ -429,7 +438,7 @@ ggplot(dat_dev,
        aes(x=iteracion, y=devianza, colour=tipo)) + geom_line() + geom_point()
 ```
 
-<img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-18-1.png" width="480" />
+<img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-19-1.png" width="480" />
 
 Nótese cómo llegamos más rápido a una buena solución (comparado
 con el ejemplo sin momento). Adicionalmente, error de entrenamiento
@@ -442,9 +451,11 @@ Valores típicos para momento son 0,0.5,0.9 o 0.99.
 
 Otras variaciones incluyen usar una tasa adaptativa de aprendizaje
 por cada parámetro (algoritmos adagrad, rmsprop, adam y adamax), o 
-actualizaciones un poco diferentes (nesterov). Los más comunes
+actualizaciones un poco diferentes (nesterov). 
+
+Los más comunes
 son descenso estocástico, descenso estocástico con momento,
-y adam.
+rmsprop y adam (Capítulo 8 del Deep Learning Book).
 
 
 ## Ajuste de redes con descenso estocástico
@@ -472,6 +483,13 @@ x_ent <- as.matrix(dat_ent[,c('x_1','x_2','x_3')])
 x_valid <-  as.matrix(dat_valid[,c('x_1','x_2','x_3')])
 y_ent <- dat_ent$g
 y_valid <- dat_valid$g
+```
+
+Empezamos con regresión logística (sin capas ocultas), que se escribe y
+ajusta como sigue:
+
+
+```r
 modelo <- keras_model_sequential() 
 modelo %>%
   layer_dense(units = 1, 
@@ -501,7 +519,9 @@ ggplot(aprendizaje,
   facet_wrap(~metric, ncol = 1) + geom_line() + geom_point(size = 0.5)
 ```
 
-<img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-21-1.png" width="480" />
+<img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-23-1.png" width="480" />
+
+Ver los pesos:
 
 
 ```r
@@ -511,12 +531,12 @@ get_weights(modelo)
 ```
 ## [[1]]
 ##            [,1]
-## [1,] -1.2426209
-## [2,]  0.2977479
-## [3,] -0.5316454
+## [1,] -1.2351371
+## [2,]  0.2543743
+## [3,] -0.4907759
 ## 
 ## [[2]]
-## [1] 1.239555
+## [1] 1.236258
 ```
 
 Y verificamos que concuerda con la salida de *glm*:
@@ -584,15 +604,35 @@ x_test <- digitos_prueba %>% select(contains('pixel')) %>% as.matrix + 1
 x_test <- x_test
 ```
 
-Para hacer un problema logístico, intentamos separar 3 del resto de los dígitos
+
+Usamos codificación dummy:
+
 
 ```r
 #dim(x_train) <- c(nrow(x_train), 16, 16, 1)
 #dim(x_test) <- c(nrow(x_test), 16, 16, 1)
 y_train <- to_categorical(digitos_entrena$digito)
 y_test <- to_categorical(digitos_prueba$digito)
+head(y_train)
 ```
 
+```
+##      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10]
+## [1,]    0    0    0    0    0    0    1    0    0     0
+## [2,]    0    0    0    0    0    1    0    0    0     0
+## [3,]    0    0    0    0    1    0    0    0    0     0
+## [4,]    0    0    0    0    0    0    0    1    0     0
+## [5,]    0    0    0    1    0    0    0    0    0     0
+## [6,]    0    0    0    0    0    0    1    0    0     0
+```
+
+Y definimos un modelo con 2 capas de 200 unidades cada una
+y regularización L2- Nótese que usamos softmax en la última capa,
+que es la función (ver parte de regresión multinomial) cuya
+salida $k$ está dada por
+$$p_k = \frac{exp(z_k)}{\sum_j exp(z_j)}$$
+donde $z=(z_1,\ldots, z_K)$ (estas son las combinaciones lineales
+de las unidades de la capa anterior).
 
 
 
@@ -626,13 +666,13 @@ score
 
 ```
 ## $loss
-## [1] 0.2893996
+## [1] 0.2815632
 ## 
 ## $acc
-## [1] 0.9322372
+## [1] 0.9332337
 ## 
 ## $categorical_crossentropy
-## [1] 0.2883518
+## [1] 0.2805149
 ```
 
 
@@ -657,7 +697,7 @@ y_valid <- spam_prueba$spam
 ```
 
 
-
+En este caso, intentemos una capa oculta:
 
 
 ```r
@@ -689,8 +729,8 @@ tab_confusion
 ```
 ##    y_valid
 ##       0   1
-##   0 897  89
-##   1  30 518
+##   0 892  72
+##   1  35 535
 ```
 
 ```r
@@ -699,15 +739,16 @@ prop.table(tab_confusion, 2)
 
 ```
 ##    y_valid
-##              0          1
-##   0 0.96763754 0.14662273
-##   1 0.03236246 0.85337727
+##             0         1
+##   0 0.9622438 0.1186161
+##   1 0.0377562 0.8813839
 ```
 
 
 ## Activaciones relu
 
-Recientemente se ha descubierto que hay una unidad más conveniente para las
+Recientemente se ha descubierto (en gran parte empíricamente)
+que hay una unidad más conveniente para las
 activaciones de las unidades, en lugar de la función sigmoide
 
 \BeginKnitrBlock{comentario}<div class="comentario">Activaciones lineales rectificadas (relu)
@@ -731,7 +772,7 @@ curve(h_relu, -5,5)
 curve(h_logistica, add=T, col='red')
 ```
 
-<img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-33-1.png" width="480" />
+<img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-35-1.png" width="480" />
 
 
 La razón del exito de estas activaciones no está del todo clara, aunque
@@ -745,6 +786,8 @@ tienen menos ese problema pues no se saturan para valores positivos.
 
 #### Ejemplo {-}
 
+Veamos el mismo modelo de dos capas de arriba, pero con 
+activaciones relu:
 
 
 ```r
@@ -777,13 +820,13 @@ score
 
 ```
 ## $loss
-## [1] 0.3501208
+## [1] 0.3507017
 ## 
 ## $acc
-## [1] 0.9407075
+## [1] 0.941704
 ## 
 ## $categorical_crossentropy
-## [1] 0.230238
+## [1] 0.2302321
 ```
 
 
@@ -855,7 +898,7 @@ El modelo sin regularización sobreajusta:
 
 
 ```r
-modelo_sin_reg %>% compile(loss = 'binary_crossentropy', optimizer = optimizer_sgd(lr = 0.9),
+modelo_sin_reg %>% compile(loss = 'binary_crossentropy', optimizer = optimizer_sgd(lr = 0.6),
   metrics = c('accuracy')
 )
 history_1 <- modelo_sin_reg %>% fit(x_train_3/2, y_train_3, verbose=1,
@@ -866,7 +909,7 @@ ggplot(hist_1, aes(x=epoch, y=value, colour=data)) + geom_line() +
   facet_wrap(~metric, scales = 'free')
 ```
 
-<img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-38-1.png" width="480" />
+<img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-40-1.png" width="480" />
 
 Y parecen ruidosas las unidades que aprendió en la capa oculta (algunas no
 aprendieron o aprendieron cosas irrelevantes):
@@ -882,7 +925,7 @@ image(matrix(get_weights(modelo_sin_reg)[[1]][,i], 16, 16, byrow=F)[,16:1],
 }
 ```
 
-<img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-39-1.png" width="672" />
+<img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-41-1.png" width="480" />
 
 
 Ahora ajustamos el modelo con dropout:
@@ -890,9 +933,9 @@ Ahora ajustamos el modelo con dropout:
 
 
 ```r
-modelo_dropout %>% compile(loss = 'binary_crossentropy', optimizer = optimizer_sgd(lr = 0.6,
-                                                                                   momentum=0.0),
-  metrics = c('accuracy')
+modelo_dropout %>% compile(loss = 'binary_crossentropy', 
+                           optimizer = optimizer_sgd(lr = 0.6),
+                           metrics = c('accuracy')
 )
 history_2 <- modelo_dropout %>% fit(x_train_3/2, y_train_3, verbose=1,
   epochs = 500, batch_size = 200, validation_split = 0.5
@@ -903,7 +946,7 @@ ggplot(hist_2, aes(x=epoch, y=value, colour=data)) + geom_line() +
   facet_wrap(~metric, scales = 'free')
 ```
 
-<img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-40-1.png" width="480" />
+<img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-42-1.png" width="480" />
 
 El desempeño es mejor, y parecen ser más útiles los patrones que aprendió
 el capa oculta:
@@ -919,7 +962,7 @@ image(matrix(get_weights(modelo_dropout)[[1]][,i], 16, 16, byrow=F)[,16:1],
 }
 ```
 
-<img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-41-1.png" width="480" />
+<img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-43-1.png" width="480" />
 
 
 
@@ -962,7 +1005,7 @@ la red completa, que es $p0+(1-p)\theta$. Ver [@Srivastava:2014:DSW:2627435.2670
 ### Ejemplo {-}
 
 Experimenta en este ejemplo con distintos valores de dropout, y verifica 
-intuitivamente sus efectos de regularización.
+intuitivamente sus efectos de regularización (ve las curvas de aprendizaje).
 
 
 ```r
@@ -997,11 +1040,11 @@ score
 
 ```
 ## $loss
-## [1] 0.2078793
+## [1] 0.2213043
 ## 
 ## $acc
-## [1] 0.9531639
+## [1] 0.9516692
 ## 
 ## $categorical_crossentropy
-## [1] 0.2039328
+## [1] 0.2172335
 ```
