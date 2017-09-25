@@ -914,7 +914,7 @@ para afinar estos parámetros según validación cruzada o una muestra de valida
 
 ### Ejemplo
 
-Consideramos una arquitectura de una capas para el problema de spam 
+Consideramos una arquitectura de dos capas para el problema de diabetes 
 
 ```{r}
 if(Sys.info()['nodename'] == 'vainilla.local'){
@@ -924,6 +924,7 @@ if(Sys.info()['nodename'] == 'vainilla.local'){
 }
 library(keras)
 ```
+Escalamos y preparamos los datos:
 
 ```{r, message=FALSE, warning=FALSE}
 library(readr)
@@ -999,6 +1000,9 @@ tab_confusion <- table(modelo_tc %>% predict_classes(x_valid_s),y_valid)
 tab_confusion
 prop.table(tab_confusion, 2)
 ```
+
+Es importante monitorear las curvas de aprendizaje (entrenamiento y
+validación) para diagnosticar mejoras:
 
 ```{r}
 df_iteraciones <- as.data.frame(iteraciones)
@@ -1087,7 +1091,7 @@ para todas las posibles combinaciones.
 
 
 ```{r}
-hiperparams <- expand.grid(lambda = 10^seq(-12,-1, 1), n_capa = c(2, 5, 10, 20, 50),
+hiperparams <- expand.grid(lambda = 10^seq(-9,-1, 1), n_capa = c(5, 10, 20, 50),
                      lr = c(0.1, 0.5, 0.9), n_iter = 1000, 
                      init_pesos = c(0.5), stringsAsFactors = FALSE)
 hiperparams$corrida <- 1:nrow(hiperparams)
@@ -1105,10 +1109,10 @@ correr_modelo <- function(params, x_ent_s, y_ent, x_valid_s, y_valid){
                 kernel_initializer = initializer_random_uniform(minval = -u, 
                                                                 maxval = u),
                 input_shape=7) %>% 
-    layer_dense(units = params[['n_capa']], activation = 'sigmoid',
-                kernel_regularizer = regularizer_l2(l = params[['lambda']]),
-                kernel_initializer = initializer_random_uniform(minval = -u, 
-                                                                maxval = u)) %>% 
+  #  layer_dense(units = params[['n_capa']], activation = 'sigmoid',
+  #              kernel_regularizer = regularizer_l2(l = params[['lambda']]),
+  #              kernel_initializer = initializer_random_uniform(minval = -u, 
+  #                                                              maxval = u)) %>% 
     layer_dense(units = 1, activation = 'sigmoid',
                 kernel_regularizer = regularizer_l2(l = params[['lambda']]),
                 kernel_initializer = initializer_random_uniform(minval = -u, 
@@ -1116,7 +1120,7 @@ correr_modelo <- function(params, x_ent_s, y_ent, x_valid_s, y_valid){
   modelo_tc %>% compile(
     loss = 'binary_crossentropy',
     optimizer = optimizer_sgd(lr =params[['lr']]),
-    metrics = c('accuracy')
+    metrics = c('accuracy', 'binary_crossentropy')
   )
   history <- modelo_tc %>% fit(
     x_ent_s, y_ent, 
@@ -1142,6 +1146,7 @@ res <- lapply(1:nrow(hiperparams), function(i){
   salida <- correr_modelo(params, x_ent_s, y_ent, x_valid_s, y_valid)
   salida
   }) 
+  hiperparams$binary_crossentropy <- sapply(res, function(item){ item$binary_crossentropy })
   hiperparams$loss <- sapply(res, function(item){ item$loss })
   hiperparams$acc <- sapply(res, function(item){ item$acc })
   saveRDS(hiperparams, file = './cache_obj/diabetes-grid.rds')
@@ -1153,7 +1158,7 @@ res <- lapply(1:nrow(hiperparams), function(i){
 Ordenamos del mejor modelo al peor según la pérdida:
 
 ```{r}
-arrange(hiperparams, loss) %>% head(10)
+arrange(hiperparams, binary_crossentropy) %>% head(10)
 ```
 
 Y podemos estudiar la dependencia de la pérdida según distintos parámetros (ojo:
@@ -1161,27 +1166,27 @@ los resultados son ruidosos por la muestra de validación relativamente chica
 y por el proceso de ajuste. Por ejemplo, los pesos aleatorios al arranque).
 
 ```{r}
-ggplot(hiperparams, aes(x = lambda, y = loss, group=n_capa, colour=factor(n_capa))) +
-  geom_line() + geom_point() + facet_wrap(~lr, ncol = 2)  + scale_x_log10() 
+ggplot(hiperparams, aes(x = lambda, y = binary_crossentropy, 
+                        group=n_capa, colour=factor(n_capa))) +
+  geom_line() + geom_point() + facet_wrap(~lr, ncol = 2)  + 
+  scale_x_log10() 
 ```
 
 ```{r}
 ggplot(filter(hiperparams, lr==0.1, n_capa > 10, lambda < 1e-4), 
-       aes(x = lambda, y = loss, group=n_capa, colour=factor(n_capa))) +
+       aes(x = lambda, y = binary_crossentropy, 
+           group=n_capa, colour=factor(n_capa))) +
   geom_line() + geom_point() + facet_wrap(~lr, ncol = 2)  + scale_x_log10() 
 ```
 
 Por ejemplo:
 
 - lambda mayor a 0.001 es demasiado grande para cualquiera de estos modelo.
-- la tasa de aprendizaje parece ser mejor alrededor de 0.1 para los modelos más grandes,
- y 0.5 para los modelos más chicos
-- Para los modelos con muchas unidades, una tasa de aprendizaje de 0.9 el algoritmo tiene
-problemas para descender.
-- En este ejemplo, podríamos escoger por ejemplo el modelo con 100 unidades y
-poca regularización
+- la tasa de aprendizaje parece ser mejor alrededor de 0.1 para estos modelos -
+esto puede ser consecuencia de la regularización por pararnos antes de sobreajuste.
 - Nótese por ejemplo que desperdiciamos iteraciones cuando la regularización es
-alta.
+alta, y el rango de número de unidades que probamos tampoco parece producir
+muchas diferencias
 
 
 ### Hiperparámetros: búsqueda aleatoria
@@ -1212,13 +1217,13 @@ exp(runif(1, -8,-1))
 
 
 ```{r}
-n_pars <- 120
+n_pars <- 100
 set.seed(913)
 if(!usar_cache){
-    hiperparams <- data_frame(lambda = 10^(runif(n_pars, -12, -1)),
+    hiperparams <- data_frame(lambda = 10^(runif(n_pars, -10, -1)),
                               n_capa = sample(c(2, 5, 10, 20, 50), n_pars, replace = T),
                               lr = runif(n_pars, 0.01, 0.9), n_iter = 1000,
-                              init_pesos = 0.5)
+                              init_pesos = runif(n_pars, 0.2,0.7))
     hiperparams$corrida <- 1:nrow(hiperparams)
   
     res_aleatorio <- lapply(1:nrow(hiperparams), function(i){
@@ -1227,6 +1232,7 @@ if(!usar_cache){
     salida
     })
     hiperparams$loss <- sapply(res_aleatorio, function(item){ item$loss})
+    hiperparams$binary_crossentropy <- sapply(res_aleatorio, function(item){ item$binary_crossentropy})
     hiperparams$acc <- sapply(res_aleatorio, function(item){ item$acc})
     saveRDS(hiperparams, file = './cache_obj/diabetes-aleatorio.rds')
   } else {
@@ -1235,15 +1241,17 @@ if(!usar_cache){
 ```
 
 ```{r}
-arrange(hiperparams, loss)
+arrange(hiperparams, binary_crossentropy)
 ```
 
 ```{r}
 hiperparams$lr_grupo <- cut(hiperparams$lr, breaks=c(0,0.1,0.25,0.5, 0.75,1))
- ggplot(hiperparams, aes(x = lambda, y = loss, 
+hiperparams$init_grupo <- cut(hiperparams$init_pesos, breaks=c(0.2,0.5,0.8))
+ ggplot(hiperparams, aes(x = lambda, y = binary_crossentropy, 
                          colour=lr_grupo,
                          size = n_capa)) +
-    geom_point(alpha = 0.75) + scale_x_log10() 
+    geom_point(alpha = 0.75) + scale_x_log10() +
+   facet_wrap(~init_grupo, ncol=1)
 ```
 
 
