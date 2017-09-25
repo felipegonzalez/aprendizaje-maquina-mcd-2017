@@ -531,12 +531,12 @@ get_weights(modelo)
 ```
 ## [[1]]
 ##            [,1]
-## [1,] -1.2351371
-## [2,]  0.2543743
-## [3,] -0.4907759
+## [1,] -1.2061217
+## [2,]  0.2599250
+## [3,] -0.5180842
 ## 
 ## [[2]]
-## [1] 1.236258
+## [1] 1.229137
 ```
 
 Y verificamos que concuerda con la salida de *glm*:
@@ -666,13 +666,13 @@ score
 
 ```
 ## $loss
-## [1] 0.2815632
+## [1] 0.2866646
 ## 
 ## $acc
-## [1] 0.9332337
+## [1] 0.9317389
 ## 
 ## $categorical_crossentropy
-## [1] 0.2805149
+## [1] 0.2856206
 ```
 
 
@@ -729,8 +729,8 @@ tab_confusion
 ```
 ##    y_valid
 ##       0   1
-##   0 892  72
-##   1  35 535
+##   0 901 119
+##   1  26 488
 ```
 
 ```r
@@ -739,9 +739,9 @@ prop.table(tab_confusion, 2)
 
 ```
 ##    y_valid
-##             0         1
-##   0 0.9622438 0.1186161
-##   1 0.0377562 0.8813839
+##              0          1
+##   0 0.97195254 0.19604613
+##   1 0.02804746 0.80395387
 ```
 
 
@@ -820,13 +820,13 @@ score
 
 ```
 ## $loss
-## [1] 0.3507017
+## [1] 0.3500519
 ## 
 ## $acc
-## [1] 0.941704
+## [1] 0.9412058
 ## 
 ## $categorical_crossentropy
-## [1] 0.2302321
+## [1] 0.2294276
 ```
 
 
@@ -898,7 +898,7 @@ El modelo sin regularización sobreajusta:
 
 
 ```r
-modelo_sin_reg %>% compile(loss = 'binary_crossentropy', optimizer = optimizer_sgd(lr = 0.6),
+modelo_sin_reg %>% compile(loss = 'binary_crossentropy', optimizer = optimizer_sgd(lr = 0.4),
   metrics = c('accuracy')
 )
 history_1 <- modelo_sin_reg %>% fit(x_train_3/2, y_train_3, verbose=1,
@@ -934,7 +934,7 @@ Ahora ajustamos el modelo con dropout:
 
 ```r
 modelo_dropout %>% compile(loss = 'binary_crossentropy', 
-                           optimizer = optimizer_sgd(lr = 0.6),
+                           optimizer = optimizer_sgd(lr = 0.4),
                            metrics = c('accuracy')
 )
 history_2 <- modelo_dropout %>% fit(x_train_3/2, y_train_3, verbose=1,
@@ -1040,11 +1040,11 @@ score
 
 ```
 ## $loss
-## [1] 0.2213043
+## [1] 0.2133512
 ## 
 ## $acc
-## [1] 0.9516692
+## [1] 0.9541604
 ## 
 ## $categorical_crossentropy
-## [1] 0.2172335
+## [1] 0.2092198
 ```

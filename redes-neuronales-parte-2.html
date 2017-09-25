@@ -589,12 +589,12 @@ history &lt;-<span class="st"> </span>modelo <span class="op">%&gt;%</span><span
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">get_weights</span>(modelo)</code></pre></div>
 <pre><code>## [[1]]
 ##            [,1]
-## [1,] -1.2351371
-## [2,]  0.2543743
-## [3,] -0.4907759
+## [1,] -1.2061217
+## [2,]  0.2599250
+## [3,] -0.5180842
 ## 
 ## [[2]]
-## [1] 1.236258</code></pre>
+## [1] 1.229137</code></pre>
 <p>Y verificamos que concuerda con la salida de <em>glm</em>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mod_logistico &lt;-<span class="st"> </span><span class="kw">glm</span>(g <span class="op">~</span><span class="st"> </span>x_<span class="dv">1</span> <span class="op">+</span><span class="st"> </span>x_<span class="dv">2</span><span class="op">+</span><span class="st"> </span>x_<span class="dv">3</span>, <span class="dt">data =</span> dat_ent, <span class="dt">family =</span> <span class="st">&#39;binomial&#39;</span>) 
 <span class="kw">coef</span>(mod_logistico)</code></pre></div>
@@ -658,13 +658,13 @@ history &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><s
 score &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">evaluate</span>(x_test, y_test)
 score</code></pre></div>
 <pre><code>## $loss
-## [1] 0.2815632
+## [1] 0.2866646
 ## 
 ## $acc
-## [1] 0.9332337
+## [1] 0.9317389
 ## 
 ## $categorical_crossentropy
-## [1] 0.2805149</code></pre>
+## [1] 0.2856206</code></pre>
 <p>Podemos también intentar con el ejemplo de spam:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(readr)
 <span class="kw">library</span>(tidyr)
@@ -700,13 +700,13 @@ tab_confusion &lt;-<span class="st"> </span><span class="kw">table</span>(modelo
 tab_confusion</code></pre></div>
 <pre><code>##    y_valid
 ##       0   1
-##   0 892  72
-##   1  35 535</code></pre>
+##   0 901 119
+##   1  26 488</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">prop.table</span>(tab_confusion, <span class="dv">2</span>)</code></pre></div>
 <pre><code>##    y_valid
-##             0         1
-##   0 0.9622438 0.1186161
-##   1 0.0377562 0.8813839</code></pre>
+##              0          1
+##   0 0.97195254 0.19604613
+##   1 0.02804746 0.80395387</code></pre>
 </div>
 </div>
 <div id="activaciones-relu" class="section level2">
@@ -757,13 +757,13 @@ history &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><s
 score &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">evaluate</span>(x_test, y_test)
 score</code></pre></div>
 <pre><code>## $loss
-## [1] 0.3507017
+## [1] 0.3500519
 ## 
 ## $acc
-## [1] 0.941704
+## [1] 0.9412058
 ## 
 ## $categorical_crossentropy
-## [1] 0.2302321</code></pre>
+## [1] 0.2294276</code></pre>
 </div>
 </div>
 <div id="dropout-para-regularizacion" class="section level2">
@@ -803,7 +803,7 @@ modelo_dropout  <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">layer_dropout</span>(<span class="fl">0.5</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">layer_dense</span>(<span class="dt">units =</span> <span class="dv">1</span>, <span class="dt">activation =</span> <span class="st">&#39;sigmoid&#39;</span>)</code></pre></div>
 <p>El modelo sin regularización sobreajusta:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">modelo_sin_reg <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">compile</span>(<span class="dt">loss =</span> <span class="st">&#39;binary_crossentropy&#39;</span>, <span class="dt">optimizer =</span> <span class="kw">optimizer_sgd</span>(<span class="dt">lr =</span> <span class="fl">0.6</span>),
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">modelo_sin_reg <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">compile</span>(<span class="dt">loss =</span> <span class="st">&#39;binary_crossentropy&#39;</span>, <span class="dt">optimizer =</span> <span class="kw">optimizer_sgd</span>(<span class="dt">lr =</span> <span class="fl">0.4</span>),
   <span class="dt">metrics =</span> <span class="kw">c</span>(<span class="st">&#39;accuracy&#39;</span>)
 )
 history_<span class="dv">1</span> &lt;-<span class="st"> </span>modelo_sin_reg <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">fit</span>(x_train_<span class="dv">3</span><span class="op">/</span><span class="dv">2</span>, y_train_<span class="dv">3</span>, <span class="dt">verbose=</span><span class="dv">1</span>,
@@ -824,7 +824,7 @@ hist_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">as
 <p><img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-41-1.png" width="480" /></p>
 <p>Ahora ajustamos el modelo con dropout:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">modelo_dropout <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">compile</span>(<span class="dt">loss =</span> <span class="st">&#39;binary_crossentropy&#39;</span>, 
-                           <span class="dt">optimizer =</span> <span class="kw">optimizer_sgd</span>(<span class="dt">lr =</span> <span class="fl">0.6</span>),
+                           <span class="dt">optimizer =</span> <span class="kw">optimizer_sgd</span>(<span class="dt">lr =</span> <span class="fl">0.4</span>),
                            <span class="dt">metrics =</span> <span class="kw">c</span>(<span class="st">&#39;accuracy&#39;</span>)
 )
 history_<span class="dv">2</span> &lt;-<span class="st"> </span>modelo_dropout <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">fit</span>(x_train_<span class="dv">3</span><span class="op">/</span><span class="dv">2</span>, y_train_<span class="dv">3</span>, <span class="dt">verbose=</span><span class="dv">1</span>,
@@ -879,13 +879,13 @@ history &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><s
 score &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">evaluate</span>(x_test, y_test)
 score</code></pre></div>
 <pre><code>## $loss
-## [1] 0.2213043
+## [1] 0.2133512
 ## 
 ## $acc
-## [1] 0.9516692
+## [1] 0.9541604
 ## 
 ## $categorical_crossentropy
-## [1] 0.2172335</code></pre>
+## [1] 0.2092198</code></pre>
 
 <div id="refs" class="references">
 <div>
