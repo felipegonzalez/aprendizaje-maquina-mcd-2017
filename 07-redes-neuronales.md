@@ -791,9 +791,9 @@ capa 2 (en gris están los sesgos):
 Que en nuestra notación escribimos como
 $$a^{(2)}_0 = 1, a^{(2)}_1 = -2, a^{(2)}_2 = 5$$
 y los pesos son, para la primera unidad:
-$$\theta^{(3)}_{0,1} = 3,  \,\,\, \theta^{(3)}_{1,1} = 1,\,\,\,\theta^{(3)}_{2,1} = -1$$
+$$\theta^{(3)}_{1,0} = 3,  \,\,\, \theta^{(3)}_{1,1} = 1,\,\,\,\theta^{(3)}_{1,2} = -1$$
 y para la segunda unidad
-$$\theta^{(3)}_{0,2} = 1,  \,\,\, \theta^{(3)}_{1,2} = 2,\,\,\,\theta^{(3)}_{2,2} = 0.5$$
+$$\theta^{(3)}_{2,0} = 1,  \,\,\, \theta^{(3)}_{2,1} = 2,\,\,\,\theta^{(3)}_{2,2} = 0.5$$
 Y ahora queremos calcular los valores que toman las unidades de la capa 3, 
 que son $a^{(3)}_1$ y  $a^{(3)}_2$$
 
@@ -916,7 +916,7 @@ $$h'(z) = h(z)(1-h(z))$$
 Como hicimos en regresión logística, primero simplificamos el problema 
 y consideramos calcular 
 las parciales *para un solo caso de entrenamiento* $(x,y)$:
-$$ D=- \sum_{j=1}^K y_{j}\log (p_1(x)) + (1-y_{j})\log (1-p_1(x)). $$
+$$ D=  -\left ( y\log (p_1(x)) + (1-y)\log (1-p_1(x))\right) . $$
 
 Después sumaremos sobre toda la muestra de entrenamiento. Entonces queremos
 calcular 
@@ -1239,7 +1239,7 @@ en tensorflow:
 modelo_tc %>% compile(
   loss = 'binary_crossentropy',
   optimizer = optimizer_sgd(lr = 0.5),
-  metrics = c('accuracy'))
+  metrics = c('accuracy','binary_crossentropy'))
 ```
 
 Iteramos con descenso en gradiente y monitoreamos el error de validación. Hacemos
@@ -1264,10 +1264,13 @@ score
 
 ```
 ## $loss
-## [1] 0.4356717
+## [1] 0.4339034
 ## 
 ## $acc
-## [1] 0.8042169
+## [1] 0.8012048
+## 
+## $binary_crossentropy
+## [1] 0.4298184
 ```
 
 ```r
@@ -1278,8 +1281,8 @@ tab_confusion
 ```
 ##    y_valid
 ##       0   1
-##   0 197  39
-##   1  26  70
+##   0 195  38
+##   1  28  71
 ```
 
 ```r
@@ -1289,8 +1292,8 @@ prop.table(tab_confusion, 2)
 ```
 ##    y_valid
 ##             0         1
-##   0 0.8834081 0.3577982
-##   1 0.1165919 0.6422018
+##   0 0.8744395 0.3486239
+##   1 0.1255605 0.6513761
 ```
 
 Es importante monitorear las curvas de aprendizaje (entrenamiento y

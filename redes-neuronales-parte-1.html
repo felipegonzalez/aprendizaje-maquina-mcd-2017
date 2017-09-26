@@ -7,7 +7,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Aprendizaje de máquina</title>
   <meta name="description" content="Notas y material para el curso de aprendizaje de máquina 2017 (ITAM)">
-  <meta name="generator" content="bookdown 0.5.1 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown 0.5.2 and GitBook 2.6.7">
 
   <meta property="og:title" content="Aprendizaje de máquina" />
   <meta property="og:type" content="book" />
@@ -25,7 +25,7 @@
 <meta name="author" content="Felipe González">
 
 
-<meta name="date" content="2017-09-25">
+<meta name="date" content="2017-09-26">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -666,7 +666,7 @@ Cuando todas las conexiones posibles de cada capa a la siguiente están presente
 <div id="ejemplo-30" class="section level4 unnumbered">
 <h4>Ejemplo</h4>
 <p>Consideremos propagar con los siguientes pesos para capa 3 y valores de la capa 2 (en gris están los sesgos): <img src="07-redes-neuronales_files/figure-html/unnamed-chunk-32-1.png" width="672" /></p>
-<p>Que en nuestra notación escribimos como <span class="math display">\[a^{(2)}_0 = 1, a^{(2)}_1 = -2, a^{(2)}_2 = 5\]</span> y los pesos son, para la primera unidad: <span class="math display">\[\theta^{(3)}_{0,1} = 3,  \,\,\, \theta^{(3)}_{1,1} = 1,\,\,\,\theta^{(3)}_{2,1} = -1\]</span> y para la segunda unidad <span class="math display">\[\theta^{(3)}_{0,2} = 1,  \,\,\, \theta^{(3)}_{1,2} = 2,\,\,\,\theta^{(3)}_{2,2} = 0.5\]</span> Y ahora queremos calcular los valores que toman las unidades de la capa 3, que son <span class="math inline">\(a^{(3)}_1\)</span> y <span class="math inline">\(a^{(3)}_2\)</span>$</p>
+<p>Que en nuestra notación escribimos como <span class="math display">\[a^{(2)}_0 = 1, a^{(2)}_1 = -2, a^{(2)}_2 = 5\]</span> y los pesos son, para la primera unidad: <span class="math display">\[\theta^{(3)}_{1,0} = 3,  \,\,\, \theta^{(3)}_{1,1} = 1,\,\,\,\theta^{(3)}_{1,2} = -1\]</span> y para la segunda unidad <span class="math display">\[\theta^{(3)}_{2,0} = 1,  \,\,\, \theta^{(3)}_{2,1} = 2,\,\,\,\theta^{(3)}_{2,2} = 0.5\]</span> Y ahora queremos calcular los valores que toman las unidades de la capa 3, que son <span class="math inline">\(a^{(3)}_1\)</span> y <span class="math inline">\(a^{(3)}_2\)</span>$</p>
 <p>Para hacer feed forward a la siguiente capa, hacemos entonces</p>
 <p><span class="math display">\[a^{(3)}_1 = h(3 + a^{(2)}_1 - a^{(2)}_2),\]</span> <span class="math display">\[a^{(3)}_2 = h(1 + 2a^{(2)}_1 + 0.5a^{(2)}_2),\]</span></p>
 <p>Ponemos los pesos y valores de la capa 2 (incluyendo sesgo):</p>
@@ -724,7 +724,7 @@ Para la primera capa, escribimos las variables de entrada: <span class="math dis
 <p><span class="math display">\[h(z)=\frac{1}{1+e^{-z}}.\]</span> Necesitaremos su derivada, que está dada por (cálculala): <span class="math display">\[h&#39;(z) = h(z)(1-h(z))\]</span></p>
 <div id="calculo-para-un-caso-de-entrenamiento" class="section level3">
 <h3><span class="header-section-number">7.5.1</span> Cálculo para un caso de entrenamiento</h3>
-<p>Como hicimos en regresión logística, primero simplificamos el problema y consideramos calcular las parciales <em>para un solo caso de entrenamiento</em> <span class="math inline">\((x,y)\)</span>: <span class="math display">\[ D=- \sum_{j=1}^K y_{j}\log (p_1(x)) + (1-y_{j})\log (1-p_1(x)). \]</span></p>
+<p>Como hicimos en regresión logística, primero simplificamos el problema y consideramos calcular las parciales <em>para un solo caso de entrenamiento</em> <span class="math inline">\((x,y)\)</span>: <span class="math display">\[ D=  -\left ( y\log (p_1(x)) + (1-y)\log (1-p_1(x))\right) . \]</span></p>
 <p>Después sumaremos sobre toda la muestra de entrenamiento. Entonces queremos calcular <span class="math display">\[\frac{\partial D}{\partial \theta_{j,k}^{(l)}}\]</span></p>
 <p>Y escribiremos, con la notación de arriba, <span class="math display">\[a^{(l)}_j = h(z^{(l)}_j)\]</span> donde <span class="math display">\[z^{(l)} = \Theta^{l} a^{(l)},\]</span> que coordenada a coordenada se escribe como <span class="math display">\[z^{(l)}_j =  \sum_{k=0}^{n_{l-1}}  \theta_{j,k}^{(l)}  a^{(l-1)}_k\]</span></p>
 <div id="paso-1-derivar-respecto-a-capa-l" class="section level4 unnumbered">
@@ -896,7 +896,7 @@ modelo_tc <span class="op">%&gt;%</span><span class="st"> </span>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">modelo_tc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">compile</span>(
   <span class="dt">loss =</span> <span class="st">&#39;binary_crossentropy&#39;</span>,
   <span class="dt">optimizer =</span> <span class="kw">optimizer_sgd</span>(<span class="dt">lr =</span> <span class="fl">0.5</span>),
-  <span class="dt">metrics =</span> <span class="kw">c</span>(<span class="st">&#39;accuracy&#39;</span>))</code></pre></div>
+  <span class="dt">metrics =</span> <span class="kw">c</span>(<span class="st">&#39;accuracy&#39;</span>,<span class="st">&#39;binary_crossentropy&#39;</span>))</code></pre></div>
 <p>Iteramos con descenso en gradiente y monitoreamos el error de validación. Hacemos 100 iteraciones de descenso en gradiente (épocas=100)</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">iteraciones &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">fit</span>(
   x_ent_s, y_ent, 
@@ -908,21 +908,24 @@ modelo_tc <span class="op">%&gt;%</span><span class="st"> </span>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">score &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">evaluate</span>(x_valid_s, y_valid)
 score</code></pre></div>
 <pre><code>## $loss
-## [1] 0.4356717
+## [1] 0.4339034
 ## 
 ## $acc
-## [1] 0.8042169</code></pre>
+## [1] 0.8012048
+## 
+## $binary_crossentropy
+## [1] 0.4298184</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tab_confusion &lt;-<span class="st"> </span><span class="kw">table</span>(modelo_tc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">predict_classes</span>(x_valid_s),y_valid) 
 tab_confusion</code></pre></div>
 <pre><code>##    y_valid
 ##       0   1
-##   0 197  39
-##   1  26  70</code></pre>
+##   0 195  38
+##   1  28  71</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">prop.table</span>(tab_confusion, <span class="dv">2</span>)</code></pre></div>
 <pre><code>##    y_valid
 ##             0         1
-##   0 0.8834081 0.3577982
-##   1 0.1165919 0.6422018</code></pre>
+##   0 0.8744395 0.3486239
+##   1 0.1255605 0.6513761</code></pre>
 <p>Es importante monitorear las curvas de aprendizaje (entrenamiento y validación) para diagnosticar mejoras:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df_iteraciones &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(iteraciones)
 <span class="kw">ggplot</span>(df_iteraciones, <span class="kw">aes</span>(<span class="dt">x=</span>epoch, <span class="dt">y=</span>value, <span class="dt">colour=</span>data, <span class="dt">group=</span>data)) <span class="op">+</span><span class="st"> </span>
