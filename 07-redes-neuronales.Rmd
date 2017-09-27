@@ -1294,7 +1294,7 @@ hacer con los dos últimos pesos de la última capa para reducir
 la devianza? ¿Incrementarlos o disminuirlos?
 5. Error en la última capa (3): Calcula $\delta^{(3)}_1$ 
 6. Calcula con backpropagation la derivada
-$\frac{\partial D}{\partial \theta^{(3)}_{2,1}}$. El resultado coincide
+$\frac{\partial D}{\partial \theta^{(3)}_{1,1}}$. El resultado coincide
 con tu intuición del inciso 4? Puedes intentar calcular directamente esta derivada también,
 con el método que quieras.
 7. Error en capa 2: Calcula $\delta^{(2)}_1$ y $\delta^{(2)}_2$, según la fórmula
