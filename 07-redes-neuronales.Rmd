@@ -663,7 +663,7 @@ $$\frac{\partial D}{\partial \theta_{j,k}^{(l)}}$$
 Y escribiremos, con la notación de arriba, 
 $$a^{(l)}_j = h(z^{(l)}_j)$$
 donde 
-$$z^{(l)} = \Theta^{l} a^{(l)},$$
+$$z^{(l)} = \Theta^{l} a^{(l-1)},$$
 que coordenada a coordenada se escribe como
 $$z^{(l)}_j =  \sum_{k=0}^{n_{l-1}}  \theta_{j,k}^{(l)}  a^{(l-1)}_k$$
 
