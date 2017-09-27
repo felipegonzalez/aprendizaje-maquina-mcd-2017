@@ -1264,13 +1264,13 @@ score
 
 ```
 ## $loss
-## [1] 0.4370899
+## [1] 0.4362241
 ## 
 ## $acc
-## [1] 0.7891566
+## [1] 0.7921687
 ## 
 ## $binary_crossentropy
-## [1] 0.4324606
+## [1] 0.4319053
 ```
 
 ```r
@@ -1281,8 +1281,8 @@ tab_confusion
 ```
 ##    y_valid
 ##       0   1
-##   0 193  40
-##   1  30  69
+##   0 193  39
+##   1  30  70
 ```
 
 ```r
@@ -1292,8 +1292,8 @@ prop.table(tab_confusion, 2)
 ```
 ##    y_valid
 ##             0         1
-##   0 0.8654709 0.3669725
-##   1 0.1345291 0.6330275
+##   0 0.8654709 0.3577982
+##   1 0.1345291 0.6422018
 ```
 
 Es importante monitorear las curvas de aprendizaje (entrenamiento y
@@ -1669,7 +1669,7 @@ hacer con los dos últimos pesos de la última capa para reducir
 la devianza? ¿Incrementarlos o disminuirlos?
 5. Error en la última capa (3): Calcula $\delta^{(3)}_1$ 
 6. Calcula con backpropagation la derivada
-$\frac{\partial D}{\partial \theta^{(3)}_{2,1}}$. El resultado coincide
+$\frac{\partial D}{\partial \theta^{(3)}_{1,1}}$. El resultado coincide
 con tu intuición del inciso 4? Puedes intentar calcular directamente esta derivada también,
 con el método que quieras.
 7. Error en capa 2: Calcula $\delta^{(2)}_1$ y $\delta^{(2)}_2$, según la fórmula
