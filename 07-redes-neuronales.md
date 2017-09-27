@@ -1264,13 +1264,13 @@ score
 
 ```
 ## $loss
-## [1] 0.4339034
+## [1] 0.4361759
 ## 
 ## $acc
-## [1] 0.8012048
+## [1] 0.7921687
 ## 
 ## $binary_crossentropy
-## [1] 0.4298184
+## [1] 0.4318935
 ```
 
 ```r
@@ -1281,8 +1281,8 @@ tab_confusion
 ```
 ##    y_valid
 ##       0   1
-##   0 195  38
-##   1  28  71
+##   0 194  40
+##   1  29  69
 ```
 
 ```r
@@ -1292,8 +1292,8 @@ prop.table(tab_confusion, 2)
 ```
 ##    y_valid
 ##             0         1
-##   0 0.8744395 0.3486239
-##   1 0.1255605 0.6513761
+##   0 0.8699552 0.3669725
+##   1 0.1300448 0.6330275
 ```
 
 Es importante monitorear las curvas de aprendizaje (entrenamiento y
@@ -1646,4 +1646,39 @@ hiperparams$init_grupo <- cut(hiperparams$init_pesos, breaks=c(0.2,0.5,0.8))
 - Suscribirse a kaggle (pueden ser equipos de 2 máximo, entonces
 les conviene suscribirse como un equipo).
 - Hacer el ejercicio de arriba \@ref(ejercicio-red)
+
+## Tarea (2 de octubre) {-}
+
+Considera la siguiente red para un problema de clasificación binaria:
+
+<img src="07-redes-neuronales_files/figure-html/unnamed-chunk-60-1.png" width="500" />
+
+Supón que los sesgos son 0 para la unidad $a_1$, 0 para la unidad $a_2$ y
+-0.5 para la unidad $p$.
+
+
+1. Escribe cada $\theta_{i,j}^{(l)}$ según la notación de clase e identifica
+su valor. Por ejemplo, tenemos que $\theta^{(2)}_{1,0} = 0$ (tienes que escribir
+7 valores como este).
+2. Supón que tenemos un caso (observación) con  $(x, p)=(1, 0)$. ¿Qué es $a_1^{(1)}$?
+Haz forward feed para
+calcular los valores de $a_1^{(2)}$, $a_1^{(2)}$ y $p=a_1^{(3)}$.
+3. Calcula la devianza para el caso $(x, p)=(1, 0)$
+4. Según el cálculo que hiciste en 3, intuitivamente, ¿qué conviene
+hacer con los dos últimos pesos de la última capa para reducir
+la devianza? ¿Incrementarlos o disminuirlos?
+5. Error en la última capa (3): Calcula $\delta^{(3)}_1$ 
+6. Calcula con backpropagation la derivada
+$\frac{\partial D}{\partial \theta^{(3)}_{2,1}}$. El resultado coincide
+con tu intuición del inciso 4? Puedes intentar calcular directamente esta derivada también,
+con el método que quieras.
+7. Error en capa 2: Calcula $\delta^{(2)}_1$ y $\delta^{(2)}_2$, según la fórmula
+\@ref(eq:delta-recursion).
+7. Utiliza el inciso anterior para calcular $\frac{\partial D}{\partial \theta_{1,1}^{(3)}}$, $\frac{\partial D}{\partial \theta_{1,2}^{(3)}}$
+y $\frac{\partial D}{\partial \theta_{1,0}^{(3)}}$,
+
+
+
+
+
 

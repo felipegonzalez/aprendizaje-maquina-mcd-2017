@@ -25,7 +25,7 @@
 <meta name="author" content="Felipe González">
 
 
-<meta name="date" content="2017-09-26">
+<meta name="date" content="2017-09-27">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -227,6 +227,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="7.6.4" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#hiperparametros-busqueda-aleatoria"><i class="fa fa-check"></i><b>7.6.4</b> Hiperparámetros: búsqueda aleatoria</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#tarea-para-25-de-septiembre"><i class="fa fa-check"></i>Tarea (para 25 de septiembre)</a></li>
+<li class="chapter" data-level="" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#tarea-2-de-octubre"><i class="fa fa-check"></i>Tarea (2 de octubre)</a></li>
 </ul></li>
 <li class="chapter" data-level="8" data-path="redes-neuronales-parte-2.html"><a href="redes-neuronales-parte-2.html"><i class="fa fa-check"></i><b>8</b> Redes neuronales (parte 2)</a><ul>
 <li class="chapter" data-level="8.1" data-path="redes-neuronales-parte-2.html"><a href="redes-neuronales-parte-2.html#descenso-estocastico"><i class="fa fa-check"></i><b>8.1</b> Descenso estocástico</a></li>
@@ -589,12 +590,12 @@ history &lt;-<span class="st"> </span>modelo <span class="op">%&gt;%</span><span
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">get_weights</span>(modelo)</code></pre></div>
 <pre><code>## [[1]]
 ##            [,1]
-## [1,] -1.2151145
-## [2,]  0.2729063
-## [3,] -0.5353933
+## [1,] -1.2042875
+## [2,]  0.2612211
+## [3,] -0.5104049
 ## 
 ## [[2]]
-## [1] 1.23435</code></pre>
+## [1] 1.225367</code></pre>
 <p>Y verificamos que concuerda con la salida de <em>glm</em>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mod_logistico &lt;-<span class="st"> </span><span class="kw">glm</span>(g <span class="op">~</span><span class="st"> </span>x_<span class="dv">1</span> <span class="op">+</span><span class="st"> </span>x_<span class="dv">2</span><span class="op">+</span><span class="st"> </span>x_<span class="dv">3</span>, <span class="dt">data =</span> dat_ent, <span class="dt">family =</span> <span class="st">&#39;binomial&#39;</span>) 
 <span class="kw">coef</span>(mod_logistico)</code></pre></div>
@@ -658,13 +659,13 @@ history &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><s
 score &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">evaluate</span>(x_test, y_test)
 score</code></pre></div>
 <pre><code>## $loss
-## [1] 0.2829392
+## [1] 0.283288
 ## 
 ## $acc
-## [1] 0.9337319
+## [1] 0.9327354
 ## 
 ## $categorical_crossentropy
-## [1] 0.2818895</code></pre>
+## [1] 0.2822394</code></pre>
 <p>Podemos también intentar con el ejemplo de spam:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(readr)
 <span class="kw">library</span>(tidyr)
@@ -700,13 +701,13 @@ tab_confusion &lt;-<span class="st"> </span><span class="kw">table</span>(modelo
 tab_confusion</code></pre></div>
 <pre><code>##    y_valid
 ##       0   1
-##   0 897  93
-##   1  30 514</code></pre>
+##   0 900 103
+##   1  27 504</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">prop.table</span>(tab_confusion, <span class="dv">2</span>)</code></pre></div>
 <pre><code>##    y_valid
 ##              0          1
-##   0 0.96763754 0.15321252
-##   1 0.03236246 0.84678748</code></pre>
+##   0 0.97087379 0.16968699
+##   1 0.02912621 0.83031301</code></pre>
 </div>
 </div>
 <div id="activaciones-relu" class="section level2">
@@ -757,13 +758,13 @@ history &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><s
 score &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">evaluate</span>(x_test, y_test)
 score</code></pre></div>
 <pre><code>## $loss
-## [1] 0.3435393
+## [1] 0.3447538
 ## 
 ## $acc
-## [1] 0.9402093
+## [1] 0.9367215
 ## 
 ## $categorical_crossentropy
-## [1] 0.2241584</code></pre>
+## [1] 0.2252885</code></pre>
 </div>
 </div>
 <div id="dropout-para-regularizacion" class="section level2">
@@ -879,13 +880,13 @@ history &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><s
 score &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">evaluate</span>(x_test, y_test)
 score</code></pre></div>
 <pre><code>## $loss
-## [1] 0.2082741
+## [1] 0.222272
 ## 
 ## $acc
-## [1] 0.9496761
+## [1] 0.9516692
 ## 
 ## $categorical_crossentropy
-## [1] 0.2042008</code></pre>
+## [1] 0.2182915</code></pre>
 
 <div id="refs" class="references">
 <div>

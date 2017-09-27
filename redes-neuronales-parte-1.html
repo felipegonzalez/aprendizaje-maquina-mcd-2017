@@ -25,7 +25,7 @@
 <meta name="author" content="Felipe González">
 
 
-<meta name="date" content="2017-09-26">
+<meta name="date" content="2017-09-27">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -227,6 +227,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="7.6.4" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#hiperparametros-busqueda-aleatoria"><i class="fa fa-check"></i><b>7.6.4</b> Hiperparámetros: búsqueda aleatoria</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#tarea-para-25-de-septiembre"><i class="fa fa-check"></i>Tarea (para 25 de septiembre)</a></li>
+<li class="chapter" data-level="" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#tarea-2-de-octubre"><i class="fa fa-check"></i>Tarea (2 de octubre)</a></li>
 </ul></li>
 <li class="chapter" data-level="8" data-path="redes-neuronales-parte-2.html"><a href="redes-neuronales-parte-2.html"><i class="fa fa-check"></i><b>8</b> Redes neuronales (parte 2)</a><ul>
 <li class="chapter" data-level="8.1" data-path="redes-neuronales-parte-2.html"><a href="redes-neuronales-parte-2.html#descenso-estocastico"><i class="fa fa-check"></i><b>8.1</b> Descenso estocástico</a></li>
@@ -908,24 +909,24 @@ modelo_tc <span class="op">%&gt;%</span><span class="st"> </span>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">score &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">evaluate</span>(x_valid_s, y_valid)
 score</code></pre></div>
 <pre><code>## $loss
-## [1] 0.4339034
+## [1] 0.4361759
 ## 
 ## $acc
-## [1] 0.8012048
+## [1] 0.7921687
 ## 
 ## $binary_crossentropy
-## [1] 0.4298184</code></pre>
+## [1] 0.4318935</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tab_confusion &lt;-<span class="st"> </span><span class="kw">table</span>(modelo_tc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">predict_classes</span>(x_valid_s),y_valid) 
 tab_confusion</code></pre></div>
 <pre><code>##    y_valid
 ##       0   1
-##   0 195  38
-##   1  28  71</code></pre>
+##   0 194  40
+##   1  29  69</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">prop.table</span>(tab_confusion, <span class="dv">2</span>)</code></pre></div>
 <pre><code>##    y_valid
 ##             0         1
-##   0 0.8744395 0.3486239
-##   1 0.1255605 0.6513761</code></pre>
+##   0 0.8699552 0.3669725
+##   1 0.1300448 0.6330275</code></pre>
 <p>Es importante monitorear las curvas de aprendizaje (entrenamiento y validación) para diagnosticar mejoras:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df_iteraciones &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(iteraciones)
 <span class="kw">ggplot</span>(df_iteraciones, <span class="kw">aes</span>(<span class="dt">x=</span>epoch, <span class="dt">y=</span>value, <span class="dt">colour=</span>data, <span class="dt">group=</span>data)) <span class="op">+</span><span class="st"> </span>
@@ -1126,6 +1127,22 @@ hiperparams<span class="op">$</span>init_grupo &lt;-<span class="st"> </span><sp
 <li>Suscribirse a kaggle (pueden ser equipos de 2 máximo, entonces les conviene suscribirse como un equipo).</li>
 <li>Hacer el ejercicio de arriba <a href="redes-neuronales-parte-1.html#ejercicio-red">7.1.0.1</a></li>
 </ul>
+</div>
+<div id="tarea-2-de-octubre" class="section level2 unnumbered">
+<h2>Tarea (2 de octubre)</h2>
+<p>Considera la siguiente red para un problema de clasificación binaria:</p>
+<p><img src="07-redes-neuronales_files/figure-html/unnamed-chunk-60-1.png" width="500" /></p>
+<p>Supón que los sesgos son 0 para la unidad <span class="math inline">\(a_1\)</span>, 0 para la unidad <span class="math inline">\(a_2\)</span> y -0.5 para la unidad <span class="math inline">\(p\)</span>.</p>
+<ol style="list-style-type: decimal">
+<li>Escribe cada <span class="math inline">\(\theta_{i,j}^{(l)}\)</span> según la notación de clase e identifica su valor. Por ejemplo, tenemos que <span class="math inline">\(\theta^{(2)}_{1,0} = 0\)</span> (tienes que escribir 7 valores como este).</li>
+<li>Supón que tenemos un caso (observación) con <span class="math inline">\((x, p)=(1, 0)\)</span>. ¿Qué es <span class="math inline">\(a_1^{(1)}\)</span>? Haz forward feed para calcular los valores de <span class="math inline">\(a_1^{(2)}\)</span>, <span class="math inline">\(a_1^{(2)}\)</span> y <span class="math inline">\(p=a_1^{(3)}\)</span>.</li>
+<li>Calcula la devianza para el caso <span class="math inline">\((x, p)=(1, 0)\)</span></li>
+<li>Según el cálculo que hiciste en 3, intuitivamente, ¿qué conviene hacer con los dos últimos pesos de la última capa para reducir la devianza? ¿Incrementarlos o disminuirlos?</li>
+<li>Error en la última capa (3): Calcula <span class="math inline">\(\delta^{(3)}_1\)</span></li>
+<li>Calcula con backpropagation la derivada <span class="math inline">\(\frac{\partial D}{\partial \theta^{(3)}_{2,1}}\)</span>. El resultado coincide con tu intuición del inciso 4? Puedes intentar calcular directamente esta derivada también, con el método que quieras.</li>
+<li>Error en capa 2: Calcula <span class="math inline">\(\delta^{(2)}_1\)</span> y <span class="math inline">\(\delta^{(2)}_2\)</span>, según la fórmula <a href="redes-neuronales-parte-1.html#eq:delta-recursion">(7.3)</a>.</li>
+<li>Utiliza el inciso anterior para calcular <span class="math inline">\(\frac{\partial D}{\partial \theta_{1,1}^{(3)}}\)</span>, <span class="math inline">\(\frac{\partial D}{\partial \theta_{1,2}^{(3)}}\)</span> y <span class="math inline">\(\frac{\partial D}{\partial \theta_{1,0}^{(3)}}\)</span>,</li>
+</ol>
 
 </div>
 </div>
