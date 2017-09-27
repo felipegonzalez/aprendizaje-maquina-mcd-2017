@@ -1299,8 +1299,8 @@ con tu intuición del inciso 4? Puedes intentar calcular directamente esta deriv
 con el método que quieras.
 7. Error en capa 2: Calcula $\delta^{(2)}_1$ y $\delta^{(2)}_2$, según la fórmula
 \@ref(eq:delta-recursion).
-7. Utiliza el inciso anterior para calcular $\frac{\partial D}{\partial \theta_{1,1}^{(3)}}$, $\frac{\partial D}{\partial \theta_{1,2}^{(3)}}$
-y $\frac{\partial D}{\partial \theta_{1,0}^{(3)}}$,
+7. Utiliza el inciso anterior para calcular $\frac{\partial D}{\partial \theta_{1,1}^{(2)}}$, $\frac{\partial D}{\partial \theta_{1,2}^{(2)}}$
+y $\frac{\partial D}{\partial \theta_{1,0}^{(2)}}$,
 
 
 
