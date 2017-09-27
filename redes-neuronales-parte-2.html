@@ -590,12 +590,12 @@ history &lt;-<span class="st"> </span>modelo <span class="op">%&gt;%</span><span
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">get_weights</span>(modelo)</code></pre></div>
 <pre><code>## [[1]]
 ##            [,1]
-## [1,] -1.2120767
-## [2,]  0.2594991
-## [3,] -0.5010932
+## [1,] -1.2387727
+## [2,]  0.2929747
+## [3,] -0.5232480
 ## 
 ## [[2]]
-## [1] 1.227112</code></pre>
+## [1] 1.237169</code></pre>
 <p>Y verificamos que concuerda con la salida de <em>glm</em>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mod_logistico &lt;-<span class="st"> </span><span class="kw">glm</span>(g <span class="op">~</span><span class="st"> </span>x_<span class="dv">1</span> <span class="op">+</span><span class="st"> </span>x_<span class="dv">2</span><span class="op">+</span><span class="st"> </span>x_<span class="dv">3</span>, <span class="dt">data =</span> dat_ent, <span class="dt">family =</span> <span class="st">&#39;binomial&#39;</span>) 
 <span class="kw">coef</span>(mod_logistico)</code></pre></div>
@@ -659,13 +659,13 @@ history &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><s
 score &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">evaluate</span>(x_test, y_test)
 score</code></pre></div>
 <pre><code>## $loss
-## [1] 0.2839912
+## [1] 0.2888221
 ## 
 ## $acc
-## [1] 0.9327354
+## [1] 0.9312407
 ## 
 ## $categorical_crossentropy
-## [1] 0.282947</code></pre>
+## [1] 0.2877713</code></pre>
 <p>Podemos también intentar con el ejemplo de spam:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(readr)
 <span class="kw">library</span>(tidyr)
@@ -701,13 +701,13 @@ tab_confusion &lt;-<span class="st"> </span><span class="kw">table</span>(modelo
 tab_confusion</code></pre></div>
 <pre><code>##    y_valid
 ##       0   1
-##   0 894  76
-##   1  33 531</code></pre>
+##   0 895  77
+##   1  32 530</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">prop.table</span>(tab_confusion, <span class="dv">2</span>)</code></pre></div>
 <pre><code>##    y_valid
 ##              0          1
-##   0 0.96440129 0.12520593
-##   1 0.03559871 0.87479407</code></pre>
+##   0 0.96548004 0.12685338
+##   1 0.03451996 0.87314662</code></pre>
 </div>
 </div>
 <div id="activaciones-relu" class="section level2">
@@ -758,13 +758,13 @@ history &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><s
 score &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">evaluate</span>(x_test, y_test)
 score</code></pre></div>
 <pre><code>## $loss
-## [1] 0.3538737
+## [1] 0.3405384
 ## 
 ## $acc
-## [1] 0.9407075
+## [1] 0.9427005
 ## 
 ## $categorical_crossentropy
-## [1] 0.2330198</code></pre>
+## [1] 0.2209506</code></pre>
 </div>
 </div>
 <div id="dropout-para-regularizacion" class="section level2">
@@ -880,13 +880,13 @@ history &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><s
 score &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">evaluate</span>(x_test, y_test)
 score</code></pre></div>
 <pre><code>## $loss
-## [1] 0.2365531
+## [1] 0.2267153
 ## 
 ## $acc
-## [1] 0.9466866
+## [1] 0.9511709
 ## 
 ## $categorical_crossentropy
-## [1] 0.2325181</code></pre>
+## [1] 0.2227322</code></pre>
 
 <div id="refs" class="references">
 <div>

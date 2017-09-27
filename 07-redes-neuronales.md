@@ -1264,13 +1264,13 @@ score
 
 ```
 ## $loss
-## [1] 0.4362241
+## [1] 0.4349115
 ## 
 ## $acc
-## [1] 0.7921687
+## [1] 0.7951807
 ## 
 ## $binary_crossentropy
-## [1] 0.4319053
+## [1] 0.4306714
 ```
 
 ```r
@@ -1281,8 +1281,8 @@ tab_confusion
 ```
 ##    y_valid
 ##       0   1
-##   0 193  39
-##   1  30  70
+##   0 196  41
+##   1  27  68
 ```
 
 ```r
@@ -1292,8 +1292,8 @@ prop.table(tab_confusion, 2)
 ```
 ##    y_valid
 ##             0         1
-##   0 0.8654709 0.3577982
-##   1 0.1345291 0.6422018
+##   0 0.8789238 0.3761468
+##   1 0.1210762 0.6238532
 ```
 
 Es importante monitorear las curvas de aprendizaje (entrenamiento y
@@ -1674,8 +1674,15 @@ con tu intuición del inciso 4? Puedes intentar calcular directamente esta deriv
 con el método que quieras.
 7. Error en capa 2: Calcula $\delta^{(2)}_1$ y $\delta^{(2)}_2$, según la fórmula
 \@ref(eq:delta-recursion).
-7. Utiliza el inciso anterior para calcular $\frac{\partial D}{\partial \theta_{1,1}^{(3)}}$, $\frac{\partial D}{\partial \theta_{1,2}^{(3)}}$
-y $\frac{\partial D}{\partial \theta_{1,0}^{(3)}}$,
+7. Utiliza el inciso anterior para calcular
+$\frac{\partial D}{\partial \theta_{1,0}^{(2)}}$, 
+$\frac{\partial D}{\partial \theta_{1,1}^{(2)}}$, 
+$\frac{\partial D}{\partial \theta_{2,0}^{(2)}}$
+y 
+$\frac{\partial D}{\partial \theta_{2,1}^{(2)}}$
+. ¿Puedes explicar los
+signos que obtuviste para estas derivadas (tip: tienes qué ver también que
+sucede en la siguiente capa)?
 
 
 
