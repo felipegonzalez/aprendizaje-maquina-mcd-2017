@@ -925,7 +925,7 @@ $$\frac{\partial D}{\partial \theta_{j,k}^{(l)}}$$
 Y escribiremos, con la notación de arriba, 
 $$a^{(l)}_j = h(z^{(l)}_j)$$
 donde 
-$$z^{(l)} = \Theta^{l} a^{(l)},$$
+$$z^{(l)} = \Theta^{l} a^{(l-1)},$$
 que coordenada a coordenada se escribe como
 $$z^{(l)}_j =  \sum_{k=0}^{n_{l-1}}  \theta_{j,k}^{(l)}  a^{(l-1)}_k$$
 
@@ -1264,13 +1264,13 @@ score
 
 ```
 ## $loss
-## [1] 0.4361759
+## [1] 0.4370899
 ## 
 ## $acc
-## [1] 0.7921687
+## [1] 0.7891566
 ## 
 ## $binary_crossentropy
-## [1] 0.4318935
+## [1] 0.4324606
 ```
 
 ```r
@@ -1281,8 +1281,8 @@ tab_confusion
 ```
 ##    y_valid
 ##       0   1
-##   0 194  40
-##   1  29  69
+##   0 193  40
+##   1  30  69
 ```
 
 ```r
@@ -1292,8 +1292,8 @@ prop.table(tab_confusion, 2)
 ```
 ##    y_valid
 ##             0         1
-##   0 0.8699552 0.3669725
-##   1 0.1300448 0.6330275
+##   0 0.8654709 0.3669725
+##   1 0.1345291 0.6330275
 ```
 
 Es importante monitorear las curvas de aprendizaje (entrenamiento y
