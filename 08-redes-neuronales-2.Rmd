@@ -305,18 +305,22 @@ estimación de minilotes más adelante en las iteraciones
 
 ```{r}
 descenso_estocástico <- function(n_epocas, z_0, eta, minilotes, decaimiento = 0.0){
+  #minilotes es una lista
   m <- length(minilotes)
   z <- matrix(0, m*n_epocas, length(z_0))
   z[1, ] <- z_0
   for(i in 1:(m*n_epocas-1)){
-    indice_mlote <- i %% m + 1
-    h_deriv <- grad_calc(minilotes[[indice_mlote]]$x, minilotes[[indice_mlote]]$y)
+    k <- i %% m + 1
+    if(i %% m == 0){
+      #comenzar nueva época y reordenar minilotes al azar
+      minilotes <- minilotes[sample(1:m, m)]
+    }
+    h_deriv <- grad_calc(minilotes[[k]]$x, minilotes[[k]]$y)
     z[i+1, ] <- z[i, ] - eta * h_deriv(z[i, ])
     eta <- eta*(1-decaimiento)
   }
   z
 }
-
 ```
 
 Y ahora vemos qué pasa con decaimiento:
@@ -373,29 +377,34 @@ $k$. A $v$ se llama la *velocidad*
 ```
 
 ```{r}
-descenso_estocástico <- function(n_epocas, z_0, eta, 
-                                 minilotes, momento=0.0, decaimiento=0.0){
+descenso_estocástico <- function(n_epocas, z_0, eta, minilotes, 
+                                 momento = 0.0, decaimiento = 0.0){
+  #minilotes es una lista
   m <- length(minilotes)
   z <- matrix(0, m*n_epocas, length(z_0))
   z[1, ] <- z_0
   v <- 0
   for(i in 1:(m*n_epocas-1)){
-    indice_mlote <- i %% m + 1
-    h_deriv <- grad_calc(minilotes[[indice_mlote]]$x, minilotes[[indice_mlote]]$y)
+    k <- i %% m + 1
+    if(i %% m == 0){
+      #comenzar nueva época y reordenar minilotes al azar
+      minilotes <- minilotes[sample(1:m, m)]
+      v <- 0
+    }
+    h_deriv <- grad_calc(minilotes[[k]]$x, minilotes[[k]]$y)
     z[i+1, ] <- z[i, ] + v
-    v <- momento*v -  eta * h_deriv(z[i, ])
+    v <- momento*v - eta * h_deriv(z[i, ])
     eta <- eta*(1-decaimiento)
   }
   z
 }
-
 ```
 
 Y ahora vemos que usando momento el algoritmo es más parecido a descenso en gradiente
 usual (pues tenemos cierta memoria de direcciones anteriores de descenso):
 
 ```{r}
-iter_estocastico <- descenso_estocástico(20, c(-1,-0.5, 0, 0), 0.1, minilotes, momento = 0.9, decaimiento = 0) %>%
+iter_estocastico <- descenso_estocástico(20, c(-1,-0.5, 0, 0), 0.1, minilotes, momento = 0.9, decaimiento = 0.01) %>%
   data.frame %>% rename(beta_0 = X1, beta_1 = X2)
 dev_ent <- devianza_calc(x = as.matrix(dat_ent[,c('x_1','x_2','x_3'), drop =FALSE]), 
                              y=dat_ent$g)
