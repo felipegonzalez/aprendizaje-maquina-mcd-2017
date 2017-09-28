@@ -25,7 +25,7 @@
 <meta name="author" content="Felipe González">
 
 
-<meta name="date" content="2017-09-27">
+<meta name="date" content="2017-09-28">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -232,7 +232,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="8" data-path="redes-neuronales-parte-2.html"><a href="redes-neuronales-parte-2.html"><i class="fa fa-check"></i><b>8</b> Redes neuronales (parte 2)</a><ul>
 <li class="chapter" data-level="8.1" data-path="redes-neuronales-parte-2.html"><a href="redes-neuronales-parte-2.html#descenso-estocastico"><i class="fa fa-check"></i><b>8.1</b> Descenso estocástico</a></li>
 <li class="chapter" data-level="8.2" data-path="redes-neuronales-parte-2.html"><a href="redes-neuronales-parte-2.html#algoritmo-de-descenso-estocastico"><i class="fa fa-check"></i><b>8.2</b> Algoritmo de descenso estocástico</a></li>
-<li class="chapter" data-level="8.3" data-path="redes-neuronales-parte-2.html"><a href="redes-neuronales-parte-2.html#por-que-usar-descenso-estocastico"><i class="fa fa-check"></i><b>8.3</b> ¿Por qué usar descenso estocástico?</a></li>
+<li class="chapter" data-level="8.3" data-path="redes-neuronales-parte-2.html"><a href="redes-neuronales-parte-2.html#por-que-usar-descenso-estocastico-por-minilotes"><i class="fa fa-check"></i><b>8.3</b> ¿Por qué usar descenso estocástico por minilotes?</a></li>
 <li class="chapter" data-level="8.4" data-path="redes-neuronales-parte-2.html"><a href="redes-neuronales-parte-2.html#escogiendo-la-tasa-de-aprendizaje"><i class="fa fa-check"></i><b>8.4</b> Escogiendo la tasa de aprendizaje</a></li>
 <li class="chapter" data-level="8.5" data-path="redes-neuronales-parte-2.html"><a href="redes-neuronales-parte-2.html#mejoras-al-algoritmo-de-descenso-estocastico."><i class="fa fa-check"></i><b>8.5</b> Mejoras al algoritmo de descenso estocástico.</a><ul>
 <li class="chapter" data-level="8.5.1" data-path="redes-neuronales-parte-2.html"><a href="redes-neuronales-parte-2.html#decaimiento-de-tasa-de-aprendizaje"><i class="fa fa-check"></i><b>8.5.1</b> Decaimiento de tasa de aprendizaje</a></li>
@@ -407,19 +407,21 @@ dat_dev_valid &lt;-<span class="st"> </span><span class="kw">data_frame</span>(<
 </li>
 </ul>
 </div>
-<div id="por-que-usar-descenso-estocastico" class="section level2">
-<h2><span class="header-section-number">8.3</span> ¿Por qué usar descenso estocástico?</h2>
+<div id="por-que-usar-descenso-estocastico-por-minilotes" class="section level2">
+<h2><span class="header-section-number">8.3</span> ¿Por qué usar descenso estocástico por minilotes?</h2>
 <p>Las propiedades importantes de descenso estocástico son:</p>
 <ol style="list-style-type: decimal">
-<li><p>Cada minilote actúa como una muestra de validación: hemos entrenado con los minilotes anteriores, y el nuevo minilote nos propone la nueva dirección (en la primera vuelta el algoritmo no ha visto ese minilote). Esto quiere decir que, al menos en la primera pasada, descenso estocástico intenta minimizar el error de predicción.</p></li>
-<li><p>Muchas veces no es necesario usar todos los datos para encontrar una buena dirección de descenso. Podemos ver la dirección de descenso en gradiente como un valor esperado sobre la muestra de entrenamiento. Una <strong>submuestra (minilote) puede ser suficiente para estimar ese valor esperado</strong>, con costo menor de cómputo</p></li>
-<li><p>Cada actualización de descenso en gradiente puede ser muy costosa (aunque se pueda paralelizar el cálculo de la suma de la devianza) pero el <strong>tiempo de iteración para descenso estocástico no crece con el número de casos totales</strong>. Podemos tener obtener buenos ajustes incluso con tamaños muy grandes de conjuntos de entrenamiento (por ejemplo, antes de procesar todos los datos de entrenamiento). Descenso estocástico <em>escala</em> bien en este sentido: el factor limitante es el tamaño de minilote y el número de iteraciones.</p></li>
-<li><p>Escogemos minilotes no tan chicos por ventajas computacionales: es más eficiente (por ejemplo en GPUs) hacer minilotes más grandes (generalmente en potencias de 2, como 32, 64, 128, 256, 512), por ejemplo, por paralelización de multiplicación de matrices en GPU).</p></li>
-<li><p>Entre las desventajas (comparado con descenso usual) es que descenso estocástico no converge - alrededor de un mínimo, típicamente oscila alrededor de él. Para problemas convexos y con conjuntos de entrenamiento chicos, descenso usual típicamente es más rápido (referencia?).</p></li>
+<li><p>Muchas veces no es necesario usar todos los datos para encontrar una buena dirección de descenso. Podemos ver la dirección de descenso en gradiente como un valor esperado sobre la muestra de entrenamiento (pues la pérdida es un promedio sobre el conjunto de entrenamiento). Una <strong>submuestra (minilote) puede ser suficiente para estimar ese valor esperado</strong>, con costo menor de cómputo. Adicionalmente, quizá no es tan buena idea estimar intentar estimar el gradiente con la mejor precisión pues es solamente una dirección de descenso <em>local</em> (así que quizá no da la mejor decisión de a dónde moverse en cada punto). Es mejor hacer iteraciones más rápidas con direcciones estimadas.</p></li>
+<li><p>Desde este punto de vista, calcular el gradiente completo para descenso en gradiente es computacionalmente ineficiente. Si el conjunto de entrenamiento es masivo, descenso en gradiente no es factible.</p></li>
+<li><p>¿Cuál es el mejor tamaño de minilote? Por un lado, minilotes más grandes nos dan mejores eficiencias en paralelización (multiplicación de matrices), especialmente en GPUs. Por otro lado, con minilotes más grandes puede ser que hagamos trabajo de más, por las razones expuestas en los incisos anteriores, y tengamos menos iteraciones en el mismo tiempo. El mejor punto está entre minilotes demasiado chicos (no aprovechamos paralelismo) o demasiado grande (hacemos demasiado trabajo por iteración)</p></li>
+</ol>
+<p>4.La propiedad más importante de descenso estocástico en minilotes es entonces que su convergencia no depende del tamaño del conjunto de entrenamiento, es decir, el <strong>tiempo de iteración para descenso estocástico no crece con el número de casos totales</strong>. Podemos tener obtener buenos ajustes incluso con tamaños muy grandes de conjuntos de entrenamiento (por ejemplo, antes de procesar todos los datos de entrenamiento). Descenso estocástico <em>escala</em> bien en este sentido: el factor limitante es el tamaño de minilote y el número de iteraciones.</p>
+<ol start="5" style="list-style-type: decimal">
+<li>Es importante permutar al azar los datos antes de hacer los minibatches, pues órdenes naturales en los datos pueden afectar la convergencia. Se ha observado también que permutar los minibatches en cada iteración típicamente acelera la convergencia (si se pueden tener los datos en memoria).</li>
 </ol>
 <div id="ejemplo-32" class="section level4 unnumbered">
 <h4>Ejemplo</h4>
-<p>En el ejemplo anterior nota que las direcciones de descenso de descenso estocástico son muy razonables (punto 2). Nota también que obtenemos una buena aproximación a la solución con menos cómputo (punto 3 - mismo número de iteraciones, pero cada iteración con un minilote).</p>
+<p>En el ejemplo anterior nota que las direcciones de descenso de descenso estocástico son muy razonables (punto 1). Nota también que obtenemos una buena aproximación a la solución con menos cómputo (punto 2 - mismo número de iteraciones, pero cada iteración con un minilote).</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(<span class="kw">filter</span>(dat_dev, iteracion <span class="op">&gt;=</span><span class="st"> </span><span class="dv">1</span>), 
        <span class="kw">aes</span>(<span class="dt">x=</span>iteracion, <span class="dt">y=</span>dev_ent, <span class="dt">colour=</span>algoritmo)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>(<span class="dt">size=</span><span class="fl">0.5</span>)<span class="op">+</span>
 <span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>tipo)</code></pre></div>
@@ -469,12 +471,17 @@ dat_dev &lt;-<span class="st"> </span><span class="kw">data_frame</span>(<span c
 <h3><span class="header-section-number">8.5.1</span> Decaimiento de tasa de aprendizaje</h3>
 <p>Hay muchos algoritmos derivados de descenso estocástico. La primera mejora consiste en reducir gradualmente la tasa de aprendizaje para aprender rápido al principio, pero filtrar el ruido de la estimación de minilotes más adelante en las iteraciones</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">descenso_estocástico &lt;-<span class="st"> </span><span class="cf">function</span>(n_epocas, z_<span class="dv">0</span>, eta, minilotes, <span class="dt">decaimiento =</span> <span class="fl">0.0</span>){
+  <span class="co">#minilotes es una lista</span>
   m &lt;-<span class="st"> </span><span class="kw">length</span>(minilotes)
   z &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="dv">0</span>, m<span class="op">*</span>n_epocas, <span class="kw">length</span>(z_<span class="dv">0</span>))
   z[<span class="dv">1</span>, ] &lt;-<span class="st"> </span>z_<span class="dv">0</span>
   <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>(m<span class="op">*</span>n_epocas<span class="op">-</span><span class="dv">1</span>)){
-    indice_mlote &lt;-<span class="st"> </span>i <span class="op">%%</span><span class="st"> </span>m <span class="op">+</span><span class="st"> </span><span class="dv">1</span>
-    h_deriv &lt;-<span class="st"> </span><span class="kw">grad_calc</span>(minilotes[[indice_mlote]]<span class="op">$</span>x, minilotes[[indice_mlote]]<span class="op">$</span>y)
+    k &lt;-<span class="st"> </span>i <span class="op">%%</span><span class="st"> </span>m <span class="op">+</span><span class="st"> </span><span class="dv">1</span>
+    <span class="cf">if</span>(i <span class="op">%%</span><span class="st"> </span>m <span class="op">==</span><span class="st"> </span><span class="dv">0</span>){
+      <span class="co">#comenzar nueva época y reordenar minilotes al azar</span>
+      minilotes &lt;-<span class="st"> </span>minilotes[<span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span>m, m)]
+    }
+    h_deriv &lt;-<span class="st"> </span><span class="kw">grad_calc</span>(minilotes[[k]]<span class="op">$</span>x, minilotes[[k]]<span class="op">$</span>y)
     z[i<span class="op">+</span><span class="dv">1</span>, ] &lt;-<span class="st"> </span>z[i, ] <span class="op">-</span><span class="st"> </span>eta <span class="op">*</span><span class="st"> </span><span class="kw">h_deriv</span>(z[i, ])
     eta &lt;-<span class="st"> </span>eta<span class="op">*</span>(<span class="dv">1</span><span class="op">-</span>decaimiento)
   }
@@ -494,11 +501,11 @@ dat_dev &lt;-<span class="st"> </span><span class="kw">data_frame</span>(<span c
 <span class="st">  </span><span class="kw">gather</span>(tipo, devianza, entrena<span class="op">:</span>validacion)
 <span class="kw">ggplot</span>(<span class="kw">filter</span>(dat_dev, iteracion<span class="op">&gt;</span><span class="dv">10</span>), 
        <span class="kw">aes</span>(<span class="dt">x=</span>iteracion, <span class="dt">y=</span>devianza, <span class="dt">colour=</span>tipo)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>()</code></pre></div>
-<p><img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-16-1.png" width="480" /> Generalmente se escoge este parámetro con un valor bajo (en aplicaciones de redes bastante menor a 0.01). Un valor alto puede provocar que el algoritmo se detenga en lugar con función pérdida alta (lejos de un óptimo)</p>
+<p><img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-16-1.png" width="480" /> Generalmente se escoge este parámetro con un valor bajo (en aplicaciones de redes bastante menor a 0.01). Un valor alto puede provocar que el algoritmo se detenga en lugar con función pérdida alta (lejos de un óptimo).</p>
 </div>
 <div id="momento" class="section level3">
 <h3><span class="header-section-number">8.5.2</span> Momento</h3>
-<p>También es posible utilizar una idea adicional que acelera la convergencia. La idea es que muchas veces la aleatoriedad del algoritmo puede producir iteraciones en direcciones que no son buenas (pues la estimación del gradiente es mala). Esto es parte del algoritmo. Sin embargo, si en varias iteraciones hemos observado movimientos en direcciones consistentes, quizá deberíamos movernos en esas direcciones consistentes, y reducir el peso de la dirección del minilote (que nos puede llevar en una dirección mala).</p>
+<p>También es posible utilizar una idea adicional que acelera la convergencia. La idea es que muchas veces la aleatoriedad del algoritmo puede producir iteraciones en direcciones que no son tan buenas (pues la estimación del gradiente es mala). Esto es parte del algoritmo. Sin embargo, si en varias iteraciones hemos observado movimientos en direcciones consistentes, quizá deberíamos movernos en esas direcciones consistentes, y reducir el peso de la dirección del minilote (que nos puede llevar en una dirección mala). El resultado es un suavizamiento de las curvas de aprendizaje.</p>
 <p>Esto es similar al movimiento de una canica en una superficie: la dirección de su movimiento está dada en parte por la dirección de descenso (el gradiente) y en parte la velocidad actual de la canica. La canica se mueve en un promedio de estas dos direcciones</p>
 
 <div class="comentario">
@@ -510,23 +517,29 @@ dat_dev &lt;-<span class="st"> </span><span class="kw">data_frame</span>(<span c
 </div>
 </li>
 </ul>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">descenso_estocástico &lt;-<span class="st"> </span><span class="cf">function</span>(n_epocas, z_<span class="dv">0</span>, eta, 
-                                 minilotes, <span class="dt">momento=</span><span class="fl">0.0</span>, <span class="dt">decaimiento=</span><span class="fl">0.0</span>){
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">descenso_estocástico &lt;-<span class="st"> </span><span class="cf">function</span>(n_epocas, z_<span class="dv">0</span>, eta, minilotes, 
+                                 <span class="dt">momento =</span> <span class="fl">0.0</span>, <span class="dt">decaimiento =</span> <span class="fl">0.0</span>){
+  <span class="co">#minilotes es una lista</span>
   m &lt;-<span class="st"> </span><span class="kw">length</span>(minilotes)
   z &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="dv">0</span>, m<span class="op">*</span>n_epocas, <span class="kw">length</span>(z_<span class="dv">0</span>))
   z[<span class="dv">1</span>, ] &lt;-<span class="st"> </span>z_<span class="dv">0</span>
   v &lt;-<span class="st"> </span><span class="dv">0</span>
   <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>(m<span class="op">*</span>n_epocas<span class="op">-</span><span class="dv">1</span>)){
-    indice_mlote &lt;-<span class="st"> </span>i <span class="op">%%</span><span class="st"> </span>m <span class="op">+</span><span class="st"> </span><span class="dv">1</span>
-    h_deriv &lt;-<span class="st"> </span><span class="kw">grad_calc</span>(minilotes[[indice_mlote]]<span class="op">$</span>x, minilotes[[indice_mlote]]<span class="op">$</span>y)
+    k &lt;-<span class="st"> </span>i <span class="op">%%</span><span class="st"> </span>m <span class="op">+</span><span class="st"> </span><span class="dv">1</span>
+    <span class="cf">if</span>(i <span class="op">%%</span><span class="st"> </span>m <span class="op">==</span><span class="st"> </span><span class="dv">0</span>){
+      <span class="co">#comenzar nueva época y reordenar minilotes al azar</span>
+      minilotes &lt;-<span class="st"> </span>minilotes[<span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span>m, m)]
+      v &lt;-<span class="st"> </span><span class="dv">0</span>
+    }
+    h_deriv &lt;-<span class="st"> </span><span class="kw">grad_calc</span>(minilotes[[k]]<span class="op">$</span>x, minilotes[[k]]<span class="op">$</span>y)
     z[i<span class="op">+</span><span class="dv">1</span>, ] &lt;-<span class="st"> </span>z[i, ] <span class="op">+</span><span class="st"> </span>v
-    v &lt;-<span class="st"> </span>momento<span class="op">*</span>v <span class="op">-</span><span class="st">  </span>eta <span class="op">*</span><span class="st"> </span><span class="kw">h_deriv</span>(z[i, ])
+    v &lt;-<span class="st"> </span>momento<span class="op">*</span>v <span class="op">-</span><span class="st"> </span>eta <span class="op">*</span><span class="st"> </span><span class="kw">h_deriv</span>(z[i, ])
     eta &lt;-<span class="st"> </span>eta<span class="op">*</span>(<span class="dv">1</span><span class="op">-</span>decaimiento)
   }
   z
 }</code></pre></div>
 <p>Y ahora vemos que usando momento el algoritmo es más parecido a descenso en gradiente usual (pues tenemos cierta memoria de direcciones anteriores de descenso):</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">iter_estocastico &lt;-<span class="st"> </span>descenso_estocá<span class="kw">stico</span>(<span class="dv">20</span>, <span class="kw">c</span>(<span class="op">-</span><span class="dv">1</span>,<span class="op">-</span><span class="fl">0.5</span>, <span class="dv">0</span>, <span class="dv">0</span>), <span class="fl">0.1</span>, minilotes, <span class="dt">momento =</span> <span class="fl">0.9</span>, <span class="dt">decaimiento =</span> <span class="dv">0</span>) <span class="op">%&gt;%</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">iter_estocastico &lt;-<span class="st"> </span>descenso_estocá<span class="kw">stico</span>(<span class="dv">20</span>, <span class="kw">c</span>(<span class="op">-</span><span class="dv">1</span>,<span class="op">-</span><span class="fl">0.5</span>, <span class="dv">0</span>, <span class="dv">0</span>), <span class="fl">0.1</span>, minilotes, <span class="dt">momento =</span> <span class="fl">0.9</span>, <span class="dt">decaimiento =</span> <span class="fl">0.01</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span>data.frame <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">rename</span>(<span class="dt">beta_0 =</span> X1, <span class="dt">beta_1 =</span> X2)
 dev_ent &lt;-<span class="st"> </span><span class="kw">devianza_calc</span>(<span class="dt">x =</span> <span class="kw">as.matrix</span>(dat_ent[,<span class="kw">c</span>(<span class="st">&#39;x_1&#39;</span>,<span class="st">&#39;x_2&#39;</span>,<span class="st">&#39;x_3&#39;</span>), <span class="dt">drop =</span><span class="ot">FALSE</span>]), 
                              <span class="dt">y=</span>dat_ent<span class="op">$</span>g)
@@ -550,7 +563,6 @@ dat_dev &lt;-<span class="st"> </span><span class="kw">data_frame</span>(<span c
 </div>
 <div id="ajuste-de-redes-con-descenso-estocastico" class="section level2">
 <h2><span class="header-section-number">8.6</span> Ajuste de redes con descenso estocástico</h2>
-<p>Ahora usamos keras (con base en tensorflow) para hacer el trabajo que hicimos con nuestros pruebas de concepto de descenso estocástico. Así tendremos más velocidad con código más robusto.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="cf">if</span>(<span class="kw">Sys.info</span>()[<span class="st">&#39;nodename&#39;</span>] <span class="op">==</span><span class="st"> &#39;vainilla.local&#39;</span>){
   <span class="co"># esto es por mi instalación particular de tensorflow - típicamente</span>
   <span class="co"># no es necesario que corras esta línea.</span>
@@ -590,12 +602,12 @@ history &lt;-<span class="st"> </span>modelo <span class="op">%&gt;%</span><span
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">get_weights</span>(modelo)</code></pre></div>
 <pre><code>## [[1]]
 ##            [,1]
-## [1,] -1.2387727
-## [2,]  0.2929747
-## [3,] -0.5232480
+## [1,] -1.2163808
+## [2,]  0.3227284
+## [3,] -0.5872459
 ## 
 ## [[2]]
-## [1] 1.237169</code></pre>
+## [1] 1.238365</code></pre>
 <p>Y verificamos que concuerda con la salida de <em>glm</em>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mod_logistico &lt;-<span class="st"> </span><span class="kw">glm</span>(g <span class="op">~</span><span class="st"> </span>x_<span class="dv">1</span> <span class="op">+</span><span class="st"> </span>x_<span class="dv">2</span><span class="op">+</span><span class="st"> </span>x_<span class="dv">3</span>, <span class="dt">data =</span> dat_ent, <span class="dt">family =</span> <span class="st">&#39;binomial&#39;</span>) 
 <span class="kw">coef</span>(mod_logistico)</code></pre></div>
@@ -659,13 +671,13 @@ history &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><s
 score &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">evaluate</span>(x_test, y_test)
 score</code></pre></div>
 <pre><code>## $loss
-## [1] 0.2888221
+## [1] 0.2908272
 ## 
 ## $acc
-## [1] 0.9312407
+## [1] 0.9347285
 ## 
 ## $categorical_crossentropy
-## [1] 0.2877713</code></pre>
+## [1] 0.2897785</code></pre>
 <p>Podemos también intentar con el ejemplo de spam:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(readr)
 <span class="kw">library</span>(tidyr)
@@ -701,13 +713,13 @@ tab_confusion &lt;-<span class="st"> </span><span class="kw">table</span>(modelo
 tab_confusion</code></pre></div>
 <pre><code>##    y_valid
 ##       0   1
-##   0 895  77
-##   1  32 530</code></pre>
+##   0 893  74
+##   1  34 533</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">prop.table</span>(tab_confusion, <span class="dv">2</span>)</code></pre></div>
 <pre><code>##    y_valid
 ##              0          1
-##   0 0.96548004 0.12685338
-##   1 0.03451996 0.87314662</code></pre>
+##   0 0.96332255 0.12191104
+##   1 0.03667745 0.87808896</code></pre>
 </div>
 </div>
 <div id="activaciones-relu" class="section level2">
@@ -758,18 +770,18 @@ history &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><s
 score &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">evaluate</span>(x_test, y_test)
 score</code></pre></div>
 <pre><code>## $loss
-## [1] 0.3405384
+## [1] 0.3575569
 ## 
 ## $acc
-## [1] 0.9427005
+## [1] 0.9402093
 ## 
 ## $categorical_crossentropy
-## [1] 0.2209506</code></pre>
+## [1] 0.2369803</code></pre>
 </div>
 </div>
 <div id="dropout-para-regularizacion" class="section level2">
 <h2><span class="header-section-number">8.8</span> Dropout para regularización</h2>
-<p>Un método más nuevo y exitoso para regularizar es el <em>dropout</em>. Consiste en perturbar la red en cada pasada de entrenamiento de minibatch (feed-forward y backprop), eliminando <em>al azar</em> algunas de las entradas de cada capa.</p>
+<p>Un método más nuevo y exitoso para regularizar es el <em>dropout</em>. Consiste en perturbar la red en cada pasada de entrenamiento de minibatch (feed-forward y backprop), eliminando <em>al azar</em> algunas de las unidades de cada capa.</p>
 <p>El objeto es que al introducir ruido en el proceso de entrenamiento evitamos sobreajuste, pues en cada paso de la iteración estamos limitando el número de unidades que la red puede usar para ajustar las respuestas. Dropout entonces busca una reducción en el sobreajuste que sea más provechosa que el consecuente aumento en el sesgo.</p>
 
 <div class="comentario">
@@ -787,7 +799,7 @@ score</code></pre></div>
 <p>Consideremos el problema de separar 9 y 3 del resto de dígitos zip. Queremos comparar el desempeño de una red sin y con dropout (tanto de entradas como de capa oculta) y entender parcialmente cómo se comportan los pesos aprendidos:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">2923</span>)
 entrena_<span class="dv">3</span> &lt;-<span class="st"> </span>digitos_entrena <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">sample_n</span>(<span class="kw">nrow</span>(digitos_entrena)) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">sample_n</span>(<span class="dv">2000</span>)
+<span class="st">  </span><span class="kw">sample_n</span>(<span class="dv">3000</span>)
 x_train_<span class="dv">3</span> &lt;-<span class="st"> </span>entrena_<span class="dv">3</span> <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="op">-</span>digito) <span class="op">%&gt;%</span><span class="st"> </span>as.matrix <span class="op">+</span><span class="st"> </span><span class="dv">1</span>
 y_train_<span class="dv">3</span> &lt;-<span class="st"> </span>(entrena_<span class="dv">3</span><span class="op">$</span>digito <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="dv">9</span>,<span class="dv">3</span>)) <span class="op">%&gt;%</span><span class="st"> </span>as.numeric
 <span class="kw">set.seed</span>(<span class="dv">12</span>)
@@ -803,12 +815,12 @@ modelo_dropout  <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">layer_dense</span>(<span class="dt">units =</span> <span class="dv">30</span>, <span class="dt">activation =</span> <span class="st">&#39;relu&#39;</span>, <span class="dt">input_shape =</span> <span class="dv">256</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">layer_dropout</span>(<span class="fl">0.5</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">layer_dense</span>(<span class="dt">units =</span> <span class="dv">1</span>, <span class="dt">activation =</span> <span class="st">&#39;sigmoid&#39;</span>)</code></pre></div>
-<p>El modelo sin regularización sobreajusta:</p>
+<p>El modelo sin regularización sobreajusta (nótese que el error de validación comienza a crecer considerablemente muy pronto hay un margen grande entre entrenamiento y validación, y la pérdida de entrenamiento es cercana a 0):</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">modelo_sin_reg <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">compile</span>(<span class="dt">loss =</span> <span class="st">&#39;binary_crossentropy&#39;</span>, <span class="dt">optimizer =</span> <span class="kw">optimizer_sgd</span>(<span class="dt">lr =</span> <span class="fl">0.4</span>),
   <span class="dt">metrics =</span> <span class="kw">c</span>(<span class="st">&#39;accuracy&#39;</span>)
 )
 history_<span class="dv">1</span> &lt;-<span class="st"> </span>modelo_sin_reg <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">fit</span>(x_train_<span class="dv">3</span><span class="op">/</span><span class="dv">2</span>, y_train_<span class="dv">3</span>, <span class="dt">verbose=</span><span class="dv">1</span>,
-  <span class="dt">epochs =</span> <span class="dv">500</span>, <span class="dt">batch_size =</span> <span class="dv">250</span>, <span class="dt">validation_split =</span> <span class="fl">0.5</span>
+  <span class="dt">epochs =</span> <span class="dv">500</span>, <span class="dt">batch_size =</span> <span class="dv">256</span>, <span class="dt">validation_split =</span> <span class="fl">0.5</span>
 )
 hist_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(history_<span class="dv">1</span>)
 <span class="kw">ggplot</span>(hist_<span class="dv">1</span>, <span class="kw">aes</span>(<span class="dt">x=</span>epoch, <span class="dt">y=</span>value, <span class="dt">colour=</span>data)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span>
@@ -829,7 +841,7 @@ hist_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">as
                            <span class="dt">metrics =</span> <span class="kw">c</span>(<span class="st">&#39;accuracy&#39;</span>)
 )
 history_<span class="dv">2</span> &lt;-<span class="st"> </span>modelo_dropout <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">fit</span>(x_train_<span class="dv">3</span><span class="op">/</span><span class="dv">2</span>, y_train_<span class="dv">3</span>, <span class="dt">verbose=</span><span class="dv">1</span>,
-  <span class="dt">epochs =</span> <span class="dv">500</span>, <span class="dt">batch_size =</span> <span class="dv">200</span>, <span class="dt">validation_split =</span> <span class="fl">0.5</span>
+  <span class="dt">epochs =</span> <span class="dv">500</span>, <span class="dt">batch_size =</span> <span class="dv">256</span>, <span class="dt">validation_split =</span> <span class="fl">0.5</span>
 )
 
 hist_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(history_<span class="dv">2</span>)
@@ -847,12 +859,10 @@ hist_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">as
 <p><img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-43-1.png" width="480" /></p>
 <p>Algunas maneras en que podemos pensar en la regularización de dropout:</p>
 <ul>
-<li><p>Unidades con valores muy grandes producen efectos grandes en las capas siguientes. Pero en dropout esto es más difícil que pase, pues esas unidades con efectos demasiado grandes no siempre están en los modelos que ajustamos.</p></li>
-<li><p>Puede ser que una unidad haga mucho trabajo, y prevenga a otras de aprender algo útil que podría mejorar las prediccines.</p></li>
 <li><p>Dropout busca que cada unidad calcule algo importante por sí sola, y dependa menos de otras unidades para hacer algo útil. Algunas unidades y pesos pueden acoplarse fuertemente (y de manera compleja) para hacer las predicciones. Si estas unidades aprendieron ese acoplamento demasiado fuerte para el conjunto de entrenamiento, entonces puede ser nuevos datos, con perturbaciones, puedan producir predicciones malas (mala generalización). Con dropout buscamos que la unidades capturen información útil en general, no necesariamente en acoplamiento fuerte con otras unidades.</p></li>
 <li><p>Podemos pensar que en cada pasada de minibatch, escogemos una arquitectura diferente, y entrenamos. El resultado final será entonces es un tipo de promedio de todas esas arquitecturas que probamos. Este promedio reduce varianza de las salidas de las unidades.</p></li>
 </ul>
-<p>El paso de escalamiento es importante para el funcionamiento correcto del método. La idea intuitiva es que el peso de una unidad es 0 con probabilidad <span class="math inline">\(p\)</span> y <span class="math inline">\(\theta\)</span> con probabilidad <span class="math inline">\(1-p\)</span>. Tomamos el valor esperado como peso para la red completa, que es <span class="math inline">\(p0+(1-p)\theta\)</span>. Ver <span class="citation">(<span class="citeproc-not-found" data-reference-id="Srivastava:2014:DSW:2627435.2670313"><strong>???</strong></span>)</span></p>
+<p>El paso de escalamiento es importante para el funcionamiento correcto del método. La idea intuitiva es que el peso de una unidad es 0 con probabilidad <span class="math inline">\(p\)</span> y <span class="math inline">\(\theta\)</span> con probabilidad <span class="math inline">\(1-p\)</span>. Tomamos el valor esperado como peso para la red completa, que es <span class="math inline">\(p0+(1-p)\theta\)</span>. Ver <span class="citation">(Srivastava et al. <a href="#ref-Srivastava:2014:DSW:2627435.2670313">2014</a>)</span></p>
 </div>
 <div id="ejemplo-35" class="section level3 unnumbered">
 <h3>Ejemplo</h3>
@@ -880,13 +890,13 @@ history &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><s
 score &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">evaluate</span>(x_test, y_test)
 score</code></pre></div>
 <pre><code>## $loss
-## [1] 0.2267153
+## [1] 0.2187696
 ## 
 ## $acc
-## [1] 0.9511709
+## [1] 0.9536622
 ## 
 ## $categorical_crossentropy
-## [1] 0.2227322</code></pre>
+## [1] 0.214723</code></pre>
 
 <div id="refs" class="references">
 <div>
@@ -898,8 +908,17 @@ score</code></pre></div>
 <div>
 <p>Ng, Andrew. 2017. “Machine Learning.” <a href="https://www.coursera.org/learn/machine-learning" class="uri">https://www.coursera.org/learn/machine-learning</a>.</p>
 </div>
+<div>
+<p>Srivastava, Nitish, Geoffrey Hinton, Alex Krizhevsky, Ilya Sutskever, and Ruslan Salakhutdinov. 2014. “Dropout: A Simple Way to Prevent Neural Networks from Overfitting.” <em>J. Mach. Learn. Res.</em> 15 (1). JMLR.org: 1929–58. <a href="http://dl.acm.org/citation.cfm?id=2627435.2670313" class="uri">http://dl.acm.org/citation.cfm?id=2627435.2670313</a>.</p>
 </div>
 </div>
+</div>
+</div>
+</div>
+<h3>References</h3>
+<div id="refs" class="references">
+<div id="ref-Srivastava:2014:DSW:2627435.2670313">
+<p>Srivastava, Nitish, Geoffrey Hinton, Alex Krizhevsky, Ilya Sutskever, and Ruslan Salakhutdinov. 2014. “Dropout: A Simple Way to Prevent Neural Networks from Overfitting.” <em>J. Mach. Learn. Res.</em> 15 (1). JMLR.org: 1929–58. <a href="http://dl.acm.org/citation.cfm?id=2627435.2670313" class="uri">http://dl.acm.org/citation.cfm?id=2627435.2670313</a>.</p>
 </div>
 </div>
             </section>

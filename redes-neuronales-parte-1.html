@@ -25,7 +25,7 @@
 <meta name="author" content="Felipe González">
 
 
-<meta name="date" content="2017-09-27">
+<meta name="date" content="2017-09-28">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -232,7 +232,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="8" data-path="redes-neuronales-parte-2.html"><a href="redes-neuronales-parte-2.html"><i class="fa fa-check"></i><b>8</b> Redes neuronales (parte 2)</a><ul>
 <li class="chapter" data-level="8.1" data-path="redes-neuronales-parte-2.html"><a href="redes-neuronales-parte-2.html#descenso-estocastico"><i class="fa fa-check"></i><b>8.1</b> Descenso estocástico</a></li>
 <li class="chapter" data-level="8.2" data-path="redes-neuronales-parte-2.html"><a href="redes-neuronales-parte-2.html#algoritmo-de-descenso-estocastico"><i class="fa fa-check"></i><b>8.2</b> Algoritmo de descenso estocástico</a></li>
-<li class="chapter" data-level="8.3" data-path="redes-neuronales-parte-2.html"><a href="redes-neuronales-parte-2.html#por-que-usar-descenso-estocastico"><i class="fa fa-check"></i><b>8.3</b> ¿Por qué usar descenso estocástico?</a></li>
+<li class="chapter" data-level="8.3" data-path="redes-neuronales-parte-2.html"><a href="redes-neuronales-parte-2.html#por-que-usar-descenso-estocastico-por-minilotes"><i class="fa fa-check"></i><b>8.3</b> ¿Por qué usar descenso estocástico por minilotes?</a></li>
 <li class="chapter" data-level="8.4" data-path="redes-neuronales-parte-2.html"><a href="redes-neuronales-parte-2.html#escogiendo-la-tasa-de-aprendizaje"><i class="fa fa-check"></i><b>8.4</b> Escogiendo la tasa de aprendizaje</a></li>
 <li class="chapter" data-level="8.5" data-path="redes-neuronales-parte-2.html"><a href="redes-neuronales-parte-2.html#mejoras-al-algoritmo-de-descenso-estocastico."><i class="fa fa-check"></i><b>8.5</b> Mejoras al algoritmo de descenso estocástico.</a><ul>
 <li class="chapter" data-level="8.5.1" data-path="redes-neuronales-parte-2.html"><a href="redes-neuronales-parte-2.html#decaimiento-de-tasa-de-aprendizaje"><i class="fa fa-check"></i><b>8.5.1</b> Decaimiento de tasa de aprendizaje</a></li>
@@ -909,24 +909,24 @@ modelo_tc <span class="op">%&gt;%</span><span class="st"> </span>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">score &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">evaluate</span>(x_valid_s, y_valid)
 score</code></pre></div>
 <pre><code>## $loss
-## [1] 0.4349115
+## [1] 0.434918
 ## 
 ## $acc
-## [1] 0.7951807
+## [1] 0.7981928
 ## 
 ## $binary_crossentropy
-## [1] 0.4306714</code></pre>
+## [1] 0.4309897</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tab_confusion &lt;-<span class="st"> </span><span class="kw">table</span>(modelo_tc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">predict_classes</span>(x_valid_s),y_valid) 
 tab_confusion</code></pre></div>
 <pre><code>##    y_valid
 ##       0   1
-##   0 196  41
-##   1  27  68</code></pre>
+##   0 196  40
+##   1  27  69</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">prop.table</span>(tab_confusion, <span class="dv">2</span>)</code></pre></div>
 <pre><code>##    y_valid
 ##             0         1
-##   0 0.8789238 0.3761468
-##   1 0.1210762 0.6238532</code></pre>
+##   0 0.8789238 0.3669725
+##   1 0.1210762 0.6330275</code></pre>
 <p>Es importante monitorear las curvas de aprendizaje (entrenamiento y validación) para diagnosticar mejoras:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df_iteraciones &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(iteraciones)
 <span class="kw">ggplot</span>(df_iteraciones, <span class="kw">aes</span>(<span class="dt">x=</span>epoch, <span class="dt">y=</span>value, <span class="dt">colour=</span>data, <span class="dt">group=</span>data)) <span class="op">+</span><span class="st"> </span>

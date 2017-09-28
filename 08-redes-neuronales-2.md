@@ -199,21 +199,35 @@ $k$.
 - Repetir para la siguiente época (opcional: reordenar antes al azar los
 minibatches, para evitar ciclos).</div>\EndKnitrBlock{comentario}
 
-## ¿Por qué usar descenso estocástico?
+## ¿Por qué usar descenso estocástico por minilotes?
 
 Las propiedades importantes de descenso estocástico son:
 
-1. Cada minilote actúa como una muestra de validación: hemos entrenado con los minilotes
-anteriores, y el nuevo minilote nos propone la nueva dirección (en la primera vuelta el
-algoritmo no ha visto ese minilote). Esto quiere decir que, al menos en la primera
-pasada, descenso estocástico intenta minimizar el error de predicción.
-
-2. Muchas veces no es necesario usar todos los datos para encontrar una buena dirección de descenso. Podemos ver la dirección de descenso en gradiente como un valor esperado sobre la muestra de entrenamiento.
+1. Muchas veces no es necesario usar todos los datos para encontrar una buena dirección de descenso. Podemos ver la dirección de descenso en gradiente como un valor esperado sobre la muestra de entrenamiento (pues la pérdida es un promedio sobre el conjunto 
+de entrenamiento).
 Una **submuestra (minilote) puede ser suficiente para estimar ese valor esperado**, con
-costo menor de cómputo
+costo menor de cómputo. Adicionalmente, quizá no es tan buena idea estimar
+intentar estimar el gradiente con la mejor precisión pues es solamente una
+dirección de descenso *local* (así que quizá no da la mejor decisión de a 
+dónde moverse en cada punto). Es mejor hacer iteraciones más rápidas con direcciones
+estimadas.
 
-3. Cada actualización de descenso en gradiente puede ser muy costosa (aunque se pueda 
-paralelizar el cálculo de la suma de la devianza) pero  el 
+2. Desde este punto de vista, calcular el gradiente completo para descenso en gradiente
+es computacionalmente ineficiente. Si el conjunto de entrenamiento es masivo,
+descenso en gradiente no es factible.
+
+3. ¿Cuál es el mejor tamaño de minilote? Por un lado, minilotes más grandes nos
+dan mejores eficiencias en paralelización (multiplicación de matrices), especialmente 
+en GPUs. Por otro lado, con minilotes más grandes puede ser que hagamos trabajo
+de más, por las razones expuestas en los incisos anteriores, y tengamos menos
+iteraciones en el mismo tiempo. El mejor punto está entre minilotes demasiado
+chicos (no aprovechamos paralelismo) o demasiado grande (hacemos demasiado trabajo
+por iteración)
+
+
+4.La propiedad más importante de descenso estocástico en minilotes es entonces que 
+su convergencia no depende del tamaño del conjunto de entrenamiento, es decir,
+el 
 **tiempo de iteración para descenso estocástico
 no crece con el número de casos totales**. Podemos tener obtener
 buenos ajustes
@@ -221,23 +235,16 @@ incluso con tamaños muy grandes de conjuntos de entrenamiento (por ejemplo, ant
 de procesar todos los datos de entrenamiento). Descenso estocástico *escala* bien
 en este sentido: el factor limitante es el tamaño de minilote y el número de iteraciones.
 
-4. Escogemos minilotes no tan chicos por ventajas
-computacionales: es más eficiente (por ejemplo en GPUs) hacer minilotes más grandes
-(generalmente en potencias de 2, como 32, 64, 128, 256, 512), por ejemplo, 
-por paralelización de multiplicación de matrices en GPU).
-
-5. Entre las desventajas (comparado con descenso usual) 
-es que descenso estocástico no converge - alrededor de un 
-mínimo, típicamente oscila alrededor de él. Para problemas
-convexos y con conjuntos de entrenamiento chicos, descenso
-usual típicamente es más rápido (referencia?).
-
+5. Es importante permutar al azar los datos antes de hacer los minibatches,
+pues órdenes naturales en los datos pueden afectar la convergencia. Se ha observado
+también que permutar los minibatches en cada iteración típicamente acelera
+la convergencia (si se pueden tener los datos en memoria).
 
 #### Ejemplo{-}
 En el ejemplo anterior nota que las direcciones de descenso de descenso estocástico
-son muy razonables (punto 2). Nota también que obtenemos
+son muy razonables (punto 1). Nota también que obtenemos
 una buena aproximación a la solución
-con menos cómputo (punto 3 - mismo número de iteraciones, pero cada iteración
+con menos cómputo (punto 2 - mismo número de iteraciones, pero cada iteración
 con un minilote). 
 
 
@@ -333,12 +340,17 @@ estimación de minilotes más adelante en las iteraciones
 
 ```r
 descenso_estocástico <- function(n_epocas, z_0, eta, minilotes, decaimiento = 0.0){
+  #minilotes es una lista
   m <- length(minilotes)
   z <- matrix(0, m*n_epocas, length(z_0))
   z[1, ] <- z_0
   for(i in 1:(m*n_epocas-1)){
-    indice_mlote <- i %% m + 1
-    h_deriv <- grad_calc(minilotes[[indice_mlote]]$x, minilotes[[indice_mlote]]$y)
+    k <- i %% m + 1
+    if(i %% m == 0){
+      #comenzar nueva época y reordenar minilotes al azar
+      minilotes <- minilotes[sample(1:m, m)]
+    }
+    h_deriv <- grad_calc(minilotes[[k]]$x, minilotes[[k]]$y)
     z[i+1, ] <- z[i, ] - eta * h_deriv(z[i, ])
     eta <- eta*(1-decaimiento)
   }
@@ -369,19 +381,20 @@ ggplot(filter(dat_dev, iteracion>10),
 Generalmente se escoge este parámetro con un valor bajo (en aplicaciones
 de redes bastante menor a 0.01). Un 
 valor alto puede provocar que el algoritmo se detenga en
-lugar con función pérdida alta (lejos de un óptimo)
+lugar con función pérdida alta (lejos de un óptimo).
 
 ### Momento
 
 También es posible utilizar una idea adicional que acelera
 la convergencia. La idea es que muchas veces la aleatoriedad
 del algoritmo puede producir iteraciones en direcciones que
-no son buenas (pues la estimación del gradiente es mala). Esto 
+no son tan buenas (pues la estimación del gradiente es mala). Esto 
 es parte del algoritmo. Sin embargo, si en varias iteraciones
 hemos observado movimientos en direcciones consistentes,
 quizá deberíamos movernos en esas direcciones consistentes,
 y reducir el peso de la dirección del minilote (que nos puede
-llevar en una dirección mala).
+llevar en una dirección mala). El resultado es un suavizamiento
+de las curvas de aprendizaje.
 
 Esto es similar al movimiento de una canica en una superficie:
 la dirección de su movimiento está dada en parte por
@@ -402,17 +415,23 @@ $k$. A $v$ se llama la *velocidad*
 
 
 ```r
-descenso_estocástico <- function(n_epocas, z_0, eta, 
-                                 minilotes, momento=0.0, decaimiento=0.0){
+descenso_estocástico <- function(n_epocas, z_0, eta, minilotes, 
+                                 momento = 0.0, decaimiento = 0.0){
+  #minilotes es una lista
   m <- length(minilotes)
   z <- matrix(0, m*n_epocas, length(z_0))
   z[1, ] <- z_0
   v <- 0
   for(i in 1:(m*n_epocas-1)){
-    indice_mlote <- i %% m + 1
-    h_deriv <- grad_calc(minilotes[[indice_mlote]]$x, minilotes[[indice_mlote]]$y)
+    k <- i %% m + 1
+    if(i %% m == 0){
+      #comenzar nueva época y reordenar minilotes al azar
+      minilotes <- minilotes[sample(1:m, m)]
+      v <- 0
+    }
+    h_deriv <- grad_calc(minilotes[[k]]$x, minilotes[[k]]$y)
     z[i+1, ] <- z[i, ] + v
-    v <- momento*v -  eta * h_deriv(z[i, ])
+    v <- momento*v - eta * h_deriv(z[i, ])
     eta <- eta*(1-decaimiento)
   }
   z
@@ -424,7 +443,7 @@ usual (pues tenemos cierta memoria de direcciones anteriores de descenso):
 
 
 ```r
-iter_estocastico <- descenso_estocástico(20, c(-1,-0.5, 0, 0), 0.1, minilotes, momento = 0.9, decaimiento = 0) %>%
+iter_estocastico <- descenso_estocástico(20, c(-1,-0.5, 0, 0), 0.1, minilotes, momento = 0.9, decaimiento = 0.01) %>%
   data.frame %>% rename(beta_0 = X1, beta_1 = X2)
 dev_ent <- devianza_calc(x = as.matrix(dat_ent[,c('x_1','x_2','x_3'), drop =FALSE]), 
                              y=dat_ent$g)
@@ -459,11 +478,6 @@ rmsprop y adam (Capítulo 8 del Deep Learning Book).
 
 
 ## Ajuste de redes con descenso estocástico
-
-Ahora usamos keras (con base en tensorflow) para hacer
-el trabajo que hicimos con nuestros pruebas de concepto de
-descenso estocástico. 
-Así tendremos más velocidad con código más robusto.
 
 
 
@@ -531,12 +545,12 @@ get_weights(modelo)
 ```
 ## [[1]]
 ##            [,1]
-## [1,] -1.2387727
-## [2,]  0.2929747
-## [3,] -0.5232480
+## [1,] -1.2163808
+## [2,]  0.3227284
+## [3,] -0.5872459
 ## 
 ## [[2]]
-## [1] 1.237169
+## [1] 1.238365
 ```
 
 Y verificamos que concuerda con la salida de *glm*:
@@ -666,13 +680,13 @@ score
 
 ```
 ## $loss
-## [1] 0.2888221
+## [1] 0.2908272
 ## 
 ## $acc
-## [1] 0.9312407
+## [1] 0.9347285
 ## 
 ## $categorical_crossentropy
-## [1] 0.2877713
+## [1] 0.2897785
 ```
 
 
@@ -729,8 +743,8 @@ tab_confusion
 ```
 ##    y_valid
 ##       0   1
-##   0 895  77
-##   1  32 530
+##   0 893  74
+##   1  34 533
 ```
 
 ```r
@@ -740,8 +754,8 @@ prop.table(tab_confusion, 2)
 ```
 ##    y_valid
 ##              0          1
-##   0 0.96548004 0.12685338
-##   1 0.03451996 0.87314662
+##   0 0.96332255 0.12191104
+##   1 0.03667745 0.87808896
 ```
 
 
@@ -820,13 +834,13 @@ score
 
 ```
 ## $loss
-## [1] 0.3405384
+## [1] 0.3575569
 ## 
 ## $acc
-## [1] 0.9427005
+## [1] 0.9402093
 ## 
 ## $categorical_crossentropy
-## [1] 0.2209506
+## [1] 0.2369803
 ```
 
 
@@ -834,7 +848,7 @@ score
 
 Un método más nuevo y exitoso para regularizar es el *dropout*. Consiste en perturbar
 la red en cada pasada de entrenamiento de minibatch (feed-forward y backprop), eliminando
-*al azar* algunas de las entradas de cada capa.
+*al azar* algunas de las unidades de cada capa.
 
 El objeto es que al introducir ruido en el proceso de entrenamiento evitamos
 sobreajuste, pues en cada paso de la iteración estamos limitando el 
@@ -875,7 +889,7 @@ aprendidos:
 ```r
 set.seed(2923)
 entrena_3 <- digitos_entrena %>% sample_n(nrow(digitos_entrena)) %>%
-  sample_n(2000)
+  sample_n(3000)
 x_train_3 <- entrena_3 %>% select(-digito) %>% as.matrix + 1
 y_train_3 <- (entrena_3$digito %in% c(9,3)) %>% as.numeric
 set.seed(12)
@@ -894,7 +908,9 @@ modelo_dropout  %>%
 ```
 
 
-El modelo sin regularización sobreajusta:
+El modelo sin regularización sobreajusta (nótese que el error de validación
+comienza a crecer considerablemente muy pronto  hay un margen grande
+entre entrenamiento y validación, y la pérdida de entrenamiento es cercana a 0):
 
 
 ```r
@@ -902,7 +918,7 @@ modelo_sin_reg %>% compile(loss = 'binary_crossentropy', optimizer = optimizer_s
   metrics = c('accuracy')
 )
 history_1 <- modelo_sin_reg %>% fit(x_train_3/2, y_train_3, verbose=1,
-  epochs = 500, batch_size = 250, validation_split = 0.5
+  epochs = 500, batch_size = 256, validation_split = 0.5
 )
 hist_1 <- as.data.frame(history_1)
 ggplot(hist_1, aes(x=epoch, y=value, colour=data)) + geom_line() + 
@@ -938,7 +954,7 @@ modelo_dropout %>% compile(loss = 'binary_crossentropy',
                            metrics = c('accuracy')
 )
 history_2 <- modelo_dropout %>% fit(x_train_3/2, y_train_3, verbose=1,
-  epochs = 500, batch_size = 200, validation_split = 0.5
+  epochs = 500, batch_size = 256, validation_split = 0.5
 )
 
 hist_2 <- as.data.frame(history_2)
@@ -967,14 +983,6 @@ image(matrix(get_weights(modelo_dropout)[[1]][,i], 16, 16, byrow=F)[,16:1],
 
 
 Algunas maneras en que podemos pensar en la regularización de dropout:
-
-- Unidades con valores muy grandes producen efectos grandes en las capas siguientes.
-Pero en dropout esto es más difícil que pase, pues esas unidades con efectos demasiado grandes
-no siempre están en los modelos que ajustamos.
-
-- Puede ser que una unidad haga mucho trabajo, y prevenga a otras de aprender
-algo útil que podría mejorar las prediccines.
-
 
 - Dropout busca que cada unidad calcule algo importante por sí sola, y 
 dependa menos de otras unidades para hacer algo útil.
@@ -1040,11 +1048,11 @@ score
 
 ```
 ## $loss
-## [1] 0.2267153
+## [1] 0.2187696
 ## 
 ## $acc
-## [1] 0.9511709
+## [1] 0.9536622
 ## 
 ## $categorical_crossentropy
-## [1] 0.2227322
+## [1] 0.214723
 ```
