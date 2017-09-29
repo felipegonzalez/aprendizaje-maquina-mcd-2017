@@ -25,7 +25,7 @@
 <meta name="author" content="Felipe González">
 
 
-<meta name="date" content="2017-09-28">
+<meta name="date" content="2017-09-29">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -267,6 +267,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
             <section class="normal" id="section-">
 <div id="redes-neuronales-parte-2" class="section level1">
 <h1><span class="header-section-number">Clase 8</span> Redes neuronales (parte 2)</h1>
+<p>En esta parte veremos aspectos más modernos de redes neuronales (incluyendo aprendizaje profundo). Estoy incluye métodos de ajuste, regularización, y definición de activaciones.</p>
 <div id="descenso-estocastico" class="section level2">
 <h2><span class="header-section-number">8.1</span> Descenso estocástico</h2>
 <p>El algoritmo más popular para ajustar redes grandes es descenso estocástico, que es una modificación de nuestro algoritmo de descenso en gradiente. Antes de presentar las razones para usarlo, veremos cómo funciona para problemas con regresión lineal o logística.</p>
@@ -331,7 +332,7 @@ descenso_estocástico &lt;-<span class="st"> </span><span class="cf">function</s
   <span class="kw">ifelse</span>(x <span class="op">&lt;</span><span class="st"> </span><span class="dv">30</span>, <span class="fl">0.9</span>, <span class="fl">0.9</span> <span class="op">-</span><span class="st"> </span><span class="fl">0.007</span> <span class="op">*</span><span class="st"> </span>(x <span class="op">-</span><span class="st"> </span><span class="dv">15</span>))
 }
 
-<span class="kw">set.seed</span>(<span class="dv">19233</span>)
+<span class="kw">set.seed</span>(<span class="dv">143</span>)
 sim_datos &lt;-<span class="st"> </span><span class="cf">function</span>(n){
   x &lt;-<span class="st"> </span><span class="kw">pmin</span>(<span class="kw">rexp</span>(n, <span class="dv">1</span><span class="op">/</span><span class="dv">30</span>), <span class="dv">100</span>)
   probs &lt;-<span class="st"> </span><span class="kw">p_1</span>(x)
@@ -343,13 +344,13 @@ sim_datos &lt;-<span class="st"> </span><span class="cf">function</span>(n){
                     <span class="dt">p_1 =</span> probs, g )
   dat <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(x_<span class="dv">1</span>, x_<span class="dv">2</span>, x_<span class="dv">3</span>, g) 
 }
-dat_ent &lt;-<span class="st"> </span><span class="kw">sim_datos</span>(<span class="dv">50</span>)
+dat_ent &lt;-<span class="st"> </span><span class="kw">sim_datos</span>(<span class="dv">100</span>)
 dat_valid &lt;-<span class="st"> </span><span class="kw">sim_datos</span>(<span class="dv">1000</span>)
 <span class="kw">glm</span>(g <span class="op">~</span><span class="st"> </span>x_<span class="dv">1</span> <span class="op">+</span><span class="st"> </span>x_<span class="dv">2</span><span class="op">+</span><span class="st"> </span>x_<span class="dv">3</span> , <span class="dt">data =</span> dat_ent, <span class="dt">family =</span> <span class="st">&#39;binomial&#39;</span>) <span class="op">%&gt;%</span><span class="st"> </span>coef</code></pre></div>
 <pre><code>## (Intercept)         x_1         x_2         x_3 
-##   1.2888612  -1.2881545   0.3311722  -0.6105063</code></pre>
+##   1.8082362  -0.7439627   0.2172971   0.3711973</code></pre>
 <p>Hacemos descenso en gradiente:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">iteraciones_descenso &lt;-<span class="st"> </span><span class="kw">descenso</span>(<span class="dv">600</span>, <span class="kw">rep</span>(<span class="dv">0</span>,<span class="dv">4</span>), <span class="fl">0.8</span>,
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">iteraciones_descenso &lt;-<span class="st"> </span><span class="kw">descenso</span>(<span class="dv">300</span>, <span class="kw">rep</span>(<span class="dv">0</span>,<span class="dv">4</span>), <span class="fl">0.8</span>,
          <span class="dt">h_deriv =</span> <span class="kw">grad_calc</span>(<span class="dt">x_ent =</span> <span class="kw">as.matrix</span>(dat_ent[,<span class="kw">c</span>(<span class="st">&#39;x_1&#39;</span>,<span class="st">&#39;x_2&#39;</span>,<span class="st">&#39;x_3&#39;</span>), <span class="dt">drop =</span><span class="ot">FALSE</span>]), 
                              <span class="dt">y_ent=</span>dat_ent<span class="op">$</span>g)) <span class="op">%&gt;%</span>
 <span class="st">  </span>data.frame <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">rename</span>(<span class="dt">beta_1 =</span> X2, <span class="dt">beta_2 =</span> X3)
@@ -365,7 +366,7 @@ minilotes &lt;-<span class="st"> </span><span class="kw">lapply</span>(split_ml,
 <span class="kw">length</span>(minilotes)</code></pre></div>
 <pre><code>## [1] 10</code></pre>
 <p>Ahora iteramos. Nótese cómo descenso en gradiente tiene un patrón aleatorio de avance hacia el mínimo, y una vez que llega a una región oscila alrededor de este mínimo.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">iter_estocastico &lt;-<span class="st"> </span>descenso_estocá<span class="kw">stico</span>(<span class="dv">60</span>, <span class="kw">rep</span>(<span class="dv">0</span>, <span class="dv">4</span>), <span class="fl">0.1</span>, minilotes) <span class="op">%&gt;%</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">iter_estocastico &lt;-<span class="st"> </span>descenso_estocá<span class="kw">stico</span>(<span class="dv">30</span>, <span class="kw">rep</span>(<span class="dv">0</span>, <span class="dv">4</span>), <span class="fl">0.1</span>, minilotes) <span class="op">%&gt;%</span>
 <span class="st">  </span>data.frame <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">rename</span>(<span class="dt">beta_0 =</span> X1, <span class="dt">beta_1 =</span> X2, <span class="dt">beta_2 =</span> X3)
 <span class="kw">ggplot</span>(iteraciones_descenso, <span class="kw">aes</span>(<span class="dt">x=</span>beta_<span class="dv">1</span>, <span class="dt">y=</span>beta_<span class="dv">2</span>)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_path</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span>
@@ -411,9 +412,9 @@ dat_dev_valid &lt;-<span class="st"> </span><span class="kw">data_frame</span>(<
 <h2><span class="header-section-number">8.3</span> ¿Por qué usar descenso estocástico por minilotes?</h2>
 <p>Las propiedades importantes de descenso estocástico son:</p>
 <ol style="list-style-type: decimal">
-<li><p>Muchas veces no es necesario usar todos los datos para encontrar una buena dirección de descenso. Podemos ver la dirección de descenso en gradiente como un valor esperado sobre la muestra de entrenamiento (pues la pérdida es un promedio sobre el conjunto de entrenamiento). Una <strong>submuestra (minilote) puede ser suficiente para estimar ese valor esperado</strong>, con costo menor de cómputo. Adicionalmente, quizá no es tan buena idea estimar intentar estimar el gradiente con la mejor precisión pues es solamente una dirección de descenso <em>local</em> (así que quizá no da la mejor decisión de a dónde moverse en cada punto). Es mejor hacer iteraciones más rápidas con direcciones estimadas.</p></li>
+<li><p>Muchas veces no es necesario usar todos los datos para encontrar una buena dirección de descenso. Podemos ver la dirección de descenso en gradiente como un valor esperado sobre la muestra de entrenamiento (pues la pérdida es un promedio sobre el conjunto de entrenamiento). Una <strong>submuestra (minilote) puede ser suficiente para estimar ese valor esperado</strong>, con costo menor de cómputo. Adicionalmente, quizá no es tan buena idea intentar estimar el gradiente con la mejor precisión pues es solamente una dirección de descenso <em>local</em> (así que quizá no da la mejor decisión de a dónde moverse en cada punto). Es mejor hacer iteraciones más rápidas con direcciones estimadas.</p></li>
 <li><p>Desde este punto de vista, calcular el gradiente completo para descenso en gradiente es computacionalmente ineficiente. Si el conjunto de entrenamiento es masivo, descenso en gradiente no es factible.</p></li>
-<li><p>¿Cuál es el mejor tamaño de minilote? Por un lado, minilotes más grandes nos dan mejores eficiencias en paralelización (multiplicación de matrices), especialmente en GPUs. Por otro lado, con minilotes más grandes puede ser que hagamos trabajo de más, por las razones expuestas en los incisos anteriores, y tengamos menos iteraciones en el mismo tiempo. El mejor punto está entre minilotes demasiado chicos (no aprovechamos paralelismo) o demasiado grande (hacemos demasiado trabajo por iteración)</p></li>
+<li><p>¿Cuál es el mejor tamaño de minilote? Por un lado, minilotes más grandes nos dan mejores eficiencias en paralelización (multiplicación de matrices), especialmente en GPUs. Por otro lado, con minilotes más grandes puede ser que hagamos trabajo de más, por las razones expuestas en los incisos anteriores, y tengamos menos iteraciones en el mismo tiempo. El mejor punto está entre minilotes demasiado chicos (no aprovechamos paralelismo) o demasiado grande (hacemos demasiado trabajo por iteración).Tamaño t</p></li>
 </ol>
 <p>4.La propiedad más importante de descenso estocástico en minilotes es entonces que su convergencia no depende del tamaño del conjunto de entrenamiento, es decir, el <strong>tiempo de iteración para descenso estocástico no crece con el número de casos totales</strong>. Podemos tener obtener buenos ajustes incluso con tamaños muy grandes de conjuntos de entrenamiento (por ejemplo, antes de procesar todos los datos de entrenamiento). Descenso estocástico <em>escala</em> bien en este sentido: el factor limitante es el tamaño de minilote y el número de iteraciones.</p>
 <ol start="5" style="list-style-type: decimal">
@@ -423,10 +424,10 @@ dat_dev_valid &lt;-<span class="st"> </span><span class="kw">data_frame</span>(<
 <h4>Ejemplo</h4>
 <p>En el ejemplo anterior nota que las direcciones de descenso de descenso estocástico son muy razonables (punto 1). Nota también que obtenemos una buena aproximación a la solución con menos cómputo (punto 2 - mismo número de iteraciones, pero cada iteración con un minilote).</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(<span class="kw">filter</span>(dat_dev, iteracion <span class="op">&gt;=</span><span class="st"> </span><span class="dv">1</span>), 
-       <span class="kw">aes</span>(<span class="dt">x=</span>iteracion, <span class="dt">y=</span>dev_ent, <span class="dt">colour=</span>algoritmo)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>(<span class="dt">size=</span><span class="fl">0.5</span>)<span class="op">+</span>
-<span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>tipo)</code></pre></div>
-<p><img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
-<p>En esta gráfica vemos que la solución de descenso estocástico puede ser superior a la optimizada con descenso en gradiente, pues descenso en gradiente rápidamente sobreajusta. De modo que la varianza inducida por el proceso de ajuste por minilotes no necesariamente es una debilidad: muchas veces nos previene de caer en soluciones sobreajustadas.</p>
+       <span class="kw">aes</span>(<span class="dt">x=</span>iteracion, <span class="dt">y=</span>dev_ent, <span class="dt">colour=</span>algoritmo)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_line</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">size=</span><span class="fl">0.5</span>)<span class="op">+</span>
+<span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>tipo, <span class="dt">ncol=</span><span class="dv">1</span>)</code></pre></div>
+<p><img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-11-1.png" width="480" /></p>
 </div>
 </div>
 <div id="escogiendo-la-tasa-de-aprendizaje" class="section level2">
@@ -464,6 +465,9 @@ dat_dev &lt;-<span class="st"> </span><span class="kw">data_frame</span>(<span c
 <span class="kw">ggplot</span>(dat_dev, 
        <span class="kw">aes</span>(<span class="dt">x=</span>iteracion, <span class="dt">y=</span>devianza, <span class="dt">colour=</span>tipo)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_line</span>() </code></pre></div>
 <p><img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-14-1.png" width="480" /></p>
+<ul>
+<li>Para redes neuronales, es importante explorar distintas tasas de aprendizaje, aún cuando no parezca haber oscilaciones grandes o convergencia muy lenta. En algunos casos, si la tasa es demasiado grande, puede ser que el algoritmo llegue a lugares con gradientes cercanos a cero (por ejemplo, por activaciones demasiado grandes) y tenga dificultad para moverse.</li>
+</ul>
 </div>
 <div id="mejoras-al-algoritmo-de-descenso-estocastico." class="section level2">
 <h2><span class="header-section-number">8.5</span> Mejoras al algoritmo de descenso estocástico.</h2>
@@ -483,13 +487,13 @@ dat_dev &lt;-<span class="st"> </span><span class="kw">data_frame</span>(<span c
     }
     h_deriv &lt;-<span class="st"> </span><span class="kw">grad_calc</span>(minilotes[[k]]<span class="op">$</span>x, minilotes[[k]]<span class="op">$</span>y)
     z[i<span class="op">+</span><span class="dv">1</span>, ] &lt;-<span class="st"> </span>z[i, ] <span class="op">-</span><span class="st"> </span>eta <span class="op">*</span><span class="st"> </span><span class="kw">h_deriv</span>(z[i, ])
-    eta &lt;-<span class="st"> </span>eta<span class="op">*</span>(<span class="dv">1</span><span class="op">-</span>decaimiento)
+    eta &lt;-<span class="st"> </span>eta<span class="op">*</span>(<span class="dv">1</span><span class="op">/</span>(<span class="dv">1</span><span class="op">+</span>decaimiento<span class="op">*</span>i))
   }
   z
 }</code></pre></div>
 <p>Y ahora vemos qué pasa con decaimiento:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">iter_estocastico &lt;-<span class="st"> </span>descenso_estocá<span class="kw">stico</span>(<span class="dv">20</span>, <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>), <span class="fl">0.1</span>, 
-                                         minilotes, <span class="dt">decaimiento =</span> <span class="fl">0.02</span>) <span class="op">%&gt;%</span>
+                                         minilotes, <span class="dt">decaimiento =</span> <span class="fl">0.0001</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span>data.frame <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">rename</span>(<span class="dt">beta_0 =</span> X1, <span class="dt">beta_1 =</span> X2)
 dev_ent &lt;-<span class="st"> </span><span class="kw">devianza_calc</span>(<span class="dt">x =</span> <span class="kw">as.matrix</span>(dat_ent[,<span class="kw">c</span>(<span class="st">&#39;x_1&#39;</span>,<span class="st">&#39;x_2&#39;</span>,<span class="st">&#39;x_3&#39;</span>), <span class="dt">drop =</span><span class="ot">FALSE</span>]), 
                              <span class="dt">y=</span>dat_ent<span class="op">$</span>g)
@@ -501,7 +505,12 @@ dat_dev &lt;-<span class="st"> </span><span class="kw">data_frame</span>(<span c
 <span class="st">  </span><span class="kw">gather</span>(tipo, devianza, entrena<span class="op">:</span>validacion)
 <span class="kw">ggplot</span>(<span class="kw">filter</span>(dat_dev, iteracion<span class="op">&gt;</span><span class="dv">10</span>), 
        <span class="kw">aes</span>(<span class="dt">x=</span>iteracion, <span class="dt">y=</span>devianza, <span class="dt">colour=</span>tipo)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>()</code></pre></div>
-<p><img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-16-1.png" width="480" /> Generalmente se escoge este parámetro con un valor bajo (en aplicaciones de redes bastante menor a 0.01). Un valor alto puede provocar que el algoritmo se detenga en lugar con función pérdida alta (lejos de un óptimo).</p>
+<p><img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-16-1.png" width="480" /></p>
+
+<div class="comentario">
+La <strong>tasa de aprendizaje</strong> es uno de los parámetros en redes neuronales más importantes de afinar. Generalmente se empieza con una tasa de aprendizaje con un valor bajo (0.01, o. 0.1), pero es necesario experimentar. - Un valor muy alto puede provocar oscilaciones muy fuertes en la pérdida - Un valor alto también puede provocar que el algoritmo se detenga en lugar con función pérdida alta (sobreajusta rápidamente). - Un valor demasiado bajo produce convergencia lenta.
+</div>
+
 </div>
 <div id="momento" class="section level3">
 <h3><span class="header-section-number">8.5.2</span> Momento</h3>
@@ -534,12 +543,13 @@ dat_dev &lt;-<span class="st"> </span><span class="kw">data_frame</span>(<span c
     h_deriv &lt;-<span class="st"> </span><span class="kw">grad_calc</span>(minilotes[[k]]<span class="op">$</span>x, minilotes[[k]]<span class="op">$</span>y)
     z[i<span class="op">+</span><span class="dv">1</span>, ] &lt;-<span class="st"> </span>z[i, ] <span class="op">+</span><span class="st"> </span>v
     v &lt;-<span class="st"> </span>momento<span class="op">*</span>v <span class="op">-</span><span class="st"> </span>eta <span class="op">*</span><span class="st"> </span><span class="kw">h_deriv</span>(z[i, ])
-    eta &lt;-<span class="st"> </span>eta<span class="op">*</span>(<span class="dv">1</span><span class="op">-</span>decaimiento)
+    eta &lt;-<span class="st"> </span>eta<span class="op">*</span>(<span class="dv">1</span><span class="op">/</span>(<span class="dv">1</span><span class="op">+</span>decaimiento<span class="op">*</span>i))
   }
   z
 }</code></pre></div>
 <p>Y ahora vemos que usando momento el algoritmo es más parecido a descenso en gradiente usual (pues tenemos cierta memoria de direcciones anteriores de descenso):</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">iter_estocastico &lt;-<span class="st"> </span>descenso_estocá<span class="kw">stico</span>(<span class="dv">20</span>, <span class="kw">c</span>(<span class="op">-</span><span class="dv">1</span>,<span class="op">-</span><span class="fl">0.5</span>, <span class="dv">0</span>, <span class="dv">0</span>), <span class="fl">0.1</span>, minilotes, <span class="dt">momento =</span> <span class="fl">0.9</span>, <span class="dt">decaimiento =</span> <span class="fl">0.01</span>) <span class="op">%&gt;%</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">231</span>)
+iter_estocastico &lt;-<span class="st"> </span>descenso_estocá<span class="kw">stico</span>(<span class="dv">20</span>, <span class="kw">c</span>(<span class="op">-</span><span class="dv">1</span>,<span class="op">-</span><span class="fl">0.5</span>, <span class="dv">0</span>, <span class="dv">0</span>), <span class="fl">0.05</span>, minilotes, <span class="dt">momento =</span> <span class="fl">0.9</span>, <span class="dt">decaimiento =</span> <span class="fl">0.000</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span>data.frame <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">rename</span>(<span class="dt">beta_0 =</span> X1, <span class="dt">beta_1 =</span> X2)
 dev_ent &lt;-<span class="st"> </span><span class="kw">devianza_calc</span>(<span class="dt">x =</span> <span class="kw">as.matrix</span>(dat_ent[,<span class="kw">c</span>(<span class="st">&#39;x_1&#39;</span>,<span class="st">&#39;x_2&#39;</span>,<span class="st">&#39;x_3&#39;</span>), <span class="dt">drop =</span><span class="ot">FALSE</span>]), 
                              <span class="dt">y=</span>dat_ent<span class="op">$</span>g)
@@ -551,7 +561,7 @@ dat_dev &lt;-<span class="st"> </span><span class="kw">data_frame</span>(<span c
 <span class="st">  </span><span class="kw">gather</span>(tipo, devianza, entrena<span class="op">:</span>validacion)
 <span class="kw">ggplot</span>(dat_dev, 
        <span class="kw">aes</span>(<span class="dt">x=</span>iteracion, <span class="dt">y=</span>devianza, <span class="dt">colour=</span>tipo)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>()</code></pre></div>
-<p><img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-19-1.png" width="480" /></p>
+<p><img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-20-1.png" width="480" /></p>
 <p>Nótese cómo llegamos más rápido a una buena solución (comparado con el ejemplo sin momento). Adicionalmente, error de entrenamiento y validación lucen más suaves, producto de promediar velocidades a lo largo de iteraciones.</p>
 <p>Valores típicos para momento son 0,0.5,0.9 o 0.99.</p>
 </div>
@@ -569,7 +579,7 @@ dat_dev &lt;-<span class="st"> </span><span class="kw">data_frame</span>(<span c
   <span class="kw">Sys.setenv</span>(<span class="dt">TENSORFLOW_PYTHON=</span><span class="st">&quot;/usr/local/bin/python&quot;</span>)
 }
 <span class="kw">library</span>(keras)</code></pre></div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">213</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">21321</span>)
 x_ent &lt;-<span class="st"> </span><span class="kw">as.matrix</span>(dat_ent[,<span class="kw">c</span>(<span class="st">&#39;x_1&#39;</span>,<span class="st">&#39;x_2&#39;</span>,<span class="st">&#39;x_3&#39;</span>)])
 x_valid &lt;-<span class="st">  </span><span class="kw">as.matrix</span>(dat_valid[,<span class="kw">c</span>(<span class="st">&#39;x_1&#39;</span>,<span class="st">&#39;x_2&#39;</span>,<span class="st">&#39;x_3&#39;</span>)])
 y_ent &lt;-<span class="st"> </span>dat_ent<span class="op">$</span>g
@@ -582,39 +592,39 @@ modelo <span class="op">%&gt;%</span>
               <span class="dt">input_shape =</span> <span class="kw">c</span>(<span class="dv">3</span>))
 
 modelo <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">compile</span>(<span class="dt">loss =</span> <span class="st">&#39;binary_crossentropy&#39;</span>,
-                   <span class="dt">optimizer =</span> <span class="kw">optimizer_sgd</span>(<span class="dt">lr =</span> <span class="fl">0.9</span>, <span class="dt">momentum =</span> <span class="dv">0</span>,
+                   <span class="dt">optimizer =</span> <span class="kw">optimizer_sgd</span>(<span class="dt">lr =</span> <span class="fl">0.2</span>, <span class="dt">momentum =</span> <span class="dv">0</span>,
                                              <span class="dt">decay =</span> <span class="dv">0</span>),
   <span class="dt">metrics =</span> <span class="kw">c</span>(<span class="st">&#39;accuracy&#39;</span>)
 )
 
 history &lt;-<span class="st"> </span>modelo <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">fit</span>(x_ent, y_ent, 
-      <span class="dt">epochs =</span> <span class="dv">30</span>, <span class="dt">batch_size =</span> <span class="dv">64</span>, 
-      <span class="dt">shuffle =</span> <span class="ot">FALSE</span>,
+      <span class="dt">epochs =</span> <span class="dv">50</span>, <span class="dt">batch_size =</span> <span class="dv">64</span>, 
+      <span class="dt">verbose =</span> <span class="dv">0</span>,
       <span class="dt">validation_data =</span> <span class="kw">list</span>(x_valid, y_valid))</code></pre></div>
 <p>Podemos ver el progreso del algoritmo por época</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">aprendizaje &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(history)
 <span class="kw">ggplot</span>(aprendizaje, 
        <span class="kw">aes</span>(<span class="dt">x=</span>epoch, <span class="dt">y=</span>value, <span class="dt">colour=</span>data, <span class="dt">group=</span>data)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>metric, <span class="dt">ncol =</span> <span class="dv">1</span>) <span class="op">+</span><span class="st"> </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>(<span class="dt">size =</span> <span class="fl">0.5</span>)</code></pre></div>
-<p><img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-23-1.png" width="480" /></p>
+<p><img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-24-1.png" width="480" /></p>
 <p>Ver los pesos:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">get_weights</span>(modelo)</code></pre></div>
 <pre><code>## [[1]]
 ##            [,1]
-## [1,] -1.2163808
-## [2,]  0.3227284
-## [3,] -0.5872459
+## [1,] -0.6587153
+## [2,]  0.1016989
+## [3,]  0.3677218
 ## 
 ## [[2]]
-## [1] 1.238365</code></pre>
+## [1] 1.652873</code></pre>
 <p>Y verificamos que concuerda con la salida de <em>glm</em>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mod_logistico &lt;-<span class="st"> </span><span class="kw">glm</span>(g <span class="op">~</span><span class="st"> </span>x_<span class="dv">1</span> <span class="op">+</span><span class="st"> </span>x_<span class="dv">2</span><span class="op">+</span><span class="st"> </span>x_<span class="dv">3</span>, <span class="dt">data =</span> dat_ent, <span class="dt">family =</span> <span class="st">&#39;binomial&#39;</span>) 
 <span class="kw">coef</span>(mod_logistico)</code></pre></div>
 <pre><code>## (Intercept)         x_1         x_2         x_3 
-##   1.2888612  -1.2881545   0.3311722  -0.6105063</code></pre>
+##   1.8082362  -0.7439627   0.2172971   0.3711973</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="fl">0.5</span><span class="op">*</span>mod_logistico<span class="op">$</span>deviance<span class="op">/</span><span class="kw">nrow</span>(dat_ent)</code></pre></div>
-<pre><code>## [1] 0.4301508</code></pre>
+<pre><code>## [1] 0.3925183</code></pre>
 <div id="ejemplo-33" class="section level4 unnumbered">
 <h4>Ejemplo</h4>
 <p>Ahora hacemos algunos ejemplos para redes totalmente conexas. Usaremos los datos de reconocimiento de dígitos.</p>
@@ -649,7 +659,7 @@ y_test &lt;-<span class="st"> </span><span class="kw">to_categorical</span>(digi
 ## [4,]    0    0    0    0    0    0    0    1    0     0
 ## [5,]    0    0    0    1    0    0    0    0    0     0
 ## [6,]    0    0    0    0    0    0    1    0    0     0</code></pre>
-<p>Y definimos un modelo con 2 capas de 200 unidades cada una y regularización L2- Nótese que usamos softmax en la última capa, que es la función (ver parte de regresión multinomial) cuya salida <span class="math inline">\(k\)</span> está dada por <span class="math display">\[p_k = \frac{exp(z_k)}{\sum_j exp(z_j)}\]</span> donde <span class="math inline">\(z=(z_1,\ldots, z_K)\)</span> (estas son las combinaciones lineales de las unidades de la capa anterior).</p>
+<p>Y definimos un modelo con 2 capas de 200 unidades cada una y regularización L2. Nótese que usamos softmax en la última capa, que es la función (ver parte de regresión multinomial) cuya salida <span class="math inline">\(k\)</span> está dada por <span class="math display">\[p_k = \frac{exp(z_k)}{\sum_j exp(z_j)}\]</span> donde <span class="math inline">\(z=(z_1,\ldots, z_K)\)</span> (estas son las combinaciones lineales de las unidades de la capa anterior).</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">modelo_tc &lt;-<span class="st"> </span><span class="kw">keras_model_sequential</span>() 
 modelo_tc <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">layer_dense</span>(<span class="dt">units =</span> <span class="dv">200</span>, <span class="dt">activation =</span> <span class="st">&#39;sigmoid&#39;</span>, 
@@ -666,18 +676,19 @@ modelo_tc <span class="op">%&gt;%</span><span class="st"> </span>
 history &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">fit</span>(
   x_train, y_train, 
   <span class="dt">epochs =</span> <span class="dv">100</span>, <span class="dt">batch_size =</span> <span class="dv">256</span>, 
+  <span class="dt">verbose =</span> <span class="dv">0</span>,
   <span class="dt">validation_data =</span> <span class="kw">list</span>(x_test, y_test)
 )
 score &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">evaluate</span>(x_test, y_test)
 score</code></pre></div>
 <pre><code>## $loss
-## [1] 0.2908272
+## [1] 0.2842575
 ## 
 ## $acc
-## [1] 0.9347285
+## [1] 0.9352267
 ## 
 ## $categorical_crossentropy
-## [1] 0.2897785</code></pre>
+## [1] 0.2832125</code></pre>
 <p>Podemos también intentar con el ejemplo de spam:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(readr)
 <span class="kw">library</span>(tidyr)
@@ -696,16 +707,16 @@ y_valid &lt;-<span class="st"> </span>spam_prueba<span class="op">$</span>spam</
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">modelo_tc &lt;-<span class="st"> </span><span class="kw">keras_model_sequential</span>() 
 modelo_tc <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">layer_dense</span>(<span class="dt">units =</span> <span class="dv">200</span>, <span class="dt">activation =</span> <span class="st">&#39;sigmoid&#39;</span>, 
-              <span class="dt">kernel_regularizer =</span> <span class="kw">regularizer_l2</span>(<span class="dt">l =</span> <span class="fl">1e-3</span>), <span class="dt">input_shape=</span><span class="dv">57</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+              <span class="dt">kernel_regularizer =</span> <span class="kw">regularizer_l2</span>(<span class="dt">l =</span> <span class="fl">1e-5</span>), <span class="dt">input_shape=</span><span class="dv">57</span>) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">layer_dense</span>(<span class="dt">units =</span> <span class="dv">1</span>, <span class="dt">activation =</span> <span class="st">&#39;sigmoid&#39;</span>)</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">modelo_tc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">compile</span>(
   <span class="dt">loss =</span> <span class="st">&#39;binary_crossentropy&#39;</span>,
-  <span class="dt">optimizer =</span> <span class="kw">optimizer_sgd</span>(<span class="dt">lr =</span> <span class="fl">0.3</span>, <span class="dt">momentum =</span> <span class="fl">0.5</span>, <span class="dt">decay =</span> <span class="fl">1e-4</span>),
+  <span class="dt">optimizer =</span> <span class="kw">optimizer_sgd</span>(<span class="dt">lr =</span> <span class="fl">0.5</span>, <span class="dt">momentum =</span> <span class="fl">0.5</span>),
   <span class="dt">metrics =</span> <span class="kw">c</span>(<span class="st">&#39;accuracy&#39;</span>, <span class="st">&#39;binary_crossentropy&#39;</span>)
 )
 history &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">fit</span>(
   x_ent_s, y_ent, 
-  <span class="dt">epochs =</span> <span class="dv">50</span>, <span class="dt">batch_size =</span> <span class="dv">256</span>, 
+  <span class="dt">epochs =</span> <span class="dv">200</span>, <span class="dt">batch_size =</span> <span class="dv">256</span>, <span class="dt">verbose =</span> <span class="dv">0</span>,
   <span class="dt">validation_data =</span> <span class="kw">list</span>(x_valid_s, y_valid)
 )
 score &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">evaluate</span>(x_valid_s, y_valid)
@@ -713,13 +724,13 @@ tab_confusion &lt;-<span class="st"> </span><span class="kw">table</span>(modelo
 tab_confusion</code></pre></div>
 <pre><code>##    y_valid
 ##       0   1
-##   0 893  74
-##   1  34 533</code></pre>
+##   0 894  60
+##   1  33 547</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">prop.table</span>(tab_confusion, <span class="dv">2</span>)</code></pre></div>
 <pre><code>##    y_valid
 ##              0          1
-##   0 0.96332255 0.12191104
-##   1 0.03667745 0.87808896</code></pre>
+##   0 0.96440129 0.09884679
+##   1 0.03559871 0.90115321</code></pre>
 </div>
 </div>
 <div id="activaciones-relu" class="section level2">
@@ -743,7 +754,7 @@ Estas generalmente sustituyen a las unidades sigmoidales en capas ocultas
 h_logistica &lt;-<span class="st"> </span><span class="cf">function</span>(z) <span class="dv">4</span><span class="op">/</span>(<span class="dv">1</span><span class="op">+</span><span class="kw">exp</span>(<span class="op">-</span>z)) <span class="co">#mult por 4 para comparar más fácilmente</span>
 <span class="kw">curve</span>(h_relu, <span class="op">-</span><span class="dv">5</span>,<span class="dv">5</span>)
 <span class="kw">curve</span>(h_logistica, <span class="dt">add=</span>T, <span class="dt">col=</span><span class="st">&#39;red&#39;</span>)</code></pre></div>
-<p><img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-35-1.png" width="480" /></p>
+<p><img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-36-1.png" width="480" /></p>
 <p>La razón del exito de estas activaciones no está del todo clara, aunque generalmente se cita el hecho de que una unidad saturada (valores de entrada muy positivos o muy negativos) es problemática en optimización, y las unidades tienen menos ese problema pues no se saturan para valores positivos.</p>
 <p><strong>Pregunta</strong>: ¿cómo cambiaría el algoritmo de feed-forward con estas unidades? ¿el de back-prop?</p>
 <div id="ejemplo-34" class="section level4 unnumbered">
@@ -759,24 +770,25 @@ modelo_tc <span class="op">%&gt;%</span><span class="st"> </span>
               <span class="dt">kernel_regularizer =</span> <span class="kw">regularizer_l2</span>(<span class="dt">l =</span> <span class="fl">1e-3</span>))</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">modelo_tc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">compile</span>(
   <span class="dt">loss =</span> <span class="st">&#39;categorical_crossentropy&#39;</span>,
-  <span class="dt">optimizer =</span> <span class="kw">optimizer_sgd</span>(<span class="dt">lr =</span> <span class="fl">0.2</span>, <span class="dt">momentum =</span> <span class="fl">0.0</span>, <span class="dt">decay =</span> <span class="dv">0</span>),
+  <span class="dt">optimizer =</span> <span class="kw">optimizer_sgd</span>(<span class="dt">lr =</span> <span class="fl">0.3</span>, <span class="dt">momentum =</span> <span class="fl">0.0</span>, <span class="dt">decay =</span> <span class="dv">0</span>),
   <span class="dt">metrics =</span> <span class="kw">c</span>(<span class="st">&#39;accuracy&#39;</span>, <span class="st">&#39;categorical_crossentropy&#39;</span>)
 )
 history &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">fit</span>(
   x_train, y_train, 
-  <span class="dt">epochs =</span> <span class="dv">100</span>, <span class="dt">batch_size =</span> <span class="dv">256</span>, 
+  <span class="dt">epochs =</span> <span class="dv">200</span>, <span class="dt">batch_size =</span> <span class="dv">256</span>, 
+  <span class="dt">verbose =</span> <span class="dv">0</span>,
   <span class="dt">validation_data =</span> <span class="kw">list</span>(x_test, y_test)
 )
 score &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">evaluate</span>(x_test, y_test)
 score</code></pre></div>
 <pre><code>## $loss
-## [1] 0.3575569
+## [1] 0.2903688
 ## 
 ## $acc
-## [1] 0.9402093
+## [1] 0.941704
 ## 
 ## $categorical_crossentropy
-## [1] 0.2369803</code></pre>
+## [1] 0.2144355</code></pre>
 </div>
 </div>
 <div id="dropout-para-regularizacion" class="section level2">
@@ -797,11 +809,11 @@ score</code></pre></div>
 <div id="ejemplo-dropout-y-regularizacion" class="section level4 unnumbered">
 <h4>Ejemplo: dropout y regularización</h4>
 <p>Consideremos el problema de separar 9 y 3 del resto de dígitos zip. Queremos comparar el desempeño de una red sin y con dropout (tanto de entradas como de capa oculta) y entender parcialmente cómo se comportan los pesos aprendidos:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">2923</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">29123</span>)
 entrena_<span class="dv">3</span> &lt;-<span class="st"> </span>digitos_entrena <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">sample_n</span>(<span class="kw">nrow</span>(digitos_entrena)) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">sample_n</span>(<span class="dv">3000</span>)
 x_train_<span class="dv">3</span> &lt;-<span class="st"> </span>entrena_<span class="dv">3</span> <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="op">-</span>digito) <span class="op">%&gt;%</span><span class="st"> </span>as.matrix <span class="op">+</span><span class="st"> </span><span class="dv">1</span>
-y_train_<span class="dv">3</span> &lt;-<span class="st"> </span>(entrena_<span class="dv">3</span><span class="op">$</span>digito <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="dv">9</span>,<span class="dv">3</span>)) <span class="op">%&gt;%</span><span class="st"> </span>as.numeric
+y_train_<span class="dv">3</span> &lt;-<span class="st"> </span>(entrena_<span class="dv">3</span><span class="op">$</span>digito <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="dv">3</span>,<span class="dv">9</span>)) <span class="op">%&gt;%</span><span class="st"> </span>as.numeric
 <span class="kw">set.seed</span>(<span class="dv">12</span>)
 modelo_sin_reg &lt;-<span class="st"> </span><span class="kw">keras_model_sequential</span>() 
 modelo_sin_reg  <span class="op">%&gt;%</span><span class="st"> </span>
@@ -811,33 +823,45 @@ modelo_sin_reg  <span class="op">%&gt;%</span><span class="st"> </span>
 modelo_dropout &lt;-<span class="st"> </span><span class="kw">keras_model_sequential</span>() 
 modelo_dropout  <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">layer_reshape</span>(<span class="dt">input_shape=</span><span class="dv">256</span>, <span class="dt">target_shape=</span><span class="dv">256</span>) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">layer_dropout</span>(<span class="fl">0.5</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">layer_dropout</span>(<span class="fl">0.3</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">layer_dense</span>(<span class="dt">units =</span> <span class="dv">30</span>, <span class="dt">activation =</span> <span class="st">&#39;relu&#39;</span>, <span class="dt">input_shape =</span> <span class="dv">256</span>) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">layer_dropout</span>(<span class="fl">0.5</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">layer_dropout</span>(<span class="fl">0.3</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">layer_dense</span>(<span class="dt">units =</span> <span class="dv">1</span>, <span class="dt">activation =</span> <span class="st">&#39;sigmoid&#39;</span>)</code></pre></div>
-<p>El modelo sin regularización sobreajusta (nótese que el error de validación comienza a crecer considerablemente muy pronto hay un margen grande entre entrenamiento y validación, y la pérdida de entrenamiento es cercana a 0):</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">modelo_sin_reg <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">compile</span>(<span class="dt">loss =</span> <span class="st">&#39;binary_crossentropy&#39;</span>, <span class="dt">optimizer =</span> <span class="kw">optimizer_sgd</span>(<span class="dt">lr =</span> <span class="fl">0.4</span>),
+<p>El modelo sin regularización sobreajusta (nótese que el error de validación comienza a crecer considerablemente muy pronto, hay un margen grande entre entrenamiento y validación, y la pérdida de entrenamiento es cercana a 0):</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">modelo_sin_reg <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">compile</span>(<span class="dt">loss =</span> <span class="st">&#39;binary_crossentropy&#39;</span>, <span class="dt">optimizer =</span> <span class="kw">optimizer_sgd</span>(<span class="dt">lr =</span> <span class="fl">0.3</span>),
   <span class="dt">metrics =</span> <span class="kw">c</span>(<span class="st">&#39;accuracy&#39;</span>)
 )
-history_<span class="dv">1</span> &lt;-<span class="st"> </span>modelo_sin_reg <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">fit</span>(x_train_<span class="dv">3</span><span class="op">/</span><span class="dv">2</span>, y_train_<span class="dv">3</span>, <span class="dt">verbose=</span><span class="dv">1</span>,
-  <span class="dt">epochs =</span> <span class="dv">500</span>, <span class="dt">batch_size =</span> <span class="dv">256</span>, <span class="dt">validation_split =</span> <span class="fl">0.5</span>
+history_<span class="dv">1</span> &lt;-<span class="st"> </span>modelo_sin_reg <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">fit</span>(x_train_<span class="dv">3</span><span class="op">/</span><span class="dv">2</span>, y_train_<span class="dv">3</span>, <span class="dt">verbose=</span><span class="dv">0</span>,
+  <span class="dt">epochs =</span> <span class="dv">500</span>, <span class="dt">batch_size =</span> <span class="dv">256</span>, <span class="dt">validation_split =</span> <span class="fl">0.2</span>
 )
 hist_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(history_<span class="dv">1</span>)
 <span class="kw">ggplot</span>(hist_<span class="dv">1</span>, <span class="kw">aes</span>(<span class="dt">x=</span>epoch, <span class="dt">y=</span>value, <span class="dt">colour=</span>data)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>metric, <span class="dt">scales =</span> <span class="st">&#39;free&#39;</span>)</code></pre></div>
-<p><img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-40-1.png" width="480" /></p>
-<p>Y parecen ruidosas las unidades que aprendió en la capa oculta (algunas no aprendieron o aprendieron cosas irrelevantes):</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">par</span>(<span class="dt">mfcol=</span><span class="kw">c</span>(<span class="dv">5</span>,<span class="dv">6</span>),
-          <span class="dt">oma =</span> <span class="kw">c</span>(<span class="dv">5</span>,<span class="dv">4</span>,<span class="dv">0</span>,<span class="dv">0</span>) <span class="op">+</span><span class="st"> </span><span class="fl">0.1</span>,
-          <span class="dt">mar =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>) <span class="op">+</span><span class="st"> </span><span class="fl">0.1</span>)
-<span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="dv">30</span>){
-<span class="kw">image</span>(<span class="kw">matrix</span>(<span class="kw">get_weights</span>(modelo_sin_reg)[[<span class="dv">1</span>]][,i], <span class="dv">16</span>, <span class="dv">16</span>, <span class="dt">byrow=</span>F)[,<span class="dv">16</span><span class="op">:</span><span class="dv">1</span>],
-      <span class="dt">axes =</span> <span class="ot">FALSE</span>, <span class="dt">col =</span> <span class="kw">grey</span>(<span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dt">length =</span> <span class="dv">256</span>)))
-}</code></pre></div>
+<span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>metric, <span class="dt">scales =</span> <span class="st">&#39;free&#39;</span>, <span class="dt">ncol=</span><span class="dv">1</span>)</code></pre></div>
 <p><img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-41-1.png" width="480" /></p>
+<p>Y parecen ruidosas las unidades que aprendió en la capa oculta (algunas no aprendieron o aprendieron cosas irrelevantes). En la siguiente imagen, cada pixel es un peso. Cada imagen agrupa los pesos de una unidad, y ordenamos los pesos según la variable de entrada (pixel) al que se multiplican.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">graf_pesos &lt;-<span class="st"> </span><span class="cf">function</span>(pesos, <span class="dt">mostrar_facets=</span><span class="ot">FALSE</span>){
+  pesos_df &lt;-<span class="st"> </span><span class="kw">as_tibble</span>(pesos) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">pixel =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">256</span>) <span class="op">%&gt;%</span>
+<span class="st">    </span><span class="kw">mutate</span>(<span class="dt">x=</span>(pixel <span class="op">-</span><span class="dv">1</span>) <span class="op">%%</span><span class="st"> </span><span class="dv">16</span>, <span class="dt">y =</span> (pixel<span class="op">-</span><span class="dv">1</span>)<span class="op">%/%</span><span class="st"> </span><span class="dv">16</span>) <span class="op">%&gt;%</span>
+<span class="st">    </span><span class="kw">gather</span>(unidad, valor, <span class="op">-</span>pixel,<span class="op">-</span>x,<span class="op">-</span>y) <span class="op">%&gt;%</span>
+<span class="st">    </span><span class="kw">mutate</span>(<span class="dt">unidad=</span><span class="kw">as.integer</span>(unidad))
+  gplot &lt;-<span class="st"> </span><span class="kw">ggplot</span>(pesos_df, <span class="kw">aes</span>(<span class="dt">x=</span>x,<span class="dt">y=</span><span class="op">-</span>y, <span class="dt">fill=</span>valor)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_tile</span>() <span class="op">+</span>
+<span class="st">    </span><span class="kw">facet_wrap</span>(<span class="op">~</span>unidad)<span class="op">+</span><span class="kw">scale_fill_gradient2</span>(<span class="dt">low =</span> <span class="st">&quot;black&quot;</span>, <span class="dt">mid=</span><span class="st">&#39;gray80&#39;</span>,
+                                              <span class="dt">high =</span> <span class="st">&quot;white&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">coord_fixed</span>()
+
+  <span class="cf">if</span>(<span class="op">!</span>mostrar_facets){
+    gplot &lt;-<span class="st"> </span>gplot <span class="op">+</span><span class="st"> </span><span class="kw">theme</span>(<span class="dt">strip.background =</span> <span class="kw">element_blank</span>(), <span class="dt">strip.text =</span> <span class="kw">element_blank</span>())    
+  }
+
+  gplot
+}
+pesos &lt;-<span class="st"> </span><span class="kw">get_weights</span>(modelo_sin_reg)[[<span class="dv">1</span>]]
+<span class="kw">colnames</span>(pesos) &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">:</span><span class="kw">ncol</span>(pesos)
+<span class="kw">graf_pesos</span>(pesos)</code></pre></div>
+<p><img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-42-1.png" width="480" /></p>
 <p>Ahora ajustamos el modelo con dropout:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">modelo_dropout <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">compile</span>(<span class="dt">loss =</span> <span class="st">&#39;binary_crossentropy&#39;</span>, 
-                           <span class="dt">optimizer =</span> <span class="kw">optimizer_sgd</span>(<span class="dt">lr =</span> <span class="fl">0.4</span>),
+                           <span class="dt">optimizer =</span> <span class="kw">optimizer_sgd</span>(<span class="dt">lr =</span> <span class="fl">0.5</span>),
                            <span class="dt">metrics =</span> <span class="kw">c</span>(<span class="st">&#39;accuracy&#39;</span>)
 )
 history_<span class="dv">2</span> &lt;-<span class="st"> </span>modelo_dropout <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">fit</span>(x_train_<span class="dv">3</span><span class="op">/</span><span class="dv">2</span>, y_train_<span class="dv">3</span>, <span class="dt">verbose=</span><span class="dv">1</span>,
@@ -847,22 +871,59 @@ history_<span class="dv">2</span> &lt;-<span class="st"> </span>modelo_dropout <
 hist_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(history_<span class="dv">2</span>)
 <span class="kw">ggplot</span>(hist_<span class="dv">2</span>, <span class="kw">aes</span>(<span class="dt">x=</span>epoch, <span class="dt">y=</span>value, <span class="dt">colour=</span>data)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>metric, <span class="dt">scales =</span> <span class="st">&#39;free&#39;</span>)</code></pre></div>
-<p><img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-42-1.png" width="480" /></p>
-<p>El desempeño es mejor, y parecen ser más útiles los patrones que aprendió el capa oculta:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">par</span>(<span class="dt">mfcol=</span><span class="kw">c</span>(<span class="dv">5</span>,<span class="dv">6</span>),
-          <span class="dt">oma =</span> <span class="kw">c</span>(<span class="dv">5</span>,<span class="dv">4</span>,<span class="dv">0</span>,<span class="dv">0</span>) <span class="op">+</span><span class="st"> </span><span class="fl">0.1</span>,
-          <span class="dt">mar =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>) <span class="op">+</span><span class="st"> </span><span class="fl">0.1</span>)
-<span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="dv">30</span>){
-<span class="kw">image</span>(<span class="kw">matrix</span>(<span class="kw">get_weights</span>(modelo_dropout)[[<span class="dv">1</span>]][,i], <span class="dv">16</span>, <span class="dv">16</span>, <span class="dt">byrow=</span>F)[,<span class="dv">16</span><span class="op">:</span><span class="dv">1</span>],
-      <span class="dt">axes =</span> <span class="ot">FALSE</span>, <span class="dt">col =</span> <span class="kw">grey</span>(<span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dt">length =</span> <span class="dv">256</span>)))
-}</code></pre></div>
 <p><img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-43-1.png" width="480" /></p>
+<p>El desempeño es mejor, y parecen ser más útiles los patrones que aprendió el capa oculta:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pesos &lt;-<span class="st"> </span><span class="kw">get_weights</span>(modelo_dropout)[[<span class="dv">1</span>]]
+<span class="kw">colnames</span>(pesos) &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">:</span><span class="kw">ncol</span>(pesos)
+<span class="kw">graf_pesos</span>(pesos) </code></pre></div>
+<p><img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-44-1.png" width="480" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">get_weights</span>(modelo_dropout)[[<span class="dv">3</span>]]</code></pre></div>
+<pre><code>##             [,1]
+##  [1,]  0.8815554
+##  [2,] -0.8776717
+##  [3,]  0.7035004
+##  [4,]  0.8718103
+##  [5,] -1.3644364
+##  [6,] -1.3788812
+##  [7,]  0.2475044
+##  [8,] -1.2667195
+##  [9,]  0.3039198
+## [10,] -1.3100710
+## [11,] -1.5976249
+## [12,] -1.3249862
+## [13,] -1.4183995
+## [14,] -1.7881016
+## [15,] -1.3392801
+## [16,] -0.9956914
+## [17,]  1.2124625
+## [18,] -1.0347903
+## [19,]  1.0969609
+## [20,]  1.3861030
+## [21,]  0.3173599
+## [22,]  1.4405326
+## [23,]  0.6274464
+## [24,] -1.7636144
+## [25,]  0.5977809
+## [26,]  0.5096252
+## [27,] -1.7358261
+## [28,] -1.6807621
+## [29,]  1.4530460
+## [30,] -1.5805937</code></pre>
+<p>¿Cuáles de estas unidades tienen peso positivo y negativo en la capa final?</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pesos_capa_f &lt;-<span class="st"> </span><span class="kw">get_weights</span>(modelo_dropout)[[<span class="dv">3</span>]]
+<span class="kw">graf_pesos</span>(pesos[, pesos_capa_f <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.5</span>], <span class="dt">mostrar_facets =</span> <span class="ot">TRUE</span>)</code></pre></div>
+<p><img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-45-1.png" width="480" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">graf_pesos</span>(pesos[, pesos_capa_f <span class="op">&lt;</span><span class="st"> </span><span class="op">-</span><span class="fl">1.5</span>], <span class="dt">mostrar_facets =</span> <span class="ot">TRUE</span>)</code></pre></div>
+<p><img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-45-2.png" width="480" /></p>
+</div>
+<div id="comentarios-adicionales" class="section level4 unnumbered">
+<h4>Comentarios adicionales</h4>
 <p>Algunas maneras en que podemos pensar en la regularización de dropout:</p>
 <ul>
 <li><p>Dropout busca que cada unidad calcule algo importante por sí sola, y dependa menos de otras unidades para hacer algo útil. Algunas unidades y pesos pueden acoplarse fuertemente (y de manera compleja) para hacer las predicciones. Si estas unidades aprendieron ese acoplamento demasiado fuerte para el conjunto de entrenamiento, entonces puede ser nuevos datos, con perturbaciones, puedan producir predicciones malas (mala generalización). Con dropout buscamos que la unidades capturen información útil en general, no necesariamente en acoplamiento fuerte con otras unidades.</p></li>
 <li><p>Podemos pensar que en cada pasada de minibatch, escogemos una arquitectura diferente, y entrenamos. El resultado final será entonces es un tipo de promedio de todas esas arquitecturas que probamos. Este promedio reduce varianza de las salidas de las unidades.</p></li>
+<li><p>El paso de escalamiento es importante para el funcionamiento correcto del método. La idea intuitiva es que el peso de una unidad es 0 con probabilidad <span class="math inline">\(p\)</span> y <span class="math inline">\(\theta\)</span> con probabilidad <span class="math inline">\(1-p\)</span>. Tomamos el valor esperado como peso para la red completa, que es <span class="math inline">\(p0+(1-p)\theta\)</span>. Ver <span class="citation">(Srivastava et al. <a href="#ref-Srivastava:2014:DSW:2627435.2670313">2014</a>)</span></p></li>
 </ul>
-<p>El paso de escalamiento es importante para el funcionamiento correcto del método. La idea intuitiva es que el peso de una unidad es 0 con probabilidad <span class="math inline">\(p\)</span> y <span class="math inline">\(\theta\)</span> con probabilidad <span class="math inline">\(1-p\)</span>. Tomamos el valor esperado como peso para la red completa, que es <span class="math inline">\(p0+(1-p)\theta\)</span>. Ver <span class="citation">(Srivastava et al. <a href="#ref-Srivastava:2014:DSW:2627435.2670313">2014</a>)</span></p>
 </div>
 <div id="ejemplo-35" class="section level3 unnumbered">
 <h3>Ejemplo</h3>
@@ -890,13 +951,13 @@ history &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><s
 score &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">evaluate</span>(x_test, y_test)
 score</code></pre></div>
 <pre><code>## $loss
-## [1] 0.2187696
+## [1] 0.228742
 ## 
 ## $acc
-## [1] 0.9536622
+## [1] 0.9511709
 ## 
 ## $categorical_crossentropy
-## [1] 0.214723</code></pre>
+## [1] 0.2245467</code></pre>
 
 <div id="refs" class="references">
 <div>
