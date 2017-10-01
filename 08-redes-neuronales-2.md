@@ -292,7 +292,7 @@ ggplot(filter(dat_dev, algoritmo=='descenso_estocastico'),
 Por ejemplo: tasa demasiado alta:
 
 ```r
-iter_estocastico <- descenso_estocástico(20, rep(0,4), 0.9, minilotes) %>%
+iter_estocastico <- descenso_estocástico(20, rep(0,4), 0.95, minilotes) %>%
   data.frame %>% rename(beta_0 = X1, beta_1 = X2)
 dev_ent <- devianza_calc(x = as.matrix(dat_ent[,c('x_1','x_2','x_3'), drop =FALSE]), 
                              y=dat_ent$g)
@@ -341,7 +341,8 @@ demasiado grandes) y tenga dificultad para moverse.
 
 Hay muchos algoritmos derivados de descenso estocástico. La primera mejora consiste en reducir gradualmente la tasa de aprendizaje
 para aprender rápido al principio, pero filtrar el ruido de la
-estimación de minilotes más adelante en las iteraciones
+estimación de minilotes más adelante en las iteraciones y permitir que el algoritmo
+se asiente en un mínimo.
 
 
 ```r
@@ -368,9 +369,9 @@ Y ahora vemos qué pasa con decaimiento:
 
 
 ```r
-iter_estocastico <- descenso_estocástico(20, c(0,0, 0, 0), 0.1, 
-                                         minilotes, decaimiento = 0.0001) %>%
-  data.frame %>% rename(beta_0 = X1, beta_1 = X2)
+iter_estocastico <- descenso_estocástico(20, c(0,0, 0, 0), 0.3, 
+                                         minilotes, decaimiento = 0.0002) %>%
+  data.frame %>% rename(beta_0 = X1, beta_1 = X2, beta_2 = X3, beta_3 = X4)
 dev_ent <- devianza_calc(x = as.matrix(dat_ent[,c('x_1','x_2','x_3'), drop =FALSE]), 
                              y=dat_ent$g)
 dev_valid <- devianza_calc(x = as.matrix(dat_valid[,c('x_1','x_2','x_3'), drop =FALSE]), 
@@ -379,11 +380,20 @@ dat_dev <- data_frame(iteracion = 1:nrow(iter_estocastico)) %>%
    mutate(entrena = apply(iter_estocastico, 1, dev_ent), 
   validacion = apply(iter_estocastico, 1, dev_valid)) %>%
   gather(tipo, devianza, entrena:validacion)
-ggplot(filter(dat_dev, iteracion>10), 
+ggplot(filter(dat_dev, iteracion>1), 
        aes(x=iteracion, y=devianza, colour=tipo)) + geom_line() + geom_point()
 ```
 
 <img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-16-1.png" width="480" />
+
+```r
+ggplot(iteraciones_descenso, aes(x=beta_1, y=beta_2)) + geom_path() +
+  geom_point() +
+  geom_path(data = iter_estocastico, colour ='red', alpha=0.5) +
+  geom_point(data = iter_estocastico, colour ='red', alpha=0.5)
+```
+
+<img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-17-1.png" width="480" />
 
 
 \BeginKnitrBlock{comentario}<div class="comentario">La **tasa de aprendizaje** es uno de los parámetros en redes neuronales más importantes
@@ -456,8 +466,8 @@ usual (pues tenemos cierta memoria de direcciones anteriores de descenso):
 
 ```r
 set.seed(231)
-iter_estocastico <- descenso_estocástico(20, c(-1,-0.5, 0, 0), 0.05, minilotes, momento = 0.9, decaimiento = 0.000) %>%
-  data.frame %>% rename(beta_0 = X1, beta_1 = X2)
+iter_estocastico <- descenso_estocástico(20, c(0,0, 0, 0), 0.2, minilotes, momento = 0.7, decaimiento = 0.001) %>%
+  data.frame %>% rename(beta_0 = X1, beta_1 = X2, beta_2=X3, beta_3=X4)
 dev_ent <- devianza_calc(x = as.matrix(dat_ent[,c('x_1','x_2','x_3'), drop =FALSE]), 
                              y=dat_ent$g)
 dev_valid <- devianza_calc(x = as.matrix(dat_valid[,c('x_1','x_2','x_3'), drop =FALSE]), 
@@ -466,11 +476,21 @@ dat_dev <- data_frame(iteracion = 1:nrow(iter_estocastico)) %>%
    mutate(entrena = apply(iter_estocastico, 1, dev_ent), 
   validacion = apply(iter_estocastico, 1, dev_valid)) %>%
   gather(tipo, devianza, entrena:validacion)
-ggplot(dat_dev, 
+ggplot(filter(dat_dev, iteracion > 1), 
        aes(x=iteracion, y=devianza, colour=tipo)) + geom_line() + geom_point()
 ```
 
-<img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-20-1.png" width="480" />
+<img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-21-1.png" width="480" />
+
+
+```r
+ggplot(iteraciones_descenso, aes(x=beta_1, y=beta_2)) + geom_path() +
+  geom_point() +
+  geom_path(data = iter_estocastico, colour ='red', alpha=0.5) +
+  geom_point(data = iter_estocastico, colour ='red', alpha=0.5)
+```
+
+<img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-22-1.png" width="480" />
 
 Nótese cómo llegamos más rápido a una buena solución (comparado
 con el ejemplo sin momento). Adicionalmente, error de entrenamiento
@@ -546,7 +566,7 @@ ggplot(aprendizaje,
   facet_wrap(~metric, ncol = 1) + geom_line() + geom_point(size = 0.5)
 ```
 
-<img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-24-1.png" width="480" />
+<img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-26-1.png" width="480" />
 
 Ver los pesos:
 
@@ -557,13 +577,13 @@ get_weights(modelo)
 
 ```
 ## [[1]]
-##            [,1]
-## [1,] -0.6587153
-## [2,]  0.1016989
-## [3,]  0.3677218
+##             [,1]
+## [1,] -0.64834106
+## [2,]  0.08212499
+## [3,]  0.37860259
 ## 
 ## [[2]]
-## [1] 1.652873
+## [1] 1.633954
 ```
 
 Y verificamos que concuerda con la salida de *glm*:
@@ -694,13 +714,13 @@ score
 
 ```
 ## $loss
-## [1] 0.2842575
+## [1] 0.2841639
 ## 
 ## $acc
-## [1] 0.9352267
+## [1] 0.9342302
 ## 
 ## $categorical_crossentropy
-## [1] 0.2832125
+## [1] 0.2831135
 ```
 
 
@@ -757,8 +777,8 @@ tab_confusion
 ```
 ##    y_valid
 ##       0   1
-##   0 894  60
-##   1  33 547
+##   0 897  57
+##   1  30 550
 ```
 
 ```r
@@ -768,8 +788,8 @@ prop.table(tab_confusion, 2)
 ```
 ##    y_valid
 ##              0          1
-##   0 0.96440129 0.09884679
-##   1 0.03559871 0.90115321
+##   0 0.96763754 0.09390445
+##   1 0.03236246 0.90609555
 ```
 
 
@@ -800,7 +820,7 @@ curve(h_relu, -5,5)
 curve(h_logistica, add=T, col='red')
 ```
 
-<img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-36-1.png" width="480" />
+<img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-38-1.png" width="480" />
 
 
 La razón del exito de estas activaciones no está del todo clara, aunque
@@ -849,13 +869,13 @@ score
 
 ```
 ## $loss
-## [1] 0.2903688
+## [1] 14.14292
 ## 
 ## $acc
-## [1] 0.941704
+## [1] 0.1315396
 ## 
 ## $categorical_crossentropy
-## [1] 0.2144355
+## [1] 13.99793
 ```
 
 
@@ -940,7 +960,7 @@ ggplot(hist_1, aes(x=epoch, y=value, colour=data)) + geom_line() +
   facet_wrap(~metric, scales = 'free', ncol=1)
 ```
 
-<img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-41-1.png" width="480" />
+<img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-43-1.png" width="480" />
 
 Y parecen ruidosas las unidades que aprendió en la capa oculta (algunas no
 aprendieron o aprendieron cosas irrelevantes). En la siguiente imagen,
@@ -970,7 +990,7 @@ colnames(pesos) <- 1:ncol(pesos)
 graf_pesos(pesos)
 ```
 
-<img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-42-1.png" width="480" />
+<img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-44-1.png" width="480" />
 
 
 Ahora ajustamos el modelo con dropout:
@@ -991,7 +1011,7 @@ ggplot(hist_2, aes(x=epoch, y=value, colour=data)) + geom_line() +
   facet_wrap(~metric, scales = 'free')
 ```
 
-<img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-43-1.png" width="480" />
+<img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-45-1.png" width="480" />
 
 El desempeño es mejor, y parecen ser más útiles los patrones que aprendió
 el capa oculta:
@@ -1005,44 +1025,44 @@ colnames(pesos) <- 1:ncol(pesos)
 graf_pesos(pesos) 
 ```
 
-<img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-44-1.png" width="480" />
+<img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-46-1.png" width="480" />
 
 ```r
 get_weights(modelo_dropout)[[3]]
 ```
 
 ```
-##             [,1]
-##  [1,]  0.8815554
-##  [2,] -0.8776717
-##  [3,]  0.7035004
-##  [4,]  0.8718103
-##  [5,] -1.3644364
-##  [6,] -1.3788812
-##  [7,]  0.2475044
-##  [8,] -1.2667195
-##  [9,]  0.3039198
-## [10,] -1.3100710
-## [11,] -1.5976249
-## [12,] -1.3249862
-## [13,] -1.4183995
-## [14,] -1.7881016
-## [15,] -1.3392801
-## [16,] -0.9956914
-## [17,]  1.2124625
-## [18,] -1.0347903
-## [19,]  1.0969609
-## [20,]  1.3861030
-## [21,]  0.3173599
-## [22,]  1.4405326
-## [23,]  0.6274464
-## [24,] -1.7636144
-## [25,]  0.5977809
-## [26,]  0.5096252
-## [27,] -1.7358261
-## [28,] -1.6807621
-## [29,]  1.4530460
-## [30,] -1.5805937
+##              [,1]
+##  [1,]  0.88334942
+##  [2,]  0.48745283
+##  [3,]  0.91198653
+##  [4,]  1.03811836
+##  [5,] -1.27611196
+##  [6,] -1.06125534
+##  [7,] -0.92351788
+##  [8,]  1.22833943
+##  [9,]  0.46632123
+## [10,]  1.14287519
+## [11,]  0.88342547
+## [12,] -1.59567106
+## [13,] -1.64333177
+## [14,]  1.02246594
+## [15,] -1.29607999
+## [16,] -1.39404535
+## [17,] -1.83468783
+## [18,] -1.48071790
+## [19,] -0.05141376
+## [20,] -1.24183202
+## [21,] -1.46573484
+## [22,] -1.19982290
+## [23,]  1.12371194
+## [24,]  1.33568633
+## [25,] -1.84629476
+## [26,]  1.36907375
+## [27,] -1.69838095
+## [28,]  1.05607331
+## [29,] -1.29975009
+## [30,]  0.18067761
 ```
 
 ¿Cuáles de estas unidades tienen peso positivo y negativo en la capa final?
@@ -1053,13 +1073,13 @@ pesos_capa_f <- get_weights(modelo_dropout)[[3]]
 graf_pesos(pesos[, pesos_capa_f > 0.5], mostrar_facets = TRUE)
 ```
 
-<img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-45-1.png" width="480" />
+<img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-47-1.png" width="480" />
 
 ```r
 graf_pesos(pesos[, pesos_capa_f < -1.5], mostrar_facets = TRUE)
 ```
 
-<img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-45-2.png" width="480" />
+<img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-47-2.png" width="480" />
 
 
 
@@ -1128,11 +1148,11 @@ score
 
 ```
 ## $loss
-## [1] 0.228742
+## [1] 0.2283117
 ## 
 ## $acc
-## [1] 0.9511709
+## [1] 0.9501744
 ## 
 ## $categorical_crossentropy
-## [1] 0.2245467
+## [1] 0.2242619
 ```

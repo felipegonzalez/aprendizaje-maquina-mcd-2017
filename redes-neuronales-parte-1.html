@@ -25,7 +25,7 @@
 <meta name="author" content="Felipe González">
 
 
-<meta name="date" content="2017-09-29">
+<meta name="date" content="2017-10-01">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -243,6 +243,15 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="8.7" data-path="redes-neuronales-parte-2.html"><a href="redes-neuronales-parte-2.html#activaciones-relu"><i class="fa fa-check"></i><b>8.7</b> Activaciones relu</a></li>
 <li class="chapter" data-level="8.8" data-path="redes-neuronales-parte-2.html"><a href="redes-neuronales-parte-2.html#dropout-para-regularizacion"><i class="fa fa-check"></i><b>8.8</b> Dropout para regularización</a><ul>
 <li class="chapter" data-level="" data-path="redes-neuronales-parte-2.html"><a href="redes-neuronales-parte-2.html#ejemplo-35"><i class="fa fa-check"></i>Ejemplo</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="redes-convolucionales.html"><a href="redes-convolucionales.html"><i class="fa fa-check"></i><b>9</b> Redes convolucionales</a><ul>
+<li class="chapter" data-level="9.1" data-path="redes-convolucionales.html"><a href="redes-convolucionales.html#filtros-convolucionales"><i class="fa fa-check"></i><b>9.1</b> Filtros convolucionales</a><ul>
+<li class="chapter" data-level="" data-path="redes-convolucionales.html"><a href="redes-convolucionales.html#filtros-en-una-dimension"><i class="fa fa-check"></i>Filtros en una dimensión</a></li>
+<li class="chapter" data-level="" data-path="redes-convolucionales.html"><a href="redes-convolucionales.html#filtros-convolucionales-en-dos-dimensiones"><i class="fa fa-check"></i>Filtros convolucionales en dos dimensiones</a></li>
+<li class="chapter" data-level="9.1.1" data-path="redes-convolucionales.html"><a href="redes-convolucionales.html#filtros-convolucionales-para-redes-neuronales"><i class="fa fa-check"></i><b>9.1.1</b> Filtros convolucionales para redes neuronales</a></li>
+<li class="chapter" data-level="9.1.2" data-path="redes-convolucionales.html"><a href="redes-convolucionales.html#capas-de-agregacion-pooling"><i class="fa fa-check"></i><b>9.1.2</b> Capas de agregación (pooling)</a></li>
+<li class="chapter" data-level="9.1.3" data-path="redes-convolucionales.html"><a href="redes-convolucionales.html#ejemplo-arquitectura-lenet"><i class="fa fa-check"></i><b>9.1.3</b> Ejemplo (arquitectura LeNet):</a></li>
 </ul></li>
 </ul></li>
 <li class="divider"></li>
@@ -909,24 +918,24 @@ modelo_tc <span class="op">%&gt;%</span><span class="st"> </span>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">score &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">evaluate</span>(x_valid_s, y_valid)
 score</code></pre></div>
 <pre><code>## $loss
-## [1] 0.437856
+## [1] 0.4352013
 ## 
 ## $acc
-## [1] 0.7951807
+## [1] 0.7891566
 ## 
 ## $binary_crossentropy
-## [1] 0.4335976</code></pre>
+## [1] 0.4306597</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tab_confusion &lt;-<span class="st"> </span><span class="kw">table</span>(modelo_tc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">predict_classes</span>(x_valid_s),y_valid) 
 tab_confusion</code></pre></div>
 <pre><code>##    y_valid
 ##       0   1
-##   0 193  38
-##   1  30  71</code></pre>
+##   0 194  41
+##   1  29  68</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">prop.table</span>(tab_confusion, <span class="dv">2</span>)</code></pre></div>
 <pre><code>##    y_valid
 ##             0         1
-##   0 0.8654709 0.3486239
-##   1 0.1345291 0.6513761</code></pre>
+##   0 0.8699552 0.3761468
+##   1 0.1300448 0.6238532</code></pre>
 <p>Es importante monitorear las curvas de aprendizaje (entrenamiento y validación) para diagnosticar mejoras:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df_iteraciones &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(iteraciones)
 <span class="kw">ggplot</span>(df_iteraciones, <span class="kw">aes</span>(<span class="dt">x=</span>epoch, <span class="dt">y=</span>value, <span class="dt">colour=</span>data, <span class="dt">group=</span>data)) <span class="op">+</span><span class="st"> </span>

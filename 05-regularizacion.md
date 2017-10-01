@@ -1071,7 +1071,7 @@ bien la curva de nivel más baja que intersecta la restricción:
 knitr::include_graphics('./imagenes/ridge_lasso.png')
 ```
 
-![](./imagenes/ridge_lasso.png)<!-- -->
+<img src="./imagenes/ridge_lasso.png" width="318" />
 Y obsérvese ahora que la solución de lasso *puede hacer algunos coeficientes
 igual a 0*. Es decir,
 
