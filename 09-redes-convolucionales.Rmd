@@ -301,7 +301,7 @@ y_test <- to_categorical(digitos_prueba$digito, 10)
 
 
 ```{r}
-usar_cache <- FALSE
+usar_cache <- TRUE
 if(!usar_cache){
 set.seed(213)
 model_2 <- keras_model_sequential() 
