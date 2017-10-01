@@ -1,0 +1,69 @@
+---
+title: "Tarea 6"
+output: html_notebook
+---
+```{r}
+library(ggplot2)
+set.seed(923)
+h <- function(x){
+    exp(x)/(1+exp(x))
+}
+x <- seq(-2,2,0.05)
+p <- h(3 + x- 3*x^2 + 3*cos(4*x))
+set.seed(2801572)
+x.2 <- runif(300, -2, 2)
+g.2 <- rbinom(300, 1, h(3 + x.2- 3*x.2^2 + 3*cos(4*x.2)))
+datos <- data.frame(x.2,g.2)
+dat.p <- data.frame(x,p)
+g <- qplot(x,p, geom='line', col='red')
+g + geom_jitter(data = datos, aes(x=x.2,y=g.2), col ='black',
+  position =position_jitter(height=0.02), alpha=0.4)
+```
+
+Ajustando *size* y *decay* (size suficientemente grande para capturar la forma
+de la función, y decay suficientemente grande para evitar inestablidad o varianza
+en el ajuste):
+
+```{r}
+library(nnet)
+set.seed(34)
+red <- nnet(g.2~ x.2, data=datos, size=5, entropy=TRUE, decay=0.01, maxit=1000) 
+datos$p_red <- predict(red)
+g + geom_jitter(data = datos, aes(x=x.2,y=g.2), col ='black',
+  position =position_jitter(height=0.05), alpha=0.4) +
+  geom_line(data = datos, aes(x=x.2, y=p_red), colour='black')
+```
+
+¿Por qué crees que no podemos capturar el chipote del lado izquierdo? 
+¿Qué podríamos ajustar si tuviéramos más datos? Por ejemplo, si $n=3000$, la misma
+arquitectura da:
+
+```{r}
+set.seed(280572)
+x.2 <- runif(3000, -2, 2)
+g.2 <- rbinom(3000, 1, h(3 + x.2- 3*x.2^2 + 3*cos(4*x.2)))
+datos <- data.frame(x.2,g.2)
+dat.p <- data.frame(x,p)
+set.seed(234) 
+#set.seed(23416)
+red <- nnet(g.2~ x.2, data=datos, size=5, entropy=TRUE, decay=0.01, maxit=1000) 
+datos$p_red <- predict(red)
+g + geom_jitter(data = datos, aes(x=x.2,y=g.2), col ='black',
+  position =position_jitter(height=0.05), alpha=0.4) +
+  geom_line(data = datos, aes(x=x.2, y=p_red), colour='black')
+```
+
+Pero como tenemos más datos, podemos intentar con una red más grande 
+(pues también disminuir regularización, y correr la red con semilla diferente), 
+por ejemplo:
+
+```{r}
+set.seed(9343)
+red <- nnet(g.2~ x.2, data=datos, size=7, entropy=TRUE, decay=0.01, maxit=1000) 
+datos$p_red <- predict(red)
+g + geom_jitter(data = datos, aes(x=x.2,y=g.2), col ='black',
+  position =position_jitter(height=0.05), alpha=0.4) +
+  geom_line(data = datos, aes(x=x.2, y=p_red), colour='black')
+```
+```
+

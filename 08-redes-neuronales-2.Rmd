@@ -271,7 +271,7 @@ ggplot(filter(dat_dev, algoritmo=='descenso_estocastico'),
 
 Por ejemplo: tasa demasiado alta:
 ```{r}
-iter_estocastico <- descenso_estocástico(20, rep(0,4), 0.9, minilotes) %>%
+iter_estocastico <- descenso_estocástico(20, rep(0,4), 0.95, minilotes) %>%
   data.frame %>% rename(beta_0 = X1, beta_1 = X2)
 dev_ent <- devianza_calc(x = as.matrix(dat_ent[,c('x_1','x_2','x_3'), drop =FALSE]), 
                              y=dat_ent$g)
@@ -315,7 +315,8 @@ demasiado grandes) y tenga dificultad para moverse.
 
 Hay muchos algoritmos derivados de descenso estocástico. La primera mejora consiste en reducir gradualmente la tasa de aprendizaje
 para aprender rápido al principio, pero filtrar el ruido de la
-estimación de minilotes más adelante en las iteraciones
+estimación de minilotes más adelante en las iteraciones y permitir que el algoritmo
+se asiente en un mínimo.
 
 ```{r}
 descenso_estocástico <- function(n_epocas, z_0, eta, minilotes, decaimiento = 0.0){
@@ -340,9 +341,9 @@ descenso_estocástico <- function(n_epocas, z_0, eta, minilotes, decaimiento = 0
 Y ahora vemos qué pasa con decaimiento:
 
 ```{r}
-iter_estocastico <- descenso_estocástico(20, c(0,0, 0, 0), 0.1, 
-                                         minilotes, decaimiento = 0.0001) %>%
-  data.frame %>% rename(beta_0 = X1, beta_1 = X2)
+iter_estocastico <- descenso_estocástico(20, c(0,0, 0, 0), 0.3, 
+                                         minilotes, decaimiento = 0.0002) %>%
+  data.frame %>% rename(beta_0 = X1, beta_1 = X2, beta_2 = X3, beta_3 = X4)
 dev_ent <- devianza_calc(x = as.matrix(dat_ent[,c('x_1','x_2','x_3'), drop =FALSE]), 
                              y=dat_ent$g)
 dev_valid <- devianza_calc(x = as.matrix(dat_valid[,c('x_1','x_2','x_3'), drop =FALSE]), 
@@ -351,8 +352,14 @@ dat_dev <- data_frame(iteracion = 1:nrow(iter_estocastico)) %>%
    mutate(entrena = apply(iter_estocastico, 1, dev_ent), 
   validacion = apply(iter_estocastico, 1, dev_valid)) %>%
   gather(tipo, devianza, entrena:validacion)
-ggplot(filter(dat_dev, iteracion>10), 
+ggplot(filter(dat_dev, iteracion>1), 
        aes(x=iteracion, y=devianza, colour=tipo)) + geom_line() + geom_point()
+```
+```{r}
+ggplot(iteraciones_descenso, aes(x=beta_1, y=beta_2)) + geom_path() +
+  geom_point() +
+  geom_path(data = iter_estocastico, colour ='red', alpha=0.5) +
+  geom_point(data = iter_estocastico, colour ='red', alpha=0.5)
 ```
 
 
@@ -428,8 +435,8 @@ usual (pues tenemos cierta memoria de direcciones anteriores de descenso):
 
 ```{r}
 set.seed(231)
-iter_estocastico <- descenso_estocástico(20, c(-1,-0.5, 0, 0), 0.05, minilotes, momento = 0.9, decaimiento = 0.000) %>%
-  data.frame %>% rename(beta_0 = X1, beta_1 = X2)
+iter_estocastico <- descenso_estocástico(20, c(0,0, 0, 0), 0.2, minilotes, momento = 0.7, decaimiento = 0.001) %>%
+  data.frame %>% rename(beta_0 = X1, beta_1 = X2, beta_2=X3, beta_3=X4)
 dev_ent <- devianza_calc(x = as.matrix(dat_ent[,c('x_1','x_2','x_3'), drop =FALSE]), 
                              y=dat_ent$g)
 dev_valid <- devianza_calc(x = as.matrix(dat_valid[,c('x_1','x_2','x_3'), drop =FALSE]), 
@@ -438,8 +445,15 @@ dat_dev <- data_frame(iteracion = 1:nrow(iter_estocastico)) %>%
    mutate(entrena = apply(iter_estocastico, 1, dev_ent), 
   validacion = apply(iter_estocastico, 1, dev_valid)) %>%
   gather(tipo, devianza, entrena:validacion)
-ggplot(dat_dev, 
+ggplot(filter(dat_dev, iteracion > 1), 
        aes(x=iteracion, y=devianza, colour=tipo)) + geom_line() + geom_point()
+```
+
+```{r}
+ggplot(iteraciones_descenso, aes(x=beta_1, y=beta_2)) + geom_path() +
+  geom_point() +
+  geom_path(data = iter_estocastico, colour ='red', alpha=0.5) +
+  geom_point(data = iter_estocastico, colour ='red', alpha=0.5)
 ```
 
 Nótese cómo llegamos más rápido a una buena solución (comparado
