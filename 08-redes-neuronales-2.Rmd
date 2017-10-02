@@ -368,6 +368,7 @@ La **tasa de aprendizaje** es uno de los parámetros en redes neuronales más im
 de afinar. Generalmente se empieza con
 una tasa de aprendizaje con un valor bajo (0.01, o. 0.1),
 pero es necesario experimentar. 
+
 - Un valor muy alto puede provocar oscilaciones muy fuertes en la pérdida
 - Un valor alto también puede provocar que el algoritmo se detenga en
 lugar con función pérdida alta (sobreajusta rápidamente).

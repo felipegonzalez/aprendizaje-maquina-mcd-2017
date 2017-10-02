@@ -1257,6 +1257,7 @@ hiperparams$init_grupo <- cut(hiperparams$init_pesos, breaks=c(0.2,0.5,0.8))
 #### Nota (entrenamientokeras)
 
 Al entrenar con keras, nótese que
+
 - El valor de *loss* (pérdida de entrenamiento) incluye regularización (ridge, sin unidades dropout), pero
 el valor de *val_loss* no los incluye. 
 - El valor de *loss* se calcula como el promedio de pérdidas sobre los minilotes. 
