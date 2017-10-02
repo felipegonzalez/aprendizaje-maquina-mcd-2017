@@ -372,7 +372,8 @@ y_train <- to_categorical(digitos_entrena$digito, 10)
 y_test <- to_categorical(digitos_prueba$digito, 10)
 ```
 
-
+Para fines de interpretación, agregaremos regularización ridge además
+de dropout (puedes obtener buen desempeño usando solamente dropout):
 
 
 ```r
@@ -382,26 +383,27 @@ set.seed(213)
 model_2 <- keras_model_sequential() 
 model_2 %>%
   layer_conv_2d(filters = 8, kernel_size = c(5,5), activation = 'relu',
-              input_shape = c(16,16,1), padding = 'same') %>%
+              input_shape = c(16,16,1), padding ='same',
+              kernel_regularizer = regularizer_l2(0.01) ) %>%
   layer_max_pooling_2d(pool_size = c(2, 2)) %>% 
   layer_dropout(rate = 0.25) %>% 
-  layer_conv_2d(filters = 12, kernel_size = c(5,5), activation = 'relu', 
-                padding='same') %>% 
+  layer_conv_2d(filters = 12, kernel_size = c(3,3), activation = 'relu',
+                kernel_regularizer = regularizer_l2(0.01)) %>% 
   layer_max_pooling_2d(pool_size = c(2, 2)) %>% 
   layer_dropout(rate = 0.25) %>% 
   layer_flatten() %>% 
-  layer_dense(units = 128, activation = 'relu') %>%
+  layer_dense(units = 100, activation = 'relu') %>%
   layer_dropout(rate = 0.5) %>%
   layer_dense(units = 10, activation = 'softmax')
 
 model_2 %>% compile(
   loss = 'categorical_crossentropy',
-  optimizer = optimizer_sgd(lr = 0.1,  momentum = 0.5),
-  metrics = c('accuracy')
+  optimizer = optimizer_sgd(lr = 0.05,  momentum = 0.5),
+  metrics = c('accuracy','categorical_crossentropy')
 )
 history <- model_2 %>% fit(
   x_train, y_train, 
-  epochs = 600, batch_size = 512, 
+  epochs = 200, batch_size = 256, 
   validation_data = list(x_test, y_test)
 )
 model_serialized <- serialize_model(model_2)
@@ -416,10 +418,29 @@ score
 
 ```
 ## $loss
-## [1] 0.1222563
+## [1] 0.2057457
 ## 
 ## $acc
-## [1] 0.9745889
+## [1] 0.959143
+## 
+## $categorical_crossentropy
+## [1] 0.1473516
+```
+
+```r
+score_entrena <- model_2 %>% evaluate(x_train, y_train)
+score_entrena
+```
+
+```
+## $loss
+## [1] 0.1045686
+## 
+## $acc
+## [1] 0.9877932
+## 
+## $categorical_crossentropy
+## [1] 0.04617448
 ```
 
 Y ahora graficamos los filtros aprendidos en la primera capa:
@@ -444,7 +465,7 @@ library(scales)
 wts <- get_weights(model_2)
 capa_1 <- wts[[1]] 
 capa_list <- lapply(1:8, function(i){
-  data_frame(val = as.numeric(capa_1[,,1,i]), pixel = 1:25, unidad=i)
+  data_frame(val = as.numeric(t(capa_1[,,1,i])), pixel = 1:25, unidad=i)
 }) %>% bind_rows %>% mutate(y = (pixel-1) %% 5, x = (pixel-1) %/% 5) %>%
   group_by(unidad) %>% mutate(val = (val-mean(val))/sd(val))
 capa_list
@@ -453,29 +474,85 @@ capa_list
 ```
 ## # A tibble: 200 x 5
 ## # Groups:   unidad [8]
-##            val pixel unidad     y     x
-##          <dbl> <int>  <int> <dbl> <dbl>
-##  1  0.16859496     1      1     0     0
-##  2 -0.86502963     2      1     1     0
-##  3 -1.46422469     3      1     2     0
-##  4 -0.62194332     4      1     3     0
-##  5 -0.59561995     5      1     4     0
-##  6 -0.72887380     6      1     0     1
-##  7 -1.42050812     7      1     1     1
-##  8 -1.11375867     8      1     2     1
-##  9  0.02237289     9      1     3     1
-## 10  1.08286579    10      1     4     1
+##           val pixel unidad     y     x
+##         <dbl> <int>  <int> <dbl> <dbl>
+##  1 -1.4653404     1      1     0     0
+##  2 -0.9698185     2      1     1     0
+##  3  1.0867707     3      1     2     0
+##  4  1.5496123     4      1     3     0
+##  5  0.6970253     5      1     4     0
+##  6 -1.6848534     6      1     0     1
+##  7 -1.4587731     7      1     1     1
+##  8  0.8354561     8      1     2     1
+##  9  1.3157807     9      1     3     1
+## 10  0.1034943    10      1     4     1
 ## # ... with 190 more rows
 ```
 
 ```r
-ggplot(capa_list, aes(x=x, y=-y)) + geom_tile(aes(fill=val)) + 
-  facet_wrap(~unidad, ncol=4) + coord_equal()+scale_fill_gradient2(low = "black", mid='gray70',high = "white") + theme(strip.background = element_blank(), strip.text = element_blank())    
+ggplot(capa_list, aes(x=x, y=-y)) + geom_raster(aes(fill=val), interpolate=FALSE) + 
+  facet_wrap(~unidad, ncol=4) + coord_equal()+scale_fill_gradient2(low = "black", mid='gray50',high = "white")    
 ```
 
 <img src="09-redes-convolucionales_files/figure-html/unnamed-chunk-18-1.png" width="384" />
 
 
+Podemos ver las activaciones de la primera capa para algunos dígitos (después de 
+pooling):
+
+
+```r
+capa <- keras_model_sequential()
+capa %>%
+  layer_conv_2d(filters = 8, kernel_size = c(5,5), activation = 'relu',
+              input_shape = c(16,16,1), padding='same',weights = wts[1:2]) %>%
+  layer_max_pooling_2d()
+probas <- predict_proba(capa, x_train[1:50,,,,drop=FALSE])
+
+graf_activaciones <- function(probas, ind){
+  probas_ind <- probas[ind,,,]
+  unidades_df <- lapply(1:dim(probas_ind)[3], function(i){
+    mat <- t(probas_ind[,,i])
+    data_frame(val = as.numeric(mat), pixel = 1:(8*8), unidad=i) %>%
+      mutate(y = (pixel-1) %% 8, x = (pixel-1) %/% 8)  %>%
+      group_by(unidad) %>% mutate(val=(val-mean(val))/sd(val))
+  })
+  dat <- bind_rows(unidades_df)
+  ggplot(dat, aes(x=x, y=-y, fill=val)) + geom_tile() + facet_wrap(~unidad) +
+    scale_fill_gradient2(low = "black", mid='gray20',high = "white") + coord_equal()
+}
+graf_activaciones(probas, 4)
+```
+
+<img src="09-redes-convolucionales_files/figure-html/unnamed-chunk-19-1.png" width="672" />
+
+```r
+graf_activaciones(probas, 5)
+```
+
+<img src="09-redes-convolucionales_files/figure-html/unnamed-chunk-19-2.png" width="672" />
+
+```r
+graf_activaciones(probas, 15)
+```
+
+<img src="09-redes-convolucionales_files/figure-html/unnamed-chunk-19-3.png" width="672" />
+
+```r
+graf_activaciones(probas, 8)
+```
+
+<img src="09-redes-convolucionales_files/figure-html/unnamed-chunk-19-4.png" width="672" />
+
+```r
+graf_activaciones(probas, 33)
+```
+
+<img src="09-redes-convolucionales_files/figure-html/unnamed-chunk-19-5.png" width="672" />
+
+```r
+#image((x_train[4,1:16,16:1,1]))
+```
 
 
 Y los filtros aprendidos en la segunda capa:
@@ -488,17 +565,17 @@ out <- list()
 for(j in 1:8){
   out_temp <- list()
   for(i in 1:12){
-  dat_lay <- data_frame(val = as.numeric(capa_2[,,j,i]), pixel = 1:25, unidad=i, otra=j) %>% mutate(y = (pixel-1) %% 5, x = (pixel-1) %/% 5) 
+  dat_lay <- data_frame(val = as.numeric(capa_2[,,j,i]), pixel = 1:9, unidad=i, otra=j) %>% mutate(y = (pixel-1) %% 3, x = (pixel-1) %/% 3) 
   out_temp[[i]] <- dat_lay
   }
   out[[j]] <- bind_rows(out_temp)
 }
 capa_out <- bind_rows(out)
 ggplot(capa_out, aes(x=x, y=-y)) + geom_tile(aes(fill=val)) + 
-  facet_grid(otra~unidad) + coord_equal()+scale_fill_gradient2(low = "black", mid='gray70',high = "white") + theme(strip.background = element_blank(), strip.text = element_blank())    
+  facet_grid(otra~unidad) + coord_equal()+scale_fill_gradient2(low = "black", mid='gray50',high = "white") + theme(strip.background = element_blank(), strip.text = element_blank())    
 ```
 
-<img src="09-redes-convolucionales_files/figure-html/unnamed-chunk-19-1.png" width="672" />
+<img src="09-redes-convolucionales_files/figure-html/unnamed-chunk-20-1.png" width="672" />
 
 
 

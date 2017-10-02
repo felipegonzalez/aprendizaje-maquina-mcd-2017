@@ -25,7 +25,7 @@
 <meta name="author" content="Felipe González">
 
 
-<meta name="date" content="2017-10-01">
+<meta name="date" content="2017-10-02">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -448,32 +448,34 @@ x_test &lt;-<span class="st"> </span>x_test<span class="op">/</span><span class=
 <span class="kw">dim</span>(x_test) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="kw">nrow</span>(x_test), <span class="dv">16</span>, <span class="dv">16</span>, <span class="dv">1</span>)
 y_train &lt;-<span class="st"> </span><span class="kw">to_categorical</span>(digitos_entrena<span class="op">$</span>digito, <span class="dv">10</span>)
 y_test &lt;-<span class="st"> </span><span class="kw">to_categorical</span>(digitos_prueba<span class="op">$</span>digito, <span class="dv">10</span>)</code></pre></div>
+<p>Para fines de interpretación, agregaremos regularización ridge además de dropout (puedes obtener buen desempeño usando solamente dropout):</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">usar_cache &lt;-<span class="st"> </span><span class="ot">TRUE</span>
 <span class="cf">if</span>(<span class="op">!</span>usar_cache){
 <span class="kw">set.seed</span>(<span class="dv">213</span>)
 model_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">keras_model_sequential</span>() 
 model_<span class="dv">2</span> <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">layer_conv_2d</span>(<span class="dt">filters =</span> <span class="dv">8</span>, <span class="dt">kernel_size =</span> <span class="kw">c</span>(<span class="dv">5</span>,<span class="dv">5</span>), <span class="dt">activation =</span> <span class="st">&#39;relu&#39;</span>,
-              <span class="dt">input_shape =</span> <span class="kw">c</span>(<span class="dv">16</span>,<span class="dv">16</span>,<span class="dv">1</span>), <span class="dt">padding =</span> <span class="st">&#39;same&#39;</span>) <span class="op">%&gt;%</span>
+              <span class="dt">input_shape =</span> <span class="kw">c</span>(<span class="dv">16</span>,<span class="dv">16</span>,<span class="dv">1</span>), <span class="dt">padding =</span><span class="st">&#39;same&#39;</span>,
+              <span class="dt">kernel_regularizer =</span> <span class="kw">regularizer_l2</span>(<span class="fl">0.01</span>) ) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">layer_max_pooling_2d</span>(<span class="dt">pool_size =</span> <span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">2</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">layer_dropout</span>(<span class="dt">rate =</span> <span class="fl">0.25</span>) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">layer_conv_2d</span>(<span class="dt">filters =</span> <span class="dv">12</span>, <span class="dt">kernel_size =</span> <span class="kw">c</span>(<span class="dv">5</span>,<span class="dv">5</span>), <span class="dt">activation =</span> <span class="st">&#39;relu&#39;</span>, 
-                <span class="dt">padding=</span><span class="st">&#39;same&#39;</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">layer_conv_2d</span>(<span class="dt">filters =</span> <span class="dv">12</span>, <span class="dt">kernel_size =</span> <span class="kw">c</span>(<span class="dv">3</span>,<span class="dv">3</span>), <span class="dt">activation =</span> <span class="st">&#39;relu&#39;</span>,
+                <span class="dt">kernel_regularizer =</span> <span class="kw">regularizer_l2</span>(<span class="fl">0.01</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">layer_max_pooling_2d</span>(<span class="dt">pool_size =</span> <span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">2</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">layer_dropout</span>(<span class="dt">rate =</span> <span class="fl">0.25</span>) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">layer_flatten</span>() <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">layer_dense</span>(<span class="dt">units =</span> <span class="dv">128</span>, <span class="dt">activation =</span> <span class="st">&#39;relu&#39;</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">layer_dense</span>(<span class="dt">units =</span> <span class="dv">100</span>, <span class="dt">activation =</span> <span class="st">&#39;relu&#39;</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">layer_dropout</span>(<span class="dt">rate =</span> <span class="fl">0.5</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">layer_dense</span>(<span class="dt">units =</span> <span class="dv">10</span>, <span class="dt">activation =</span> <span class="st">&#39;softmax&#39;</span>)
 
 model_<span class="dv">2</span> <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">compile</span>(
   <span class="dt">loss =</span> <span class="st">&#39;categorical_crossentropy&#39;</span>,
-  <span class="dt">optimizer =</span> <span class="kw">optimizer_sgd</span>(<span class="dt">lr =</span> <span class="fl">0.1</span>,  <span class="dt">momentum =</span> <span class="fl">0.5</span>),
-  <span class="dt">metrics =</span> <span class="kw">c</span>(<span class="st">&#39;accuracy&#39;</span>)
+  <span class="dt">optimizer =</span> <span class="kw">optimizer_sgd</span>(<span class="dt">lr =</span> <span class="fl">0.05</span>,  <span class="dt">momentum =</span> <span class="fl">0.5</span>),
+  <span class="dt">metrics =</span> <span class="kw">c</span>(<span class="st">&#39;accuracy&#39;</span>,<span class="st">&#39;categorical_crossentropy&#39;</span>)
 )
 history &lt;-<span class="st"> </span>model_<span class="dv">2</span> <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">fit</span>(
   x_train, y_train, 
-  <span class="dt">epochs =</span> <span class="dv">600</span>, <span class="dt">batch_size =</span> <span class="dv">512</span>, 
+  <span class="dt">epochs =</span> <span class="dv">200</span>, <span class="dt">batch_size =</span> <span class="dv">256</span>, 
   <span class="dt">validation_data =</span> <span class="kw">list</span>(x_test, y_test)
 )
 model_serialized &lt;-<span class="st"> </span><span class="kw">serialize_model</span>(model_<span class="dv">2</span>)
@@ -485,10 +487,23 @@ model_serialized &lt;-<span class="st"> </span><span class="kw">serialize_model<
 score &lt;-<span class="st"> </span>model_<span class="dv">2</span> <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">evaluate</span>(x_test, y_test)
 score</code></pre></div>
 <pre><code>## $loss
-## [1] 0.1222563
+## [1] 0.2057457
 ## 
 ## $acc
-## [1] 0.9745889</code></pre>
+## [1] 0.959143
+## 
+## $categorical_crossentropy
+## [1] 0.1473516</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">score_entrena &lt;-<span class="st"> </span>model_<span class="dv">2</span> <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">evaluate</span>(x_train, y_train)
+score_entrena</code></pre></div>
+<pre><code>## $loss
+## [1] 0.1045686
+## 
+## $acc
+## [1] 0.9877932
+## 
+## $categorical_crossentropy
+## [1] 0.04617448</code></pre>
 <p>Y ahora graficamos los filtros aprendidos en la primera capa:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(scales)</code></pre></div>
 <pre><code>## 
@@ -499,43 +514,74 @@ score</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">wts &lt;-<span class="st"> </span><span class="kw">get_weights</span>(model_<span class="dv">2</span>)
 capa_<span class="dv">1</span> &lt;-<span class="st"> </span>wts[[<span class="dv">1</span>]] 
 capa_list &lt;-<span class="st"> </span><span class="kw">lapply</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">8</span>, <span class="cf">function</span>(i){
-  <span class="kw">data_frame</span>(<span class="dt">val =</span> <span class="kw">as.numeric</span>(capa_<span class="dv">1</span>[,,<span class="dv">1</span>,i]), <span class="dt">pixel =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">25</span>, <span class="dt">unidad=</span>i)
+  <span class="kw">data_frame</span>(<span class="dt">val =</span> <span class="kw">as.numeric</span>(<span class="kw">t</span>(capa_<span class="dv">1</span>[,,<span class="dv">1</span>,i])), <span class="dt">pixel =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">25</span>, <span class="dt">unidad=</span>i)
 }) <span class="op">%&gt;%</span><span class="st"> </span>bind_rows <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">y =</span> (pixel<span class="op">-</span><span class="dv">1</span>) <span class="op">%%</span><span class="st"> </span><span class="dv">5</span>, <span class="dt">x =</span> (pixel<span class="op">-</span><span class="dv">1</span>) <span class="op">%/%</span><span class="st"> </span><span class="dv">5</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">group_by</span>(unidad) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">val =</span> (val<span class="op">-</span><span class="kw">mean</span>(val))<span class="op">/</span><span class="kw">sd</span>(val))
 capa_list</code></pre></div>
 <pre><code>## # A tibble: 200 x 5
 ## # Groups:   unidad [8]
-##            val pixel unidad     y     x
-##          &lt;dbl&gt; &lt;int&gt;  &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt;
-##  1  0.16859496     1      1     0     0
-##  2 -0.86502963     2      1     1     0
-##  3 -1.46422469     3      1     2     0
-##  4 -0.62194332     4      1     3     0
-##  5 -0.59561995     5      1     4     0
-##  6 -0.72887380     6      1     0     1
-##  7 -1.42050812     7      1     1     1
-##  8 -1.11375867     8      1     2     1
-##  9  0.02237289     9      1     3     1
-## 10  1.08286579    10      1     4     1
+##           val pixel unidad     y     x
+##         &lt;dbl&gt; &lt;int&gt;  &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt;
+##  1 -1.4653404     1      1     0     0
+##  2 -0.9698185     2      1     1     0
+##  3  1.0867707     3      1     2     0
+##  4  1.5496123     4      1     3     0
+##  5  0.6970253     5      1     4     0
+##  6 -1.6848534     6      1     0     1
+##  7 -1.4587731     7      1     1     1
+##  8  0.8354561     8      1     2     1
+##  9  1.3157807     9      1     3     1
+## 10  0.1034943    10      1     4     1
 ## # ... with 190 more rows</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(capa_list, <span class="kw">aes</span>(<span class="dt">x=</span>x, <span class="dt">y=</span><span class="op">-</span>y)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_tile</span>(<span class="kw">aes</span>(<span class="dt">fill=</span>val)) <span class="op">+</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>unidad, <span class="dt">ncol=</span><span class="dv">4</span>) <span class="op">+</span><span class="st"> </span><span class="kw">coord_equal</span>()<span class="op">+</span><span class="kw">scale_fill_gradient2</span>(<span class="dt">low =</span> <span class="st">&quot;black&quot;</span>, <span class="dt">mid=</span><span class="st">&#39;gray70&#39;</span>,<span class="dt">high =</span> <span class="st">&quot;white&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">theme</span>(<span class="dt">strip.background =</span> <span class="kw">element_blank</span>(), <span class="dt">strip.text =</span> <span class="kw">element_blank</span>())    </code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(capa_list, <span class="kw">aes</span>(<span class="dt">x=</span>x, <span class="dt">y=</span><span class="op">-</span>y)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_raster</span>(<span class="kw">aes</span>(<span class="dt">fill=</span>val), <span class="dt">interpolate=</span><span class="ot">FALSE</span>) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>unidad, <span class="dt">ncol=</span><span class="dv">4</span>) <span class="op">+</span><span class="st"> </span><span class="kw">coord_equal</span>()<span class="op">+</span><span class="kw">scale_fill_gradient2</span>(<span class="dt">low =</span> <span class="st">&quot;black&quot;</span>, <span class="dt">mid=</span><span class="st">&#39;gray50&#39;</span>,<span class="dt">high =</span> <span class="st">&quot;white&quot;</span>)    </code></pre></div>
 <p><img src="09-redes-convolucionales_files/figure-html/unnamed-chunk-18-1.png" width="384" /></p>
+<p>Podemos ver las activaciones de la primera capa para algunos dígitos (después de pooling):</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">capa &lt;-<span class="st"> </span><span class="kw">keras_model_sequential</span>()
+capa <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">layer_conv_2d</span>(<span class="dt">filters =</span> <span class="dv">8</span>, <span class="dt">kernel_size =</span> <span class="kw">c</span>(<span class="dv">5</span>,<span class="dv">5</span>), <span class="dt">activation =</span> <span class="st">&#39;relu&#39;</span>,
+              <span class="dt">input_shape =</span> <span class="kw">c</span>(<span class="dv">16</span>,<span class="dv">16</span>,<span class="dv">1</span>), <span class="dt">padding=</span><span class="st">&#39;same&#39;</span>,<span class="dt">weights =</span> wts[<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>]) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">layer_max_pooling_2d</span>()
+probas &lt;-<span class="st"> </span><span class="kw">predict_proba</span>(capa, x_train[<span class="dv">1</span><span class="op">:</span><span class="dv">50</span>,,,,<span class="dt">drop=</span><span class="ot">FALSE</span>])
+
+graf_activaciones &lt;-<span class="st"> </span><span class="cf">function</span>(probas, ind){
+  probas_ind &lt;-<span class="st"> </span>probas[ind,,,]
+  unidades_df &lt;-<span class="st"> </span><span class="kw">lapply</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">dim</span>(probas_ind)[<span class="dv">3</span>], <span class="cf">function</span>(i){
+    mat &lt;-<span class="st"> </span><span class="kw">t</span>(probas_ind[,,i])
+    <span class="kw">data_frame</span>(<span class="dt">val =</span> <span class="kw">as.numeric</span>(mat), <span class="dt">pixel =</span> <span class="dv">1</span><span class="op">:</span>(<span class="dv">8</span><span class="op">*</span><span class="dv">8</span>), <span class="dt">unidad=</span>i) <span class="op">%&gt;%</span>
+<span class="st">      </span><span class="kw">mutate</span>(<span class="dt">y =</span> (pixel<span class="op">-</span><span class="dv">1</span>) <span class="op">%%</span><span class="st"> </span><span class="dv">8</span>, <span class="dt">x =</span> (pixel<span class="op">-</span><span class="dv">1</span>) <span class="op">%/%</span><span class="st"> </span><span class="dv">8</span>)  <span class="op">%&gt;%</span>
+<span class="st">      </span><span class="kw">group_by</span>(unidad) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">val=</span>(val<span class="op">-</span><span class="kw">mean</span>(val))<span class="op">/</span><span class="kw">sd</span>(val))
+  })
+  dat &lt;-<span class="st"> </span><span class="kw">bind_rows</span>(unidades_df)
+  <span class="kw">ggplot</span>(dat, <span class="kw">aes</span>(<span class="dt">x=</span>x, <span class="dt">y=</span><span class="op">-</span>y, <span class="dt">fill=</span>val)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_tile</span>() <span class="op">+</span><span class="st"> </span><span class="kw">facet_wrap</span>(<span class="op">~</span>unidad) <span class="op">+</span>
+<span class="st">    </span><span class="kw">scale_fill_gradient2</span>(<span class="dt">low =</span> <span class="st">&quot;black&quot;</span>, <span class="dt">mid=</span><span class="st">&#39;gray20&#39;</span>,<span class="dt">high =</span> <span class="st">&quot;white&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">coord_equal</span>()
+}
+<span class="kw">graf_activaciones</span>(probas, <span class="dv">4</span>)</code></pre></div>
+<p><img src="09-redes-convolucionales_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">graf_activaciones</span>(probas, <span class="dv">5</span>)</code></pre></div>
+<p><img src="09-redes-convolucionales_files/figure-html/unnamed-chunk-19-2.png" width="672" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">graf_activaciones</span>(probas, <span class="dv">15</span>)</code></pre></div>
+<p><img src="09-redes-convolucionales_files/figure-html/unnamed-chunk-19-3.png" width="672" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">graf_activaciones</span>(probas, <span class="dv">8</span>)</code></pre></div>
+<p><img src="09-redes-convolucionales_files/figure-html/unnamed-chunk-19-4.png" width="672" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">graf_activaciones</span>(probas, <span class="dv">33</span>)</code></pre></div>
+<p><img src="09-redes-convolucionales_files/figure-html/unnamed-chunk-19-5.png" width="672" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#image((x_train[4,1:16,16:1,1]))</span></code></pre></div>
 <p>Y los filtros aprendidos en la segunda capa:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">capa_<span class="dv">2</span> &lt;-<span class="st"> </span>wts[[<span class="dv">3</span>]] 
 out &lt;-<span class="st"> </span><span class="kw">list</span>()
 <span class="cf">for</span>(j <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="dv">8</span>){
   out_temp &lt;-<span class="st"> </span><span class="kw">list</span>()
   <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="dv">12</span>){
-  dat_lay &lt;-<span class="st"> </span><span class="kw">data_frame</span>(<span class="dt">val =</span> <span class="kw">as.numeric</span>(capa_<span class="dv">2</span>[,,j,i]), <span class="dt">pixel =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">25</span>, <span class="dt">unidad=</span>i, <span class="dt">otra=</span>j) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">y =</span> (pixel<span class="op">-</span><span class="dv">1</span>) <span class="op">%%</span><span class="st"> </span><span class="dv">5</span>, <span class="dt">x =</span> (pixel<span class="op">-</span><span class="dv">1</span>) <span class="op">%/%</span><span class="st"> </span><span class="dv">5</span>) 
+  dat_lay &lt;-<span class="st"> </span><span class="kw">data_frame</span>(<span class="dt">val =</span> <span class="kw">as.numeric</span>(capa_<span class="dv">2</span>[,,j,i]), <span class="dt">pixel =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">9</span>, <span class="dt">unidad=</span>i, <span class="dt">otra=</span>j) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">y =</span> (pixel<span class="op">-</span><span class="dv">1</span>) <span class="op">%%</span><span class="st"> </span><span class="dv">3</span>, <span class="dt">x =</span> (pixel<span class="op">-</span><span class="dv">1</span>) <span class="op">%/%</span><span class="st"> </span><span class="dv">3</span>) 
   out_temp[[i]] &lt;-<span class="st"> </span>dat_lay
   }
   out[[j]] &lt;-<span class="st"> </span><span class="kw">bind_rows</span>(out_temp)
 }
 capa_out &lt;-<span class="st"> </span><span class="kw">bind_rows</span>(out)
 <span class="kw">ggplot</span>(capa_out, <span class="kw">aes</span>(<span class="dt">x=</span>x, <span class="dt">y=</span><span class="op">-</span>y)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_tile</span>(<span class="kw">aes</span>(<span class="dt">fill=</span>val)) <span class="op">+</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">facet_grid</span>(otra<span class="op">~</span>unidad) <span class="op">+</span><span class="st"> </span><span class="kw">coord_equal</span>()<span class="op">+</span><span class="kw">scale_fill_gradient2</span>(<span class="dt">low =</span> <span class="st">&quot;black&quot;</span>, <span class="dt">mid=</span><span class="st">&#39;gray70&#39;</span>,<span class="dt">high =</span> <span class="st">&quot;white&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">theme</span>(<span class="dt">strip.background =</span> <span class="kw">element_blank</span>(), <span class="dt">strip.text =</span> <span class="kw">element_blank</span>())    </code></pre></div>
-<p><img src="09-redes-convolucionales_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
+<span class="st">  </span><span class="kw">facet_grid</span>(otra<span class="op">~</span>unidad) <span class="op">+</span><span class="st"> </span><span class="kw">coord_equal</span>()<span class="op">+</span><span class="kw">scale_fill_gradient2</span>(<span class="dt">low =</span> <span class="st">&quot;black&quot;</span>, <span class="dt">mid=</span><span class="st">&#39;gray50&#39;</span>,<span class="dt">high =</span> <span class="st">&quot;white&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">theme</span>(<span class="dt">strip.background =</span> <span class="kw">element_blank</span>(), <span class="dt">strip.text =</span> <span class="kw">element_blank</span>())    </code></pre></div>
+<p><img src="09-redes-convolucionales_files/figure-html/unnamed-chunk-20-1.png" width="672" /></p>
 
 <div id="refs" class="references">
 <div>

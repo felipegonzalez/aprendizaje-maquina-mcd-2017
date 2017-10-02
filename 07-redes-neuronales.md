@@ -1264,13 +1264,13 @@ score
 
 ```
 ## $loss
-## [1] 0.4352013
+## [1] 0.4366918
 ## 
 ## $acc
 ## [1] 0.7891566
 ## 
 ## $binary_crossentropy
-## [1] 0.4306597
+## [1] 0.4321142
 ```
 
 ```r
@@ -1637,7 +1637,23 @@ hiperparams$init_grupo <- cut(hiperparams$init_pesos, breaks=c(0.2,0.5,0.8))
 
 <img src="07-redes-neuronales_files/figure-html/unnamed-chunk-59-1.png" width="480" />
 
+#### Nota (entrenamientokeras)
 
+Al entrenar con keras, nótese que
+- El valor de *loss* (pérdida de entrenamiento) incluye regularización (ridge, sin unidades dropout), pero
+el valor de *val_loss* no los incluye. 
+- El valor de *loss* se calcula como el promedio de pérdidas sobre los minilotes. 
+El valor de *val_loss* se calcula con los parámetros obtenidos al final de 
+la época.
+- Por tanto, *loss* tiende a ser menor que lo que obtendríamos evaluando
+la pérdida de entrenamiento al final de la época, y puede ser en ocasiones
+más grande que *val_loss*.
+- Si queremos ver valores totalmente comparables, podemos obtener el score
+del modelo, al final del entrenamiento, tanto para entrenamiento como prueba.
+- Adicionalmente, diferencias en las muestras de entrenamiento y 
+validación pueden producir también valores
+de validación ligaramente menores de entrenamiento. Este efecto puede ser más
+grande si se trata de muestras relativamente chicas de entrenamiento/prueba.
 
 
 ## Tarea (para 25 de septiembre) {-}

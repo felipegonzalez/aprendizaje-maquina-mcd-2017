@@ -25,7 +25,7 @@
 <meta name="author" content="Felipe González">
 
 
-<meta name="date" content="2017-10-01">
+<meta name="date" content="2017-10-02">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -918,13 +918,13 @@ modelo_tc <span class="op">%&gt;%</span><span class="st"> </span>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">score &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">evaluate</span>(x_valid_s, y_valid)
 score</code></pre></div>
 <pre><code>## $loss
-## [1] 0.4352013
+## [1] 0.4366918
 ## 
 ## $acc
 ## [1] 0.7891566
 ## 
 ## $binary_crossentropy
-## [1] 0.4306597</code></pre>
+## [1] 0.4321142</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tab_confusion &lt;-<span class="st"> </span><span class="kw">table</span>(modelo_tc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">predict_classes</span>(x_valid_s),y_valid) 
 tab_confusion</code></pre></div>
 <pre><code>##    y_valid
@@ -1127,6 +1127,10 @@ hiperparams<span class="op">$</span>init_grupo &lt;-<span class="st"> </span><sp
 <span class="st">    </span><span class="kw">geom_point</span>(<span class="dt">alpha =</span> <span class="fl">0.75</span>) <span class="op">+</span><span class="st"> </span><span class="kw">scale_x_log10</span>() <span class="op">+</span>
 <span class="st">   </span><span class="kw">facet_wrap</span>(<span class="op">~</span>init_grupo, <span class="dt">ncol=</span><span class="dv">1</span>)</code></pre></div>
 <p><img src="07-redes-neuronales_files/figure-html/unnamed-chunk-59-1.png" width="480" /></p>
+<div id="nota-entrenamientokeras" class="section level4">
+<h4><span class="header-section-number">7.6.4.1</span> Nota (entrenamientokeras)</h4>
+<p>Al entrenar con keras, nótese que - El valor de <em>loss</em> (pérdida de entrenamiento) incluye regularización (ridge, sin unidades dropout), pero el valor de <em>val_loss</em> no los incluye. - El valor de <em>loss</em> se calcula como el promedio de pérdidas sobre los minilotes. El valor de <em>val_loss</em> se calcula con los parámetros obtenidos al final de la época. - Por tanto, <em>loss</em> tiende a ser menor que lo que obtendríamos evaluando la pérdida de entrenamiento al final de la época, y puede ser en ocasiones más grande que <em>val_loss</em>. - Si queremos ver valores totalmente comparables, podemos obtener el score del modelo, al final del entrenamiento, tanto para entrenamiento como prueba. - Adicionalmente, diferencias en las muestras de entrenamiento y validación pueden producir también valores de validación ligaramente menores de entrenamiento. Este efecto puede ser más grande si se trata de muestras relativamente chicas de entrenamiento/prueba.</p>
+</div>
 </div>
 </div>
 <div id="tarea-para-25-de-septiembre" class="section level2 unnumbered">
