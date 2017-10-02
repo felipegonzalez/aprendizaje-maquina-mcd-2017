@@ -592,7 +592,7 @@ dat_dev &lt;-<span class="st"> </span><span class="kw">data_frame</span>(<span c
 <div id="otras-variaciones" class="section level3">
 <h3><span class="header-section-number">8.5.3</span> Otras variaciones</h3>
 <p>Otras variaciones incluyen usar una tasa adaptativa de aprendizaje por cada parámetro (algoritmos adagrad, rmsprop, adam y adamax), o actualizaciones un poco diferentes (nesterov).</p>
-<p>Los más comunes son descenso estocástico, descenso estocástico con momento, rmsprop y adam (Capítulo 8 del Deep Learning Book).</p>
+<p>Los más comunes son descenso estocástico, descenso estocástico con momento, rmsprop y adam (Capítulo 8 del Deep Learning Book, <span class="citation">(Goodfellow, Bengio, and Courville <a href="#ref-Goodfellow-et-al-2016">2016</a>)</span>).</p>
 </div>
 </div>
 <div id="ajuste-de-redes-con-descenso-estocastico" class="section level2">
@@ -636,12 +636,12 @@ history &lt;-<span class="st"> </span>modelo <span class="op">%&gt;%</span><span
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">get_weights</span>(modelo)</code></pre></div>
 <pre><code>## [[1]]
 ##            [,1]
-## [1,] -0.6568111
-## [2,]  0.1326030
-## [3,]  0.2792778
+## [1,] -0.7047257
+## [2,]  0.1707478
+## [3,]  0.4118057
 ## 
 ## [[2]]
-## [1] 1.681023</code></pre>
+## [1] 1.684589</code></pre>
 <p>Y verificamos que concuerda con la salida de <em>glm</em>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mod_logistico &lt;-<span class="st"> </span><span class="kw">glm</span>(g <span class="op">~</span><span class="st"> </span>x_<span class="dv">1</span> <span class="op">+</span><span class="st"> </span>x_<span class="dv">2</span><span class="op">+</span><span class="st"> </span>x_<span class="dv">3</span>, <span class="dt">data =</span> dat_ent, <span class="dt">family =</span> <span class="st">&#39;binomial&#39;</span>) 
 <span class="kw">coef</span>(mod_logistico)</code></pre></div>
@@ -706,13 +706,13 @@ history &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><s
 score &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">evaluate</span>(x_test, y_test)
 score</code></pre></div>
 <pre><code>## $loss
-## [1] 0.2965479
+## [1] 0.2893738
 ## 
 ## $acc
-## [1] 0.9327354
+## [1] 0.9347285
 ## 
 ## $categorical_crossentropy
-## [1] 0.295504</code></pre>
+## [1] 0.2883264</code></pre>
 <p>Podemos también intentar con el ejemplo de spam:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(readr)
 <span class="kw">library</span>(tidyr)
@@ -748,13 +748,13 @@ tab_confusion &lt;-<span class="st"> </span><span class="kw">table</span>(modelo
 tab_confusion</code></pre></div>
 <pre><code>##    y_valid
 ##       0   1
-##   0 897  60
-##   1  30 547</code></pre>
+##   0 896  55
+##   1  31 552</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">prop.table</span>(tab_confusion, <span class="dv">2</span>)</code></pre></div>
 <pre><code>##    y_valid
 ##              0          1
-##   0 0.96763754 0.09884679
-##   1 0.03236246 0.90115321</code></pre>
+##   0 0.96655879 0.09060956
+##   1 0.03344121 0.90939044</code></pre>
 </div>
 </div>
 <div id="activaciones-relu" class="section level2">
@@ -806,13 +806,13 @@ history &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><s
 score &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">evaluate</span>(x_test, y_test)
 score</code></pre></div>
 <pre><code>## $loss
-## [1] 0.3036692
+## [1] 0.2871271
 ## 
 ## $acc
-## [1] 0.941704
+## [1] 0.939711
 ## 
 ## $categorical_crossentropy
-## [1] 0.2063511</code></pre>
+## [1] 0.2115004</code></pre>
 </div>
 </div>
 <div id="dropout-para-regularizacion" class="section level2">
@@ -902,37 +902,37 @@ hist_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">as
 <span class="kw">graf_pesos</span>(pesos) </code></pre></div>
 <p><img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-46-1.png" width="480" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">get_weights</span>(modelo_dropout)[[<span class="dv">3</span>]]</code></pre></div>
-<pre><code>##             [,1]
-##  [1,]  0.9739828
-##  [2,]  0.8980622
-##  [3,] -1.1668810
-##  [4,]  1.3625262
-##  [5,] -1.6335862
-##  [6,] -1.7534477
-##  [7,] -1.4724798
-##  [8,] -0.7711555
-##  [9,]  0.2682589
-## [10,]  1.2423295
-## [11,]  0.6945222
-## [12,] -1.4446635
-## [13,] -1.1300424
-## [14,]  1.0470448
-## [15,]  0.5532100
-## [16,] -1.4958400
-## [17,] -1.6265123
-## [18,] -1.4725618
-## [19,]  1.1640632
-## [20,] -1.3785912
-## [21,] -1.2072512
-## [22,]  1.2936895
-## [23,] -1.3581073
-## [24,]  0.5442253
-## [25,] -1.3795297
-## [26,] -1.8015870
-## [27,]  1.2695985
-## [28,] -1.1949564
-## [29,] -1.1696427
-## [30,] -1.3859587</code></pre>
+<pre><code>##              [,1]
+##  [1,] -0.02055110
+##  [2,] -1.18968213
+##  [3,] -1.83825672
+##  [4,]  1.37205255
+##  [5,] -1.46315765
+##  [6,] -1.78099012
+##  [7,] -1.36311162
+##  [8,] -1.42374241
+##  [9,]  1.11071265
+## [10,] -0.96320146
+## [11,] -1.04466140
+## [12,]  0.40042496
+## [13,]  1.18465531
+## [14,]  0.95219564
+## [15,]  1.27064216
+## [16,] -1.63601232
+## [17,] -1.28497744
+## [18,]  0.92599416
+## [19,] -1.36016572
+## [20,] -1.72797060
+## [21,] -1.36258996
+## [22,]  1.07142091
+## [23,]  0.46239254
+## [24,]  0.80072331
+## [25,]  0.98713773
+## [26,]  0.02007181
+## [27,] -1.44922602
+## [28,] -1.58758569
+## [29,] -1.23068392
+## [30,]  1.35829461</code></pre>
 <p>¿Cuáles de estas unidades tienen peso positivo y negativo en la capa final?</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pesos_capa_f &lt;-<span class="st"> </span><span class="kw">get_weights</span>(modelo_dropout)[[<span class="dv">3</span>]]
 <span class="kw">graf_pesos</span>(pesos[, pesos_capa_f <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.5</span>], <span class="dt">mostrar_facets =</span> <span class="ot">TRUE</span>)</code></pre></div>
@@ -975,19 +975,22 @@ history &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><s
 score &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">evaluate</span>(x_test, y_test)
 score</code></pre></div>
 <pre><code>## $loss
-## [1] 0.213945
+## [1] 0.2266205
 ## 
 ## $acc
-## [1] 0.9506726
+## [1] 0.9531639
 ## 
 ## $categorical_crossentropy
-## [1] 0.2098789</code></pre>
+## [1] 0.2226727</code></pre>
 
 </div>
 </div>
 </div>
 <h3>References</h3>
 <div id="refs" class="references">
+<div id="ref-Goodfellow-et-al-2016">
+<p>Goodfellow, Ian, Yoshua Bengio, and Aaron Courville. 2016. <em>Deep Learning</em>. MIT Press.</p>
+</div>
 <div id="ref-Srivastava:2014:DSW:2627435.2670313">
 <p>Srivastava, Nitish, Geoffrey Hinton, Alex Krizhevsky, Ilya Sutskever, and Ruslan Salakhutdinov. 2014. “Dropout: A Simple Way to Prevent Neural Networks from Overfitting.” <em>J. Mach. Learn. Res.</em> 15 (1). JMLR.org: 1929–58. <a href="http://dl.acm.org/citation.cfm?id=2627435.2670313" class="uri">http://dl.acm.org/citation.cfm?id=2627435.2670313</a>.</p>
 </div>
