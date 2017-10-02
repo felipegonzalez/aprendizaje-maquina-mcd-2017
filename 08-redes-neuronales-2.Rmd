@@ -472,7 +472,7 @@ actualizaciones un poco diferentes (nesterov).
 
 Los más comunes
 son descenso estocástico, descenso estocástico con momento,
-rmsprop y adam (Capítulo 8 del Deep Learning Book).
+rmsprop y adam (Capítulo 8 del Deep Learning Book, [@Goodfellow-et-al-2016]).
 
 
 ## Ajuste de redes con descenso estocástico
