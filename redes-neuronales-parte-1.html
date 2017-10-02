@@ -918,24 +918,24 @@ modelo_tc <span class="op">%&gt;%</span><span class="st"> </span>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">score &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">evaluate</span>(x_valid_s, y_valid)
 score</code></pre></div>
 <pre><code>## $loss
-## [1] 0.4338338
+## [1] 0.4339935
 ## 
 ## $acc
-## [1] 0.8012048
+## [1] 0.7921687
 ## 
 ## $binary_crossentropy
-## [1] 0.4298047</code></pre>
+## [1] 0.4297712</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tab_confusion &lt;-<span class="st"> </span><span class="kw">table</span>(modelo_tc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">predict_classes</span>(x_valid_s),y_valid) 
 tab_confusion</code></pre></div>
 <pre><code>##    y_valid
 ##       0   1
-##   0 197  40
-##   1  26  69</code></pre>
+##   0 194  40
+##   1  29  69</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">prop.table</span>(tab_confusion, <span class="dv">2</span>)</code></pre></div>
 <pre><code>##    y_valid
 ##             0         1
-##   0 0.8834081 0.3669725
-##   1 0.1165919 0.6330275</code></pre>
+##   0 0.8699552 0.3669725
+##   1 0.1300448 0.6330275</code></pre>
 <p>Es importante monitorear las curvas de aprendizaje (entrenamiento y validación) para diagnosticar mejoras:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df_iteraciones &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(iteraciones)
 <span class="kw">ggplot</span>(df_iteraciones, <span class="kw">aes</span>(<span class="dt">x=</span>epoch, <span class="dt">y=</span>value, <span class="dt">colour=</span>data, <span class="dt">group=</span>data)) <span class="op">+</span><span class="st"> </span>
@@ -1129,7 +1129,14 @@ hiperparams<span class="op">$</span>init_grupo &lt;-<span class="st"> </span><sp
 <p><img src="07-redes-neuronales_files/figure-html/unnamed-chunk-59-1.png" width="480" /></p>
 <div id="nota-entrenamientokeras" class="section level4">
 <h4><span class="header-section-number">7.6.4.1</span> Nota (entrenamientokeras)</h4>
-<p>Al entrenar con keras, nótese que - El valor de <em>loss</em> (pérdida de entrenamiento) incluye regularización (ridge, sin unidades dropout), pero el valor de <em>val_loss</em> no los incluye. - El valor de <em>loss</em> se calcula como el promedio de pérdidas sobre los minilotes. El valor de <em>val_loss</em> se calcula con los parámetros obtenidos al final de la época. - Por tanto, <em>loss</em> tiende a ser menor que lo que obtendríamos evaluando la pérdida de entrenamiento al final de la época, y puede ser en ocasiones más grande que <em>val_loss</em>. - Si queremos ver valores totalmente comparables, podemos obtener el score del modelo, al final del entrenamiento, tanto para entrenamiento como prueba. - Adicionalmente, diferencias en las muestras de entrenamiento y validación pueden producir también valores de validación ligaramente menores de entrenamiento. Este efecto puede ser más grande si se trata de muestras relativamente chicas de entrenamiento/prueba.</p>
+<p>Al entrenar con keras, nótese que</p>
+<ul>
+<li>El valor de <em>loss</em> (pérdida de entrenamiento) incluye regularización (ridge, sin unidades dropout), pero el valor de <em>val_loss</em> no los incluye.</li>
+<li>El valor de <em>loss</em> se calcula como el promedio de pérdidas sobre los minilotes. El valor de <em>val_loss</em> se calcula con los parámetros obtenidos al final de la época.</li>
+<li>Por tanto, <em>loss</em> tiende a ser menor que lo que obtendríamos evaluando la pérdida de entrenamiento al final de la época, y puede ser en ocasiones más grande que <em>val_loss</em>.</li>
+<li>Si queremos ver valores totalmente comparables, podemos obtener el score del modelo, al final del entrenamiento, tanto para entrenamiento como prueba.</li>
+<li>Adicionalmente, diferencias en las muestras de entrenamiento y validación pueden producir también valores de validación ligaramente menores de entrenamiento. Este efecto puede ser más grande si se trata de muestras relativamente chicas de entrenamiento/prueba.</li>
+</ul>
 </div>
 </div>
 </div>

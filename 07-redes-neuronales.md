@@ -1264,13 +1264,13 @@ score
 
 ```
 ## $loss
-## [1] 0.4338338
+## [1] 0.4339935
 ## 
 ## $acc
-## [1] 0.8012048
+## [1] 0.7921687
 ## 
 ## $binary_crossentropy
-## [1] 0.4298047
+## [1] 0.4297712
 ```
 
 ```r
@@ -1281,8 +1281,8 @@ tab_confusion
 ```
 ##    y_valid
 ##       0   1
-##   0 197  40
-##   1  26  69
+##   0 194  40
+##   1  29  69
 ```
 
 ```r
@@ -1292,8 +1292,8 @@ prop.table(tab_confusion, 2)
 ```
 ##    y_valid
 ##             0         1
-##   0 0.8834081 0.3669725
-##   1 0.1165919 0.6330275
+##   0 0.8699552 0.3669725
+##   1 0.1300448 0.6330275
 ```
 
 Es importante monitorear las curvas de aprendizaje (entrenamiento y
@@ -1640,6 +1640,7 @@ hiperparams$init_grupo <- cut(hiperparams$init_pesos, breaks=c(0.2,0.5,0.8))
 #### Nota (entrenamientokeras)
 
 Al entrenar con keras, nótese que
+
 - El valor de *loss* (pérdida de entrenamiento) incluye regularización (ridge, sin unidades dropout), pero
 el valor de *val_loss* no los incluye. 
 - El valor de *loss* se calcula como el promedio de pérdidas sobre los minilotes. 
