@@ -1,0 +1,371 @@
+# Métodos basados en árboles
+
+## Árboles para regresión y clasificación.
+
+La idea básica de los árboles es buscar puntos
+de cortes en las variables de entrada para
+hacer predicciones, ir dividiendo la muestra,
+y encontrar cortes sucesivos para refinar las predicciones.
+
+#### Ejemplo {-}
+Buscamos clasificar hogares según su ingreso, usando
+como entradas características de los hogares. Podríamos tener,
+por ejemplo:
+
+```{r}
+knitr::include_graphics('./imagenes/arboles_1.png')
+```
+
+- Con este árbol podemos clasificar nuevos hogares.
+- Nótese que los árboles pueden capturar interacciones entre las
+variables de entradas. En nuestro ejemplo ficticio, "automóvil" nos
+da información acerca del ingreso, pero solo caundo el nivel de educación
+del jefe de familia es bajo.
+- Árboles también pueden aproximar relaciones no lineales entre entradas
+y variable de salida (es similar a los ejemplos donde haciamos categorización
+de variables de entrada).
+- Igual que en redes neuronales, en lugar de buscar puntos de corte o interacciones
+a mano, con los árboles intentamos encontrarlos de manera automática.
+
+
+### Árboles para clasificación
+
+Un árbol particiona el espacio de entradas en rectángulos paralelos a los
+ejes, y hace predicciones basadas en un modelo simple dentro de
+cada una de esas particiones.
+
+Por ejemplo:
+
+```{r}
+knitr::include_graphics('./imagenes/arboles_2.png')
+```
+
+- El proceso de partición binaria recursiva (con una entrada a la vez)
+puede representarse mediante árboles binarios.
+- Los nodos terminales representan a la partición obtenida.
+
+Para definir el proceso de construcción de los árboles, debemos definir:
+
+1. ¿Cómo escoger las particiones? Idea: buscar hacer los nodos sucesivamente
+más puros (que una sola clase domine).
+2. ¿Cuándo declarar a un nodo como terminal? ¿Cuándo particionar más profundamente? Idea: dependiendo de la aplicación, buscamos hacer árboles
+chicos, o en otras árboles grandes que después podamos para no sobreajustar.
+3. ¿Cómo hacer predicciones en nodos terminales? IDea: escoger la clase más
+común en cada nodo terminal (la de máxima probabilidad).
+
+
+### Reglas de partición
+
+Supongamos que tenemos variables de entrada $(X_1,\ldots, X_p)$. Recursivamente
+particionamos cada nodo escogiendo entre particiones talques que:
+
+- Dependen de una sola variable de entrada $X_i$
+- Si $X_i$ es continua, la partición es de la forma $\{X_i\leq c\},\{X_i> c\}$,
+para alguna $c$ (punto de corte)
+- Si $X_i$ es categórica, la partición es de la forma
+$\{X_i\in S\},\{X_i\notin S\}$, para algún subconjunto $S$ de categorías de $X_i$.
+- En cada nodo candidatos, escogemos uno de estos cortes para particionar.
+
+¿Cómo escogemos la partición en cada nodo? En cada nodo, la partición
+se escoge de una manera miope o local, intentando separar las
+calses lo mejor que se pueda (sin considerar qué pasa en cortes hechos
+más adelante). En un nodo dado, escogemos la partición que 
+**reduce lo más posible su impureza**:
+
+### Medidas de impureza
+
+Consideramos un nodo $t$ de un árbol $T$, y sean $p_1(t),\ldots, p_K(t)$ las
+proporciones de casos de $t$ que caen en cada categoría.
+
+```{block2, type='comentario'}
+La **impureza** de un nodo $t$ está dada por 
+$$i(t) = -\sum_{j=1}^K p_j(t)\log p_j(t)$$
+Este medida se llama entropía. Hay otras posibilidades como medida
+de impureza (por ejemplo, coeficiente de Gini).
+```
+
+#### Ejemplo
+Graficamos la medida de impureza para dos clases:
+```{r}
+impureza <- function(p){
+  -(p*log(p) + (1-p)*log(1-p))
+}
+curve(impureza, 0,1)
+```
+
+Donde vemos que la máxima impureza se alcanza cuando las proporciones de 
+clase en un nodo so 50-50, y la mínima impureza (máxima pureza) se alcanza
+cuando en el nodo solo hay casos de una clase. 
+
+### Reglas de partición y tamaño del árobl
+
+Podemos escribir la regla de partición, que se aplica a cada nodo de un árbol
+
+```{block2, type='comentario'}
+**Regla de partición**
+En cada nodo, buscamos entre **todas** las variables $X_i$ y t **todos**
+los puntos de corte $c$ la que da la mayor reducción
+de impureza posible.
+```
+
+Lo que resta explicar es qué criterio de paro utilizamos para dejar de particionar.
+
+```{block2, type='comentario'}
+**Regla de paro**
+Cuando usemos árboles en ótros métodos, generalmente hay dos opciones:
+
+- Particionar hasta cierta profundidad fija (por ejemplo, máximo 8 nodos terminales). Este enfoque generalmente usa árboles relativamente chicos (se usa en boosting de árboles).
+- Dejar de particionar cuando encontramos un número mínimo de casos en un nodo (por ejemplo, 5 o 10 casos). Este enfoque resulta en árboles grandes, probablemente sobreajustados (se usa en bosques aleatorios).
+  
+Y cuando utilizamos los árboles por sí solos para hacer predicciones:
+  
+- Podemos probar distintos valores de tamaño de árbol, y escogemos por validación (muestra o cruzada) el tamaño final.
+- Podemos usar el método CART de Breiman, que consiste en construir un árbol
+grande y luego podar al tamaño correcto.
+```
+
+
+#### Ejemplo {-}
+
+Construímos algunos árboles con los datos de spam:
+
+
+```{r, message=FALSE, warning=FALSE}
+library(rpart)    			   
+library(rpart.plot)
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+spam_entrena <- read.csv('./datos/spam-entrena.csv')
+spam_prueba <- read.csv('./datos/spam-prueba.csv')
+head(spam_entrena)
+```
+
+Podemos construir un árbol grande. En este caso, 
+buscamos que los nodos resultantes tengan al menos un caso
+y para particionar pedimos que el nodo tenga al menos 10 casos:
+
+```{r}
+set.seed(22)
+control_completo <- rpart.control(cp=0, 
+                                  minsplit=10, 
+                                  minbucket=1, 
+                                  xval=10, 
+                                  maxdepth=30)
+spam_tree_completo<-rpart(spam ~ ., data = spam_entrena, method = "class",
+                          control = control_completo)
+prp(spam_tree_completo, type=4, extra=4)
+```
+
+Podemos hacer predicciones con este árbol. Por ejemplo, en entrenamiento tenemos:
+
+```{r}
+prop_clase <- predict(spam_tree_completo, newdata = spam_entrena)
+table(prop_clase[,2]>0.5, spam_entrena$spam )
+```
+y en prueba:
+
+```{r}
+prop_clase <- predict(spam_tree_completo, newdata = spam_prueba)
+table(prop_clase[,2]>0.5, spam_prueba$spam )
+```
+Y notamos la brecha grande entre prueba y entrenamiento, lo que sugiere sobreajuste. Este árbol es demasiado grande.
+
+
+### Costo - Complejidad (Breiman)
+
+Una manera de escoger árboles del tamaño correcto es utilizando una medida inventada
+por Breiman para medir la calidad de un árbol. La complejidad
+de un árbol $T$ está dada por (para $\alpha$ fija):
+
+$$C_\alpha (T) = \overline{err}(T) + \alpha \vert T\vert$$
+donde
+
+- $\overline{err}(T)$ es el error de clasificación de $T$
+- $\vert T\vert$ es el número de nodos terminales del árbol
+- $\alpha>0$ es un parámetro de penalización del tamaño del árbol.
+
+Este medida de complejidad incluye qué tan bien clasifica el árbol
+en la muestra de entrenamiento, pero penaliza por el tamaño del árbol.
+
+
+Para escoger el tamaño del árbol correcto, definimos
+$T_\alpha \subset T$ como el subárbol de $T$ que
+minimiza la medidad $C_\alpha (T_\alpha)$.
+
+Para entender esta decisión, obsérvese que:
+
+- Un subárbol grande de $T$ tiene menor valor de $\overline{err}(T)$ (pues usa más cortes)
+- Pero un subárbol grande de $T$ tiene más penalización por complejidad $\alpha\vert T\vert$.
+
+
+De modo que para $\alpha$ fija, el árbol $T_\alpha$ hace un
+balance entre error de entrenamiento y penalización por complejidad.
+
+
+#### Ejemplo
+
+Podemos ver subárboles más chicos creados durante el procedimiento de división
+de nodos (prp está el paquete rpart.plot). En este caso
+pondemos $\alpha = 0.2$ (cp = $\alpha$ = complexity parameter):
+
+```{r}
+arbol.chico.1 <- prune(spam_tree_completo, cp=0.2)
+prp(arbol.chico.1, type = 4, extra = 4)
+```
+
+Si disminuimos el coeficiente $alpha$.
+
+```{r}
+arbol.chico.1 <- prune(spam_tree_completo, cp=0.07)
+prp(arbol.chico.1, type = 4, extra = 4)
+```
+
+y vemos que en efecto el árbol $T_{0.07}$ contiene al árbol
+$T_{0.2}$, y ambos son subárboles del árbol gigante que construimos al principio.
+
+
+
+
+```{block2, type='comentario'}
+Para podar un árbol con costo-complejidad, encontramos para
+cada $\alpha>0$ (coeficiente de complejidad) un árbol
+$T_\alpha\subset T$ que minimiza el costo-complejidad. Esto resulta
+en una sucesión de árboles
+$T_0\subset T_1\subset T_2\subset \cdots T_m\subset T$,
+de donde podemos escoger con validación el árbol óptimo.
+```
+
+*Nota*: Esto es un teorema que hace falta demostrar: el resultado
+principal es que conforme aumentamos $\alpha$, vamos eliminiando
+ramas del árbol, de manera que los 
+
+
+
+```{r}
+arbol.chico.1 <- prune(spam_tree_completo, cp=0.05)
+prp(arbol.chico.1, type = 4, extra = 4)
+```
+
+
+```{r}
+arbol.chico.1 <- prune(spam_tree_completo, cp=0.02)
+prp(arbol.chico.1, type = 4, extra = 4)
+```
+
+```{r}
+source('./scripts/fancyRpartPlot.R')
+fancyRpartPlot(arbol.chico.1, sub='')
+```
+
+
+**Nota**: Enfoques de predicción basados en solo árbol para
+clasificación y regresión son típicamente superados en 
+predicción por otros métodos. ¿Cuál crees que sea la razón? ¿Es un
+problema de varianza o sesgo?
+
+
+
+
+### (Opcional) Predicciones con CART
+
+Podemos hacer predicciones con un sólo árbol. En el caso de spam, haríamos
+
+```{r}
+spam_tree <-rpart(spam ~ ., data = spam_entrena, 
+                  method = "class", control=list(cp=0, 
+                                              minsplit=5,minbucket=1))
+```
+
+Ahora mostramos los resultados de cada árbol para cada
+valor de $\alpha$. La siguiente función nos da una estimación
+de validación cruzada del error:
+
+```{r}
+printcp(spam_tree)
+```
+
+Y usamos la regla de mínimo error o a una desviación estándar
+del error mínimo:
+
+```{r}
+arbol_podado <- prune(spam_tree, cp =  0.00276396)
+prp(arbol_podado)
+```
+
+Cuyo error de predicción es:
+
+```{r}
+probs_clase <- predict(arbol_podado, newdata=spam_prueba)
+head(probs_clase)
+prop.table(table((probs_clase[,2]>0.5),spam_prueba$spam),2)
+```
+
+
+### Variabilidad en el proceso de construcción
+
+
+Existe variabilidad considerable en el proceso de división.  Por ejemplo:
+
+```{r}
+muestra.1 <- spam_entrena[sample(1:nrow(spam_entrena), nrow(spam_entrena), replace=T), ]
+spam.tree.completo.1 <-rpart(spam ~ ., data =  muestra.1, method = "class",
+                          control = control_completo)
+arbol.chico.1 <- prune(spam.tree.completo.1, cp=0.03)
+prp(arbol.chico.1, type = 4, extra = 4)
+```
+
+```{r}
+muestra.1 <- spam_entrena[sample(1:nrow(spam_entrena), nrow(spam_entrena), replace=T), ]
+spam.tree.completo.1 <-rpart(spam ~ ., data =  muestra.1, method = "class",
+                          control = control.completo)
+arbol.chico.1 <- prune(spam.tree.completo.1, cp=0.03)
+prp(arbol.chico.1, type = 4, extra = 4)
+```
+
+### Relación lineal
+
+Los árboles pueden requerir ser muy grandes para estimar apropiadamente
+relaciones lineales.
+
+```{r}
+x <- runif(200,0,1)
+y <- 2*x + rnorm(200,0,0.1)
+arbol <- rpart(y~x, data=data_frame(x=x, y=y), method = 'anova')
+x_pred <- seq(0,1,0.05)
+y_pred <- predict(arbol, newdata = data_frame(x=x_pred))
+y_verdadera <- 2*x_pred
+dat <- data_frame(x_pred=x_pred, y_pred=y_pred, y_verdadera=y_verdadera) %>% gather(y, valor, y_pred:y_verdadera)
+ggplot(dat, aes(x=x_pred, y=valor, colour=y)) + geom_line()
+```
+
+
+
+### Ventajas y desventajas de árboles
+
+
+Ventajas:
+
+1. Árboles chicos son fáciles de explicar e interpretar
+2. Capturan interacciones entre las variables de entrada
+3. Son robustos en el sentido de que
+ - valores numéricos atípicos no hacen fallar al método
+ - no es necesario transformar variables
+ - hay formas fáciles de lididar con datos faltantes (cortes sucedáneos)
+4. Se ajustan rápidamente yson relativamente fácilmente de interpretar (por ejemplo, son útiles para clasificar en campo)
+5. Árboles grandes generalmente no sufren de sesgo.
+
+Desventajas:
+
+1. Tienen dificultades en capturar estructuras lineales
+2. En la interpretación, tienen la dificultad de que muchas veces
+algunas variables de entrada "enmascaran" a otras. Que una variable de entrada
+no esté en el árbol no quiere decir que nosea "importante" para predecir
+(regresión ridge lidia mejor con esto).
+3. Son inestables (varianza alta) por construcción: es local/miope, basada
+en cortes duros si/no. Esto produce desempeño predictivo relativamente malo
+(p ej: una pequeña diferencia en cortes iniciales puede resultar en estructuras
+de árbol totalmente distintas).
+4. Adicoinalmente, no son apropiados cuando hay variables categóricas con 
+muchas niveles: en estos casos, el árbol sobreajusta desde los primeros
+cortes, y las predicciones son malas.

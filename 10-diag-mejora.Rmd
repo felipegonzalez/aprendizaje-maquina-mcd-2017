@@ -1,0 +1,557 @@
+# Diagnóstico y mejora de modelos
+
+## Aspectos generales
+
+Al comenzar un proyecto de machine learning, las primeras consideraciones deben ser:
+
+
+```{block2, type='comentario'}
+1. Establecer métricas de error apropiadas para el problema, y cuál es el máximo
+valor de este error requerido para nuestra aplicación.
+
+2. Construir un *pipeline* lo antes posible que vaya de datos hasta medición
+de calidad de los modelos. Este pipeline deberá, al menos, incluir cálculos de entradas,
+medición de desempeño de los modelos y cálculos de otros diagnósticos (como error
+de entrenamiento, convergencia de algoritmos, etc.)
+```
+
+En general, es difícil preveer exactamente qué va a funcionar para
+un problema particular, y los diagnósticos que veremos 
+requieren de haber ajustado modelos. Nuestra primera
+recomendación para ir hacia un modelo de mejor desempeño es:
+
+Es mejor y más rápido comenzar rápido, aún con un modelo simple, con entradas {\em crudas} (no muy refinadas), y con los datos que tenemos a mano. De esta forma podemos aprender  más rápido. Demasiado tiempo pensando, discutiendo, o diseñando qué algoritmo
+deberíamos usar, cómo deberíamos construir las entradas, etc. es muchas veces
+tiempo perdido.
+
+Con el pipeline establecido, si el resultado no es satisfactorio, entonces
+tenemos que tomar decisiones para mejorar. 
+
+## ¿Qué hacer cuando el desempeño no es satisfactorio?
+
+Supongamos que tenemos un clasificador construido con regresión 
+logística regularizada, y que cuando lo aplicamos a nuestra muestra 
+de prueba el desempeño
+es malo. ¿Qué hacer?
+
+Algunas opciones:
+
+- Conseguir más datos de entrenamiento.
+- Reducir el número de entradas por algún método (eliminación manual, componentes principales, etc.)
+- Construir más entradas utilizando distintos enfoques o fuentes de datos.
+- Incluir variables derivadas adicionales  e interacciones.
+- Intentar construir una red neuronal para predecir (otro método).
+- Aumentar la regularización.
+- Disminuir la regularización.
+- Correr más tiempo el algoritmo de ajuste.
+
+¿Con cuál empezar? Cada una de estas estrategias intenta arreglar
+distintos problemas. En lugar de intentar al azar distintas cosas, que
+consumen tiempo y dinero y no necesariamente nos van a llevar a mejoras, 
+a continuación veremos diagnósticos y recetas
+que nos sugieren la mejor manera de usar nuestro tiempo para mejorar 
+nuestros modelos. 
+
+
+Usaremos el siguiente ejemplo para ilustrar los conceptos:
+
+
+#### Ejemplo {-}
+
+Nos interesa hacer una predicción de polaridad de críticas o comentarios
+de pelíıculas: buscamos clasificar una reseña como positiva o negativa dependiendo de su contenido.  Tenemos dos grupos de reseñas separadas en positivas y negativas
+(estos datos fueron etiquetados por una persona).
+
+```{r, message=FALSE, warning=FALSE, echo =FALSE}
+library(readr)
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+```
+
+Cada reseña está un archivo de texto, y tenemos 1000 de cada tipo:
+
+```{r}
+negativos <- list.files('./datos/sentiment/neg', full.names = TRUE)
+positivos <- list.files('./datos/sentiment/pos', full.names = TRUE)
+head(negativos)
+head(positivos)
+length(negativos)
+length(positivos)
+```
+
+```{r}
+read_file(negativos[1])
+read_file(positivos[1])
+```
+
+- Consideremos primero la métrica de error, que depende de nuestra aplicación. En
+este caso, quisiéramos hacer dar una calificación a cada película basada en el 
+% de reseñas positivas que tiene. Supongamos que se ha decidido que
+necesitamos al menos una tasa de correctos de 90\% para que el score sea confiable
+ (cómo calcularías algo así?). 
+ 
+- Ahora necesitamos construir un pipeline para obtener las primeras predicciones.
+ Tenemos que pensar qué entradas podríamos construir. 
+
+## Pipeline de procesamiento
+
+Empezamos por construir funciones para leer datos (ver script). 
+Construimos un data frame:
+
+```{r}
+source('./scripts/funciones_sentiment.R')
+df <- prep_df('./datos/sentiment/') %>% unnest(texto)
+nrow(df)
+df$texto[1]
+```
+  
+Ahora separamos una muestra de prueba (y una de entrenamiento más chica
+para simular después el proceso de recoger más datos):
+
+```{r}
+set.seed(94512)
+df$muestra <- sample(c('entrena', 'prueba'), 2000, prob = c(0.8, 0.2),
+                     replace = TRUE)
+table(df$muestra)
+df_ent <- df %>% filter(muestra == 'entrena')
+df_pr <- df %>% filter(muestra == 'prueba')
+df_ent <- sample_n(df_ent, nrow(df_ent)) #permutamos al azar
+df_ent_grande <- df_ent
+df_ent <- df_ent %>% sample_n(700)
+```
+  
+Intentemos algo simple para empezar: consideramos qué palabras contiene
+cada reseña, e intentamos clasificar en base esas palabras. Así que en
+primer lugar dividimos cada texto en *tokens* (pueden ser palabras, o 
+sucesiones de caracteres o de palabras de tamaño fijo (n-gramas), oraciones, etc.).
+En este caso, usamos el paquete *tidytext*. La función *unnest_tokens* elimina
+signos de puntuación, convierte todo a minúsculas, y separa las palabras:
+
+Vamos a calcular los tokens y ordernarlos por frecuencia. Empezamos
+calculando nuestro vocabulario. Supongamos que usamos las 50 palabras más comunes,
+y usamos poca regularización:
+
+
+```{r}
+vocabulario <- calc_vocabulario(df_ent, 50)
+head(vocabulario)
+tail(vocabulario)
+```
+
+
+
+```{block2, type='comentario'}
+- Todas las etapas de preprocesamiento deben hacerse en función de los datos de entrenamiento.
+En este ejemplo, podríamos cometer el error de usar todos los datos para  calcular
+el vocabulario.
+- Nuestras entradas aquí no se ven muy buenas:  los términos más comunes son en su mayoría palabras sin significado, de 
+modo que no esperamos un desempeño muy bueno. En este momento no nos preocupamos
+mucho por eso, queremos correr los primeros modelos.
+```
+
+```{r, message=FALSE, warning=FALSE}
+library(glmnet)
+mod_x <- correr_modelo(df_ent, df_pr, vocabulario, lambda = 1e-1)
+```
+
+## Diagnósticos: sesgo y varianza
+
+Y notamos que
+
+- El error de entrenamiento no es satisfactorio: está muy por arriba de nuestro objetivo (10\%)
+- Hay algo de brecha entre entrenamiento y prueba, de modo que disminuir varianza puede
+ayudar.
+
+¿Qué hacer? Nuestro clasificador ni siquiera puede clasificar bien la muestra de entrenamiento,
+lo que implica que nuestro modelo tiene sesgo alto. Controlar la varianza
+no nos va a ayudar a resolver nuestro problema en este punto. Podemos intentar un modelo
+más flexible.
+
+```{block2, type='comentario'}
+Error de entrenamiento demasiado alto indica que necesitamos probar con modelos
+más flexibles (disminuir el sesgo).
+```
+
+Para disminuir el sesgo podemos:
+
+- Expander el vocabulario (agregar más entradas)
+- Crear nuevas entradas a partir de los datos (más informativas)
+- Usar un método más flexible (como redes neuronales)
+- Regularizar menos
+
+Cosas que no van a funcionar (puede bajar un poco el error de validación, pero
+el error de entrenamiento es muy alto):
+
+- Conseguir más datos de entrenamiento (el error de entrenamiento va a subir, y el de validación va a quedar muy arriba, aunque disminuya)
+- Regularizar más (misma razón)
+- Usar un vocabulario más chico, eliminar entradas (misma razón)
+
+
+Por ejemplo, si juntáramos más datos de entrenamiento (con el costo que esto
+implica), obtendríamos:
+
+```{r}
+mod_x <- correr_modelo(df_ent_grande, df_pr, vocabulario, lambda = 1e-1)
+```
+Vemos que aunque bajó ligeramente el error de prueba, el error es demasiado alto.
+Esta estrategia no funcionó con este modelo, y hubiéramos perdido tiempo y dinero 
+(por duplicar el tamaño de muestra)
+sin obtener mejoras apreciables.
+
+**Observación**: el error de entrenamiento subió. ¿Puedes explicar eso? Esto sucede
+porque típicamente el error para cada caso individual de la muestra original sube, pues la optimización se hace sobre más casos. Es más difícil ajustar los datos de entrenamiento
+cuando tenemos más datos.
+
+
+En lugar de eso, podemos comenzar quitando regularización, por ejemplo
+
+```{r}
+mod_x <- correr_modelo(df_ent, df_pr, vocabulario, lambda =1e-10)
+```
+
+Y notamos que reducimos un poco el sesgo. Por el momento, seguiremos intentando reducir sesgo. Podemos ahora incluir más variables
+
+
+```{r}
+vocabulario <- calc_vocabulario(df_ent, 3000)
+mod_x <- correr_modelo(df_ent, df_pr, vocabulario, lambda=1e-10)
+```
+
+
+El sesgo ya no parece ser un problema: Ahora tenemos
+un problema de varianza. 
+
+```{block2, type='comentario'}
+Una brecha grande entre entrenamiento y validación muchas veces indica
+sobreajuste (el problema es varianza).
+```
+
+Podemos regularizar más:
+
+```{r}
+mod_x <- correr_modelo(df_ent, df_pr, vocabulario, lambda=1e-6)
+```
+
+```{r}
+mod_x <- correr_modelo(df_ent, df_pr, vocabulario, lambda=0.05)
+```
+
+
+## Refinando el pipeline
+
+```{block2, type='comentario'}
+Refinar el pipeline para producir mejores entradas, o corridas más rápidas, generalmente
+es una buena inversión de tiempo (aunque es mejor no hacerlo prematuramente).
+```
+
+El error de entrenamiento es satisfactorio todavía, y nos estamos acercando
+a nuestro objetivo (intenta regularizar más para verificar que el problema
+ahora es sesgo). En este punto, podemos intentar reducir 
+ varianza (reducir error de prueba con algún incremento en error de entrenamiento).
+
+- Buscar más casos de entrenamiento: si son baratos, esto podría ayudar (aumentar
+al doble o 10 veces más).
+- Redefinir entradas más informativas, para reducir el número de variables pero
+al mismo tiempo no aumentar el sesgo.
+
+
+Intentaremos por el momento el segundo camino (reducción de varianza). 
+Podemos intentar tres cosas:
+
+- Eliminar los términos que son demasiado frecuentes (son palabras no informativas,
+como the, a, he, she, etc.). Esto podría reducir varianza sin afectar mucho el sesgo.
+- Usar raíces de palabras en lugar de palabras (por ejemplo, transfomar
+defect, defects, defective -> defect y boring,bored, bore ->  bore, etc.). De esta
+manera, controlamos la proliferación de entradas que indican lo mismo y aumentan
+varianza - y quizá el sesgo no aumente mucho.
+- Intentar usar bigramas - esto reduce el sesgo, pero quizá la varianza no aumente mucho.
+
+```{r}
+data("stop_words")
+head(stop_words)
+```
+
+```{r}
+head(calc_vocabulario(df_ent, 100))
+head(calc_vocabulario(df_ent, 100, remove_stop = TRUE))
+```
+
+
+```{r}
+vocabulario <- calc_vocabulario(df_ent, 3000, remove_stop = TRUE)
+head(vocabulario %>% arrange(desc(frec)),20)
+tail(vocabulario %>% arrange(desc(frec)),20)
+```
+
+Este vocabulario parece que puede ser más útil. Vamos a tener que ajustar
+la regularización de nuevo (y también el número de entradas). Nota:
+este proceso también lo podemos hacer con cv.glmnet de manera más rápida.
+
+
+```{r}
+mod_x <- correr_modelo_cv(df_ent, df_pr, vocabulario, lambda = exp(seq(-10,2,0.1)))
+#mod_x <- correr_modelo(df_ent, df_pr, vocabulario, lambda =1)
+#mod_x <- correr_modelo(df_ent, df_pr, vocabulario, lambda =0.1)
+#mod_x <- correr_modelo(df_ent, df_pr, vocabulario, lambda =0.01)
+```
+
+No estamos mejorando. Podemos intentar con un número diferente de entradas (menos,
+pues nuestro problema es varianza):
+```{r}
+vocabulario <- calc_vocabulario(df_ent, 4000, remove_stop = TRUE)
+mod_x <- correr_modelo_cv(df_ent, df_pr, vocabulario, lambda = exp(seq(-10,2,0.1)))
+```
+
+Y parece que nuestra estrategia no está funcionando muy bien.
+Regresamos a nuestro modelo con ridge
+
+```{r}
+vocabulario <- calc_vocabulario(df_ent, 3000, remove_stop = FALSE)
+mod_x <- correr_modelo_cv(df_ent, df_pr, vocabulario, lambda = exp(seq(-5,2,0.1)))
+```
+
+Podemos intentar aumentar el número de palabras y aumentar también la
+regularización
+
+```{r}
+vocabulario <- calc_vocabulario(df_ent, 4000, remove_stop = FALSE)
+mod_x <- correr_modelo_cv(df_ent, df_pr, vocabulario, lambda = exp(seq(-5,2,0.1)))
+```
+
+## Consiguiendo más datos
+
+```{block2, type='comentario'}
+Si nuestro problema es varianza, conseguir más datos de entrenamiento puede
+ayudarnos, especialmente si producir estos datos es relativamente barato y rápido.
+```
+
+
+Como nuestro principal problema es varianza, podemos mejorar buscando más datos. Supongamos
+que hacemos eso en este caso, conseguimos el doble casos de entrenamiento.
+En este ejemplo,
+podríamos etiquetar más reviews: esto es relativamente barato y rápido
+
+```{r}
+vocabulario <- calc_vocabulario(df_ent_grande, 3000, remove_stop = FALSE)
+mod_x <- correr_modelo_cv(df_ent_grande, df_pr, vocabulario, lambda = exp(seq(-5,2,0.1)))
+```
+
+Y ya casi logramos nuestro objetivo. Podemos intentar con más palabras
+```{r}
+vocabulario <- calc_vocabulario(df_ent_grande, 4000, remove_stop = FALSE)
+mod_x <- correr_modelo_cv(df_ent_grande, df_pr, vocabulario, lambda = exp(seq(-5,2,0.1)))
+```
+
+
+Y esto funcionó bien. Subir más la regularización no ayuda mucho (pruébalo).
+Parece que el sesgo lo podemos hacer
+chico (reducir el error de entrenamiento considerablemente), pero
+tenemos un problema más grande con la varianza.
+
+- Quizá muchas palabras que estamos usando
+no tienen qué ver con la calidad de positivo/negativo, y eso induce varianza.
+- Estos modelos no utilizan la estructura que hay en las reseñas, simplemente
+cuentan qué palabras aparecen. Quizá aprovechar esta estructura podemos incluir
+variables más informativas que induzcan menos varianza sin aumentar el sesgo.
+- Podemos conseguir más datos.
+
+
+Obsérvese que:
+
+- ¿Podríamos intentar con una red neuronal totalmente conexa? Probablemente
+esto no va a ayudar, pues es un modelo más complejo y nuestro problema es
+varianza.
+
+## Usar datos adicionales
+
+```{block2, type='comentario'}
+Considerar fuentes adicionales de datos muchas veces puede ayudar a mejorar
+nuestras entradas, lo cual puede tener beneficios en predicción (tanto sesgo como
+varianza).
+```
+
+Intentemos el primer camino. Probamos usar palabras que tengan 
+afinidad como parte de su significado (positivas y negativas). Estos datos
+están incluidos en el paquete *tidytext*.
+
+
+```{r}
+bing <- filter(sentiments, lexicon == 'bing')
+tail(bing)
+```
+
+```{r}
+dim(vocabulario)
+vocabulario <- calc_vocabulario(df_ent_grande, 8000, remove_stop = FALSE)
+voc_bing <- vocabulario %>% inner_join(bing %>% rename(palabra = word))
+dim(voc_bing)
+mod_x <- correr_modelo_cv(df_ent_grande, df_pr, voc_bing, alpha=0,
+                       lambda = exp(seq(-5,2,0.1)))
+```
+Estas variables solas no dan un resultado tan bueno (tenemos tanto sesgo
+como varianza altas). Podemos combinar:
+
+```{r}
+vocabulario <- calc_vocabulario(df_ent_grande, 3000, remove_stop =FALSE)
+voc <- bind_rows(vocabulario, voc_bing %>% select(palabra, frec)) %>% unique
+dim(voc)
+mod_x <- correr_modelo_cv(df_ent_grande, df_pr, voc, alpha=0, lambda = exp(seq(-5,2,0.1)))
+```
+
+Este camino no se ve mal, pero no hemos logrado mejoras. Aunque quizá valdría la pena
+intentar refinar más y ver qué pasa. 
+
+## Análisis de errores
+
+
+Ahora podemos ver qué errores estamos cometiendo. Busquemos los peores. Corremos el mejor
+modelo hasta ahora:
+
+```{r}
+vocabulario <- calc_vocabulario(df_ent_grande, 4000, remove_stop = FALSE)
+mod_x <- correr_modelo_cv(df_ent_grande, df_pr, vocabulario, lambda = exp(seq(-5,2,0.1)))
+```
+
+Y busquemos las diferencias más grandes del la probabilidad ajustada con la
+clase observada
+
+```{r}
+y <- mod_x$prueba$y
+x <- mod_x$prueba$x
+probs <- predict(mod_x$mod, newx = x, type ='response', s='lambda.min')
+
+df_1 <- data_frame(id = rownames(x), y=y, prob = probs[,1]) %>%
+  mutate(error = y - prob) %>% arrange(desc(abs(error)))
+df_1
+filter(df, id == 1461) %>% pull(texto)
+filter(df, id == 1508) %>% pull(texto)
+```
+
+```{r}
+filter(df, id == 222) %>% pull(texto) #negativa
+filter(df, id == 25) %>% pull(texto) #negativa
+filter(df, id == 728) %>% pull(texto) #negativa
+
+```
+
+Algunos de los errores son difíciles (por ejemplo, una reseña que dice que
+la película es tan mala que es buena). Otros quizá podemos hacer algo con nuestro
+método: en algunas partes vemos algunas problemas con nuestro método, por ejemplo, 
+"no energy" - nuestro método no toma en cuenta el orden de las palabras. Podemos
+intentar capturar algo de esto usando bigramas (pares de palabras) en lugar
+de simplemente usar palabras.
+
+```{r}
+vocabulario <- calc_vocabulario(df_ent_grande, 3800, remove_stop = FALSE)
+mod_x <- correr_modelo_cv(df_ent_grande, df_pr, vocabulario, lambda = exp(seq(-5,2,0.1)))
+vocabulario_bigramas <- calc_vocabulario(df_ent_grande, 500, bigram = TRUE)
+vocabulario_bigramas %>% arrange(desc(frec))
+vocabulario_bigramas %>% arrange((frec))
+```
+
+```{r}
+library(stringr)
+mod_bigramas <- correr_modelo_cv(df_ent_grande, df_pr, vocabulario_bigramas, 
+                                alpha=1,
+                          lambda = exp(seq(-7,2,0.1)), bigram = TRUE)
+
+```
+
+Este resultado no es malo. Podemos intentar construir un modelo con unigramas
+y bigramas:
+
+```{r}
+y <- mod_x$entrena$y
+x_1 <- mod_x$entrena$x
+x_2 <- mod_bigramas$entrena$x
+mod_ub <- cv.glmnet(x = cbind(x_1, x_2), 
+                       y = y, alpha = 0.0, family ='binomial',
+                       lambda = exp(seq(-5,1,0.1)))
+
+plot(mod_ub)
+x_1p <- mod_x$prueba$x
+x_2p <- mod_bigramas$prueba$x
+preds_ent <- predict(mod_ub, newx = cbind(x_1,x_2), type='class', lambda ='lambda.min')
+mean(preds_ent != mod_x$entrena$y)
+
+preds_1 <- predict(mod_ub, newx = cbind(x_1p,x_2p), type='class', lambda ='lambda.min')
+mean(preds_1 != mod_x$prueba$y)
+```
+
+#### Ejemplo (opcional)
+
+En este ejemplo no tenemos muchos datos, pero puedes intentar
+de todas formas ajustar una red neuronal adaptada al problema
+(word embeddings, que veremos más adelante, y convoluciones
+de una dimensión a lo largo de oraciones). Quizá es buena
+idea empezar con un conjunto de datos más grandes, como
+dataset_imdb() en el paquete keras.
+
+```{r, eval=FALSE}
+if(Sys.info()['nodename'] == 'vainilla.local'){
+  # esto es por mi instalación particular de tensorflow - típicamente
+  # no es necesario que corras esta línea.
+  Sys.setenv(TENSORFLOW_PYTHON="/usr/local/bin/python")
+}
+library(keras)
+vocabulario <- calc_vocabulario(df_ent_grande, 4000, remove_stop = FALSE)
+dim(vocabulario)
+entrena <- convertir_lista(df_ent_grande, vocabulario)
+prueba <- convertir_lista(df_pr, vocabulario)
+quantile(sapply(entrena$x, length))
+x_train <- entrena$x %>%
+  pad_sequences(maxlen = 2000, truncating="post")
+x_test <- prueba$x %>%
+  pad_sequences(maxlen = 2000, truncating='post')
+
+```
+
+
+
+```{r, eval=FALSE}
+
+model <- keras_model_sequential()
+model %>% 
+  # Start off with an efficient embedding layer which maps
+  # the vocab indices into embedding_dims dimensions
+  layer_embedding(input_dim = nrow(vocabulario)+2, output_dim = 20, 
+                  input_length=2000,
+                  embeddings_regularizer = regularizer_l2(0.00)) %>%
+  layer_dropout(0.5) %>%
+  layer_conv_1d(
+    filters = 30, kernel_size=3, 
+    padding = "valid", activation = "relu", strides = 1,
+    kernel_regularizer = regularizer_l2(0.01)) %>%
+  # Apply max pooling:
+  layer_dropout(0.5) %>%
+  layer_global_max_pooling_1d() %>%
+  # Add a vanilla hidden layer:
+  layer_dense(20, activation ='relu') %>%
+  layer_dropout(0.5) %>%
+  layer_dense(1) %>%
+  layer_activation("sigmoid")
+
+
+# Compile model
+model %>% compile(
+  loss = "binary_crossentropy",
+  optimizer = optimizer_adam(lr=0.001),
+  metrics = c("accuracy","binary_crossentropy")
+)
+
+model %>%
+  fit(
+    x_train, entrena$y,
+    batch_size = 128,
+    epochs = 100,
+    #  callback = callback_early_stopping(monitor='val_loss', patience=50),
+    validation_data = list(x_test, prueba$y)
+  )
+print("Entrenamiento")
+evaluate(model, x_train, entrena$y)
+print("Prueba")
+evaluate(model, x_test, prueba$y )
+```
+
+
