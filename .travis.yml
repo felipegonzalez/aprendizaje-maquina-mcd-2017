@@ -3,9 +3,9 @@ cache: packages
 pandoc_version: 1.19.2.1
 
 before_script:
+  - sudo apt-get install libopenblas-base
   - chmod +x ./_build.sh
   - chmod +x ./_deploy.sh
-  - sudo apt-get install libopenblas-base
 
 script:
   - ./_build.sh
