@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html >
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Aprendizaje de máquina</title>
+  <meta name="description" content="Notas y material para el curso de aprendizaje de máquina 2017 (ITAM)">
+  <meta name="generator" content="bookdown 0.5.4 and GitBook 2.6.7">
+
+  <meta property="og:title" content="Aprendizaje de máquina" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="Notas y material para el curso de aprendizaje de máquina 2017 (ITAM)" />
+  <meta name="github-repo" content="felipegonzalez/aprendizaje-maquina-2017" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Aprendizaje de máquina" />
+  
+  <meta name="twitter:description" content="Notas y material para el curso de aprendizaje de máquina 2017 (ITAM)" />
+  
+
+<meta name="author" content="Felipe González">
+
+
+<meta name="date" content="2017-10-09">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  
+  
+<link rel="prev" href="redes-convolucionales.html">
+<link rel="next" href="metodos-basados-en-arboles.html">
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+<link rel="stylesheet" href="toc.css" type="text/css" />
+<link rel="stylesheet" href="font-awesome.min.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Aprendizaje Máquina</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Temario y referencias</a><ul>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#evaluacion"><i class="fa fa-check"></i>Evaluación</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#software-r-y-rstudio"><i class="fa fa-check"></i>Software: R y Rstudio</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#referencias-principales"><i class="fa fa-check"></i>Referencias principales</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#otras-referencias"><i class="fa fa-check"></i>Otras referencias</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#otros-materiales"><i class="fa fa-check"></i>Otros materiales</a></li>
+</ul></li>
+<li class="chapter" data-level="1" data-path="introduccion.html"><a href="introduccion.html"><i class="fa fa-check"></i><b>1</b> Introducción</a><ul>
+<li class="chapter" data-level="1.1" data-path="introduccion.html"><a href="introduccion.html#que-es-aprendizaje-de-maquina-machine-learning"><i class="fa fa-check"></i><b>1.1</b> ¿Qué es aprendizaje de máquina (machine learning)?</a></li>
+<li class="chapter" data-level="1.2" data-path="introduccion.html"><a href="introduccion.html#aprendizaje-supervisado-1"><i class="fa fa-check"></i><b>1.2</b> Aprendizaje Supervisado</a><ul>
+<li class="chapter" data-level="1.2.1" data-path="introduccion.html"><a href="introduccion.html#proceso-generador-de-datos-modelo-teorico"><i class="fa fa-check"></i><b>1.2.1</b> Proceso generador de datos (modelo teórico)</a></li>
+</ul></li>
+<li class="chapter" data-level="1.3" data-path="introduccion.html"><a href="introduccion.html#predicciones"><i class="fa fa-check"></i><b>1.3</b> Predicciones</a></li>
+<li class="chapter" data-level="1.4" data-path="introduccion.html"><a href="introduccion.html#cuantificacion-de-error-o-precision"><i class="fa fa-check"></i><b>1.4</b> Cuantificación de error o precisión</a></li>
+<li class="chapter" data-level="1.5" data-path="introduccion.html"><a href="introduccion.html#aprendizaje"><i class="fa fa-check"></i><b>1.5</b> Tarea de aprendizaje supervisado</a><ul>
+<li class="chapter" data-level="1.5.1" data-path="introduccion.html"><a href="introduccion.html#observaciones"><i class="fa fa-check"></i><b>1.5.1</b> Observaciones</a></li>
+</ul></li>
+<li class="chapter" data-level="1.6" data-path="introduccion.html"><a href="introduccion.html#por-que-tenemos-errores"><i class="fa fa-check"></i><b>1.6</b> ¿Por qué tenemos errores?</a></li>
+<li class="chapter" data-level="1.7" data-path="introduccion.html"><a href="introduccion.html#como-estimar-f"><i class="fa fa-check"></i><b>1.7</b> ¿Cómo estimar f?</a></li>
+<li class="chapter" data-level="1.8" data-path="introduccion.html"><a href="introduccion.html#resumen"><i class="fa fa-check"></i><b>1.8</b> Resumen</a></li>
+<li class="chapter" data-level="1.9" data-path="introduccion.html"><a href="introduccion.html#tarea"><i class="fa fa-check"></i><b>1.9</b> Tarea</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="regresion.html"><a href="regresion.html"><i class="fa fa-check"></i><b>2</b> Regresión lineal</a><ul>
+<li class="chapter" data-level="2.1" data-path="introduccion.html"><a href="introduccion.html#introduccion"><i class="fa fa-check"></i><b>2.1</b> Introducción</a></li>
+<li class="chapter" data-level="2.2" data-path="regresion.html"><a href="regresion.html#aprendizaje-de-coeficientes-ajuste"><i class="fa fa-check"></i><b>2.2</b> Aprendizaje de coeficientes (ajuste)</a></li>
+<li class="chapter" data-level="2.3" data-path="regresion.html"><a href="regresion.html#descenso-en-gradiente"><i class="fa fa-check"></i><b>2.3</b> Descenso en gradiente</a><ul>
+<li class="chapter" data-level="2.3.1" data-path="regresion.html"><a href="regresion.html#seleccion-de-tamano-de-paso-eta"><i class="fa fa-check"></i><b>2.3.1</b> Selección de tamaño de paso <span class="math inline">\(\eta\)</span></a></li>
+<li class="chapter" data-level="2.3.2" data-path="regresion.html"><a href="regresion.html#funciones-de-varias-variables"><i class="fa fa-check"></i><b>2.3.2</b> Funciones de varias variables</a></li>
+</ul></li>
+<li class="chapter" data-level="2.4" data-path="regresion.html"><a href="regresion.html#descenso-en-gradiente-para-regresion-lineal"><i class="fa fa-check"></i><b>2.4</b> Descenso en gradiente para regresión lineal</a></li>
+<li class="chapter" data-level="2.5" data-path="regresion.html"><a href="regresion.html#normalizacion-de-entradas"><i class="fa fa-check"></i><b>2.5</b> Normalización de entradas</a></li>
+<li class="chapter" data-level="2.6" data-path="regresion.html"><a href="regresion.html#interpretacion-de-modelos-lineales"><i class="fa fa-check"></i><b>2.6</b> Interpretación de modelos lineales</a></li>
+<li class="chapter" data-level="2.7" data-path="regresion.html"><a href="regresion.html#solucion-analitica"><i class="fa fa-check"></i><b>2.7</b> Solución analítica</a></li>
+<li class="chapter" data-level="2.8" data-path="regresion.html"><a href="regresion.html#por-que-el-modelo-lineal-funciona-bien-muchas-veces"><i class="fa fa-check"></i><b>2.8</b> ¿Por qué el modelo lineal funciona bien (muchas veces)?</a><ul>
+<li class="chapter" data-level="2.8.1" data-path="regresion.html"><a href="regresion.html#k-vecinos-mas-cercanos"><i class="fa fa-check"></i><b>2.8.1</b> k vecinos más cercanos</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="regresion.html"><a href="regresion.html#tarea-1"><i class="fa fa-check"></i>Tarea</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="logistica.html"><a href="logistica.html"><i class="fa fa-check"></i><b>3</b> Regresión logística</a><ul>
+<li class="chapter" data-level="3.1" data-path="logistica.html"><a href="logistica.html#el-problema-de-clasificacion"><i class="fa fa-check"></i><b>3.1</b> El problema de clasificación</a><ul>
+<li class="chapter" data-level="" data-path="logistica.html"><a href="logistica.html#que-estimar-en-problemas-de-clasificacion"><i class="fa fa-check"></i>¿Qué estimar en problemas de clasificación?</a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="logistica.html"><a href="logistica.html#estimacion-de-probabilidades-de-clase"><i class="fa fa-check"></i><b>3.2</b> Estimación de probabilidades de clase</a><ul>
+<li class="chapter" data-level="" data-path="logistica.html"><a href="logistica.html#ejemplo-10"><i class="fa fa-check"></i>Ejemplo</a></li>
+<li class="chapter" data-level="3.2.1" data-path="logistica.html"><a href="logistica.html#k-vecinos-mas-cercanos-1"><i class="fa fa-check"></i><b>3.2.1</b> k-vecinos más cercanos</a></li>
+<li class="chapter" data-level="" data-path="logistica.html"><a href="logistica.html#ejemplo-12"><i class="fa fa-check"></i>Ejemplo</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="logistica.html"><a href="logistica.html#error-para-modelos-de-clasificacion"><i class="fa fa-check"></i><b>3.3</b> Error para modelos de clasificación</a><ul>
+<li class="chapter" data-level="3.3.1" data-path="logistica.html"><a href="logistica.html#ejercicio-1"><i class="fa fa-check"></i><b>3.3.1</b> Ejercicio</a></li>
+<li class="chapter" data-level="3.3.2" data-path="logistica.html"><a href="logistica.html#error-de-clasificacion-y-funcion-de-perdida-0-1"><i class="fa fa-check"></i><b>3.3.2</b> Error de clasificación y función de pérdida 0-1</a></li>
+<li class="chapter" data-level="3.3.3" data-path="logistica.html"><a href="logistica.html#discusion-relacion-entre-devianza-y-error-de-clasificacion"><i class="fa fa-check"></i><b>3.3.3</b> Discusión: relación entre devianza y error de clasificación</a></li>
+</ul></li>
+<li class="chapter" data-level="3.4" data-path="logistica.html"><a href="logistica.html#regresion-logistica"><i class="fa fa-check"></i><b>3.4</b> Regresión logística</a><ul>
+<li class="chapter" data-level="3.4.1" data-path="logistica.html"><a href="logistica.html#regresion-logistica-simple"><i class="fa fa-check"></i><b>3.4.1</b> Regresión logística simple</a></li>
+<li class="chapter" data-level="3.4.2" data-path="logistica.html"><a href="logistica.html#funcion-logistica"><i class="fa fa-check"></i><b>3.4.2</b> Función logística</a></li>
+<li class="chapter" data-level="3.4.3" data-path="logistica.html"><a href="logistica.html#regresion-logistica-1"><i class="fa fa-check"></i><b>3.4.3</b> Regresión logística</a></li>
+</ul></li>
+<li class="chapter" data-level="3.5" data-path="logistica.html"><a href="logistica.html#aprendizaje-de-coeficientes-para-regresion-logistica-binomial."><i class="fa fa-check"></i><b>3.5</b> Aprendizaje de coeficientes para regresión logística (binomial).</a></li>
+<li class="chapter" data-level="3.6" data-path="logistica.html"><a href="logistica.html#observaciones-adicionales"><i class="fa fa-check"></i><b>3.6</b> Observaciones adicionales</a></li>
+<li class="chapter" data-level="3.7" data-path="logistica.html"><a href="logistica.html#ejercicio-datos-de-diabetes"><i class="fa fa-check"></i><b>3.7</b> Ejercicio: datos de diabetes</a><ul>
+<li class="chapter" data-level="" data-path="logistica.html"><a href="logistica.html#tarea-2"><i class="fa fa-check"></i>Tarea</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="mas-sobre-problemas-de-clasificacion.html"><a href="mas-sobre-problemas-de-clasificacion.html"><i class="fa fa-check"></i><b>4</b> Más sobre problemas de clasificación</a><ul>
+<li class="chapter" data-level="4.1" data-path="mas-sobre-problemas-de-clasificacion.html"><a href="mas-sobre-problemas-de-clasificacion.html#analisis-de-error-para-clasificadores-binarios"><i class="fa fa-check"></i><b>4.1</b> Análisis de error para clasificadores binarios</a><ul>
+<li class="chapter" data-level="4.1.1" data-path="mas-sobre-problemas-de-clasificacion.html"><a href="mas-sobre-problemas-de-clasificacion.html#punto-de-corte-para-un-clasificador-binario"><i class="fa fa-check"></i><b>4.1.1</b> Punto de corte para un clasificador binario</a></li>
+<li class="chapter" data-level="4.1.2" data-path="mas-sobre-problemas-de-clasificacion.html"><a href="mas-sobre-problemas-de-clasificacion.html#espacio-roc-de-clasificadores"><i class="fa fa-check"></i><b>4.1.2</b> Espacio ROC de clasificadores</a></li>
+</ul></li>
+<li class="chapter" data-level="4.2" data-path="mas-sobre-problemas-de-clasificacion.html"><a href="mas-sobre-problemas-de-clasificacion.html#perfil-de-un-clasificador-binario-y-curvas-roc"><i class="fa fa-check"></i><b>4.2</b> Perfil de un clasificador binario y curvas ROC</a></li>
+<li class="chapter" data-level="4.3" data-path="mas-sobre-problemas-de-clasificacion.html"><a href="mas-sobre-problemas-de-clasificacion.html#regresion-logistica-para-problemas-de-mas-de-2-clases"><i class="fa fa-check"></i><b>4.3</b> Regresión logística para problemas de más de 2 clases</a><ul>
+<li class="chapter" data-level="4.3.1" data-path="mas-sobre-problemas-de-clasificacion.html"><a href="mas-sobre-problemas-de-clasificacion.html#regresion-logistica-multinomial"><i class="fa fa-check"></i><b>4.3.1</b> Regresión logística multinomial</a></li>
+<li class="chapter" data-level="4.3.2" data-path="mas-sobre-problemas-de-clasificacion.html"><a href="mas-sobre-problemas-de-clasificacion.html#interpretacion-de-coeficientes"><i class="fa fa-check"></i><b>4.3.2</b> Interpretación de coeficientes</a></li>
+<li class="chapter" data-level="4.3.3" data-path="mas-sobre-problemas-de-clasificacion.html"><a href="mas-sobre-problemas-de-clasificacion.html#ejemplo-clasificacion-de-digitos-con-regresion-multinomial"><i class="fa fa-check"></i><b>4.3.3</b> Ejemplo: Clasificación de dígitos con regresión multinomial</a></li>
+<li class="chapter" data-level="" data-path="mas-sobre-problemas-de-clasificacion.html"><a href="mas-sobre-problemas-de-clasificacion.html#discusion"><i class="fa fa-check"></i>Discusión</a></li>
+</ul></li>
+<li class="chapter" data-level="4.4" data-path="mas-sobre-problemas-de-clasificacion.html"><a href="mas-sobre-problemas-de-clasificacion.html#descenso-en-gradiente-para-regresion-multinomial-logistica"><i class="fa fa-check"></i><b>4.4</b> Descenso en gradiente para regresión multinomial logística</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="regularizacion.html"><a href="regularizacion.html"><i class="fa fa-check"></i><b>5</b> Regularización</a><ul>
+<li class="chapter" data-level="5.1" data-path="regularizacion.html"><a href="regularizacion.html#sesgo-y-varianza-de-predictores"><i class="fa fa-check"></i><b>5.1</b> Sesgo y varianza de predictores</a><ul>
+<li class="chapter" data-level="5.1.1" data-path="regularizacion.html"><a href="regularizacion.html#sesgo-y-varianza-en-modelos-lineales"><i class="fa fa-check"></i><b>5.1.1</b> Sesgo y varianza en modelos lineales</a></li>
+<li class="chapter" data-level="5.1.2" data-path="regularizacion.html"><a href="regularizacion.html#reduciendo-varianza-de-los-coeficientes"><i class="fa fa-check"></i><b>5.1.2</b> Reduciendo varianza de los coeficientes</a></li>
+</ul></li>
+<li class="chapter" data-level="5.2" data-path="regularizacion.html"><a href="regularizacion.html#regularizacion-ridge"><i class="fa fa-check"></i><b>5.2</b> Regularización ridge</a><ul>
+<li class="chapter" data-level="5.2.1" data-path="regularizacion.html"><a href="regularizacion.html#seleccion-de-coeficiente-de-regularizacion"><i class="fa fa-check"></i><b>5.2.1</b> Selección de coeficiente de regularización</a></li>
+</ul></li>
+<li class="chapter" data-level="5.3" data-path="regularizacion.html"><a href="regularizacion.html#entrenamiento-validacion-y-prueba"><i class="fa fa-check"></i><b>5.3</b> Entrenamiento, Validación y Prueba</a><ul>
+<li class="chapter" data-level="5.3.1" data-path="regularizacion.html"><a href="regularizacion.html#validacion-cruzada"><i class="fa fa-check"></i><b>5.3.1</b> Validación cruzada</a></li>
+<li class="chapter" data-level="" data-path="regularizacion.html"><a href="regularizacion.html#ejercicio-5"><i class="fa fa-check"></i>Ejercicio</a></li>
+</ul></li>
+<li class="chapter" data-level="5.4" data-path="regularizacion.html"><a href="regularizacion.html#regularizacion-lasso"><i class="fa fa-check"></i><b>5.4</b> Regularización lasso</a></li>
+<li class="chapter" data-level="5.5" data-path="regularizacion.html"><a href="regularizacion.html#tarea-3"><i class="fa fa-check"></i><b>5.5</b> Tarea</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="extensiones-para-regresion-lineal-y-logistica.html"><a href="extensiones-para-regresion-lineal-y-logistica.html"><i class="fa fa-check"></i><b>6</b> Extensiones para regresión lineal y logística</a><ul>
+<li class="chapter" data-level="6.1" data-path="extensiones-para-regresion-lineal-y-logistica.html"><a href="extensiones-para-regresion-lineal-y-logistica.html#como-hacer-mas-flexible-el-modelo-lineal"><i class="fa fa-check"></i><b>6.1</b> Cómo hacer más flexible el modelo lineal</a></li>
+<li class="chapter" data-level="6.2" data-path="extensiones-para-regresion-lineal-y-logistica.html"><a href="extensiones-para-regresion-lineal-y-logistica.html#transformacion-de-entradas"><i class="fa fa-check"></i><b>6.2</b> Transformación de entradas</a></li>
+<li class="chapter" data-level="6.3" data-path="extensiones-para-regresion-lineal-y-logistica.html"><a href="extensiones-para-regresion-lineal-y-logistica.html#variables-cualitativas"><i class="fa fa-check"></i><b>6.3</b> Variables cualitativas</a></li>
+<li class="chapter" data-level="6.4" data-path="extensiones-para-regresion-lineal-y-logistica.html"><a href="extensiones-para-regresion-lineal-y-logistica.html#interacciones"><i class="fa fa-check"></i><b>6.4</b> Interacciones</a></li>
+<li class="chapter" data-level="6.5" data-path="extensiones-para-regresion-lineal-y-logistica.html"><a href="extensiones-para-regresion-lineal-y-logistica.html#categorizacion-de-variables"><i class="fa fa-check"></i><b>6.5</b> Categorización de variables</a></li>
+<li class="chapter" data-level="6.6" data-path="extensiones-para-regresion-lineal-y-logistica.html"><a href="extensiones-para-regresion-lineal-y-logistica.html#splines"><i class="fa fa-check"></i><b>6.6</b> Splines</a><ul>
+<li class="chapter" data-level="6.6.1" data-path="extensiones-para-regresion-lineal-y-logistica.html"><a href="extensiones-para-regresion-lineal-y-logistica.html#cuando-usar-estas-tecnicas"><i class="fa fa-check"></i><b>6.6.1</b> ¿Cuándo usar estas técnicas?</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html"><i class="fa fa-check"></i><b>7</b> Redes neuronales (parte 1)</a><ul>
+<li class="chapter" data-level="7.1" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#introduccion-a-redes-neuronales"><i class="fa fa-check"></i><b>7.1</b> Introducción a redes neuronales</a><ul>
+<li class="chapter" data-level="" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#como-construyen-entradas-las-redes-neuronales"><i class="fa fa-check"></i>¿Cómo construyen entradas las redes neuronales?</a></li>
+<li class="chapter" data-level="" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#como-ajustar-los-parametros"><i class="fa fa-check"></i>¿Cómo ajustar los parámetros?</a></li>
+</ul></li>
+<li class="chapter" data-level="7.2" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#interacciones-en-redes-neuronales"><i class="fa fa-check"></i><b>7.2</b> Interacciones en redes neuronales</a></li>
+<li class="chapter" data-level="7.3" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#calculo-en-redes-feed-forward."><i class="fa fa-check"></i><b>7.3</b> Cálculo en redes: feed-forward.</a></li>
+<li class="chapter" data-level="" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#notacion-1"><i class="fa fa-check"></i>Notación</a></li>
+<li class="chapter" data-level="7.4" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#feed-forward"><i class="fa fa-check"></i><b>7.4</b> Feed forward</a></li>
+<li class="chapter" data-level="7.5" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#backpropagation-calculo-del-gradiente"><i class="fa fa-check"></i><b>7.5</b> Backpropagation: cálculo del gradiente</a><ul>
+<li class="chapter" data-level="7.5.1" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#calculo-para-un-caso-de-entrenamiento"><i class="fa fa-check"></i><b>7.5.1</b> Cálculo para un caso de entrenamiento</a></li>
+<li class="chapter" data-level="7.5.2" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#algoritmo-de-backpropagation"><i class="fa fa-check"></i><b>7.5.2</b> Algoritmo de backpropagation</a></li>
+</ul></li>
+<li class="chapter" data-level="7.6" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#ajuste-de-parametros-introduccion"><i class="fa fa-check"></i><b>7.6</b> Ajuste de parámetros (introducción)</a><ul>
+<li class="chapter" data-level="7.6.1" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#ejemplo-31"><i class="fa fa-check"></i><b>7.6.1</b> Ejemplo</a></li>
+<li class="chapter" data-level="7.6.2" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#hiperparametros-busqueda-manual"><i class="fa fa-check"></i><b>7.6.2</b> Hiperparámetros: búsqueda manual</a></li>
+<li class="chapter" data-level="7.6.3" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#hiperparametros-busqueda-en-grid"><i class="fa fa-check"></i><b>7.6.3</b> Hiperparámetros: búsqueda en grid</a></li>
+<li class="chapter" data-level="7.6.4" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#hiperparametros-busqueda-aleatoria"><i class="fa fa-check"></i><b>7.6.4</b> Hiperparámetros: búsqueda aleatoria</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#tarea-para-25-de-septiembre"><i class="fa fa-check"></i>Tarea (para 25 de septiembre)</a></li>
+<li class="chapter" data-level="" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#tarea-2-de-octubre"><i class="fa fa-check"></i>Tarea (2 de octubre)</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="redes-neuronales-parte-2.html"><a href="redes-neuronales-parte-2.html"><i class="fa fa-check"></i><b>8</b> Redes neuronales (parte 2)</a><ul>
+<li class="chapter" data-level="8.1" data-path="redes-neuronales-parte-2.html"><a href="redes-neuronales-parte-2.html#descenso-estocastico"><i class="fa fa-check"></i><b>8.1</b> Descenso estocástico</a></li>
+<li class="chapter" data-level="8.2" data-path="redes-neuronales-parte-2.html"><a href="redes-neuronales-parte-2.html#algoritmo-de-descenso-estocastico"><i class="fa fa-check"></i><b>8.2</b> Algoritmo de descenso estocástico</a></li>
+<li class="chapter" data-level="8.3" data-path="redes-neuronales-parte-2.html"><a href="redes-neuronales-parte-2.html#por-que-usar-descenso-estocastico-por-minilotes"><i class="fa fa-check"></i><b>8.3</b> ¿Por qué usar descenso estocástico por minilotes?</a></li>
+<li class="chapter" data-level="8.4" data-path="redes-neuronales-parte-2.html"><a href="redes-neuronales-parte-2.html#escogiendo-la-tasa-de-aprendizaje"><i class="fa fa-check"></i><b>8.4</b> Escogiendo la tasa de aprendizaje</a></li>
+<li class="chapter" data-level="8.5" data-path="redes-neuronales-parte-2.html"><a href="redes-neuronales-parte-2.html#mejoras-al-algoritmo-de-descenso-estocastico."><i class="fa fa-check"></i><b>8.5</b> Mejoras al algoritmo de descenso estocástico.</a><ul>
+<li class="chapter" data-level="8.5.1" data-path="redes-neuronales-parte-2.html"><a href="redes-neuronales-parte-2.html#decaimiento-de-tasa-de-aprendizaje"><i class="fa fa-check"></i><b>8.5.1</b> Decaimiento de tasa de aprendizaje</a></li>
+<li class="chapter" data-level="8.5.2" data-path="redes-neuronales-parte-2.html"><a href="redes-neuronales-parte-2.html#momento"><i class="fa fa-check"></i><b>8.5.2</b> Momento</a></li>
+<li class="chapter" data-level="8.5.3" data-path="redes-neuronales-parte-2.html"><a href="redes-neuronales-parte-2.html#otras-variaciones"><i class="fa fa-check"></i><b>8.5.3</b> Otras variaciones</a></li>
+</ul></li>
+<li class="chapter" data-level="8.6" data-path="redes-neuronales-parte-2.html"><a href="redes-neuronales-parte-2.html#ajuste-de-redes-con-descenso-estocastico"><i class="fa fa-check"></i><b>8.6</b> Ajuste de redes con descenso estocástico</a></li>
+<li class="chapter" data-level="8.7" data-path="redes-neuronales-parte-2.html"><a href="redes-neuronales-parte-2.html#activaciones-relu"><i class="fa fa-check"></i><b>8.7</b> Activaciones relu</a></li>
+<li class="chapter" data-level="8.8" data-path="redes-neuronales-parte-2.html"><a href="redes-neuronales-parte-2.html#dropout-para-regularizacion"><i class="fa fa-check"></i><b>8.8</b> Dropout para regularización</a><ul>
+<li class="chapter" data-level="" data-path="redes-neuronales-parte-2.html"><a href="redes-neuronales-parte-2.html#ejemplo-35"><i class="fa fa-check"></i>Ejemplo</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="redes-convolucionales.html"><a href="redes-convolucionales.html"><i class="fa fa-check"></i><b>9</b> Redes convolucionales</a><ul>
+<li class="chapter" data-level="9.1" data-path="redes-convolucionales.html"><a href="redes-convolucionales.html#filtros-convolucionales"><i class="fa fa-check"></i><b>9.1</b> Filtros convolucionales</a><ul>
+<li class="chapter" data-level="" data-path="redes-convolucionales.html"><a href="redes-convolucionales.html#filtros-en-una-dimension"><i class="fa fa-check"></i>Filtros en una dimensión</a></li>
+<li class="chapter" data-level="" data-path="redes-convolucionales.html"><a href="redes-convolucionales.html#filtros-convolucionales-en-dos-dimensiones"><i class="fa fa-check"></i>Filtros convolucionales en dos dimensiones</a></li>
+<li class="chapter" data-level="9.1.1" data-path="redes-convolucionales.html"><a href="redes-convolucionales.html#filtros-convolucionales-para-redes-neuronales"><i class="fa fa-check"></i><b>9.1.1</b> Filtros convolucionales para redes neuronales</a></li>
+<li class="chapter" data-level="9.1.2" data-path="redes-convolucionales.html"><a href="redes-convolucionales.html#capas-de-agregacion-pooling"><i class="fa fa-check"></i><b>9.1.2</b> Capas de agregación (pooling)</a></li>
+<li class="chapter" data-level="9.1.3" data-path="redes-convolucionales.html"><a href="redes-convolucionales.html#ejemplo-arquitectura-lenet"><i class="fa fa-check"></i><b>9.1.3</b> Ejemplo (arquitectura LeNet):</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="diagnostico-y-mejora-de-modelos.html"><a href="diagnostico-y-mejora-de-modelos.html"><i class="fa fa-check"></i><b>10</b> Diagnóstico y mejora de modelos</a><ul>
+<li class="chapter" data-level="10.1" data-path="diagnostico-y-mejora-de-modelos.html"><a href="diagnostico-y-mejora-de-modelos.html#aspectos-generales"><i class="fa fa-check"></i><b>10.1</b> Aspectos generales</a></li>
+<li class="chapter" data-level="10.2" data-path="diagnostico-y-mejora-de-modelos.html"><a href="diagnostico-y-mejora-de-modelos.html#que-hacer-cuando-el-desempeno-no-es-satisfactorio"><i class="fa fa-check"></i><b>10.2</b> ¿Qué hacer cuando el desempeño no es satisfactorio?</a></li>
+<li class="chapter" data-level="10.3" data-path="diagnostico-y-mejora-de-modelos.html"><a href="diagnostico-y-mejora-de-modelos.html#pipeline-de-procesamiento"><i class="fa fa-check"></i><b>10.3</b> Pipeline de procesamiento</a></li>
+<li class="chapter" data-level="10.4" data-path="diagnostico-y-mejora-de-modelos.html"><a href="diagnostico-y-mejora-de-modelos.html#diagnosticos-sesgo-y-varianza"><i class="fa fa-check"></i><b>10.4</b> Diagnósticos: sesgo y varianza</a></li>
+<li class="chapter" data-level="10.5" data-path="diagnostico-y-mejora-de-modelos.html"><a href="diagnostico-y-mejora-de-modelos.html#refinando-el-pipeline"><i class="fa fa-check"></i><b>10.5</b> Refinando el pipeline</a></li>
+<li class="chapter" data-level="10.6" data-path="diagnostico-y-mejora-de-modelos.html"><a href="diagnostico-y-mejora-de-modelos.html#consiguiendo-mas-datos"><i class="fa fa-check"></i><b>10.6</b> Consiguiendo más datos</a></li>
+<li class="chapter" data-level="10.7" data-path="diagnostico-y-mejora-de-modelos.html"><a href="diagnostico-y-mejora-de-modelos.html#usar-datos-adicionales"><i class="fa fa-check"></i><b>10.7</b> Usar datos adicionales</a></li>
+<li class="chapter" data-level="10.8" data-path="diagnostico-y-mejora-de-modelos.html"><a href="diagnostico-y-mejora-de-modelos.html#examen-de-modelo-y-analisis-de-errores"><i class="fa fa-check"></i><b>10.8</b> Examen de modelo y Análisis de errores</a></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html"><i class="fa fa-check"></i><b>11</b> Métodos basados en árboles</a><ul>
+<li class="chapter" data-level="11.1" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#arboles-para-regresion-y-clasificacion."><i class="fa fa-check"></i><b>11.1</b> Árboles para regresión y clasificación.</a><ul>
+<li class="chapter" data-level="11.1.1" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#arboles-para-clasificacion"><i class="fa fa-check"></i><b>11.1.1</b> Árboles para clasificación</a></li>
+<li class="chapter" data-level="11.1.2" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#tipos-de-particion"><i class="fa fa-check"></i><b>11.1.2</b> Tipos de partición</a></li>
+<li class="chapter" data-level="11.1.3" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#medidas-de-impureza"><i class="fa fa-check"></i><b>11.1.3</b> Medidas de impureza</a></li>
+<li class="chapter" data-level="11.1.4" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#reglas-de-particion-y-tamano-del-arobl"><i class="fa fa-check"></i><b>11.1.4</b> Reglas de partición y tamaño del árobl</a></li>
+<li class="chapter" data-level="11.1.5" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#costo---complejidad-breiman"><i class="fa fa-check"></i><b>11.1.5</b> Costo - Complejidad (Breiman)</a></li>
+<li class="chapter" data-level="11.1.6" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#opcional-predicciones-con-cart"><i class="fa fa-check"></i><b>11.1.6</b> (Opcional) Predicciones con CART</a></li>
+<li class="chapter" data-level="11.1.7" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#arboles-para-regresion"><i class="fa fa-check"></i><b>11.1.7</b> Árboles para regresión</a></li>
+<li class="chapter" data-level="11.1.8" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#variabilidad-en-el-proceso-de-construccion"><i class="fa fa-check"></i><b>11.1.8</b> Variabilidad en el proceso de construcción</a></li>
+<li class="chapter" data-level="11.1.9" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#relaciones-lineal"><i class="fa fa-check"></i><b>11.1.9</b> Relaciones lineal</a></li>
+<li class="chapter" data-level="11.1.10" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#ventajas-y-desventajas-de-arboles"><i class="fa fa-check"></i><b>11.1.10</b> Ventajas y desventajas de árboles</a></li>
+</ul></li>
+<li class="chapter" data-level="11.2" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#bosques-aleatorios."><i class="fa fa-check"></i><b>11.2</b> Bosques aleatorios.</a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Publicado con bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Aprendizaje de máquina</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="diagnostico-y-mejora-de-modelos" class="section level1">
+<h1><span class="header-section-number">Clase 10</span> Diagnóstico y mejora de modelos</h1>
+<div id="aspectos-generales" class="section level2">
+<h2><span class="header-section-number">10.1</span> Aspectos generales</h2>
+<p>Al comenzar un proyecto de machine learning, las primeras consideraciones deben ser:</p>
+
+<div class="comentario">
+<ol style="list-style-type: decimal">
+<li><p>Establecer métricas de error apropiadas para el problema, y cuál es el máximo valor de este error requerido para nuestra aplicación.</p></li>
+<li>Construir un <em>pipeline</em> lo antes posible que vaya de datos hasta medición de calidad de los modelos. Este pipeline deberá, al menos, incluir cálculos de entradas, medición de desempeño de los modelos y cálculos de otros diagnósticos (como error de entrenamiento, convergencia de algoritmos, etc.)
+</div>
+</li>
+</ol>
+<p>En general, es difícil preveer exactamente qué va a funcionar para un problema particular, y los diagnósticos que veremos requieren de haber ajustado modelos. Nuestra primera recomendación para ir hacia un modelo de mejor desempeño es:</p>
+<p>Es mejor y más rápido comenzar rápido, aún con un modelo simple, con entradas {} (no muy refinadas), y con los datos que tenemos a mano. De esta forma podemos aprender más rápido. Demasiado tiempo pensando, discutiendo, o diseñando qué algoritmo deberíamos usar, cómo deberíamos construir las entradas, etc. es muchas veces tiempo perdido.</p>
+<p>Con el pipeline establecido, si el resultado no es satisfactorio, entonces tenemos que tomar decisiones para mejorar.</p>
+</div>
+<div id="que-hacer-cuando-el-desempeno-no-es-satisfactorio" class="section level2">
+<h2><span class="header-section-number">10.2</span> ¿Qué hacer cuando el desempeño no es satisfactorio?</h2>
+<p>Supongamos que tenemos un clasificador construido con regresión logística regularizada, y que cuando lo aplicamos a nuestra muestra de prueba el desempeño es malo. ¿Qué hacer?</p>
+<p>Algunas opciones:</p>
+<ul>
+<li>Conseguir más datos de entrenamiento.</li>
+<li>Reducir el número de entradas por algún método (eliminación manual, componentes principales, etc.)</li>
+<li>Construir más entradas utilizando distintos enfoques o fuentes de datos.</li>
+<li>Incluir variables derivadas adicionales e interacciones.</li>
+<li>Intentar construir una red neuronal para predecir (otro método).</li>
+<li>Aumentar la regularización.</li>
+<li>Disminuir la regularización.</li>
+<li>Correr más tiempo el algoritmo de ajuste.</li>
+</ul>
+<p>¿Con cuál empezar? Cada una de estas estrategias intenta arreglar distintos problemas. En lugar de intentar al azar distintas cosas, que consumen tiempo y dinero y no necesariamente nos van a llevar a mejoras, a continuación veremos diagnósticos y recetas que nos sugieren la mejor manera de usar nuestro tiempo para mejorar nuestros modelos.</p>
+<p>Usaremos el siguiente ejemplo para ilustrar los conceptos:</p>
+<div id="ejemplo-36" class="section level4 unnumbered">
+<h4>Ejemplo</h4>
+<p>Nos interesa hacer una predicción de polaridad de críticas o comentarios de pelíıculas: buscamos clasificar una reseña como positiva o negativa dependiendo de su contenido. Tenemos dos grupos de reseñas separadas en positivas y negativas (estos datos fueron etiquetados por una persona).</p>
+<p>Cada reseña está un archivo de texto, y tenemos 1000 de cada tipo:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">negativos &lt;-<span class="st"> </span><span class="kw">list.files</span>(<span class="st">&#39;./datos/sentiment/neg&#39;</span>, <span class="dt">full.names =</span> <span class="ot">TRUE</span>)
+positivos &lt;-<span class="st"> </span><span class="kw">list.files</span>(<span class="st">&#39;./datos/sentiment/pos&#39;</span>, <span class="dt">full.names =</span> <span class="ot">TRUE</span>)
+<span class="kw">head</span>(negativos)</code></pre></div>
+<pre><code>## [1] &quot;./datos/sentiment/neg/cv000_29416.txt&quot;
+## [2] &quot;./datos/sentiment/neg/cv001_19502.txt&quot;
+## [3] &quot;./datos/sentiment/neg/cv002_17424.txt&quot;
+## [4] &quot;./datos/sentiment/neg/cv003_12683.txt&quot;
+## [5] &quot;./datos/sentiment/neg/cv004_12641.txt&quot;
+## [6] &quot;./datos/sentiment/neg/cv005_29357.txt&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(positivos)</code></pre></div>
+<pre><code>## [1] &quot;./datos/sentiment/pos/cv000_29590.txt&quot;
+## [2] &quot;./datos/sentiment/pos/cv001_18431.txt&quot;
+## [3] &quot;./datos/sentiment/pos/cv002_15918.txt&quot;
+## [4] &quot;./datos/sentiment/pos/cv003_11664.txt&quot;
+## [5] &quot;./datos/sentiment/pos/cv004_11636.txt&quot;
+## [6] &quot;./datos/sentiment/pos/cv005_29443.txt&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">length</span>(negativos)</code></pre></div>
+<pre><code>## [1] 1000</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">length</span>(positivos)</code></pre></div>
+<pre><code>## [1] 1000</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">read_file</span>(negativos[<span class="dv">1</span>])</code></pre></div>
+<pre><code>## [1] &quot;plot : two teen couples go to a church party , drink and then drive . \nthey get into an accident . \none of the guys dies , but his girlfriend continues to see him in her life , and has nightmares . \nwhat&#39;s the deal ? \nwatch the movie and \&quot; sorta \&quot; find out . . . \ncritique : a mind-fuck movie for the teen generation that touches on a very cool idea , but presents it in a very bad package . \nwhich is what makes this review an even harder one to write , since i generally applaud films which attempt to break the mold , mess with your head and such ( lost highway &amp; memento ) , but there are good and bad ways of making all types of films , and these folks just didn&#39;t snag this one correctly . \nthey seem to have taken this pretty neat concept , but executed it terribly . \nso what are the problems with the movie ? \nwell , its main problem is that it&#39;s simply too jumbled . \nit starts off \&quot; normal \&quot; but then downshifts into this \&quot; fantasy \&quot; world in which you , as an audience member , have no idea what&#39;s going on . \nthere are dreams , there are characters coming back from the dead , there are others who look like the dead , there are strange apparitions , there are disappearances , there are a looooot of chase scenes , there are tons of weird things that happen , and most of it is simply not explained . \nnow i personally don&#39;t mind trying to unravel a film every now and then , but when all it does is give me the same clue over and over again , i get kind of fed up after a while , which is this film&#39;s biggest problem . \nit&#39;s obviously got this big secret to hide , but it seems to want to hide it completely until its final five minutes . \nand do they make things entertaining , thrilling or even engaging , in the meantime ? \nnot really . \nthe sad part is that the arrow and i both dig on flicks like this , so we actually figured most of it out by the half-way point , so all of the strangeness after that did start to make a little bit of sense , but it still didn&#39;t the make the film all that more entertaining . \ni guess the bottom line with movies like this is that you should always make sure that the audience is \&quot; into it \&quot; even before they are given the secret password to enter your world of understanding . \ni mean , showing melissa sagemiller running away from visions for about 20 minutes throughout the movie is just plain lazy ! ! \nokay , we get it . . . there \nare people chasing her and we don&#39;t know who they are . \ndo we really need to see it over and over again ? \nhow about giving us different scenes offering further insight into all of the strangeness going down in the movie ? \napparently , the studio took this film away from its director and chopped it up themselves , and it shows . \nthere might&#39;ve been a pretty decent teen mind-fuck movie in here somewhere , but i guess \&quot; the suits \&quot; decided that turning it into a music video with little edge , would make more sense . \nthe actors are pretty good for the most part , although wes bentley just seemed to be playing the exact same character that he did in american beauty , only in a new neighborhood . \nbut my biggest kudos go out to sagemiller , who holds her own throughout the entire film , and actually has you feeling her character&#39;s unraveling . \noverall , the film doesn&#39;t stick because it doesn&#39;t entertain , it&#39;s confusing , it rarely excites and it feels pretty redundant for most of its runtime , despite a pretty cool ending and explanation to all of the craziness that came before it . \noh , and by the way , this is not a horror or teen slasher flick . . . it&#39;s \njust packaged to look that way because someone is apparently assuming that the genre is still hot with the kids . \nit also wrapped production two years ago and has been sitting on the shelves ever since . \nwhatever . . . skip \nit ! \nwhere&#39;s joblo coming from ? \na nightmare of elm street 3 ( 7/10 ) - blair witch 2 ( 7/10 ) - the crow ( 9/10 ) - the crow : salvation ( 4/10 ) - lost highway ( 10/10 ) - memento ( 10/10 ) - the others ( 9/10 ) - stir of echoes ( 8/10 ) \n&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">read_file</span>(positivos[<span class="dv">1</span>])</code></pre></div>
+<pre><code>## [1] &quot;films adapted from comic books have had plenty of success , whether they&#39;re about superheroes ( batman , superman , spawn ) , or geared toward kids ( casper ) or the arthouse crowd ( ghost world ) , but there&#39;s never really been a comic book like from hell before . \nfor starters , it was created by alan moore ( and eddie campbell ) , who brought the medium to a whole new level in the mid &#39;80s with a 12-part series called the watchmen . \nto say moore and campbell thoroughly researched the subject of jack the ripper would be like saying michael jackson is starting to look a little odd . \nthe book ( or \&quot; graphic novel , \&quot; if you will ) is over 500 pages long and includes nearly 30 more that consist of nothing but footnotes . \nin other words , don&#39;t dismiss this film because of its source . \nif you can get past the whole comic book thing , you might find another stumbling block in from hell&#39;s directors , albert and allen hughes . \ngetting the hughes brothers to direct this seems almost as ludicrous as casting carrot top in , well , anything , but riddle me this : who better to direct a film that&#39;s set in the ghetto and features really violent street crime than the mad geniuses behind menace ii society ? \nthe ghetto in question is , of course , whitechapel in 1888 london&#39;s east end . \nit&#39;s a filthy , sooty place where the whores ( called \&quot; unfortunates \&quot; ) are starting to get a little nervous about this mysterious psychopath who has been carving through their profession with surgical precision . \nwhen the first stiff turns up , copper peter godley ( robbie coltrane , the world is not enough ) calls in inspector frederick abberline ( johnny depp , blow ) to crack the case . \nabberline , a widower , has prophetic dreams he unsuccessfully tries to quell with copious amounts of absinthe and opium . \nupon arriving in whitechapel , he befriends an unfortunate named mary kelly ( heather graham , say it isn&#39;t so ) and proceeds to investigate the horribly gruesome crimes that even the police surgeon can&#39;t stomach . \ni don&#39;t think anyone needs to be briefed on jack the ripper , so i won&#39;t go into the particulars here , other than to say moore and campbell have a unique and interesting theory about both the identity of the killer and the reasons he chooses to slay . \nin the comic , they don&#39;t bother cloaking the identity of the ripper , but screenwriters terry hayes ( vertical limit ) and rafael yglesias ( les mis ? rables ) do a good job of keeping him hidden from viewers until the very end . \nit&#39;s funny to watch the locals blindly point the finger of blame at jews and indians because , after all , an englishman could never be capable of committing such ghastly acts . \nand from hell&#39;s ending had me whistling the stonecutters song from the simpsons for days ( \&quot; who holds back the electric car/who made steve guttenberg a star ? \&quot; ) . \ndon&#39;t worry - it&#39;ll all make sense when you see it . \nnow onto from hell&#39;s appearance : it&#39;s certainly dark and bleak enough , and it&#39;s surprising to see how much more it looks like a tim burton film than planet of the apes did ( at times , it seems like sleepy hollow 2 ) . \nthe print i saw wasn&#39;t completely finished ( both color and music had not been finalized , so no comments about marilyn manson ) , but cinematographer peter deming ( don&#39;t say a word ) ably captures the dreariness of victorian-era london and helped make the flashy killing scenes remind me of the crazy flashbacks in twin peaks , even though the violence in the film pales in comparison to that in the black-and-white comic . \noscar winner martin childs&#39; ( shakespeare in love ) production design turns the original prague surroundings into one creepy place . \neven the acting in from hell is solid , with the dreamy depp turning in a typically strong performance and deftly handling a british accent . \nians holm ( joe gould&#39;s secret ) and richardson ( 102 dalmatians ) log in great supporting roles , but the big surprise here is graham . \ni cringed the first time she opened her mouth , imagining her attempt at an irish accent , but it actually wasn&#39;t half bad . \nthe film , however , is all good . \n2 : 00 - r for strong violence/gore , sexuality , language and drug content \n&quot;</code></pre>
+<ul>
+<li><p>Consideremos primero la métrica de error, que depende de nuestra aplicación. En este caso, quisiéramos hacer dar una calificación a cada película basada en el % de reseñas positivas que tiene. Supongamos que se ha decidido que necesitamos al menos una tasa de correctos de 90% para que el score sea confiable (cómo calcularías algo así?).</p></li>
+<li><p>Ahora necesitamos construir un pipeline para obtener las primeras predicciones. Tenemos que pensar qué entradas podríamos construir.</p></li>
+</ul>
+</div>
+</div>
+<div id="pipeline-de-procesamiento" class="section level2">
+<h2><span class="header-section-number">10.3</span> Pipeline de procesamiento</h2>
+<p>Empezamos por construir funciones para leer datos (ver script). Construimos un data frame:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">source</span>(<span class="st">&#39;./scripts/funciones_sentiment.R&#39;</span>)
+df &lt;-<span class="st"> </span><span class="kw">prep_df</span>(<span class="st">&#39;./datos/sentiment/&#39;</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">unnest</span>(texto)
+<span class="kw">nrow</span>(df)</code></pre></div>
+<pre><code>## [1] 2000</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df<span class="op">$</span>texto[<span class="dv">1</span>]</code></pre></div>
+<pre><code>## [1] &quot;Review  films adapted from comic books have had plenty of success , whether they&#39;re about superheroes ( batman , superman , spawn ) , or geared toward kids ( casper ) or the arthouse crowd ( ghost world ) , but there&#39;s never really been a comic book like from hell before .  Review  for starters , it was created by alan moore ( and eddie campbell ) , who brought the medium to a whole new level in the mid &#39;80s with a 12-part series called the watchmen .  Review  to say moore and campbell thoroughly researched the subject of jack the ripper would be like saying michael jackson is starting to look a little odd .  Review  the book ( or \&quot; graphic novel , \&quot; if you will ) is over 500 pages long and includes nearly 30 more that consist of nothing but footnotes .  Review  in other words , don&#39;t dismiss this film because of its source .  Review  if you can get past the whole comic book thing , you might find another stumbling block in from hell&#39;s directors , albert and allen hughes .  Review  getting the hughes brothers to direct this seems almost as ludicrous as casting carrot top in , well , anything , but riddle me this : who better to direct a film that&#39;s set in the ghetto and features really violent street crime than the mad geniuses behind menace ii society ?  Review  the ghetto in question is , of course , whitechapel in 1888 london&#39;s east end .  Review  it&#39;s a filthy , sooty place where the whores ( called \&quot; unfortunates \&quot; ) are starting to get a little nervous about this mysterious psychopath who has been carving through their profession with surgical precision .  Review  when the first stiff turns up , copper peter godley ( robbie coltrane , the world is not enough ) calls in inspector frederick abberline ( johnny depp , blow ) to crack the case .  Review  abberline , a widower , has prophetic dreams he unsuccessfully tries to quell with copious amounts of absinthe and opium .  Review  upon arriving in whitechapel , he befriends an unfortunate named mary kelly ( heather graham , say it isn&#39;t so ) and proceeds to investigate the horribly gruesome crimes that even the police surgeon can&#39;t stomach .  Review  i don&#39;t think anyone needs to be briefed on jack the ripper , so i won&#39;t go into the particulars here , other than to say moore and campbell have a unique and interesting theory about both the identity of the killer and the reasons he chooses to slay .  Review  in the comic , they don&#39;t bother cloaking the identity of the ripper , but screenwriters terry hayes ( vertical limit ) and rafael yglesias ( les mis ? rables ) do a good job of keeping him hidden from viewers until the very end .  Review  it&#39;s funny to watch the locals blindly point the finger of blame at jews and indians because , after all , an englishman could never be capable of committing such ghastly acts .  Review  and from hell&#39;s ending had me whistling the stonecutters song from the simpsons for days ( \&quot; who holds back the electric car/who made steve guttenberg a star ? \&quot; ) .  Review  don&#39;t worry - it&#39;ll all make sense when you see it .  Review  now onto from hell&#39;s appearance : it&#39;s certainly dark and bleak enough , and it&#39;s surprising to see how much more it looks like a tim burton film than planet of the apes did ( at times , it seems like sleepy hollow 2 ) .  Review  the print i saw wasn&#39;t completely finished ( both color and music had not been finalized , so no comments about marilyn manson ) , but cinematographer peter deming ( don&#39;t say a word ) ably captures the dreariness of victorian-era london and helped make the flashy killing scenes remind me of the crazy flashbacks in twin peaks , even though the violence in the film pales in comparison to that in the black-and-white comic .  Review  oscar winner martin childs&#39; ( shakespeare in love ) production design turns the original prague surroundings into one creepy place .  Review  even the acting in from hell is solid , with the dreamy depp turning in a typically strong performance and deftly handling a british accent .  Review  ians holm ( joe gould&#39;s secret ) and richardson ( 102 dalmatians ) log in great supporting roles , but the big surprise here is graham .  Review  i cringed the first time she opened her mouth , imagining her attempt at an irish accent , but it actually wasn&#39;t half bad .  Review  the film , however , is all good .  Review  2 : 00 - r for strong violence/gore , sexuality , language and drug content &quot;</code></pre>
+<p>Ahora separamos una muestra de prueba (y una de entrenamiento más chica para simular después el proceso de recoger más datos):</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">94512</span>)
+df<span class="op">$</span>muestra &lt;-<span class="st"> </span><span class="kw">sample</span>(<span class="kw">c</span>(<span class="st">&#39;entrena&#39;</span>, <span class="st">&#39;prueba&#39;</span>), <span class="dv">2000</span>, <span class="dt">prob =</span> <span class="kw">c</span>(<span class="fl">0.8</span>, <span class="fl">0.2</span>),
+                     <span class="dt">replace =</span> <span class="ot">TRUE</span>)
+<span class="kw">table</span>(df<span class="op">$</span>muestra)</code></pre></div>
+<pre><code>## 
+## entrena  prueba 
+##    1575     425</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df_ent &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(muestra <span class="op">==</span><span class="st"> &#39;entrena&#39;</span>)
+df_pr &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(muestra <span class="op">==</span><span class="st"> &#39;prueba&#39;</span>)
+df_ent &lt;-<span class="st"> </span><span class="kw">sample_n</span>(df_ent, <span class="kw">nrow</span>(df_ent)) <span class="co">#permutamos al azar</span>
+df_ent_grande &lt;-<span class="st"> </span>df_ent
+df_ent &lt;-<span class="st"> </span>df_ent <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">sample_n</span>(<span class="dv">700</span>)</code></pre></div>
+<p>Intentemos algo simple para empezar: consideramos qué palabras contiene cada reseña, e intentamos clasificar en base esas palabras. Así que en primer lugar dividimos cada texto en <em>tokens</em> (pueden ser palabras, o sucesiones de caracteres o de palabras de tamaño fijo (n-gramas), oraciones, etc.). En este caso, usamos el paquete <em>tidytext</em>. La función <em>unnest_tokens</em> elimina signos de puntuación, convierte todo a minúsculas, y separa las palabras:</p>
+<p>Vamos a calcular los tokens y ordernarlos por frecuencia. Empezamos calculando nuestro vocabulario. Supongamos que usamos las 50 palabras más comunes, y usamos poca regularización:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vocabulario &lt;-<span class="st"> </span><span class="kw">calc_vocabulario</span>(df_ent, <span class="dv">50</span>)
+<span class="kw">head</span>(vocabulario)</code></pre></div>
+<pre><code>## # A tibble: 6 x 2
+##   palabra  frec
+##     &lt;chr&gt; &lt;int&gt;
+## 1       a 12904
+## 2   about  1228
+## 3     all  1464
+## 4      an  2000
+## 5     and 12173
+## 6     are  2359</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">tail</span>(vocabulario)</code></pre></div>
+<pre><code>## # A tibble: 6 x 2
+##   palabra  frec
+##     &lt;chr&gt; &lt;int&gt;
+## 1     was  1608
+## 2    when  1091
+## 3   which  1153
+## 4     who  1870
+## 5    with  3705
+## 6     you  1565</code></pre>
+
+<div class="comentario">
+<ul>
+<li>Todas las etapas de preprocesamiento deben hacerse en función de los datos de entrenamiento. En este ejemplo, podríamos cometer el error de usar todos los datos para calcular el vocabulario.</li>
+<li>Nuestras entradas aquí no se ven muy buenas: los términos más comunes son en su mayoría palabras sin significado, de modo que no esperamos un desempeño muy bueno. En este momento no nos preocupamos mucho por eso, queremos correr los primeros modelos.
+</div>
+</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(glmnet)
+mod_x &lt;-<span class="st"> </span><span class="kw">correr_modelo</span>(df_ent, df_pr, vocabulario, <span class="dt">lambda =</span> <span class="fl">1e-1</span>)</code></pre></div>
+<pre><code>## [1] &quot;Error entrenamiento: 0.32&quot;
+## [1] &quot;Error prueba: 0.36&quot;
+## [1] &quot;Devianza entrena:1.174&quot;
+## [1] &quot;Devianza prueba:1.28&quot;</code></pre>
+</div>
+<div id="diagnosticos-sesgo-y-varianza" class="section level2">
+<h2><span class="header-section-number">10.4</span> Diagnósticos: sesgo y varianza</h2>
+<p>Y notamos que</p>
+<ul>
+<li>El error de entrenamiento no es satisfactorio: está muy por arriba de nuestro objetivo (10%)</li>
+<li>Hay algo de brecha entre entrenamiento y prueba, de modo que disminuir varianza puede ayudar.</li>
+</ul>
+<p>¿Qué hacer? Nuestro clasificador ni siquiera puede clasificar bien la muestra de entrenamiento, lo que implica que nuestro modelo tiene sesgo alto. Controlar la varianza no nos va a ayudar a resolver nuestro problema en este punto. Podemos intentar un modelo más flexible.</p>
+
+<div class="comentario">
+Error de entrenamiento demasiado alto indica que necesitamos probar con modelos más flexibles (disminuir el sesgo).
+</div>
+
+<p>Para disminuir el sesgo podemos:</p>
+<ul>
+<li>Expander el vocabulario (agregar más entradas)</li>
+<li>Crear nuevas entradas a partir de los datos (más informativas)</li>
+<li>Usar un método más flexible (como redes neuronales)</li>
+<li>Regularizar menos</li>
+</ul>
+<p>Cosas que no van a funcionar (puede bajar un poco el error de validación, pero el error de entrenamiento es muy alto):</p>
+<ul>
+<li>Conseguir más datos de entrenamiento (el error de entrenamiento va a subir, y el de validación va a quedar muy arriba, aunque disminuya)</li>
+<li>Regularizar más (misma razón)</li>
+<li>Usar un vocabulario más chico, eliminar entradas (misma razón)</li>
+</ul>
+<p>Por ejemplo, si juntáramos más datos de entrenamiento (con el costo que esto implica), obtendríamos:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mod_x &lt;-<span class="st"> </span><span class="kw">correr_modelo</span>(df_ent_grande, df_pr, vocabulario, <span class="dt">lambda =</span> <span class="fl">1e-1</span>)</code></pre></div>
+<pre><code>## Joining, by = &quot;palabra&quot;
+## Joining, by = &quot;palabra&quot;</code></pre>
+<pre><code>## [1] &quot;Error entrenamiento: 0.32&quot;
+## [1] &quot;Error prueba: 0.35&quot;
+## [1] &quot;Devianza entrena:1.218&quot;
+## [1] &quot;Devianza prueba:1.264&quot;</code></pre>
+<p>Vemos que aunque bajó ligeramente el error de prueba, el error es demasiado alto. Esta estrategia no funcionó con este modelo, y hubiéramos perdido tiempo y dinero (por duplicar el tamaño de muestra) sin obtener mejoras apreciables.</p>
+<p><strong>Observación</strong>: el error de entrenamiento subió. ¿Puedes explicar eso? Esto sucede porque típicamente el error para cada caso individual de la muestra original sube, pues la optimización se hace sobre más casos. Es más difícil ajustar los datos de entrenamiento cuando tenemos más datos.</p>
+<p>En lugar de eso, podemos comenzar quitando regularización, por ejemplo</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mod_x &lt;-<span class="st"> </span><span class="kw">correr_modelo</span>(df_ent, df_pr, vocabulario, <span class="dt">lambda =</span><span class="fl">1e-10</span>)</code></pre></div>
+<pre><code>## Joining, by = &quot;palabra&quot;
+## Joining, by = &quot;palabra&quot;</code></pre>
+<pre><code>## [1] &quot;Error entrenamiento: 0.28&quot;
+## [1] &quot;Error prueba: 0.35&quot;
+## [1] &quot;Devianza entrena:1.091&quot;
+## [1] &quot;Devianza prueba:1.368&quot;</code></pre>
+<p>Y notamos que reducimos un poco el sesgo. Por el momento, seguiremos intentando reducir sesgo. Podemos ahora incluir más variables</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vocabulario &lt;-<span class="st"> </span><span class="kw">calc_vocabulario</span>(df_ent, <span class="dv">3000</span>)
+mod_x &lt;-<span class="st"> </span><span class="kw">correr_modelo</span>(df_ent, df_pr, vocabulario, <span class="dt">lambda=</span><span class="fl">1e-10</span>)</code></pre></div>
+<pre><code>## Joining, by = &quot;palabra&quot;
+## Joining, by = &quot;palabra&quot;</code></pre>
+<pre><code>## [1] &quot;Error entrenamiento: 0&quot;
+## [1] &quot;Error prueba: 0.43&quot;
+## [1] &quot;Devianza entrena:0&quot;
+## [1] &quot;Devianza prueba:15.744&quot;</code></pre>
+<p>El sesgo ya no parece ser un problema: Ahora tenemos un problema de varianza.</p>
+
+<div class="comentario">
+Una brecha grande entre entrenamiento y validación muchas veces indica sobreajuste (el problema es varianza).
+</div>
+
+<p>Podemos regularizar más:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mod_x &lt;-<span class="st"> </span><span class="kw">correr_modelo</span>(df_ent, df_pr, vocabulario, <span class="dt">lambda=</span><span class="fl">1e-6</span>)</code></pre></div>
+<pre><code>## Joining, by = &quot;palabra&quot;
+## Joining, by = &quot;palabra&quot;</code></pre>
+<pre><code>## [1] &quot;Error entrenamiento: 0&quot;
+## [1] &quot;Error prueba: 0.36&quot;
+## [1] &quot;Devianza entrena:0&quot;
+## [1] &quot;Devianza prueba:8.243&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mod_x &lt;-<span class="st"> </span><span class="kw">correr_modelo</span>(df_ent, df_pr, vocabulario, <span class="dt">lambda=</span><span class="fl">0.05</span>)</code></pre></div>
+<pre><code>## Joining, by = &quot;palabra&quot;
+## Joining, by = &quot;palabra&quot;</code></pre>
+<pre><code>## [1] &quot;Error entrenamiento: 0&quot;
+## [1] &quot;Error prueba: 0.24&quot;
+## [1] &quot;Devianza entrena:0.091&quot;
+## [1] &quot;Devianza prueba:1.347&quot;</code></pre>
+</div>
+<div id="refinando-el-pipeline" class="section level2">
+<h2><span class="header-section-number">10.5</span> Refinando el pipeline</h2>
+
+<div class="comentario">
+Refinar el pipeline para producir mejores entradas, o corridas más rápidas, generalmente es una buena inversión de tiempo (aunque es mejor no hacerlo prematuramente).
+</div>
+
+<p>El error de entrenamiento es satisfactorio todavía, y nos estamos acercando a nuestro objetivo (intenta regularizar más para verificar que el problema ahora es sesgo). En este punto, podemos intentar reducir varianza (reducir error de prueba con algún incremento en error de entrenamiento).</p>
+<ul>
+<li>Buscar más casos de entrenamiento: si son baratos, esto podría ayudar (aumentar al doble o 10 veces más).</li>
+<li>Redefinir entradas más informativas, para reducir el número de variables pero al mismo tiempo no aumentar el sesgo.</li>
+</ul>
+<p>Intentaremos por el momento el segundo camino (reducción de varianza). Podemos intentar tres cosas:</p>
+<ul>
+<li>Eliminar los términos que son demasiado frecuentes (son palabras no informativas, como the, a, he, she, etc.). Esto podría reducir varianza sin afectar mucho el sesgo.</li>
+<li>Usar raíces de palabras en lugar de palabras (por ejemplo, transfomar defect, defects, defective -&gt; defect y boring,bored, bore -&gt; bore, etc.). De esta manera, controlamos la proliferación de entradas que indican lo mismo y aumentan varianza - y quizá el sesgo no aumente mucho.</li>
+<li>Intentar usar bigramas - esto reduce el sesgo, pero quizá la varianza no aumente mucho.</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(<span class="st">&quot;stop_words&quot;</span>)
+<span class="kw">head</span>(stop_words)</code></pre></div>
+<pre><code>## # A tibble: 6 x 2
+##        word lexicon
+##       &lt;chr&gt;   &lt;chr&gt;
+## 1         a   SMART
+## 2       a&#39;s   SMART
+## 3      able   SMART
+## 4     about   SMART
+## 5     above   SMART
+## 6 according   SMART</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(<span class="kw">calc_vocabulario</span>(df_ent, <span class="dv">100</span>))</code></pre></div>
+<pre><code>## # A tibble: 6 x 2
+##   palabra  frec
+##     &lt;chr&gt; &lt;int&gt;
+## 1       a 12904
+## 2   about  1228
+## 3   after   569
+## 4     all  1464
+## 5    also   704
+## 6      an  2000</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(<span class="kw">calc_vocabulario</span>(df_ent, <span class="dv">100</span>, <span class="dt">remove_stop =</span> <span class="ot">TRUE</span>))</code></pre></div>
+<pre><code>## # A tibble: 6 x 2
+##    palabra  frec
+##      &lt;chr&gt; &lt;int&gt;
+## 1        2   179
+## 2   acting   224
+## 3   action   418
+## 4    actor   165
+## 5   actors   256
+## 6 american   193</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vocabulario &lt;-<span class="st"> </span><span class="kw">calc_vocabulario</span>(df_ent, <span class="dv">2000</span>, <span class="dt">remove_stop =</span> <span class="ot">TRUE</span>)
+<span class="kw">head</span>(vocabulario <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">arrange</span>(<span class="kw">desc</span>(frec)),<span class="dv">20</span>)</code></pre></div>
+<pre><code>## # A tibble: 20 x 2
+##       palabra  frec
+##         &lt;chr&gt; &lt;int&gt;
+##  1     review 22028
+##  2       film  2991
+##  3      movie  1844
+##  4       time   797
+##  5      story   749
+##  6  character   639
+##  7 characters   631
+##  8       life   527
+##  9      films   515
+## 10       plot   490
+## 11        bad   484
+## 12     people   484
+## 13      scene   482
+## 14     movies   455
+## 15     scenes   443
+## 16     action   418
+## 17   director   413
+## 18       love   393
+## 19       real   329
+## 20      world   323</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">tail</span>(vocabulario <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">arrange</span>(<span class="kw">desc</span>(frec)),<span class="dv">20</span>)</code></pre></div>
+<pre><code>## # A tibble: 20 x 2
+##          palabra  frec
+##            &lt;chr&gt; &lt;int&gt;
+##  1         shock    18
+##  2           sir    18
+##  3         sleep    18
+##  4          sole    18
+##  5          spot    18
+##  6         stays    18
+##  7 stereotypical    18
+##  8         strip    18
+##  9     supergirl    18
+## 10        taylor    18
+## 11        threat    18
+## 12     thrillers    18
+## 13     tradition    18
+## 14          tree    18
+## 15         trial    18
+## 16          trio    18
+## 17       triumph    18
+## 18         visit    18
+## 19       warning    18
+## 20      werewolf    18</code></pre>
+<p>Este vocabulario parece que puede ser más útil. Vamos a tener que ajustar la regularización de nuevo (y también el número de entradas). Nota: este proceso también lo podemos hacer con cv.glmnet de manera más rápida.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mod_x &lt;-<span class="st"> </span><span class="kw">correr_modelo_cv</span>(df_ent, df_pr, vocabulario, 
+                          <span class="dt">lambda =</span> <span class="kw">exp</span>(<span class="kw">seq</span>(<span class="op">-</span><span class="dv">10</span>,<span class="dv">2</span>,<span class="fl">0.1</span>)))</code></pre></div>
+<pre><code>## Joining, by = &quot;palabra&quot;
+## Joining, by = &quot;palabra&quot;</code></pre>
+<p><img src="10-diag-mejora_files/figure-html/unnamed-chunk-21-1.png" width="672" /></p>
+<pre><code>## [1] &quot;Lambda min: 3.32011692273655&quot;
+## [1] &quot;Error entrenamiento: 0.04&quot;
+## [1] &quot;Error prueba: 0.26&quot;
+## [1] &quot;Devianza entrena:0.975&quot;
+## [1] &quot;Devianza prueba:1.222&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#mod_x &lt;- correr_modelo(df_ent, df_pr, vocabulario, lambda =1)</span>
+<span class="co">#mod_x &lt;- correr_modelo(df_ent, df_pr, vocabulario, lambda =0.1)</span>
+<span class="co">#mod_x &lt;- correr_modelo(df_ent, df_pr, vocabulario, lambda =0.01)</span></code></pre></div>
+<p>No estamos mejorando. Podemos intentar con un número diferente de entradas (menos, pues nuestro problema es varianza):</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vocabulario &lt;-<span class="st"> </span><span class="kw">calc_vocabulario</span>(df_ent, <span class="dv">4000</span>, <span class="dt">remove_stop =</span> <span class="ot">TRUE</span>)
+mod_x &lt;-<span class="st"> </span><span class="kw">correr_modelo_cv</span>(df_ent, df_pr, vocabulario, <span class="dt">lambda =</span> <span class="kw">exp</span>(<span class="kw">seq</span>(<span class="op">-</span><span class="dv">10</span>,<span class="dv">2</span>,<span class="fl">0.1</span>)))</code></pre></div>
+<pre><code>## Joining, by = &quot;palabra&quot;
+## Joining, by = &quot;palabra&quot;</code></pre>
+<p><img src="10-diag-mejora_files/figure-html/unnamed-chunk-22-1.png" width="672" /></p>
+<pre><code>## [1] &quot;Lambda min: 7.38905609893065&quot;
+## [1] &quot;Error entrenamiento: 0.02&quot;
+## [1] &quot;Error prueba: 0.24&quot;
+## [1] &quot;Devianza entrena:1.007&quot;
+## [1] &quot;Devianza prueba:1.223&quot;</code></pre>
+<p>Y parece que nuestra estrategia no está funcionando muy bien. Regresamos a nuestro modelo con ridge</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vocabulario &lt;-<span class="st"> </span><span class="kw">calc_vocabulario</span>(df_ent, <span class="dv">3000</span>, <span class="dt">remove_stop =</span> <span class="ot">FALSE</span>)
+mod_x &lt;-<span class="st"> </span><span class="kw">correr_modelo_cv</span>(df_ent, df_pr, vocabulario, <span class="dt">lambda =</span> <span class="kw">exp</span>(<span class="kw">seq</span>(<span class="op">-</span><span class="dv">5</span>,<span class="dv">2</span>,<span class="fl">0.1</span>)))</code></pre></div>
+<pre><code>## Joining, by = &quot;palabra&quot;
+## Joining, by = &quot;palabra&quot;</code></pre>
+<p><img src="10-diag-mejora_files/figure-html/unnamed-chunk-23-1.png" width="672" /></p>
+<pre><code>## [1] &quot;Lambda min: 3.00416602394643&quot;
+## [1] &quot;Error entrenamiento: 0.03&quot;
+## [1] &quot;Error prueba: 0.24&quot;
+## [1] &quot;Devianza entrena:0.841&quot;
+## [1] &quot;Devianza prueba:1.156&quot;</code></pre>
+<p>Podemos intentar aumentar el número de palabras y aumentar también la regularización</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vocabulario &lt;-<span class="st"> </span><span class="kw">calc_vocabulario</span>(df_ent, <span class="dv">4000</span>, <span class="dt">remove_stop =</span> <span class="ot">FALSE</span>)
+mod_x &lt;-<span class="st"> </span><span class="kw">correr_modelo_cv</span>(df_ent, df_pr, vocabulario, <span class="dt">lambda =</span> <span class="kw">exp</span>(<span class="kw">seq</span>(<span class="op">-</span><span class="dv">5</span>,<span class="dv">2</span>,<span class="fl">0.1</span>)))</code></pre></div>
+<pre><code>## Joining, by = &quot;palabra&quot;
+## Joining, by = &quot;palabra&quot;</code></pre>
+<p><img src="10-diag-mejora_files/figure-html/unnamed-chunk-24-1.png" width="672" /></p>
+<pre><code>## [1] &quot;Lambda min: 7.38905609893065&quot;
+## [1] &quot;Error entrenamiento: 0.03&quot;
+## [1] &quot;Error prueba: 0.23&quot;
+## [1] &quot;Devianza entrena:1.003&quot;
+## [1] &quot;Devianza prueba:1.203&quot;</code></pre>
+</div>
+<div id="consiguiendo-mas-datos" class="section level2">
+<h2><span class="header-section-number">10.6</span> Consiguiendo más datos</h2>
+
+<div class="comentario">
+Si nuestro problema es varianza, conseguir más datos de entrenamiento puede ayudarnos, especialmente si producir estos datos es relativamente barato y rápido.
+</div>
+
+<p>Como nuestro principal problema es varianza, podemos mejorar buscando más datos. Supongamos que hacemos eso en este caso, conseguimos el doble casos de entrenamiento. En este ejemplo, podríamos etiquetar más reviews: esto es relativamente barato y rápido</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vocabulario &lt;-<span class="st"> </span><span class="kw">calc_vocabulario</span>(df_ent_grande, <span class="dv">3000</span>, <span class="dt">remove_stop =</span> <span class="ot">FALSE</span>)
+mod_x &lt;-<span class="st"> </span><span class="kw">correr_modelo_cv</span>(df_ent_grande, df_pr, vocabulario, <span class="dt">lambda =</span> <span class="kw">exp</span>(<span class="kw">seq</span>(<span class="op">-</span><span class="dv">5</span>,<span class="dv">2</span>,<span class="fl">0.1</span>)))</code></pre></div>
+<pre><code>## Joining, by = &quot;palabra&quot;
+## Joining, by = &quot;palabra&quot;</code></pre>
+<p><img src="10-diag-mejora_files/figure-html/unnamed-chunk-26-1.png" width="672" /></p>
+<pre><code>## [1] &quot;Lambda min: 0.367879441171442&quot;
+## [1] &quot;Error entrenamiento: 0.01&quot;
+## [1] &quot;Error prueba: 0.2&quot;
+## [1] &quot;Devianza entrena:0.486&quot;
+## [1] &quot;Devianza prueba:0.906&quot;</code></pre>
+<p>Y ya casi logramos nuestro objetivo. Podemos intentar con más palabras</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vocabulario &lt;-<span class="st"> </span><span class="kw">calc_vocabulario</span>(df_ent_grande, <span class="dv">4000</span>, <span class="dt">remove_stop =</span> <span class="ot">FALSE</span>)
+mod_x &lt;-<span class="st"> </span><span class="kw">correr_modelo_cv</span>(df_ent_grande, df_pr, vocabulario, <span class="dt">lambda =</span> <span class="kw">exp</span>(<span class="kw">seq</span>(<span class="op">-</span><span class="dv">5</span>,<span class="dv">2</span>,<span class="fl">0.1</span>)))</code></pre></div>
+<pre><code>## Joining, by = &quot;palabra&quot;
+## Joining, by = &quot;palabra&quot;</code></pre>
+<p><img src="10-diag-mejora_files/figure-html/unnamed-chunk-27-1.png" width="672" /></p>
+<pre><code>## [1] &quot;Lambda min: 0.606530659712633&quot;
+## [1] &quot;Error entrenamiento: 0.01&quot;
+## [1] &quot;Error prueba: 0.17&quot;
+## [1] &quot;Devianza entrena:0.526&quot;
+## [1] &quot;Devianza prueba:0.896&quot;</code></pre>
+<p>Y esto funcionó bien. Subir más la regularización no ayuda mucho (pruébalo). Parece que el sesgo lo podemos hacer chico (reducir el error de entrenamiento considerablemente), pero tenemos un problema más grande con la varianza.</p>
+<ul>
+<li>Quizá muchas palabras que estamos usando no tienen qué ver con la calidad de positivo/negativo, y eso induce varianza.</li>
+<li>Estos modelos no utilizan la estructura que hay en las reseñas, simplemente cuentan qué palabras aparecen. Quizá aprovechar esta estructura podemos incluir variables más informativas que induzcan menos varianza sin aumentar el sesgo.</li>
+<li>Podemos conseguir más datos.</li>
+</ul>
+<p>Obsérvese que:</p>
+<ul>
+<li>¿Podríamos intentar con una red neuronal totalmente conexa? Probablemente esto no va a ayudar, pues es un modelo más complejo y nuestro problema es varianza.</li>
+</ul>
+</div>
+<div id="usar-datos-adicionales" class="section level2">
+<h2><span class="header-section-number">10.7</span> Usar datos adicionales</h2>
+
+<div class="comentario">
+Considerar fuentes adicionales de datos muchas veces puede ayudar a mejorar nuestras entradas, lo cual puede tener beneficios en predicción (tanto sesgo como varianza).
+</div>
+
+<p>Intentemos el primer camino. Probamos usar palabras que tengan afinidad como parte de su significado (positivas y negativas). Estos datos están incluidos en el paquete <em>tidytext</em>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">bing &lt;-<span class="st"> </span><span class="kw">filter</span>(sentiments, lexicon <span class="op">==</span><span class="st"> &#39;bing&#39;</span>)
+<span class="kw">tail</span>(bing)</code></pre></div>
+<pre><code>## # A tibble: 6 x 4
+##        word sentiment lexicon score
+##       &lt;chr&gt;     &lt;chr&gt;   &lt;chr&gt; &lt;int&gt;
+## 1   zealous  negative    bing    NA
+## 2 zealously  negative    bing    NA
+## 3    zenith  positive    bing    NA
+## 4      zest  positive    bing    NA
+## 5     zippy  positive    bing    NA
+## 6    zombie  negative    bing    NA</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dim</span>(vocabulario)</code></pre></div>
+<pre><code>## [1] 4106    2</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vocabulario &lt;-<span class="st"> </span><span class="kw">calc_vocabulario</span>(df_ent_grande, <span class="dv">8000</span>, <span class="dt">remove_stop =</span> <span class="ot">FALSE</span>)
+voc_bing &lt;-<span class="st"> </span>vocabulario <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">inner_join</span>(bing <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">rename</span>(<span class="dt">palabra =</span> word))</code></pre></div>
+<pre><code>## Joining, by = &quot;palabra&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dim</span>(voc_bing)</code></pre></div>
+<pre><code>## [1] 1476    5</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mod_x &lt;-<span class="st"> </span><span class="kw">correr_modelo_cv</span>(df_ent_grande, df_pr, voc_bing, <span class="dt">alpha=</span><span class="dv">0</span>,
+                       <span class="dt">lambda =</span> <span class="kw">exp</span>(<span class="kw">seq</span>(<span class="op">-</span><span class="dv">5</span>,<span class="dv">2</span>,<span class="fl">0.1</span>)))</code></pre></div>
+<pre><code>## Joining, by = &quot;palabra&quot;
+## Joining, by = &quot;palabra&quot;</code></pre>
+<p><img src="10-diag-mejora_files/figure-html/unnamed-chunk-30-1.png" width="672" /></p>
+<pre><code>## [1] &quot;Lambda min: 0.496585303791409&quot;
+## [1] &quot;Error entrenamiento: 0.06&quot;
+## [1] &quot;Error prueba: 0.18&quot;
+## [1] &quot;Devianza entrena:0.736&quot;
+## [1] &quot;Devianza prueba:0.961&quot;</code></pre>
+<p>Estas variables solas no dan un resultado tan bueno (tenemos tanto sesgo como varianza altas). Podemos combinar:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vocabulario &lt;-<span class="st"> </span><span class="kw">calc_vocabulario</span>(df_ent_grande, <span class="dv">3000</span>, <span class="dt">remove_stop =</span><span class="ot">FALSE</span>)
+voc &lt;-<span class="st"> </span><span class="kw">bind_rows</span>(vocabulario, voc_bing <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(palabra, frec)) <span class="op">%&gt;%</span><span class="st"> </span>unique
+<span class="kw">dim</span>(voc)</code></pre></div>
+<pre><code>## [1] 4021    2</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mod_x &lt;-<span class="st"> </span><span class="kw">correr_modelo_cv</span>(df_ent_grande, df_pr, voc, <span class="dt">alpha=</span><span class="dv">0</span>, <span class="dt">lambda =</span> <span class="kw">exp</span>(<span class="kw">seq</span>(<span class="op">-</span><span class="dv">5</span>,<span class="dv">2</span>,<span class="fl">0.1</span>)))</code></pre></div>
+<pre><code>## Joining, by = &quot;palabra&quot;
+## Joining, by = &quot;palabra&quot;</code></pre>
+<p><img src="10-diag-mejora_files/figure-html/unnamed-chunk-31-1.png" width="672" /></p>
+<pre><code>## [1] &quot;Lambda min: 0.67032004603564&quot;
+## [1] &quot;Error entrenamiento: 0.01&quot;
+## [1] &quot;Error prueba: 0.17&quot;
+## [1] &quot;Devianza entrena:0.547&quot;
+## [1] &quot;Devianza prueba:0.911&quot;</code></pre>
+<p>Este camino no se ve mal, pero no hemos logrado mejoras. Aunque quizá valdría la pena intentar refinar más y ver qué pasa.</p>
+</div>
+<div id="examen-de-modelo-y-analisis-de-errores" class="section level2">
+<h2><span class="header-section-number">10.8</span> Examen de modelo y Análisis de errores</h2>
+<p>Ahora podemos ver qué errores estamos cometiendo, y cómo está funcionando el modelo. Busquemos los peores. Corremos el mejor modelo hasta ahora:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vocabulario &lt;-<span class="st"> </span><span class="kw">calc_vocabulario</span>(df_ent_grande, <span class="dv">4000</span>, <span class="dt">remove_stop =</span> <span class="ot">FALSE</span>)
+mod_x &lt;-<span class="st"> </span><span class="kw">correr_modelo_cv</span>(df_ent_grande, df_pr, vocabulario, <span class="dt">lambda =</span> <span class="kw">exp</span>(<span class="kw">seq</span>(<span class="op">-</span><span class="dv">5</span>,<span class="dv">2</span>,<span class="fl">0.1</span>)))</code></pre></div>
+<pre><code>## Joining, by = &quot;palabra&quot;
+## Joining, by = &quot;palabra&quot;</code></pre>
+<p><img src="10-diag-mejora_files/figure-html/unnamed-chunk-32-1.png" width="672" /></p>
+<pre><code>## [1] &quot;Lambda min: 0.740818220681718&quot;
+## [1] &quot;Error entrenamiento: 0.02&quot;
+## [1] &quot;Error prueba: 0.17&quot;
+## [1] &quot;Devianza entrena:0.573&quot;
+## [1] &quot;Devianza prueba:0.914&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">coeficientes &lt;-<span class="st"> </span><span class="kw">predict</span>(mod_x<span class="op">$</span>mod, <span class="dt">lambda =</span> <span class="st">&#39;lambda.min&#39;</span>, <span class="dt">type =</span> <span class="st">&#39;coefficients&#39;</span>) 
+coef_df &lt;-<span class="st"> </span><span class="kw">data_frame</span>(<span class="dt">palabra =</span> <span class="kw">rownames</span>(coeficientes),
+                      <span class="dt">coef =</span> coeficientes[,<span class="dv">1</span>])
+<span class="kw">arrange</span>(coef_df, coef) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">print</span>(<span class="dt">n=</span><span class="dv">20</span>)</code></pre></div>
+<pre><code>## # A tibble: 4,107 x 2
+##        palabra        coef
+##          &lt;chr&gt;       &lt;dbl&gt;
+##  1 (Intercept) -0.28900636
+##  2   ludicrous -0.11993381
+##  3      forgot -0.11559527
+##  4   miserably -0.10598781
+##  5  repetitive -0.10317123
+##  6      asleep -0.09743587
+##  7    designed -0.09428161
+##  8     frankly -0.09176484
+##  9    tiresome -0.09097330
+## 10   painfully -0.09000826
+## 11   insulting -0.08770382
+## 12 implausible -0.08318215
+## 13   cardboard -0.08107360
+## 14   redeeming -0.08054622
+## 15   slightest -0.08029741
+## 16      lethal -0.07775558
+## 17       inept -0.07671683
+## 18 potentially -0.07402287
+## 19       kicks -0.07391823
+## 20   profanity -0.07374146
+## # ... with 4,087 more rows</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">arrange</span>(coef_df, <span class="kw">desc</span>(coef)) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">print</span>(<span class="dt">n=</span><span class="dv">20</span>)</code></pre></div>
+<pre><code>## # A tibble: 4,107 x 2
+##          palabra       coef
+##            &lt;chr&gt;      &lt;dbl&gt;
+##  1   exceptional 0.10100076
+##  2        lesser 0.09812082
+##  3    underneath 0.09371545
+##  4       triumph 0.08363819
+##  5      identify 0.08277150
+##  6 appropriately 0.08116368
+##  7        enters 0.08086985
+##  8         ideal 0.08023261
+##  9   outstanding 0.07902024
+## 10        shines 0.07575683
+## 11          ease 0.07229817
+## 12        finest 0.07014397
+## 13        beings 0.06877740
+## 14      captures 0.06858859
+## 15     plausible 0.06818160
+## 16         notch 0.06814189
+## 17        nearby 0.06746912
+## 18          tiny 0.06601499
+## 19           gem 0.06419142
+## 20     threatens 0.06313503
+## # ... with 4,087 more rows</code></pre>
+<p>Y busquemos las diferencias más grandes del la probabilidad ajustada con la clase observada</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">y &lt;-<span class="st"> </span>mod_x<span class="op">$</span>prueba<span class="op">$</span>y
+x &lt;-<span class="st"> </span>mod_x<span class="op">$</span>prueba<span class="op">$</span>x
+probs &lt;-<span class="st"> </span><span class="kw">predict</span>(mod_x<span class="op">$</span>mod, <span class="dt">newx =</span> x, <span class="dt">type =</span><span class="st">&#39;response&#39;</span>, <span class="dt">s=</span><span class="st">&#39;lambda.min&#39;</span>)
+
+df_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">data_frame</span>(<span class="dt">id =</span> <span class="kw">rownames</span>(x), <span class="dt">y=</span>y, <span class="dt">prob =</span> probs[,<span class="dv">1</span>]) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">error =</span> y <span class="op">-</span><span class="st"> </span>prob) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">arrange</span>(<span class="kw">desc</span>(<span class="kw">abs</span>(error)))
+df_<span class="dv">1</span></code></pre></div>
+<pre><code>## # A tibble: 425 x 4
+##       id     y      prob      error
+##    &lt;chr&gt; &lt;dbl&gt;     &lt;dbl&gt;      &lt;dbl&gt;
+##  1   222     0 0.9767586 -0.9767586
+##  2  1461     1 0.1292236  0.8707764
+##  3  1050     1 0.1484240  0.8515760
+##  4  1490     1 0.2150220  0.7849780
+##  5  1508     1 0.2216865  0.7783135
+##  6  1960     1 0.2446289  0.7553711
+##  7  1933     1 0.2738587  0.7261413
+##  8    25     0 0.7198569 -0.7198569
+##  9  1447     1 0.3112285  0.6887715
+## 10  1306     1 0.3126126  0.6873874
+## # ... with 415 more rows</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">filter</span>(df, id <span class="op">==</span><span class="st"> </span><span class="dv">1461</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(texto)</code></pre></div>
+<pre><code>## [1] &quot;Review  deep rising is one of \&quot; those \&quot; movies .  Review  the kind of movie which serves no purpose except to entertain us .  Review  it does not ask us to think about important questions like life on other planets or the possibility that there is no god . . . screw that , it says boldly , let&#39;s see some computer generated monsters rip into , decapitate and generally cause irreparable booboos to a bunch of little known actors .  Review  heh !  Review  them wacky monsters , gotta love &#39;em .  Review  of course , since we can rent about a thousand b movies with the same kind of story , hollywood must give that little extra \&quot; oumph \&quot; to get people in theaters .  Review  that is where deep rising fails , which is a good thing .  Review  confused ?  Review  let me explain :  Review  despite all them flashy effects and big explosions , deep rising is still , at heart , a good &#39;ol b movie .  Review  luckily , it&#39;s a very good b movie .  Review  the worst cliches in movie history are a b movie&#39;s bread and butter .  Review  therefore , things that would destroy a serious movie actually help us have a good time while watching a movie of lower calibre .  Review  of course we know there&#39;s a big slimy creature behind that door , that one person will wander off to be picked off by said monster and we always know which persons or person will make it out alive .  Review  we just don&#39;t know when or how horrible it will be .  Review  i went to see deep rising with my expections low and my tolerance for bad dialogue high .  Review  imagine my surprise when i discover that deep rising is actually , well , pretty darn funny at times .  Review  a funny b movie ?  Review  well , that&#39;s new .  Review  these flicks are not supposed to make us laugh .  Review   ( except for a few unintended laughs once a while . )  Review  and before you know it , treat williams , wes studi and famke jansen appear on the big screen .  Review  hey ! i know them guys ( and gal ) from a couple of other movies .  Review  cool .  Review  familiar faces .  Review  so far so good .  Review  our man treat is the hero , he&#39;ll live .  Review  wes is a staple of b movies , he is the token victim .  Review  we know he&#39;ll buy the farm but he will take a few creeps with him on the way out .  Review  famke is the babe , &#39;nuff said .  Review  there is also a guy with glasses ( the guy with glasses always dies ) a black person ( b movie buffs know that the black guy always dies , never fails ) and a very funny , nerdy guy .  Review   ( ah !  Review  comic relief .  Review  how can we possibly explain having to kill him . . . let  Review  him live . )  Review  after the first fifteen minutes i felt right at home .  Review  i know who to root for and who i need to boo too and a gum to chew .  Review   ( please kill me . )  Review  suffice it to say that for the next hour and a half i jumped out of my seat a few times , went \&quot; ewwww \&quot; about a dozen times and nearly had an orgasm over all the explosions and firepower our heroes were packing .  Review  i&#39;m a man , we nottice these things .  Review  all in all , i&#39;d recommend deep rising if you are looking for a good time and care to leave your brain at the door . . . but  Review  bring your sense of humor and excitement in with you .  Review  the acting is decent , the effects top rate .  Review  how to best describe it ?  Review  put together the jet ski scene from hard rain , the bug attacks from starship troopers , a couple of james bond like stunts and all those scenes from friday the thirteenth and freddy where you keep screaming \&quot; don&#39;t go there , he&#39;s behind you \&quot; and you end up with deep rising .  Review  for creepy crawly goodness , tight t-shirts , major firepower and the need to go to the bathroom every fifteen minutes from seing all that water . &quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">filter</span>(df, id <span class="op">==</span><span class="st"> </span><span class="dv">1508</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(texto)</code></pre></div>
+<pre><code>## [1] &quot;Review  capsule : side-splitting comedy that follows its own merciless logic almost through to the end . . .  Review  but not without providing a good deal of genuine laughs .  Review  most comedies these days have one flaw .  Review  they&#39;re not funny .  Review  they think they&#39;re funny , but they are devoid of anything really penetrating or dastardly .  Review  occasionally a good funny movie sneaks past the deadening hollywood preconceptions of humor and we get a real gem : ruthless people , for instance , which established a microcosm of a setup and played it out to the bitter end .  Review  liar liar is built the same way and is just about as funny .  Review  this is one of the few movies i&#39;ve seen where i was laughing consistently almost all the way through : instead of a couple of set-pieces that inspired a laugh ( think of the dismal fatal instinct ) , the whole movie works like clockwork .  Review  jim carrey playes a high-powered lawyer , to whom lying is as natural as breathing .  Review  there is one thing he takes seriously , though : his son , and we can sense the affection that they have for each other right away .  Review  but his wife is divorced and seeing another man , and now it looks like they may move away together .  Review  the son goes with them , of course .  Review  the movie sets up this early material with good timing and a remarkable balance of jim carrey&#39;s over-the-top persona with reality .  Review  then the plot springs into action : after being snubbed ( not deliberately ) by his father at his birthday , the kid makes a wish as he blows out the birthday candles : that for just one day , dad can&#39;t lie .  Review  he gets the wish .  Review  what happens next is sidesplitting .  Review  everything turns into a confrontation : when cornered by a bum for some change , he shouts , \&quot; no !  Review  i&#39;m not giving you any money because i know you&#39;ll spend it on booze !  Review  all i want to do is to get to the office without having to step over the debris of our decaying society ! \&quot;  Review  he can&#39;t even get into an elevator without earning a black eye .  Review  and what&#39;s worse , he&#39;s now gotten himself into an expensive divorce settlement that requires him to twist the truth like abstract wire sculpture .  Review  carrey , who i used to find unfunny , has gotten better at his schtick , even if it&#39;s a limited one .  Review  he uses it to great effect in this movie .  Review  there is a scene where he tries to test his ability to lie and nearly demolishes his office in the process ( there&#39;s a grin breaking out across my face right now , just remembering the scene ) .  Review  he can&#39;t even write the lie ; his fingers twitch , his body buckles like someone in the throes of cyanide poisoning , and when he tries to talk it&#39;s like he&#39;s speaking in tongues .  Review  equally funny is a scene where he beats himself to a pulp ( don&#39;t ask why ) , tries to drink water to keep from having outbursts in the courtroom ( it fails , with semi-predictable results ) , and winds up biting the bullet when he gets called into the boardroom to have everyone ask what they think of them .  Review  this scene alone may force people to stop the tape for minutes on end .  Review  the movie sustains its laughs and also its flashes of insight until almost the end .  Review  a shame , too , because the movie insists on having a big , ridiculous climax that involves carrey&#39;s character flagging down a plane using a set of motorized stairs , then breaking his leg , etc . a simple reconciliation would do the trick .  Review  why is this stupid pent-up climax always obligatory ?  Review  it&#39;s not even part of the movie&#39;s real agenda .  Review  thankfully , liar liar survives it , and so does carrey .  Review  maybe they were being merciful , on reflection .  Review  if i&#39;d laughed any more , i might have needed an iron lung . &quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">filter</span>(df, id <span class="op">==</span><span class="st"> </span><span class="dv">222</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(texto) <span class="co">#negativa</span></code></pre></div>
+<pre><code>## [1] &quot;Review  it&#39;s probably inevitable that the popular virtual reality genre ( \&quot; the matrix , \&quot; \&quot; existenz \&quot; ) would collide with the even more popular serial-killer genre ( \&quot; kiss the girls , \&quot; \&quot; se7en \&quot; ) .  Review  the result should have been more interesting than \&quot; the cell . \&quot;  Review  as the movie opens , therapist catharine deane ( jennifer lopez ) treats a catatonic boy ( colton james ) by entering his mind through some sort of virtual reality technique that&#39;s never fully explained .  Review  after months of therapy sessions in a surreal desert , catharine has no success to report .  Review  meanwhile , killer carl stargher ( vincent d&#39;onofrio ) has claimed another victim .  Review  his particular hobby is to kidnap young women , keep them in a glass cell overnight , and drown them .  Review  he takes the corpse and soaks it in bleach , then suspends himself over the body and jerks off while watching a video tape of the drowning .  Review  although carl&#39;s been doing this for awhile , he&#39;s recently become sloppy , and fbi agent peter novak ( vince vaughn ) is closing in fast .  Review  not fast enough , though , to keep carl from sticking another woman ( tara subkoff ) in the cell or to catch him before he suffers a schizophrenic attack that leaves him in a coma .  Review  from the videos in carl&#39;s house , peter can see that the drowning cell is automated and will fill with water forty hours after the abduction .  Review  to save the kidnapped girl , peter has to find the cell before the end of the day , and comatose carl&#39;s not talking .  Review  so off they go to catharine in the hope that she can go inside carl&#39;s mind and find out where the cell is in time .  Review  the focus of \&quot; the cell \&quot; in on the ornate interior of carl&#39;s mind , but the universe director tarsem singh creates seems more an exercise in computer-generated spectacle than an exploration of the psychotic personality .  Review  for the most part , it&#39;s style without substance .  Review  in his own mind , carl is a decadent emperor in flowing robes , ming the merciless , as well as a frightened boy ( jake thomas ) abused by his father .  Review  all in all , the mind of a psycho killer turns out to be a strangely dull place , and i kept wishing i could fast-forward to the next development .  Review  singh is best known for directing music videos , particularly rem&#39;s \&quot; losing my religion , \&quot; and \&quot; the cell \&quot; seems very much like a really long , really slow mtv video with the sound deleted .  Review  singer lopez seems to think she&#39;s in a video as well ; she devotes more time to posing in elaborate costumes than she does to acting .  Review  the premise had great promise .  Review  the computer-generated world within carl&#39;s mind could have been a bizarre , surreal universe governed by insanity and symbolism rather than logic .  Review  the first room catharine enters in carl&#39;s head shows this promise .  Review  she finds a horse standing in center of the room ; suddenly , sheets of sharp-edged glass fall into the horse , dividing it into segments .  Review  the panes of glass separate , pulling apart the pieces of the still-living horse .  Review  this scene is twisted , disturbing , and thought-provoking , because the psychological importance of the horse and its fate is left to the viewer to ponder .  Review  another element that should have been developed is the effect on catharine of merging with the mind of a psychopath .  Review  their minds begin to bleed together at one point in the movie , and this should have provided an opportunity to discover the dark corners of catharine&#39;s own psyche .  Review  like sidney lumet&#39;s \&quot; the offence \&quot; or michael mann&#39;s \&quot; manhunter , \&quot; \&quot; the cell \&quot; could have explored how the madness of the killer brings out a repressed darkness in the investigator .  Review  however , catharine&#39;s character is hardly developed at all , and lopez has no depth to offer the role .  Review  bottom line : don&#39;t get trapped in this one . &quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">filter</span>(df, id <span class="op">==</span><span class="st"> </span><span class="dv">25</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(texto) <span class="co">#negativa</span></code></pre></div>
+<pre><code>## [1] &quot;Review  forgive the fevered criticism but the fervor of the crucible infects .  Review  set in 1692 at salem , massachusetts , the crucible opens with a group of teenage girls passionately singing and dancing around a boiling cauldron in the middle of a forest under the glow of a full moon .  Review  they beckon the names of men as the targets of their love spells .  Review  then one of the girls lets her hair down and sheds her clothes .  Review  not to be outdone in her quest to regain the attention of john proctor ( daniel day lewis ) , abigail ( winona ryder ) suddenly seizes a chicken , beats it against the ground and smears her face and lips with the fresh blood .  Review  taking even adolescent hormone surges into account , surely this chicken-bashing bit is a bit excessive , especially for prim puritan sensibilities ?  Review  surely to the puritan eye this is as close to a coven of witches as it gets ?  Review  the crucible errs from the beginning and arthur miller&#39;s name should be summoned for blame here for the addition of the above scene to his screen adaptation of his play .  Review  this is far from a harmless event , a bad start to an already shaky morality tale .  Review  the play describes the film&#39;s opening scene during tense exchanges that makes one wonder about the veracity of both accusation and reply , and this adds to the play&#39;s charged atmosphere .  Review  in the film , the opening scene becomes an unintentional pandora&#39;s box .  Review  not only is credulity stretched but abigail&#39;s obsession is unfortunately spotlighted .  Review  it positions the crucible more as a cautionary fable about obsessive and malevolent women than against witch hunts ; it will bring back the memory of a rabbit boiling away in a pot .  Review  not surprisingly , the nighttime forest frenzy does not go unnoticed and when two girls fail to wake the following morning , witches are invoked by those eager to blame .  Review  when the girls are questioned , their confession of guilt is accompanied with an announcement of their return to god and they are thereafter converted to immaculate witnesses , led lustfully by abigail .  Review  with alarming synchronicity our hormonally-advantaged girls zealously gesture and point accusing fingers at innocents , constant reminders that abigail&#39;s passion sets all this into inexorable motion .  Review  abigail seizes on this opportunity to rid herself of her rival for john proctor&#39;s love , his wife elizabeth ( joan allen ) , by including her among those accused of witchcraft .  Review  appropriately narrow-waisted and equipped with a distractingly white smile ( watch his teeth deteriorate much too quickly to a murky yellow ) , day lewis plays the dashing moral hero with an over-earnestness that longs to be watched .  Review  director nicholas hytner is guilty of encouraging day lewis&#39; foaming-mouth fervour with shots where we stare up at proctor as if he was mounted on a pedestal for our admiration .  Review  otherwise , hytner&#39;s direction is unremarkable .  Review  ryder&#39;s performance as abigail is as consistent as her mood swings .  Review  her fits of frenzy are energetic enough but the quieter moments are less successful .  Review  abigail supposedly revels in her newfound power , but ryder fails at being convincingly haughty although there is much haughtiness to spare here .  Review  paul scofield is fine as the overzealous judge danforth , but the incessant moral posturings of all the characters along with the recurrent histrionics of the young girls pricks at the nerves .  Review  probably because she is the only refuge of restraint amidst all the huffing and puffing , allen&#39;s elizabeth comes out as the most sympathetic character .  Review  a scene near the end featuring a private conversation between the imprisoned elizabeth and john is undeniably powerful because for once we are given a reprieve from the moral bantering and the human consequences are revealed .  Review  unfortunately , when john&#39;s audience again increases to more than one his urge to pontificate returns and the human urgency of his situation is lost .  Review  it is clear that miller meant well but i do wish he did it with more delicacy and fewer diversions .  Review  his screenplay is an imperfect creature with the distractions coming out as loud as the message .  Review  the result is a clumsy muddle - i felt like the chicken from the opening scene , head ceaselessly banged with piousness too heavy-handed to be wholly believable .  Review  when the gallows beckoned , it was sweet release indeed .  Review  far from bewitching , the crucible tests the patience . &quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">filter</span>(df, id <span class="op">==</span><span class="st"> </span><span class="dv">728</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(texto) <span class="co">#negativa</span></code></pre></div>
+<pre><code>## [1] &quot;Review  girl 6 is , in a word , a mess .  Review  i was never able to determine what spike lee was trying to accomplish with this film .  Review  there was no sense of where the film was going , or any kind of coherent narrative .  Review  if there was a point to the film , i missed it .  Review  girl 6 , by the way , is the way theresa randle&#39;s character is addressed in the phone sex workplace ; all the girls are known by their numbers .  Review  the plot , such as it is : theresa randle is a struggling n . y . actress , and eventually takes a job as a phone-sex operator .  Review  she begins to lose contact with reality , as her job consumes her .  Review  also , she must deal with the advances of her ex-husband ( isiah washington ) .  Review  he is an ex- con thief , and she tries to keep him away , while at the same time , it&#39;s clear that she still harbors feelings for him .  Review  her neighbor , jimmy ( spike lee ) functions as the observer ; mediating between the ex- husband and girl 6 .  Review  he also functions as a point of stability , as he watches her become seduced by the lurid world of phone sex .  Review  the soundtrack , consisting of songs by prince , was jarring .  Review  it kept taking my attention from the film - not altogether a bad thing , i&#39;ll grant you , as what was transpiring onscreen wasn&#39;t that riveting .  Review  for parts of the middle of the film , the music stayed blissfully in the background .  Review  in the opening sequence and one scene later in the film , however , the music was particularly loud and distracting .  Review  of course , i&#39;ve never really cared for prince&#39;s ( or tafkap if you like ) music .  Review  prince fans might love the soundtrack , but it will probably be distracting , even to die-hard fans .  Review  of the performances , the only one that stood out was spike lee&#39;s buddy character , jimmy .  Review  he was excellent as the always-broke neighbor of girl 6 .  Review  he should have stuck to acting in this film .  Review  there are several sequences that gave me the impression that he&#39;d like to be oliver stone when he grows up .  Review  there are scenes shot with different types of film , which are purposely grainy , and reminiscent of some of the scenes in oliver stone&#39;s natural born killers .  Review  in that film , they worked to propel the narrative .  Review  in this film , they just made me more confused .  Review  there are some amusing moments , and a few insights into the lives of the women who use their voices to make the phone-sex industry the multi-billion dollar industry that it has become .  Review  other than that , though , nothing much happens .  Review  there are a few intense moments , as when one caller becomes frightening , but even that is rather lackluster .  Review  i&#39;m not the biggest fan of spike lee , though i&#39;d agree that he has done some very good work in the past .  Review  in girl 6 , though , he seems to be floundering .  Review  he had an interesting idea , a fairly good setup , and seemed to wander aimlessly from there .  Review  girl 6 earns a grade of d . &quot;</code></pre>
+<p>Algunos de los errores son difíciles (por ejemplo, una reseña que dice que la película es tan mala que es buena). Otros quizá podemos hacer algo con nuestro método: en algunas partes vemos algunas problemas con nuestro método, por ejemplo, “no energy” - nuestro método no toma en cuenta el orden de las palabras. Podemos intentar capturar algo de esto usando bigramas (pares de palabras) en lugar de simplemente usar palabras.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vocabulario &lt;-<span class="st"> </span><span class="kw">calc_vocabulario</span>(df_ent_grande, <span class="dv">3800</span>, <span class="dt">remove_stop =</span> <span class="ot">FALSE</span>)
+mod_x &lt;-<span class="st"> </span><span class="kw">correr_modelo_cv</span>(df_ent_grande, df_pr, vocabulario, <span class="dt">lambda =</span> <span class="kw">exp</span>(<span class="kw">seq</span>(<span class="op">-</span><span class="dv">5</span>,<span class="dv">2</span>,<span class="fl">0.1</span>)))</code></pre></div>
+<pre><code>## Joining, by = &quot;palabra&quot;
+## Joining, by = &quot;palabra&quot;</code></pre>
+<p><img src="10-diag-mejora_files/figure-html/unnamed-chunk-36-1.png" width="672" /></p>
+<pre><code>## [1] &quot;Lambda min: 0.548811636094027&quot;
+## [1] &quot;Error entrenamiento: 0.01&quot;
+## [1] &quot;Error prueba: 0.18&quot;
+## [1] &quot;Devianza entrena:0.522&quot;
+## [1] &quot;Devianza prueba:0.896&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vocabulario_bigramas &lt;-<span class="st"> </span><span class="kw">calc_vocabulario</span>(df_ent_grande, <span class="dv">500</span>, <span class="dt">bigram =</span> <span class="ot">TRUE</span>)
+vocabulario_bigramas <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">arrange</span>(<span class="kw">desc</span>(frec))</code></pre></div>
+<pre><code>## # A tibble: 501 x 2
+##       palabra  frec
+##         &lt;chr&gt; &lt;int&gt;
+##  1     of the  6980
+##  2 review the  6423
+##  3     in the  4598
+##  4   the film  3167
+##  5       is a  2321
+##  6      to be  2218
+##  7     to the  2180
+##  8    and the  2018
+##  9       in a  1755
+## 10     on the  1755
+## # ... with 491 more rows</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vocabulario_bigramas <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">arrange</span>((frec))</code></pre></div>
+<pre><code>## # A tibble: 501 x 2
+##          palabra  frec
+##            &lt;chr&gt; &lt;int&gt;
+##  1       i&#39;m not   133
+##  2 the beginning   133
+##  3   the opening   133
+##  4     their own   133
+##  5       what he   133
+##  6  world review   133
+##  7      and some   134
+##  8   directed by   134
+##  9        he can   134
+## 10       none of   134
+## # ... with 491 more rows</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(stringr)
+mod_bigramas &lt;-<span class="st"> </span><span class="kw">correr_modelo_cv</span>(df_ent_grande, df_pr, vocabulario_bigramas, 
+                                <span class="dt">alpha=</span><span class="dv">1</span>,
+                          <span class="dt">lambda =</span> <span class="kw">exp</span>(<span class="kw">seq</span>(<span class="op">-</span><span class="dv">7</span>,<span class="dv">2</span>,<span class="fl">0.1</span>)), <span class="dt">bigram =</span> <span class="ot">TRUE</span>)</code></pre></div>
+<pre><code>## Joining, by = &quot;palabra&quot;
+## Joining, by = &quot;palabra&quot;</code></pre>
+<p><img src="10-diag-mejora_files/figure-html/unnamed-chunk-37-1.png" width="672" /></p>
+<pre><code>## [1] &quot;Lambda min: 0.0111089965382423&quot;
+## [1] &quot;Error entrenamiento: 0.19&quot;
+## [1] &quot;Error prueba: 0.31&quot;
+## [1] &quot;Devianza entrena:0.94&quot;
+## [1] &quot;Devianza prueba:1.175&quot;</code></pre>
+<p>Este resultado no es malo. Podemos intentar construir un modelo con unigramas y bigramas:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">y &lt;-<span class="st"> </span>mod_x<span class="op">$</span>entrena<span class="op">$</span>y
+x_<span class="dv">1</span> &lt;-<span class="st"> </span>mod_x<span class="op">$</span>entrena<span class="op">$</span>x
+x_<span class="dv">2</span> &lt;-<span class="st"> </span>mod_bigramas<span class="op">$</span>entrena<span class="op">$</span>x
+mod_ub &lt;-<span class="st"> </span><span class="kw">cv.glmnet</span>(<span class="dt">x =</span> <span class="kw">cbind</span>(x_<span class="dv">1</span>, x_<span class="dv">2</span>), 
+                       <span class="dt">y =</span> y, <span class="dt">alpha =</span> <span class="fl">0.0</span>, <span class="dt">family =</span><span class="st">&#39;binomial&#39;</span>,
+                       <span class="dt">lambda =</span> <span class="kw">exp</span>(<span class="kw">seq</span>(<span class="op">-</span><span class="dv">5</span>,<span class="dv">1</span>,<span class="fl">0.1</span>)))
+
+<span class="kw">plot</span>(mod_ub)</code></pre></div>
+<p><img src="10-diag-mejora_files/figure-html/unnamed-chunk-38-1.png" width="672" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x_1p &lt;-<span class="st"> </span>mod_x<span class="op">$</span>prueba<span class="op">$</span>x
+x_2p &lt;-<span class="st"> </span>mod_bigramas<span class="op">$</span>prueba<span class="op">$</span>x
+preds_ent &lt;-<span class="st"> </span><span class="kw">predict</span>(mod_ub, <span class="dt">newx =</span> <span class="kw">cbind</span>(x_<span class="dv">1</span>,x_<span class="dv">2</span>), <span class="dt">type=</span><span class="st">&#39;class&#39;</span>, <span class="dt">lambda =</span><span class="st">&#39;lambda.min&#39;</span>)
+<span class="kw">mean</span>(preds_ent <span class="op">!=</span><span class="st"> </span>mod_x<span class="op">$</span>entrena<span class="op">$</span>y)</code></pre></div>
+<pre><code>## [1] 0.02857143</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">preds_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">predict</span>(mod_ub, <span class="dt">newx =</span> <span class="kw">cbind</span>(x_1p,x_2p), <span class="dt">type=</span><span class="st">&#39;class&#39;</span>, <span class="dt">lambda =</span><span class="st">&#39;lambda.min&#39;</span>)
+<span class="kw">mean</span>(preds_<span class="dv">1</span> <span class="op">!=</span><span class="st"> </span>mod_x<span class="op">$</span>prueba<span class="op">$</span>y)</code></pre></div>
+<pre><code>## [1] 0.1717647</code></pre>
+<div id="ejemplo-opcional" class="section level4">
+<h4><span class="header-section-number">10.8.0.1</span> Ejemplo (opcional)</h4>
+<p>En este ejemplo no tenemos muchos datos, pero puedes intentar de todas formas ajustar una red neuronal adaptada al problema (word embeddings, que veremos más adelante, y convoluciones de una dimensión a lo largo de oraciones). Quizá es buena idea empezar con un conjunto de datos más grandes, como dataset_imdb() en el paquete keras.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="cf">if</span>(<span class="kw">Sys.info</span>()[<span class="st">&#39;nodename&#39;</span>] <span class="op">==</span><span class="st"> &#39;vainilla.local&#39;</span>){
+  <span class="co"># esto es por mi instalación particular de tensorflow - típicamente</span>
+  <span class="co"># no es necesario que corras esta línea.</span>
+  <span class="kw">Sys.setenv</span>(<span class="dt">TENSORFLOW_PYTHON=</span><span class="st">&quot;/usr/local/bin/python&quot;</span>)
+}
+<span class="kw">library</span>(keras)
+vocabulario &lt;-<span class="st"> </span><span class="kw">calc_vocabulario</span>(df_ent_grande, <span class="dv">4000</span>, <span class="dt">remove_stop =</span> <span class="ot">FALSE</span>)
+<span class="kw">dim</span>(vocabulario)
+entrena &lt;-<span class="st"> </span><span class="kw">convertir_lista</span>(df_ent_grande, vocabulario)
+prueba &lt;-<span class="st"> </span><span class="kw">convertir_lista</span>(df_pr, vocabulario)
+<span class="kw">quantile</span>(<span class="kw">sapply</span>(entrena<span class="op">$</span>x, length))
+x_train &lt;-<span class="st"> </span>entrena<span class="op">$</span>x <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">pad_sequences</span>(<span class="dt">maxlen =</span> <span class="dv">2000</span>, <span class="dt">truncating=</span><span class="st">&quot;post&quot;</span>)
+x_test &lt;-<span class="st"> </span>prueba<span class="op">$</span>x <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">pad_sequences</span>(<span class="dt">maxlen =</span> <span class="dv">2000</span>, <span class="dt">truncating=</span><span class="st">&#39;post&#39;</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">model &lt;-<span class="st"> </span><span class="kw">keras_model_sequential</span>()
+model <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="co"># Start off with an efficient embedding layer which maps</span>
+<span class="st">  </span><span class="co"># the vocab indices into embedding_dims dimensions</span>
+<span class="st">  </span><span class="kw">layer_embedding</span>(<span class="dt">input_dim =</span> <span class="kw">nrow</span>(vocabulario)<span class="op">+</span><span class="dv">2</span>, <span class="dt">output_dim =</span> <span class="dv">20</span>, 
+                  <span class="dt">input_length=</span><span class="dv">2000</span>,
+                  <span class="dt">embeddings_regularizer =</span> <span class="kw">regularizer_l2</span>(<span class="fl">0.00</span>)) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">layer_dropout</span>(<span class="fl">0.5</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">layer_conv_1d</span>(
+    <span class="dt">filters =</span> <span class="dv">30</span>, <span class="dt">kernel_size=</span><span class="dv">3</span>, 
+    <span class="dt">padding =</span> <span class="st">&quot;valid&quot;</span>, <span class="dt">activation =</span> <span class="st">&quot;relu&quot;</span>, <span class="dt">strides =</span> <span class="dv">1</span>,
+    <span class="dt">kernel_regularizer =</span> <span class="kw">regularizer_l2</span>(<span class="fl">0.01</span>)) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="co"># Apply max pooling:</span>
+<span class="st">  </span><span class="kw">layer_dropout</span>(<span class="fl">0.5</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">layer_global_max_pooling_1d</span>() <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="co"># Add a vanilla hidden layer:</span>
+<span class="st">  </span><span class="kw">layer_dense</span>(<span class="dv">20</span>, <span class="dt">activation =</span><span class="st">&#39;relu&#39;</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">layer_dropout</span>(<span class="fl">0.5</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">layer_dense</span>(<span class="dv">1</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">layer_activation</span>(<span class="st">&quot;sigmoid&quot;</span>)
+
+
+<span class="co"># Compile model</span>
+model <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">compile</span>(
+  <span class="dt">loss =</span> <span class="st">&quot;binary_crossentropy&quot;</span>,
+  <span class="dt">optimizer =</span> <span class="kw">optimizer_adam</span>(<span class="dt">lr=</span><span class="fl">0.001</span>),
+  <span class="dt">metrics =</span> <span class="kw">c</span>(<span class="st">&quot;accuracy&quot;</span>,<span class="st">&quot;binary_crossentropy&quot;</span>)
+)
+
+model <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">fit</span>(
+    x_train, entrena<span class="op">$</span>y,
+    <span class="dt">batch_size =</span> <span class="dv">128</span>,
+    <span class="dt">epochs =</span> <span class="dv">100</span>,
+    <span class="co">#  callback = callback_early_stopping(monitor=&#39;val_loss&#39;, patience=50),</span>
+    <span class="dt">validation_data =</span> <span class="kw">list</span>(x_test, prueba<span class="op">$</span>y)
+  )
+<span class="kw">print</span>(<span class="st">&quot;Entrenamiento&quot;</span>)
+<span class="kw">evaluate</span>(model, x_train, entrena<span class="op">$</span>y)
+<span class="kw">print</span>(<span class="st">&quot;Prueba&quot;</span>)
+<span class="kw">evaluate</span>(model, x_test, prueba<span class="op">$</span>y )</code></pre></div>
+
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="redes-convolucionales.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="metodos-basados-en-arboles.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"google": false,
+"weibo": false,
+"instapper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/felipegonzalez/aprendizaje-maquina-2017/edit/master/10-diag-mejora.Rmd",
+"text": "Edit"
+},
+"download": ["aprendizaje-maquina.pdf", "aprendizaje-maquina.epub"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:" && /^https?:/.test(script.src))
+      script.src  = script.src.replace(/^https?:/, '');
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

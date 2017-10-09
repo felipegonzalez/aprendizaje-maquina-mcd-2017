@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html >
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Aprendizaje de máquina</title>
+  <meta name="description" content="Notas y material para el curso de aprendizaje de máquina 2017 (ITAM)">
+  <meta name="generator" content="bookdown 0.5.4 and GitBook 2.6.7">
+
+  <meta property="og:title" content="Aprendizaje de máquina" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="Notas y material para el curso de aprendizaje de máquina 2017 (ITAM)" />
+  <meta name="github-repo" content="felipegonzalez/aprendizaje-maquina-2017" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Aprendizaje de máquina" />
+  
+  <meta name="twitter:description" content="Notas y material para el curso de aprendizaje de máquina 2017 (ITAM)" />
+  
+
+<meta name="author" content="Felipe González">
+
+
+<meta name="date" content="2017-10-09">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  
+  
+<link rel="prev" href="diagnostico-y-mejora-de-modelos.html">
+
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+<link rel="stylesheet" href="toc.css" type="text/css" />
+<link rel="stylesheet" href="font-awesome.min.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Aprendizaje Máquina</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Temario y referencias</a><ul>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#evaluacion"><i class="fa fa-check"></i>Evaluación</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#software-r-y-rstudio"><i class="fa fa-check"></i>Software: R y Rstudio</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#referencias-principales"><i class="fa fa-check"></i>Referencias principales</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#otras-referencias"><i class="fa fa-check"></i>Otras referencias</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#otros-materiales"><i class="fa fa-check"></i>Otros materiales</a></li>
+</ul></li>
+<li class="chapter" data-level="1" data-path="introduccion.html"><a href="introduccion.html"><i class="fa fa-check"></i><b>1</b> Introducción</a><ul>
+<li class="chapter" data-level="1.1" data-path="introduccion.html"><a href="introduccion.html#que-es-aprendizaje-de-maquina-machine-learning"><i class="fa fa-check"></i><b>1.1</b> ¿Qué es aprendizaje de máquina (machine learning)?</a></li>
+<li class="chapter" data-level="1.2" data-path="introduccion.html"><a href="introduccion.html#aprendizaje-supervisado-1"><i class="fa fa-check"></i><b>1.2</b> Aprendizaje Supervisado</a><ul>
+<li class="chapter" data-level="1.2.1" data-path="introduccion.html"><a href="introduccion.html#proceso-generador-de-datos-modelo-teorico"><i class="fa fa-check"></i><b>1.2.1</b> Proceso generador de datos (modelo teórico)</a></li>
+</ul></li>
+<li class="chapter" data-level="1.3" data-path="introduccion.html"><a href="introduccion.html#predicciones"><i class="fa fa-check"></i><b>1.3</b> Predicciones</a></li>
+<li class="chapter" data-level="1.4" data-path="introduccion.html"><a href="introduccion.html#cuantificacion-de-error-o-precision"><i class="fa fa-check"></i><b>1.4</b> Cuantificación de error o precisión</a></li>
+<li class="chapter" data-level="1.5" data-path="introduccion.html"><a href="introduccion.html#aprendizaje"><i class="fa fa-check"></i><b>1.5</b> Tarea de aprendizaje supervisado</a><ul>
+<li class="chapter" data-level="1.5.1" data-path="introduccion.html"><a href="introduccion.html#observaciones"><i class="fa fa-check"></i><b>1.5.1</b> Observaciones</a></li>
+</ul></li>
+<li class="chapter" data-level="1.6" data-path="introduccion.html"><a href="introduccion.html#por-que-tenemos-errores"><i class="fa fa-check"></i><b>1.6</b> ¿Por qué tenemos errores?</a></li>
+<li class="chapter" data-level="1.7" data-path="introduccion.html"><a href="introduccion.html#como-estimar-f"><i class="fa fa-check"></i><b>1.7</b> ¿Cómo estimar f?</a></li>
+<li class="chapter" data-level="1.8" data-path="introduccion.html"><a href="introduccion.html#resumen"><i class="fa fa-check"></i><b>1.8</b> Resumen</a></li>
+<li class="chapter" data-level="1.9" data-path="introduccion.html"><a href="introduccion.html#tarea"><i class="fa fa-check"></i><b>1.9</b> Tarea</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="regresion.html"><a href="regresion.html"><i class="fa fa-check"></i><b>2</b> Regresión lineal</a><ul>
+<li class="chapter" data-level="2.1" data-path="introduccion.html"><a href="introduccion.html#introduccion"><i class="fa fa-check"></i><b>2.1</b> Introducción</a></li>
+<li class="chapter" data-level="2.2" data-path="regresion.html"><a href="regresion.html#aprendizaje-de-coeficientes-ajuste"><i class="fa fa-check"></i><b>2.2</b> Aprendizaje de coeficientes (ajuste)</a></li>
+<li class="chapter" data-level="2.3" data-path="regresion.html"><a href="regresion.html#descenso-en-gradiente"><i class="fa fa-check"></i><b>2.3</b> Descenso en gradiente</a><ul>
+<li class="chapter" data-level="2.3.1" data-path="regresion.html"><a href="regresion.html#seleccion-de-tamano-de-paso-eta"><i class="fa fa-check"></i><b>2.3.1</b> Selección de tamaño de paso <span class="math inline">\(\eta\)</span></a></li>
+<li class="chapter" data-level="2.3.2" data-path="regresion.html"><a href="regresion.html#funciones-de-varias-variables"><i class="fa fa-check"></i><b>2.3.2</b> Funciones de varias variables</a></li>
+</ul></li>
+<li class="chapter" data-level="2.4" data-path="regresion.html"><a href="regresion.html#descenso-en-gradiente-para-regresion-lineal"><i class="fa fa-check"></i><b>2.4</b> Descenso en gradiente para regresión lineal</a></li>
+<li class="chapter" data-level="2.5" data-path="regresion.html"><a href="regresion.html#normalizacion-de-entradas"><i class="fa fa-check"></i><b>2.5</b> Normalización de entradas</a></li>
+<li class="chapter" data-level="2.6" data-path="regresion.html"><a href="regresion.html#interpretacion-de-modelos-lineales"><i class="fa fa-check"></i><b>2.6</b> Interpretación de modelos lineales</a></li>
+<li class="chapter" data-level="2.7" data-path="regresion.html"><a href="regresion.html#solucion-analitica"><i class="fa fa-check"></i><b>2.7</b> Solución analítica</a></li>
+<li class="chapter" data-level="2.8" data-path="regresion.html"><a href="regresion.html#por-que-el-modelo-lineal-funciona-bien-muchas-veces"><i class="fa fa-check"></i><b>2.8</b> ¿Por qué el modelo lineal funciona bien (muchas veces)?</a><ul>
+<li class="chapter" data-level="2.8.1" data-path="regresion.html"><a href="regresion.html#k-vecinos-mas-cercanos"><i class="fa fa-check"></i><b>2.8.1</b> k vecinos más cercanos</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="regresion.html"><a href="regresion.html#tarea-1"><i class="fa fa-check"></i>Tarea</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="logistica.html"><a href="logistica.html"><i class="fa fa-check"></i><b>3</b> Regresión logística</a><ul>
+<li class="chapter" data-level="3.1" data-path="logistica.html"><a href="logistica.html#el-problema-de-clasificacion"><i class="fa fa-check"></i><b>3.1</b> El problema de clasificación</a><ul>
+<li class="chapter" data-level="" data-path="logistica.html"><a href="logistica.html#que-estimar-en-problemas-de-clasificacion"><i class="fa fa-check"></i>¿Qué estimar en problemas de clasificación?</a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="logistica.html"><a href="logistica.html#estimacion-de-probabilidades-de-clase"><i class="fa fa-check"></i><b>3.2</b> Estimación de probabilidades de clase</a><ul>
+<li class="chapter" data-level="" data-path="logistica.html"><a href="logistica.html#ejemplo-10"><i class="fa fa-check"></i>Ejemplo</a></li>
+<li class="chapter" data-level="3.2.1" data-path="logistica.html"><a href="logistica.html#k-vecinos-mas-cercanos-1"><i class="fa fa-check"></i><b>3.2.1</b> k-vecinos más cercanos</a></li>
+<li class="chapter" data-level="" data-path="logistica.html"><a href="logistica.html#ejemplo-12"><i class="fa fa-check"></i>Ejemplo</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="logistica.html"><a href="logistica.html#error-para-modelos-de-clasificacion"><i class="fa fa-check"></i><b>3.3</b> Error para modelos de clasificación</a><ul>
+<li class="chapter" data-level="3.3.1" data-path="logistica.html"><a href="logistica.html#ejercicio-1"><i class="fa fa-check"></i><b>3.3.1</b> Ejercicio</a></li>
+<li class="chapter" data-level="3.3.2" data-path="logistica.html"><a href="logistica.html#error-de-clasificacion-y-funcion-de-perdida-0-1"><i class="fa fa-check"></i><b>3.3.2</b> Error de clasificación y función de pérdida 0-1</a></li>
+<li class="chapter" data-level="3.3.3" data-path="logistica.html"><a href="logistica.html#discusion-relacion-entre-devianza-y-error-de-clasificacion"><i class="fa fa-check"></i><b>3.3.3</b> Discusión: relación entre devianza y error de clasificación</a></li>
+</ul></li>
+<li class="chapter" data-level="3.4" data-path="logistica.html"><a href="logistica.html#regresion-logistica"><i class="fa fa-check"></i><b>3.4</b> Regresión logística</a><ul>
+<li class="chapter" data-level="3.4.1" data-path="logistica.html"><a href="logistica.html#regresion-logistica-simple"><i class="fa fa-check"></i><b>3.4.1</b> Regresión logística simple</a></li>
+<li class="chapter" data-level="3.4.2" data-path="logistica.html"><a href="logistica.html#funcion-logistica"><i class="fa fa-check"></i><b>3.4.2</b> Función logística</a></li>
+<li class="chapter" data-level="3.4.3" data-path="logistica.html"><a href="logistica.html#regresion-logistica-1"><i class="fa fa-check"></i><b>3.4.3</b> Regresión logística</a></li>
+</ul></li>
+<li class="chapter" data-level="3.5" data-path="logistica.html"><a href="logistica.html#aprendizaje-de-coeficientes-para-regresion-logistica-binomial."><i class="fa fa-check"></i><b>3.5</b> Aprendizaje de coeficientes para regresión logística (binomial).</a></li>
+<li class="chapter" data-level="3.6" data-path="logistica.html"><a href="logistica.html#observaciones-adicionales"><i class="fa fa-check"></i><b>3.6</b> Observaciones adicionales</a></li>
+<li class="chapter" data-level="3.7" data-path="logistica.html"><a href="logistica.html#ejercicio-datos-de-diabetes"><i class="fa fa-check"></i><b>3.7</b> Ejercicio: datos de diabetes</a><ul>
+<li class="chapter" data-level="" data-path="logistica.html"><a href="logistica.html#tarea-2"><i class="fa fa-check"></i>Tarea</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="mas-sobre-problemas-de-clasificacion.html"><a href="mas-sobre-problemas-de-clasificacion.html"><i class="fa fa-check"></i><b>4</b> Más sobre problemas de clasificación</a><ul>
+<li class="chapter" data-level="4.1" data-path="mas-sobre-problemas-de-clasificacion.html"><a href="mas-sobre-problemas-de-clasificacion.html#analisis-de-error-para-clasificadores-binarios"><i class="fa fa-check"></i><b>4.1</b> Análisis de error para clasificadores binarios</a><ul>
+<li class="chapter" data-level="4.1.1" data-path="mas-sobre-problemas-de-clasificacion.html"><a href="mas-sobre-problemas-de-clasificacion.html#punto-de-corte-para-un-clasificador-binario"><i class="fa fa-check"></i><b>4.1.1</b> Punto de corte para un clasificador binario</a></li>
+<li class="chapter" data-level="4.1.2" data-path="mas-sobre-problemas-de-clasificacion.html"><a href="mas-sobre-problemas-de-clasificacion.html#espacio-roc-de-clasificadores"><i class="fa fa-check"></i><b>4.1.2</b> Espacio ROC de clasificadores</a></li>
+</ul></li>
+<li class="chapter" data-level="4.2" data-path="mas-sobre-problemas-de-clasificacion.html"><a href="mas-sobre-problemas-de-clasificacion.html#perfil-de-un-clasificador-binario-y-curvas-roc"><i class="fa fa-check"></i><b>4.2</b> Perfil de un clasificador binario y curvas ROC</a></li>
+<li class="chapter" data-level="4.3" data-path="mas-sobre-problemas-de-clasificacion.html"><a href="mas-sobre-problemas-de-clasificacion.html#regresion-logistica-para-problemas-de-mas-de-2-clases"><i class="fa fa-check"></i><b>4.3</b> Regresión logística para problemas de más de 2 clases</a><ul>
+<li class="chapter" data-level="4.3.1" data-path="mas-sobre-problemas-de-clasificacion.html"><a href="mas-sobre-problemas-de-clasificacion.html#regresion-logistica-multinomial"><i class="fa fa-check"></i><b>4.3.1</b> Regresión logística multinomial</a></li>
+<li class="chapter" data-level="4.3.2" data-path="mas-sobre-problemas-de-clasificacion.html"><a href="mas-sobre-problemas-de-clasificacion.html#interpretacion-de-coeficientes"><i class="fa fa-check"></i><b>4.3.2</b> Interpretación de coeficientes</a></li>
+<li class="chapter" data-level="4.3.3" data-path="mas-sobre-problemas-de-clasificacion.html"><a href="mas-sobre-problemas-de-clasificacion.html#ejemplo-clasificacion-de-digitos-con-regresion-multinomial"><i class="fa fa-check"></i><b>4.3.3</b> Ejemplo: Clasificación de dígitos con regresión multinomial</a></li>
+<li class="chapter" data-level="" data-path="mas-sobre-problemas-de-clasificacion.html"><a href="mas-sobre-problemas-de-clasificacion.html#discusion"><i class="fa fa-check"></i>Discusión</a></li>
+</ul></li>
+<li class="chapter" data-level="4.4" data-path="mas-sobre-problemas-de-clasificacion.html"><a href="mas-sobre-problemas-de-clasificacion.html#descenso-en-gradiente-para-regresion-multinomial-logistica"><i class="fa fa-check"></i><b>4.4</b> Descenso en gradiente para regresión multinomial logística</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="regularizacion.html"><a href="regularizacion.html"><i class="fa fa-check"></i><b>5</b> Regularización</a><ul>
+<li class="chapter" data-level="5.1" data-path="regularizacion.html"><a href="regularizacion.html#sesgo-y-varianza-de-predictores"><i class="fa fa-check"></i><b>5.1</b> Sesgo y varianza de predictores</a><ul>
+<li class="chapter" data-level="5.1.1" data-path="regularizacion.html"><a href="regularizacion.html#sesgo-y-varianza-en-modelos-lineales"><i class="fa fa-check"></i><b>5.1.1</b> Sesgo y varianza en modelos lineales</a></li>
+<li class="chapter" data-level="5.1.2" data-path="regularizacion.html"><a href="regularizacion.html#reduciendo-varianza-de-los-coeficientes"><i class="fa fa-check"></i><b>5.1.2</b> Reduciendo varianza de los coeficientes</a></li>
+</ul></li>
+<li class="chapter" data-level="5.2" data-path="regularizacion.html"><a href="regularizacion.html#regularizacion-ridge"><i class="fa fa-check"></i><b>5.2</b> Regularización ridge</a><ul>
+<li class="chapter" data-level="5.2.1" data-path="regularizacion.html"><a href="regularizacion.html#seleccion-de-coeficiente-de-regularizacion"><i class="fa fa-check"></i><b>5.2.1</b> Selección de coeficiente de regularización</a></li>
+</ul></li>
+<li class="chapter" data-level="5.3" data-path="regularizacion.html"><a href="regularizacion.html#entrenamiento-validacion-y-prueba"><i class="fa fa-check"></i><b>5.3</b> Entrenamiento, Validación y Prueba</a><ul>
+<li class="chapter" data-level="5.3.1" data-path="regularizacion.html"><a href="regularizacion.html#validacion-cruzada"><i class="fa fa-check"></i><b>5.3.1</b> Validación cruzada</a></li>
+<li class="chapter" data-level="" data-path="regularizacion.html"><a href="regularizacion.html#ejercicio-5"><i class="fa fa-check"></i>Ejercicio</a></li>
+</ul></li>
+<li class="chapter" data-level="5.4" data-path="regularizacion.html"><a href="regularizacion.html#regularizacion-lasso"><i class="fa fa-check"></i><b>5.4</b> Regularización lasso</a></li>
+<li class="chapter" data-level="5.5" data-path="regularizacion.html"><a href="regularizacion.html#tarea-3"><i class="fa fa-check"></i><b>5.5</b> Tarea</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="extensiones-para-regresion-lineal-y-logistica.html"><a href="extensiones-para-regresion-lineal-y-logistica.html"><i class="fa fa-check"></i><b>6</b> Extensiones para regresión lineal y logística</a><ul>
+<li class="chapter" data-level="6.1" data-path="extensiones-para-regresion-lineal-y-logistica.html"><a href="extensiones-para-regresion-lineal-y-logistica.html#como-hacer-mas-flexible-el-modelo-lineal"><i class="fa fa-check"></i><b>6.1</b> Cómo hacer más flexible el modelo lineal</a></li>
+<li class="chapter" data-level="6.2" data-path="extensiones-para-regresion-lineal-y-logistica.html"><a href="extensiones-para-regresion-lineal-y-logistica.html#transformacion-de-entradas"><i class="fa fa-check"></i><b>6.2</b> Transformación de entradas</a></li>
+<li class="chapter" data-level="6.3" data-path="extensiones-para-regresion-lineal-y-logistica.html"><a href="extensiones-para-regresion-lineal-y-logistica.html#variables-cualitativas"><i class="fa fa-check"></i><b>6.3</b> Variables cualitativas</a></li>
+<li class="chapter" data-level="6.4" data-path="extensiones-para-regresion-lineal-y-logistica.html"><a href="extensiones-para-regresion-lineal-y-logistica.html#interacciones"><i class="fa fa-check"></i><b>6.4</b> Interacciones</a></li>
+<li class="chapter" data-level="6.5" data-path="extensiones-para-regresion-lineal-y-logistica.html"><a href="extensiones-para-regresion-lineal-y-logistica.html#categorizacion-de-variables"><i class="fa fa-check"></i><b>6.5</b> Categorización de variables</a></li>
+<li class="chapter" data-level="6.6" data-path="extensiones-para-regresion-lineal-y-logistica.html"><a href="extensiones-para-regresion-lineal-y-logistica.html#splines"><i class="fa fa-check"></i><b>6.6</b> Splines</a><ul>
+<li class="chapter" data-level="6.6.1" data-path="extensiones-para-regresion-lineal-y-logistica.html"><a href="extensiones-para-regresion-lineal-y-logistica.html#cuando-usar-estas-tecnicas"><i class="fa fa-check"></i><b>6.6.1</b> ¿Cuándo usar estas técnicas?</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html"><i class="fa fa-check"></i><b>7</b> Redes neuronales (parte 1)</a><ul>
+<li class="chapter" data-level="7.1" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#introduccion-a-redes-neuronales"><i class="fa fa-check"></i><b>7.1</b> Introducción a redes neuronales</a><ul>
+<li class="chapter" data-level="" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#como-construyen-entradas-las-redes-neuronales"><i class="fa fa-check"></i>¿Cómo construyen entradas las redes neuronales?</a></li>
+<li class="chapter" data-level="" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#como-ajustar-los-parametros"><i class="fa fa-check"></i>¿Cómo ajustar los parámetros?</a></li>
+</ul></li>
+<li class="chapter" data-level="7.2" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#interacciones-en-redes-neuronales"><i class="fa fa-check"></i><b>7.2</b> Interacciones en redes neuronales</a></li>
+<li class="chapter" data-level="7.3" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#calculo-en-redes-feed-forward."><i class="fa fa-check"></i><b>7.3</b> Cálculo en redes: feed-forward.</a></li>
+<li class="chapter" data-level="" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#notacion-1"><i class="fa fa-check"></i>Notación</a></li>
+<li class="chapter" data-level="7.4" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#feed-forward"><i class="fa fa-check"></i><b>7.4</b> Feed forward</a></li>
+<li class="chapter" data-level="7.5" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#backpropagation-calculo-del-gradiente"><i class="fa fa-check"></i><b>7.5</b> Backpropagation: cálculo del gradiente</a><ul>
+<li class="chapter" data-level="7.5.1" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#calculo-para-un-caso-de-entrenamiento"><i class="fa fa-check"></i><b>7.5.1</b> Cálculo para un caso de entrenamiento</a></li>
+<li class="chapter" data-level="7.5.2" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#algoritmo-de-backpropagation"><i class="fa fa-check"></i><b>7.5.2</b> Algoritmo de backpropagation</a></li>
+</ul></li>
+<li class="chapter" data-level="7.6" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#ajuste-de-parametros-introduccion"><i class="fa fa-check"></i><b>7.6</b> Ajuste de parámetros (introducción)</a><ul>
+<li class="chapter" data-level="7.6.1" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#ejemplo-31"><i class="fa fa-check"></i><b>7.6.1</b> Ejemplo</a></li>
+<li class="chapter" data-level="7.6.2" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#hiperparametros-busqueda-manual"><i class="fa fa-check"></i><b>7.6.2</b> Hiperparámetros: búsqueda manual</a></li>
+<li class="chapter" data-level="7.6.3" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#hiperparametros-busqueda-en-grid"><i class="fa fa-check"></i><b>7.6.3</b> Hiperparámetros: búsqueda en grid</a></li>
+<li class="chapter" data-level="7.6.4" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#hiperparametros-busqueda-aleatoria"><i class="fa fa-check"></i><b>7.6.4</b> Hiperparámetros: búsqueda aleatoria</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#tarea-para-25-de-septiembre"><i class="fa fa-check"></i>Tarea (para 25 de septiembre)</a></li>
+<li class="chapter" data-level="" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#tarea-2-de-octubre"><i class="fa fa-check"></i>Tarea (2 de octubre)</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="redes-neuronales-parte-2.html"><a href="redes-neuronales-parte-2.html"><i class="fa fa-check"></i><b>8</b> Redes neuronales (parte 2)</a><ul>
+<li class="chapter" data-level="8.1" data-path="redes-neuronales-parte-2.html"><a href="redes-neuronales-parte-2.html#descenso-estocastico"><i class="fa fa-check"></i><b>8.1</b> Descenso estocástico</a></li>
+<li class="chapter" data-level="8.2" data-path="redes-neuronales-parte-2.html"><a href="redes-neuronales-parte-2.html#algoritmo-de-descenso-estocastico"><i class="fa fa-check"></i><b>8.2</b> Algoritmo de descenso estocástico</a></li>
+<li class="chapter" data-level="8.3" data-path="redes-neuronales-parte-2.html"><a href="redes-neuronales-parte-2.html#por-que-usar-descenso-estocastico-por-minilotes"><i class="fa fa-check"></i><b>8.3</b> ¿Por qué usar descenso estocástico por minilotes?</a></li>
+<li class="chapter" data-level="8.4" data-path="redes-neuronales-parte-2.html"><a href="redes-neuronales-parte-2.html#escogiendo-la-tasa-de-aprendizaje"><i class="fa fa-check"></i><b>8.4</b> Escogiendo la tasa de aprendizaje</a></li>
+<li class="chapter" data-level="8.5" data-path="redes-neuronales-parte-2.html"><a href="redes-neuronales-parte-2.html#mejoras-al-algoritmo-de-descenso-estocastico."><i class="fa fa-check"></i><b>8.5</b> Mejoras al algoritmo de descenso estocástico.</a><ul>
+<li class="chapter" data-level="8.5.1" data-path="redes-neuronales-parte-2.html"><a href="redes-neuronales-parte-2.html#decaimiento-de-tasa-de-aprendizaje"><i class="fa fa-check"></i><b>8.5.1</b> Decaimiento de tasa de aprendizaje</a></li>
+<li class="chapter" data-level="8.5.2" data-path="redes-neuronales-parte-2.html"><a href="redes-neuronales-parte-2.html#momento"><i class="fa fa-check"></i><b>8.5.2</b> Momento</a></li>
+<li class="chapter" data-level="8.5.3" data-path="redes-neuronales-parte-2.html"><a href="redes-neuronales-parte-2.html#otras-variaciones"><i class="fa fa-check"></i><b>8.5.3</b> Otras variaciones</a></li>
+</ul></li>
+<li class="chapter" data-level="8.6" data-path="redes-neuronales-parte-2.html"><a href="redes-neuronales-parte-2.html#ajuste-de-redes-con-descenso-estocastico"><i class="fa fa-check"></i><b>8.6</b> Ajuste de redes con descenso estocástico</a></li>
+<li class="chapter" data-level="8.7" data-path="redes-neuronales-parte-2.html"><a href="redes-neuronales-parte-2.html#activaciones-relu"><i class="fa fa-check"></i><b>8.7</b> Activaciones relu</a></li>
+<li class="chapter" data-level="8.8" data-path="redes-neuronales-parte-2.html"><a href="redes-neuronales-parte-2.html#dropout-para-regularizacion"><i class="fa fa-check"></i><b>8.8</b> Dropout para regularización</a><ul>
+<li class="chapter" data-level="" data-path="redes-neuronales-parte-2.html"><a href="redes-neuronales-parte-2.html#ejemplo-35"><i class="fa fa-check"></i>Ejemplo</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="redes-convolucionales.html"><a href="redes-convolucionales.html"><i class="fa fa-check"></i><b>9</b> Redes convolucionales</a><ul>
+<li class="chapter" data-level="9.1" data-path="redes-convolucionales.html"><a href="redes-convolucionales.html#filtros-convolucionales"><i class="fa fa-check"></i><b>9.1</b> Filtros convolucionales</a><ul>
+<li class="chapter" data-level="" data-path="redes-convolucionales.html"><a href="redes-convolucionales.html#filtros-en-una-dimension"><i class="fa fa-check"></i>Filtros en una dimensión</a></li>
+<li class="chapter" data-level="" data-path="redes-convolucionales.html"><a href="redes-convolucionales.html#filtros-convolucionales-en-dos-dimensiones"><i class="fa fa-check"></i>Filtros convolucionales en dos dimensiones</a></li>
+<li class="chapter" data-level="9.1.1" data-path="redes-convolucionales.html"><a href="redes-convolucionales.html#filtros-convolucionales-para-redes-neuronales"><i class="fa fa-check"></i><b>9.1.1</b> Filtros convolucionales para redes neuronales</a></li>
+<li class="chapter" data-level="9.1.2" data-path="redes-convolucionales.html"><a href="redes-convolucionales.html#capas-de-agregacion-pooling"><i class="fa fa-check"></i><b>9.1.2</b> Capas de agregación (pooling)</a></li>
+<li class="chapter" data-level="9.1.3" data-path="redes-convolucionales.html"><a href="redes-convolucionales.html#ejemplo-arquitectura-lenet"><i class="fa fa-check"></i><b>9.1.3</b> Ejemplo (arquitectura LeNet):</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="diagnostico-y-mejora-de-modelos.html"><a href="diagnostico-y-mejora-de-modelos.html"><i class="fa fa-check"></i><b>10</b> Diagnóstico y mejora de modelos</a><ul>
+<li class="chapter" data-level="10.1" data-path="diagnostico-y-mejora-de-modelos.html"><a href="diagnostico-y-mejora-de-modelos.html#aspectos-generales"><i class="fa fa-check"></i><b>10.1</b> Aspectos generales</a></li>
+<li class="chapter" data-level="10.2" data-path="diagnostico-y-mejora-de-modelos.html"><a href="diagnostico-y-mejora-de-modelos.html#que-hacer-cuando-el-desempeno-no-es-satisfactorio"><i class="fa fa-check"></i><b>10.2</b> ¿Qué hacer cuando el desempeño no es satisfactorio?</a></li>
+<li class="chapter" data-level="10.3" data-path="diagnostico-y-mejora-de-modelos.html"><a href="diagnostico-y-mejora-de-modelos.html#pipeline-de-procesamiento"><i class="fa fa-check"></i><b>10.3</b> Pipeline de procesamiento</a></li>
+<li class="chapter" data-level="10.4" data-path="diagnostico-y-mejora-de-modelos.html"><a href="diagnostico-y-mejora-de-modelos.html#diagnosticos-sesgo-y-varianza"><i class="fa fa-check"></i><b>10.4</b> Diagnósticos: sesgo y varianza</a></li>
+<li class="chapter" data-level="10.5" data-path="diagnostico-y-mejora-de-modelos.html"><a href="diagnostico-y-mejora-de-modelos.html#refinando-el-pipeline"><i class="fa fa-check"></i><b>10.5</b> Refinando el pipeline</a></li>
+<li class="chapter" data-level="10.6" data-path="diagnostico-y-mejora-de-modelos.html"><a href="diagnostico-y-mejora-de-modelos.html#consiguiendo-mas-datos"><i class="fa fa-check"></i><b>10.6</b> Consiguiendo más datos</a></li>
+<li class="chapter" data-level="10.7" data-path="diagnostico-y-mejora-de-modelos.html"><a href="diagnostico-y-mejora-de-modelos.html#usar-datos-adicionales"><i class="fa fa-check"></i><b>10.7</b> Usar datos adicionales</a></li>
+<li class="chapter" data-level="10.8" data-path="diagnostico-y-mejora-de-modelos.html"><a href="diagnostico-y-mejora-de-modelos.html#examen-de-modelo-y-analisis-de-errores"><i class="fa fa-check"></i><b>10.8</b> Examen de modelo y Análisis de errores</a></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html"><i class="fa fa-check"></i><b>11</b> Métodos basados en árboles</a><ul>
+<li class="chapter" data-level="11.1" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#arboles-para-regresion-y-clasificacion."><i class="fa fa-check"></i><b>11.1</b> Árboles para regresión y clasificación.</a><ul>
+<li class="chapter" data-level="11.1.1" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#arboles-para-clasificacion"><i class="fa fa-check"></i><b>11.1.1</b> Árboles para clasificación</a></li>
+<li class="chapter" data-level="11.1.2" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#tipos-de-particion"><i class="fa fa-check"></i><b>11.1.2</b> Tipos de partición</a></li>
+<li class="chapter" data-level="11.1.3" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#medidas-de-impureza"><i class="fa fa-check"></i><b>11.1.3</b> Medidas de impureza</a></li>
+<li class="chapter" data-level="11.1.4" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#reglas-de-particion-y-tamano-del-arobl"><i class="fa fa-check"></i><b>11.1.4</b> Reglas de partición y tamaño del árobl</a></li>
+<li class="chapter" data-level="11.1.5" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#costo---complejidad-breiman"><i class="fa fa-check"></i><b>11.1.5</b> Costo - Complejidad (Breiman)</a></li>
+<li class="chapter" data-level="11.1.6" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#opcional-predicciones-con-cart"><i class="fa fa-check"></i><b>11.1.6</b> (Opcional) Predicciones con CART</a></li>
+<li class="chapter" data-level="11.1.7" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#arboles-para-regresion"><i class="fa fa-check"></i><b>11.1.7</b> Árboles para regresión</a></li>
+<li class="chapter" data-level="11.1.8" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#variabilidad-en-el-proceso-de-construccion"><i class="fa fa-check"></i><b>11.1.8</b> Variabilidad en el proceso de construcción</a></li>
+<li class="chapter" data-level="11.1.9" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#relaciones-lineal"><i class="fa fa-check"></i><b>11.1.9</b> Relaciones lineal</a></li>
+<li class="chapter" data-level="11.1.10" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#ventajas-y-desventajas-de-arboles"><i class="fa fa-check"></i><b>11.1.10</b> Ventajas y desventajas de árboles</a></li>
+</ul></li>
+<li class="chapter" data-level="11.2" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#bosques-aleatorios."><i class="fa fa-check"></i><b>11.2</b> Bosques aleatorios.</a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Publicado con bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Aprendizaje de máquina</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="metodos-basados-en-arboles" class="section level1">
+<h1><span class="header-section-number">Clase 11</span> Métodos basados en árboles</h1>
+<div id="arboles-para-regresion-y-clasificacion." class="section level2">
+<h2><span class="header-section-number">11.1</span> Árboles para regresión y clasificación.</h2>
+<p>La idea básica de los árboles es buscar puntos de cortes en las variables de entrada para hacer predicciones, ir dividiendo la muestra, y encontrar cortes sucesivos para refinar las predicciones.</p>
+<div id="ejemplo-37" class="section level4 unnumbered">
+<h4>Ejemplo</h4>
+<p>Buscamos clasificar hogares según su ingreso, usando como entradas características de los hogares. Podríamos tener, por ejemplo:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="st">&#39;./imagenes/arboles_1.png&#39;</span>)</code></pre></div>
+<p><img src="imagenes/arboles_1.png" width="496" /></p>
+<ul>
+<li>Con este árbol podemos clasificar nuevos hogares.</li>
+<li>Nótese que los árboles pueden capturar interacciones entre las variables de entradas. En nuestro ejemplo ficticio, “automóvil” nos da información acerca del ingreso, pero solo caundo el nivel de educación del jefe de familia es bajo. (Ejercicio: si el ingreso fuera una cantidad numérica, ¿cómo escribirías este modelo con una suma de términos que involucren las variables mostradas en el diagrama?)</li>
+<li>Árboles también pueden aproximar relaciones no lineales entre entradas y variable de salida (es similar a los ejemplos donde haciamos categorización de variables de entrada).</li>
+<li>Igual que en redes neuronales, en lugar de buscar puntos de corte o interacciones a mano, con los árboles intentamos encontrarlos de manera automática.</li>
+</ul>
+</div>
+<div id="arboles-para-clasificacion" class="section level3">
+<h3><span class="header-section-number">11.1.1</span> Árboles para clasificación</h3>
+<p>Un árbol particiona el espacio de entradas en rectángulos paralelos a los ejes, y hace predicciones basadas en un modelo simple dentro de cada una de esas particiones.</p>
+<p>Por ejemplo:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="st">&#39;./imagenes/arboles_2.png&#39;</span>)</code></pre></div>
+<p><img src="imagenes/arboles_2.png" width="540" /></p>
+<ul>
+<li>El proceso de partición binaria recursiva (con una entrada a la vez) puede representarse mediante árboles binarios.</li>
+<li>Los nodos terminales representan a la partición obtenida.</li>
+</ul>
+<p>Para definir el proceso de construcción de los árboles, debemos definir:</p>
+<ol style="list-style-type: decimal">
+<li>¿Cómo escoger las particiones? Idea: buscar hacer los nodos sucesivamente más puros (que una sola clase domine).</li>
+<li>¿Cuándo declarar a un nodo como terminal? ¿Cuándo particionar más profundamente? Idea: dependiendo de la aplicación, buscamos hacer árboles chicos, o en otras árboles grandes que después podamos para no sobreajustar.</li>
+<li>¿Cómo hacer predicciones en nodos terminales? Idea: escoger la clase más común en cada nodo terminal (la de máxima probabilidad).</li>
+</ol>
+</div>
+<div id="tipos-de-particion" class="section level3">
+<h3><span class="header-section-number">11.1.2</span> Tipos de partición</h3>
+<p>Supongamos que tenemos variables de entrada <span class="math inline">\((X_1,\ldots, X_p)\)</span>. Recursivamente particionamos cada nodo escogiendo entre particiones tales que:</p>
+<ul>
+<li>Dependen de una sola variable de entrada <span class="math inline">\(X_i\)</span></li>
+<li>Si <span class="math inline">\(X_i\)</span> es continua, la partición es de la forma <span class="math inline">\(\{X_i\leq c\},\{X_i&gt; c\}\)</span>, para alguna <span class="math inline">\(c\)</span> (punto de corte)</li>
+<li>Si <span class="math inline">\(X_i\)</span> es categórica, la partición es de la forma <span class="math inline">\(\{X_i\in S\},\{X_i\notin S\}\)</span>, para algún subconjunto <span class="math inline">\(S\)</span> de categorías de <span class="math inline">\(X_i\)</span>.</li>
+<li>En cada nodo candidato, escogemos uno de estos cortes para particionar.</li>
+</ul>
+<p>¿Cómo escogemos la partición en cada nodo? En cada nodo, la partición se escoge de una manera miope o local, intentando separar las clases lo mejor que se pueda (sin considerar qué pasa en cortes hechos más adelante). En un nodo dado, escogemos la partición que <strong>reduce lo más posible su impureza</strong>:</p>
+</div>
+<div id="medidas-de-impureza" class="section level3">
+<h3><span class="header-section-number">11.1.3</span> Medidas de impureza</h3>
+<p>Consideramos un nodo <span class="math inline">\(t\)</span> de un árbol <span class="math inline">\(T\)</span>, y sean <span class="math inline">\(p_1(t),\ldots, p_K(t)\)</span> las proporciones de casos de <span class="math inline">\(t\)</span> que caen en cada categoría.</p>
+
+<div class="comentario">
+La <strong>impureza</strong> de un nodo <span class="math inline">\(t\)</span> está dada por <span class="math display">\[i(t) = -\sum_{j=1}^K p_j(t)\log p_j(t)\]</span> Este medida se llama entropía. Hay otras posibilidades como medida de impureza (por ejemplo, coeficiente de Gini).
+</div>
+
+<div id="ejemplo-38" class="section level4">
+<h4><span class="header-section-number">11.1.3.1</span> Ejemplo</h4>
+<p>Graficamos la medida de impureza para dos clases:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">impureza &lt;-<span class="st"> </span><span class="cf">function</span>(p){
+  <span class="op">-</span>(p<span class="op">*</span><span class="kw">log</span>(p) <span class="op">+</span><span class="st"> </span>(<span class="dv">1</span><span class="op">-</span>p)<span class="op">*</span><span class="kw">log</span>(<span class="dv">1</span><span class="op">-</span>p))
+}
+<span class="kw">curve</span>(impureza, <span class="dv">0</span>,<span class="dv">1</span>)</code></pre></div>
+<p><img src="11-arboles_files/figure-html/unnamed-chunk-4-1.png" width="480" /></p>
+<p>Donde vemos que la máxima impureza se alcanza cuando las proporciones de clase en un nodo so 50-50, y la mínima impureza (máxima pureza) se alcanza cuando en el nodo solo hay casos de una clase. Nótese que esta cantidad es proporcional a la devianza del nodo, donde tenemos porbabilidad constante de clase 1 igual a <span class="math inline">\(p\)</span>.</p>
+</div>
+</div>
+<div id="reglas-de-particion-y-tamano-del-arobl" class="section level3">
+<h3><span class="header-section-number">11.1.4</span> Reglas de partición y tamaño del árobl</h3>
+<p>Podemos escribir la regla de partición, que se aplica a cada nodo de un árbol</p>
+
+<div class="comentario">
+<strong>Regla de partición</strong> En cada nodo, buscamos entre <strong>todas</strong> las variables <span class="math inline">\(X_i\)</span> y <strong>todos</strong> los puntos de corte <span class="math inline">\(c\)</span> la que da la mayor reducción de impureza posible (donde la impureza de un corte es el promedio ponderado por casos de las impurezas de los nodos resultantes).
+</div>
+
+<div id="ejemplo-39" class="section level4 unnumbered">
+<h4>Ejemplo</h4>
+<p>Consideremos un nodo <span class="math inline">\(t\)</span>, cuyos casos de entrenamiento son:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">n_t &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">200</span>,<span class="dv">100</span>, <span class="dv">150</span>)
+impureza &lt;-<span class="st"> </span><span class="cf">function</span>(p){
+  <span class="op">-</span><span class="kw">sum</span>(p<span class="op">*</span><span class="kw">log</span>(p))
+}
+<span class="kw">impureza</span>(n_t<span class="op">/</span><span class="kw">sum</span>(n_t))</code></pre></div>
+<pre><code>## [1] 1.060857</code></pre>
+<p>Y comparamos con</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">n_t &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">300</span>,<span class="dv">10</span>, <span class="dv">140</span>)
+impureza &lt;-<span class="st"> </span><span class="cf">function</span>(p){
+  p &lt;-<span class="st"> </span>p[p<span class="op">&gt;</span><span class="dv">0</span>]
+  <span class="op">-</span><span class="kw">sum</span>(p<span class="op">*</span><span class="kw">log</span>(p))
+}
+<span class="kw">impureza</span>(n_t<span class="op">/</span><span class="kw">sum</span>(n_t))</code></pre></div>
+<pre><code>## [1] 0.7181575</code></pre>
+<p>Ahora supongamos que tenemos un posible cortes, el primero resulta en</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">n_t &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">300</span>,<span class="dv">10</span>, <span class="dv">140</span>)
+n_<span class="dv">1</span> =<span class="st"> </span><span class="kw">c</span>(<span class="dv">300</span>,<span class="dv">0</span>,<span class="dv">0</span>)
+n_<span class="dv">2</span> =<span class="st"> </span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">10</span>,<span class="dv">140</span>)
+(<span class="kw">sum</span>(n_<span class="dv">1</span>)<span class="op">/</span><span class="kw">sum</span>(n_t))<span class="op">*</span><span class="kw">impureza</span>(n_<span class="dv">1</span><span class="op">/</span><span class="kw">sum</span>(n_<span class="dv">1</span>)) <span class="op">+</span><span class="st"> </span>(<span class="kw">sum</span>(n_<span class="dv">2</span>)<span class="op">/</span><span class="kw">sum</span>(n_t))<span class="op">*</span><span class="kw">impureza</span>(n_<span class="dv">2</span><span class="op">/</span><span class="kw">sum</span>(n_<span class="dv">2</span>))</code></pre></div>
+<pre><code>## [1] 0.08164334</code></pre>
+<p>Un peor corte es:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">n_t &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">300</span>,<span class="dv">10</span>, <span class="dv">140</span>)
+n_<span class="dv">1</span> =<span class="st"> </span><span class="kw">c</span>(<span class="dv">200</span>,<span class="dv">0</span>,<span class="dv">40</span>)
+n_<span class="dv">2</span> =<span class="st"> </span><span class="kw">c</span>(<span class="dv">100</span>,<span class="dv">10</span>,<span class="dv">100</span>)
+(<span class="kw">sum</span>(n_<span class="dv">1</span>)<span class="op">/</span><span class="kw">sum</span>(n_t))<span class="op">*</span><span class="kw">impureza</span>(n_<span class="dv">1</span><span class="op">/</span><span class="kw">sum</span>(n_<span class="dv">1</span>)) <span class="op">+</span><span class="st"> </span>(<span class="kw">sum</span>(n_<span class="dv">2</span>)<span class="op">/</span><span class="kw">sum</span>(n_t))<span class="op">*</span><span class="kw">impureza</span>(n_<span class="dv">2</span><span class="op">/</span><span class="kw">sum</span>(n_<span class="dv">2</span>))</code></pre></div>
+<pre><code>## [1] 0.6377053</code></pre>
+<p>Lo que resta explicar es qué criterio de paro utilizamos para dejar de particionar.</p>
+
+<div class="comentario">
+<p><strong>Regla de paro</strong> Cuando usemos árboles en ótros métodos, generalmente hay dos opciones:</p>
+<ul>
+<li>Particionar hasta cierta profundidad fija (por ejemplo, máximo 8 nodos terminales). Este enfoque generalmente usa árboles relativamente chicos (se usa en boosting de árboles).</li>
+<li>Dejar de particionar cuando encontramos un número mínimo de casos en un nodo (por ejemplo, 5 o 10 casos). Este enfoque resulta en árboles grandes, probablemente sobreajustados (se usa en bosques aleatorios).</li>
+</ul>
+<p>Y cuando utilizamos los árboles por sí solos para hacer predicciones:</p>
+<ul>
+<li>Podemos probar distintos valores de tamaño de árbol, y escogemos por validación (muestra o cruzada) el tamaño final.</li>
+<li>Podemos usar el método CART de Breiman, que consiste en construir un árbol grande y luego podar al tamaño correcto.
+</div>
+</li>
+</ul>
+</div>
+<div id="ejemplo-40" class="section level4 unnumbered">
+<h4>Ejemplo</h4>
+<p>Construímos algunos árboles con los datos de spam:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(rpart)                 
+<span class="kw">library</span>(rpart.plot)
+<span class="kw">library</span>(ggplot2)
+<span class="kw">library</span>(dplyr)
+<span class="kw">library</span>(tidyr)
+spam_entrena &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&#39;./datos/spam-entrena.csv&#39;</span>)
+spam_prueba &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&#39;./datos/spam-prueba.csv&#39;</span>)
+<span class="kw">head</span>(spam_entrena)</code></pre></div>
+<pre><code>##   X wfmake wfaddress wfall wf3d wfour wfover wfremove wfinternet wforder
+## 1 1   0.00      0.57  0.00    0  0.00      0        0          0    0.00
+## 2 2   1.24      0.41  1.24    0  0.00      0        0          0    0.00
+## 3 3   0.00      0.00  0.00    0  0.00      0        0          0    0.00
+## 4 4   0.00      0.00  0.48    0  0.96      0        0          0    0.48
+## 5 5   0.54      0.00  0.54    0  1.63      0        0          0    0.00
+## 6 6   0.00      0.00  0.00    0  0.00      0        0          0    0.00
+##   wfmail wfreceive wfwill wfpeople wfreport wfaddresses wffree wfbusiness
+## 1      0      0.57   0.57     1.15        0           0   0.00       0.00
+## 2      0      0.00   0.41     0.00        0           0   0.41       0.00
+## 3      0      0.00   0.00     0.00        0           0   0.00       0.00
+## 4      0      0.00   0.00     0.00        0           0   0.96       0.96
+## 5      0      0.00   0.54     0.00        0           0   0.54       0.54
+## 6      0      0.00   0.00     0.00        0           0   0.00       0.00
+##   wfemail wfyou wfcredit wfyour wffont wf000 wfmoney wfhp wfhpl wfgeorge
+## 1    1.73  3.46        0   1.15      0  0.00    0.00    0     0      0.0
+## 2    0.82  3.73        0   1.24      0  0.00    0.41    0     0      0.0
+## 3    0.00 12.19        0   4.87      0  0.00    9.75    0     0      0.0
+## 4    0.00  1.44        0   0.48      0  0.96    0.00    0     0      0.0
+## 5    0.00  2.17        0   5.97      0  0.54    0.00    0     0      0.0
+## 6    0.00  5.00        0   0.00      0  0.00    0.00    0     0      2.5
+##   wf650 wflab wflabs wftelnet wf857 wfdata wf415 wf85 wftechnology wf1999
+## 1     0     0      0        0     0      0     0    0            0      0
+## 2     0     0      0        0     0      0     0    0            0      0
+## 3     0     0      0        0     0      0     0    0            0      0
+## 4     0     0      0        0     0      0     0    0            0      0
+## 5     0     0      0        0     0      0     0    0            0      0
+## 6     0     0      0        0     0      0     0    0            0      0
+##   wfparts wfpm wfdirect wfcs wfmeeting wforiginal wfproject wfre wfedu
+## 1       0    0        0    0         0          0         0 0.00     0
+## 2       0    0        0    0         0          0         0 0.41     0
+## 3       0    0        0    0         0          0         0 0.00     0
+## 4       0    0        0    0         0          0         0 0.48     0
+## 5       0    0        0    0         0          0         0 0.00     0
+## 6       0    0        0    0         0          0         0 0.00     0
+##   wftable wfconference cfsc cfpar cfbrack cfexc cfdollar cfpound
+## 1       0            0    0 0.000   0.000 0.107    0.000   0.000
+## 2       0            0    0 0.065   0.000 0.461    0.527   0.000
+## 3       0            0    0 0.000   0.000 0.000    0.000   0.000
+## 4       0            0    0 0.133   0.066 0.468    0.267   0.000
+## 5       0            0    0 0.000   0.000 0.715    0.318   0.000
+## 6       0            0    0 0.000   0.000 0.833    0.000   0.416
+##   crlaverage crllongest crltotal spam
+## 1      1.421          7       54    1
+## 2      3.166         19      114    1
+## 3      1.000          1        7    0
+## 4      3.315         61      242    1
+## 5      2.345         22      129    1
+## 6      1.937          8       31    0</code></pre>
+<p>Podemos construir un árbol grande. En este caso, buscamos que los nodos resultantes tengan al menos un caso y para particionar pedimos que el nodo tenga al menos 10 casos:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">22</span>)
+control_completo &lt;-<span class="st"> </span><span class="kw">rpart.control</span>(<span class="dt">cp=</span><span class="dv">0</span>, 
+                                  <span class="dt">minsplit=</span><span class="dv">10</span>, 
+                                  <span class="dt">minbucket=</span><span class="dv">1</span>, 
+                                  <span class="dt">xval=</span><span class="dv">10</span>, 
+                                  <span class="dt">maxdepth=</span><span class="dv">30</span>)
+spam_tree_completo&lt;-<span class="kw">rpart</span>(spam <span class="op">~</span><span class="st"> </span>., <span class="dt">data =</span> spam_entrena, <span class="dt">method =</span> <span class="st">&quot;class&quot;</span>,
+                          <span class="dt">control =</span> control_completo)
+<span class="kw">prp</span>(spam_tree_completo, <span class="dt">type=</span><span class="dv">4</span>, <span class="dt">extra=</span><span class="dv">4</span>)</code></pre></div>
+<pre><code>## Warning: labs do not fit even at cex 0.15, there may be some overplotting</code></pre>
+<p><img src="11-arboles_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+<p>Podemos examinar la parte de arriba del árbol:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">arbol.chico.<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">prune</span>(spam_tree_completo, <span class="dt">cp=</span><span class="fl">0.07</span>)
+<span class="kw">prp</span>(arbol.chico.<span class="dv">1</span>, <span class="dt">type =</span> <span class="dv">4</span>, <span class="dt">extra =</span> <span class="dv">4</span>)</code></pre></div>
+<p><img src="11-arboles_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+<p>Podemos hacer predicciones con este árbol grande. Por ejemplo, en entrenamiento tenemos:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">prop_clase &lt;-<span class="st"> </span><span class="kw">predict</span>(spam_tree_completo, <span class="dt">newdata =</span> spam_entrena)
+<span class="kw">table</span>(prop_clase[,<span class="dv">2</span>]<span class="op">&gt;</span><span class="fl">0.5</span>, spam_entrena<span class="op">$</span>spam )</code></pre></div>
+<pre><code>##        
+##            0    1
+##   FALSE 1835   34
+##   TRUE    26 1172</code></pre>
+<p>y en prueba:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">prop_clase &lt;-<span class="st"> </span><span class="kw">predict</span>(spam_tree_completo, <span class="dt">newdata =</span> spam_prueba)
+<span class="kw">table</span>(prop_clase[,<span class="dv">2</span>]<span class="op">&gt;</span><span class="fl">0.5</span>, spam_prueba<span class="op">$</span>spam )</code></pre></div>
+<pre><code>##        
+##           0   1
+##   FALSE 839  68
+##   TRUE   88 539</code></pre>
+<p>Y notamos la brecha grande entre prueba y entrenamiento, lo que sugiere sobreajuste. Este árbol es demasiado grande.</p>
+</div>
+</div>
+<div id="costo---complejidad-breiman" class="section level3">
+<h3><span class="header-section-number">11.1.5</span> Costo - Complejidad (Breiman)</h3>
+<p>Una manera de escoger árboles del tamaño correcto es utilizando una medida inventada por Breiman para medir la calidad de un árbol. La complejidad de un árbol <span class="math inline">\(T\)</span> está dada por (para <span class="math inline">\(\alpha\)</span> fija):</p>
+<p><span class="math display">\[C_\alpha (T) = \overline{err}(T) + \alpha \vert T\vert\]</span> donde</p>
+<ul>
+<li><span class="math inline">\(\overline{err}(T)\)</span> es el error de clasificación de <span class="math inline">\(T\)</span></li>
+<li><span class="math inline">\(\vert T\vert\)</span> es el número de nodos terminales del árbol</li>
+<li><span class="math inline">\(\alpha&gt;0\)</span> es un parámetro de penalización del tamaño del árbol.</li>
+</ul>
+<p>Este medida de complejidad incluye qué tan bien clasifica el árbol en la muestra de entrenamiento, pero penaliza por el tamaño del árbol.</p>
+<p>Para escoger el tamaño del árbol correcto, definimos <span class="math inline">\(T_\alpha \subset T\)</span> como el subárbol de <span class="math inline">\(T\)</span> que minimiza la medida <span class="math inline">\(C_\alpha (T_\alpha)\)</span>.</p>
+<p>Para entender esta decisión, obsérvese que:</p>
+<ul>
+<li>Un subárbol grande de <span class="math inline">\(T\)</span> tiene menor valor de <span class="math inline">\(\overline{err}(T)\)</span> (pues usa más cortes)</li>
+<li>Pero un subárbol grande de <span class="math inline">\(T\)</span> tiene más penalización por complejidad <span class="math inline">\(\alpha\vert T\vert\)</span>.</li>
+</ul>
+<p>De modo que para <span class="math inline">\(\alpha\)</span> fija, el árbol <span class="math inline">\(T_\alpha\)</span> hace un balance entre error de entrenamiento y penalización por complejidad.</p>
+<div id="ejemplo-41" class="section level4">
+<h4><span class="header-section-number">11.1.5.1</span> Ejemplo</h4>
+<p>Podemos ver subárboles más chicos creados durante el procedimiento de división de nodos (prp está el paquete rpart.plot). En este caso pondemos <span class="math inline">\(\alpha = 0.2\)</span> (cp = <span class="math inline">\(\alpha\)</span> = complexity parameter):</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">arbol.chico.<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">prune</span>(spam_tree_completo, <span class="dt">cp=</span><span class="fl">0.2</span>)
+<span class="kw">prp</span>(arbol.chico.<span class="dv">1</span>, <span class="dt">type =</span> <span class="dv">4</span>, <span class="dt">extra =</span> <span class="dv">4</span>)</code></pre></div>
+<p><img src="11-arboles_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
+<p>Si disminuimos el coeficiente <span class="math inline">\(alpha\)</span>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">arbol.chico.<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">prune</span>(spam_tree_completo, <span class="dt">cp=</span><span class="fl">0.07</span>)
+<span class="kw">prp</span>(arbol.chico.<span class="dv">1</span>, <span class="dt">type =</span> <span class="dv">4</span>, <span class="dt">extra =</span> <span class="dv">4</span>)</code></pre></div>
+<p><img src="11-arboles_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
+<p>y vemos que en efecto el árbol <span class="math inline">\(T_{0.07}\)</span> contiene al árbol <span class="math inline">\(T_{0.2}\)</span>, y ambos son subárboles del árbol gigante que construimos al principio.</p>
+
+<div class="comentario">
+Para podar un árbol con costo-complejidad, encontramos para cada <span class="math inline">\(\alpha&gt;0\)</span> (coeficiente de complejidad) un árbol <span class="math inline">\(T_\alpha\subset T\)</span> que minimiza el costo-complejidad. Esto resulta en una sucesión de árboles <span class="math inline">\(T_0\subset T_1\subset T_2\subset \cdots T_m\subset T\)</span>, de donde podemos escoger con validación el árbol óptimo.
+</div>
+
+<p><em>Nota</em>: Esto es un teorema que hace falta demostrar: el resultado principal es que conforme aumentamos <span class="math inline">\(\alpha\)</span>, vamos eliminiando ramas del árbol, de manera que los</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">arbol.chico.<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">prune</span>(spam_tree_completo, <span class="dt">cp=</span><span class="fl">0.05</span>)
+<span class="kw">prp</span>(arbol.chico.<span class="dv">1</span>, <span class="dt">type =</span> <span class="dv">4</span>, <span class="dt">extra =</span> <span class="dv">4</span>)</code></pre></div>
+<p><img src="11-arboles_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">arbol.chico.<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">prune</span>(spam_tree_completo, <span class="dt">cp=</span><span class="fl">0.02</span>)
+<span class="kw">prp</span>(arbol.chico.<span class="dv">1</span>, <span class="dt">type =</span> <span class="dv">4</span>, <span class="dt">extra =</span> <span class="dv">4</span>)</code></pre></div>
+<p><img src="11-arboles_files/figure-html/unnamed-chunk-20-1.png" width="672" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">source</span>(<span class="st">&#39;./scripts/fancyRpartPlot.R&#39;</span>)
+<span class="kw">fancyRpartPlot</span>(arbol.chico.<span class="dv">1</span>, <span class="dt">sub=</span><span class="st">&#39;&#39;</span>)</code></pre></div>
+<pre><code>## Loading required package: RColorBrewer</code></pre>
+<p><img src="11-arboles_files/figure-html/unnamed-chunk-21-1.png" width="672" /></p>
+<p><strong>Nota</strong>: Enfoques de predicción basados en solo árbol para clasificación y regresión son típicamente superados en predicción por otros métodos. ¿Cuál crees que sea la razón? ¿Es un problema de varianza o sesgo?</p>
+</div>
+</div>
+<div id="opcional-predicciones-con-cart" class="section level3">
+<h3><span class="header-section-number">11.1.6</span> (Opcional) Predicciones con CART</h3>
+<p>Podemos hacer predicciones con un sólo árbol. En el caso de spam, haríamos</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">spam_tree &lt;-<span class="kw">rpart</span>(spam <span class="op">~</span><span class="st"> </span>., <span class="dt">data =</span> spam_entrena, 
+                  <span class="dt">method =</span> <span class="st">&quot;class&quot;</span>, <span class="dt">control=</span><span class="kw">list</span>(<span class="dt">cp=</span><span class="dv">0</span>, 
+                                              <span class="dt">minsplit=</span><span class="dv">5</span>,<span class="dt">minbucket=</span><span class="dv">1</span>))</code></pre></div>
+<p>Ahora mostramos los resultados de cada árbol para cada valor de <span class="math inline">\(\alpha\)</span>. La siguiente función nos da una estimación de validación cruzada del error:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">printcp</span>(spam_tree)</code></pre></div>
+<pre><code>## 
+## Classification tree:
+## rpart(formula = spam ~ ., data = spam_entrena, method = &quot;class&quot;, 
+##     control = list(cp = 0, minsplit = 5, minbucket = 1))
+## 
+## Variables actually used in tree construction:
+##  [1] cfbrack      cfdollar     cfexc        cfpar        cfsc        
+##  [6] crlaverage   crllongest   crltotal     wf1999       wf3d        
+## [11] wf650        wfaddress    wfall        wfbusiness   wfconference
+## [16] wfcredit     wfdata       wfdirect     wfedu        wfemail     
+## [21] wffont       wffree       wfgeorge     wfhp         wfhpl       
+## [26] wfinternet   wflabs       wfmail       wfmake       wfmeeting   
+## [31] wfmoney      wforder      wforiginal   wfour        wfover      
+## [36] wfpeople     wfpm         wfproject    wfre         wfreceive   
+## [41] wfremove     wfreport     wftechnology wfwill       wfyou       
+## [46] wfyour       X           
+## 
+## Root node error: 1206/3067 = 0.39322
+## 
+## n= 3067 
+## 
+##            CP nsplit rel error  xerror     xstd
+## 1  0.49087894      0  1.000000 1.00000 0.022431
+## 2  0.13681592      1  0.509121 0.54975 0.018903
+## 3  0.05223881      2  0.372305 0.45605 0.017616
+## 4  0.03980100      3  0.320066 0.35489 0.015912
+## 5  0.03150912      4  0.280265 0.33582 0.015546
+## 6  0.01160862      5  0.248756 0.30265 0.014869
+## 7  0.01077944      6  0.237148 0.28192 0.014417
+## 8  0.00663350      7  0.226368 0.26866 0.014115
+## 9  0.00497512      9  0.213101 0.25622 0.013822
+## 10 0.00414594     18  0.166667 0.23051 0.013184
+## 11 0.00331675     20  0.158375 0.22886 0.013141
+## 12 0.00276396     24  0.145108 0.21973 0.012902
+## 13 0.00248756     27  0.136816 0.21808 0.012858
+## 14 0.00165837     31  0.126036 0.21393 0.012746
+## 15 0.00130301     44  0.104478 0.20149 0.012403
+## 16 0.00124378     52  0.092869 0.20232 0.012426
+## 17 0.00118455     54  0.090381 0.20232 0.012426
+## 18 0.00110558     61  0.082090 0.20398 0.012473
+## 19 0.00082919     67  0.075456 0.20481 0.012496
+## 20 0.00066335    100  0.048093 0.21476 0.012769
+## 21 0.00041459    107  0.043118 0.22471 0.013033
+## 22 0.00033167    121  0.037313 0.23632 0.013332
+## 23 0.00031095    126  0.035655 0.23549 0.013311
+## 24 0.00027640    140  0.029851 0.23383 0.013269
+## 25 0.00020730    146  0.028192 0.23383 0.013269
+## 26 0.00010365    150  0.027363 0.23466 0.013290
+## 27 0.00000000    158  0.026534 0.23466 0.013290</code></pre>
+<p>Y usamos la regla de mínimo error o a una desviación estándar del error mínimo:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">arbol_podado &lt;-<span class="st"> </span><span class="kw">prune</span>(spam_tree, <span class="dt">cp =</span>  <span class="fl">0.00276396</span>)
+<span class="kw">prp</span>(arbol_podado)</code></pre></div>
+<p><img src="11-arboles_files/figure-html/unnamed-chunk-24-1.png" width="672" /></p>
+<p>Cuyo error de predicción es:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">probs_clase &lt;-<span class="st"> </span><span class="kw">predict</span>(arbol_podado, <span class="dt">newdata=</span>spam_prueba)
+<span class="kw">head</span>(probs_clase)</code></pre></div>
+<pre><code>##            0          1
+## 1 0.03621170 0.96378830
+## 2 0.03621170 0.96378830
+## 3 0.05181347 0.94818653
+## 4 0.94941394 0.05058606
+## 5 0.03621170 0.96378830
+## 6 0.03621170 0.96378830</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">prop.table</span>(<span class="kw">table</span>((probs_clase[,<span class="dv">2</span>]<span class="op">&gt;</span><span class="fl">0.5</span>),spam_prueba<span class="op">$</span>spam),<span class="dv">2</span>)</code></pre></div>
+<pre><code>##        
+##                  0          1
+##   FALSE 0.94929881 0.14827018
+##   TRUE  0.05070119 0.85172982</code></pre>
+</div>
+<div id="arboles-para-regresion" class="section level3">
+<h3><span class="header-section-number">11.1.7</span> Árboles para regresión</h3>
+<p>Para problemas de regresión, el criterio de pureza y la predicción en cada nodo terminal es diferente:</p>
+<ul>
+<li>En los nodos terminales usamos el promedio los casos de entrenamiento que caen en tal nodo (en lugar de la clase más común)</li>
+<li>La impureza de define como varianza: si <span class="math inline">\(t\)</span> es un nodo, su impureza está dada por $(y - m)^2, donde la suma es sobre los casos que están en el nodo y <span class="math inline">\(m\)</span> es la media de las <span class="math inline">\(y\)</span>’s del nodo.</li>
+</ul>
+</div>
+<div id="variabilidad-en-el-proceso-de-construccion" class="section level3">
+<h3><span class="header-section-number">11.1.8</span> Variabilidad en el proceso de construcción</h3>
+<p>Existe variabilidad considerable en el proceso de división, lo cual es una debilidad de los árboles. Por ejemplo:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">muestra.<span class="dv">1</span> &lt;-<span class="st"> </span>spam_entrena[<span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(spam_entrena), <span class="kw">nrow</span>(spam_entrena), <span class="dt">replace=</span>T), ]
+spam.tree.completo.<span class="dv">1</span> &lt;-<span class="kw">rpart</span>(spam <span class="op">~</span><span class="st"> </span>., <span class="dt">data =</span>  muestra.<span class="dv">1</span>, <span class="dt">method =</span> <span class="st">&quot;class&quot;</span>,
+                          <span class="dt">control =</span> control_completo)
+arbol.chico.<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">prune</span>(spam.tree.completo.<span class="dv">1</span>, <span class="dt">cp=</span><span class="fl">0.03</span>)
+<span class="kw">prp</span>(arbol.chico.<span class="dv">1</span>, <span class="dt">type =</span> <span class="dv">4</span>, <span class="dt">extra =</span> <span class="dv">4</span>)</code></pre></div>
+<p><img src="11-arboles_files/figure-html/unnamed-chunk-26-1.png" width="672" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">muestra.<span class="dv">1</span> &lt;-<span class="st"> </span>spam_entrena[<span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(spam_entrena), <span class="kw">nrow</span>(spam_entrena), <span class="dt">replace=</span>T), ]
+spam.tree.completo.<span class="dv">1</span> &lt;-<span class="kw">rpart</span>(spam <span class="op">~</span><span class="st"> </span>., <span class="dt">data =</span>  muestra.<span class="dv">1</span>, <span class="dt">method =</span> <span class="st">&quot;class&quot;</span>,
+                          <span class="dt">control =</span> control_completo)
+arbol.chico.<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">prune</span>(spam.tree.completo.<span class="dv">1</span>, <span class="dt">cp=</span><span class="fl">0.03</span>)
+<span class="kw">prp</span>(arbol.chico.<span class="dv">1</span>, <span class="dt">type =</span> <span class="dv">4</span>, <span class="dt">extra =</span> <span class="dv">4</span>)</code></pre></div>
+<p><img src="11-arboles_files/figure-html/unnamed-chunk-27-1.png" width="672" /></p>
+<p>Pequeñas diferencias en la muestra de entrenamiento produce distintas selecciones de variables y puntos de corte, y estructuras de árboles muchas veces distintas. Esto introduce varianza considerable en las predicciones.</p>
+</div>
+<div id="relaciones-lineal" class="section level3">
+<h3><span class="header-section-number">11.1.9</span> Relaciones lineal</h3>
+<p>Los árboles pueden requerir ser muy grandes para estimar apropiadamente relaciones lineales.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x &lt;-<span class="st"> </span><span class="kw">runif</span>(<span class="dv">200</span>,<span class="dv">0</span>,<span class="dv">1</span>)
+y &lt;-<span class="st"> </span><span class="dv">2</span><span class="op">*</span>x <span class="op">+</span><span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">200</span>,<span class="dv">0</span>,<span class="fl">0.1</span>)
+arbol &lt;-<span class="st"> </span><span class="kw">rpart</span>(y<span class="op">~</span>x, <span class="dt">data=</span><span class="kw">data_frame</span>(<span class="dt">x=</span>x, <span class="dt">y=</span>y), <span class="dt">method =</span> <span class="st">&#39;anova&#39;</span>)
+x_pred &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="fl">0.05</span>)
+y_pred &lt;-<span class="st"> </span><span class="kw">predict</span>(arbol, <span class="dt">newdata =</span> <span class="kw">data_frame</span>(<span class="dt">x=</span>x_pred))
+y_verdadera &lt;-<span class="st"> </span><span class="dv">2</span><span class="op">*</span>x_pred
+dat &lt;-<span class="st"> </span><span class="kw">data_frame</span>(<span class="dt">x_pred=</span>x_pred, <span class="dt">y_pred=</span>y_pred, <span class="dt">y_verdadera=</span>y_verdadera) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">gather</span>(y, valor, y_pred<span class="op">:</span>y_verdadera)
+<span class="kw">ggplot</span>(dat, <span class="kw">aes</span>(<span class="dt">x=</span>x_pred, <span class="dt">y=</span>valor, <span class="dt">colour=</span>y)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_line</span>()</code></pre></div>
+<p><img src="11-arboles_files/figure-html/unnamed-chunk-28-1.png" width="672" /></p>
+</div>
+<div id="ventajas-y-desventajas-de-arboles" class="section level3">
+<h3><span class="header-section-number">11.1.10</span> Ventajas y desventajas de árboles</h3>
+<p>Ventajas:</p>
+<ol style="list-style-type: decimal">
+<li>Árboles chicos son fáciles de explicar e interpretar</li>
+<li>Capturan interacciones entre las variables de entrada</li>
+<li>Son robustos en el sentido de que</li>
+</ol>
+<ul>
+<li>valores numéricos atípicos no hacen fallar al método</li>
+<li>no es necesario transformar variables</li>
+<li>hay formas fáciles de lidiar con datos faltantes (cortes sucedáneos)</li>
+</ul>
+<ol start="4" style="list-style-type: decimal">
+<li>Se ajustan rápidamente yson relativamente fácilmente de interpretar (por ejemplo, son útiles para clasificar en campo)</li>
+<li>Árboles grandes generalmente no sufren de sesgo.</li>
+</ol>
+<p>Desventajas:</p>
+<ol style="list-style-type: decimal">
+<li>Tienen dificultades en capturar estructuras lineales</li>
+<li>En la interpretación, tienen la dificultad de que muchas veces algunas variables de entrada “enmascaran” a otras. Que una variable de entrada no esté en el árbol no quiere decir que nosea “importante” para predecir (regresión ridge lidia mejor con esto).</li>
+<li>Son inestables (varianza alta) por construcción: es local/miope, basada en cortes duros si/no. Esto produce desempeño predictivo relativamente malo (p ej: una pequeña diferencia en cortes iniciales puede resultar en estructuras de árbol totalmente distintas).</li>
+<li>Adicoinalmente, no son apropiados cuando hay variables categóricas con muchas niveles: en estos casos, el árbol sobreajusta desde los primeros cortes, y las predicciones son malas.</li>
+</ol>
+</div>
+</div>
+<div id="bosques-aleatorios." class="section level2">
+<h2><span class="header-section-number">11.2</span> Bosques aleatorios.</h2>
+<p>Bosques aleatorios es un método de predicción que utiliza familias de árboles para hacer predicciones.</p>
+<p>Los árboles grandes tienen la ventaja de tener sesgo bajo, pero sufren de varianza alta. Podemos explotar el sesgo bajo si logramos controlar la varianza. Una idea primera para lograr esto es es hacer <em>bagging</em> de árboles:</p>
+<ul>
+<li>Perturbar la muestra de entrenamiento de distintas maneras y producir árboles distintos (grandes). La perturbación más usada es tomar muestras bootstrap de los datos y ajustar un árbol a cada muestra bootstrap</li>
+<li>Promediar el resultado de todos estos árboles para hacer predicciones. El proceso de promediar reduce la varianza, sin tener pérdidas en sesgo.</li>
+</ul>
+
+<div id="refs" class="references">
+<div>
+<p>Breiman, Leo. 2001. “Statistical Modeling: The Two Cultures (with Comments and a Rejoinder by the Author).” <em>Statist. Sci.</em> 16 (3). The Institute of Mathematical Statistics: 199–231. doi:<a href="https://doi.org/10.1214/ss/1009213726">10.1214/ss/1009213726</a>.</p>
+</div>
+<div>
+<p>Goodfellow, Ian, Yoshua Bengio, and Aaron Courville. 2016. <em>Deep Learning</em>. MIT Press.</p>
+</div>
+<div>
+<p>James, Gareth, Daniela Witten, Trevor Hastie, and Robert Tibshirani. 2014. <em>An Introduction to Statistical Learning: With Applications in R</em>. Springer Publishing Company, Incorporated. <a href="http://www-bcf.usc.edu/~gareth/ISL/" class="uri">http://www-bcf.usc.edu/~gareth/ISL/</a>.</p>
+</div>
+<div>
+<p>Ng, Andrew. 2017. “Machine Learning.” <a href="https://www.coursera.org/learn/machine-learning" class="uri">https://www.coursera.org/learn/machine-learning</a>.</p>
+</div>
+<div>
+<p>Srivastava, Nitish, Geoffrey Hinton, Alex Krizhevsky, Ilya Sutskever, and Ruslan Salakhutdinov. 2014. “Dropout: A Simple Way to Prevent Neural Networks from Overfitting.” <em>J. Mach. Learn. Res.</em> 15 (1). JMLR.org: 1929–58. <a href="http://dl.acm.org/citation.cfm?id=2627435.2670313" class="uri">http://dl.acm.org/citation.cfm?id=2627435.2670313</a>.</p>
+</div>
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="diagnostico-y-mejora-de-modelos.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"google": false,
+"weibo": false,
+"instapper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/felipegonzalez/aprendizaje-maquina-2017/edit/master/11-arboles.Rmd",
+"text": "Edit"
+},
+"download": ["aprendizaje-maquina.pdf", "aprendizaje-maquina.epub"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:" && /^https?:/.test(script.src))
+      script.src  = script.src.replace(/^https?:/, '');
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
