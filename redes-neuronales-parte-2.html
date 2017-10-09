@@ -662,13 +662,13 @@ history &lt;-<span class="st"> </span>modelo <span class="op">%&gt;%</span><span
 <p>Ver los pesos:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">get_weights</span>(modelo)</code></pre></div>
 <pre><code>## [[1]]
-##             [,1]
-## [1,] -0.68274689
-## [2,]  0.09829825
-## [3,]  0.39039287
+##            [,1]
+## [1,] -0.6094330
+## [2,]  0.1350487
+## [3,]  0.3193991
 ## 
 ## [[2]]
-## [1] 1.689765</code></pre>
+## [1] 1.639108</code></pre>
 <p>Y verificamos que concuerda con la salida de <em>glm</em>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mod_logistico &lt;-<span class="st"> </span><span class="kw">glm</span>(g <span class="op">~</span><span class="st"> </span>x_<span class="dv">1</span> <span class="op">+</span><span class="st"> </span>x_<span class="dv">2</span><span class="op">+</span><span class="st"> </span>x_<span class="dv">3</span>, <span class="dt">data =</span> dat_ent, <span class="dt">family =</span> <span class="st">&#39;binomial&#39;</span>) 
 <span class="kw">coef</span>(mod_logistico)</code></pre></div>
@@ -733,13 +733,13 @@ history &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><s
 score &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">evaluate</span>(x_test, y_test)
 score</code></pre></div>
 <pre><code>## $loss
-## [1] 0.2887852
+## [1] 0.2882553
 ## 
 ## $acc
-## [1] 0.9327354
+## [1] 0.9347285
 ## 
 ## $categorical_crossentropy
-## [1] 0.2877366</code></pre>
+## [1] 0.2872078</code></pre>
 <p>Podemos también intentar con el ejemplo de spam:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(readr)
 <span class="kw">library</span>(tidyr)
@@ -775,13 +775,13 @@ tab_confusion &lt;-<span class="st"> </span><span class="kw">table</span>(modelo
 tab_confusion</code></pre></div>
 <pre><code>##    y_valid
 ##       0   1
-##   0 883  41
-##   1  44 566</code></pre>
+##   0 893  55
+##   1  34 552</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">prop.table</span>(tab_confusion, <span class="dv">2</span>)</code></pre></div>
 <pre><code>##    y_valid
 ##              0          1
-##   0 0.95253506 0.06754530
-##   1 0.04746494 0.93245470</code></pre>
+##   0 0.96332255 0.09060956
+##   1 0.03667745 0.90939044</code></pre>
 </div>
 </div>
 <div id="activaciones-relu" class="section level2">
@@ -833,13 +833,13 @@ history &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><s
 score &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">evaluate</span>(x_test, y_test)
 score</code></pre></div>
 <pre><code>## $loss
-## [1] 0.3181783
+## [1] 0.3597308
 ## 
 ## $acc
-## [1] 0.9392128
+## [1] 0.9277529
 ## 
 ## $categorical_crossentropy
-## [1] 0.236321</code></pre>
+## [1] 0.2594504</code></pre>
 </div>
 </div>
 <div id="dropout-para-regularizacion" class="section level2">
@@ -929,37 +929,37 @@ hist_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">as
 <span class="kw">graf_pesos</span>(pesos) </code></pre></div>
 <p><img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-46-1.png" width="480" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">get_weights</span>(modelo_dropout)[[<span class="dv">3</span>]]</code></pre></div>
-<pre><code>##             [,1]
-##  [1,] -1.0427445
-##  [2,] -1.0734046
-##  [3,] -1.2239776
-##  [4,] -1.3257900
-##  [5,]  1.1338624
-##  [6,] -1.2414638
-##  [7,] -1.1543273
-##  [8,] -1.3348786
-##  [9,]  1.0007651
-## [10,] -1.7932342
-## [11,]  0.7578114
-## [12,]  1.1357149
-## [13,]  1.1513617
-## [14,] -0.7627069
-## [15,] -1.3611740
-## [16,] -1.5173594
-## [17,]  0.6057861
-## [18,] -1.4497701
-## [19,] -1.5730430
-## [20,] -1.5906689
-## [21,] -1.7252148
-## [22,]  0.4400252
-## [23,]  1.2038738
-## [24,] -1.3288229
-## [25,]  0.5841386
-## [26,] -1.5666116
-## [27,]  1.2519047
-## [28,] -1.2543490
-## [29,] -1.2691883
-## [30,] -1.4369233</code></pre>
+<pre><code>##              [,1]
+##  [1,] -1.48109257
+##  [2,]  0.06170978
+##  [3,] -1.62558341
+##  [4,]  1.32386577
+##  [5,] -1.80074680
+##  [6,] -1.33228719
+##  [7,]  1.40005577
+##  [8,]  1.06047499
+##  [9,]  0.89728737
+## [10,]  1.25643778
+## [11,]  0.91738296
+## [12,] -1.39444935
+## [13,] -1.30900919
+## [14,]  0.14942293
+## [15,] -1.78798258
+## [16,]  1.23983753
+## [17,]  0.29647398
+## [18,] -1.05404580
+## [19,]  1.26808643
+## [20,]  0.45458815
+## [21,]  1.00345647
+## [22,] -1.30789459
+## [23,] -1.15657043
+## [24,] -1.09454072
+## [25,] -1.84335208
+## [26,] -1.32517803
+## [27,] -1.25536120
+## [28,]  1.20876920
+## [29,] -1.25172019
+## [30,]  1.19220150</code></pre>
 <p>¿Cuáles de estas unidades tienen peso positivo y negativo en la capa final?</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pesos_capa_f &lt;-<span class="st"> </span><span class="kw">get_weights</span>(modelo_dropout)[[<span class="dv">3</span>]]
 <span class="kw">graf_pesos</span>(pesos[, pesos_capa_f <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.5</span>], <span class="dt">mostrar_facets =</span> <span class="ot">TRUE</span>)</code></pre></div>
@@ -1002,13 +1002,13 @@ history &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><s
 score &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">evaluate</span>(x_test, y_test)
 score</code></pre></div>
 <pre><code>## $loss
-## [1] 0.229105
+## [1] 0.2214103
 ## 
 ## $acc
-## [1] 0.9506726
+## [1] 0.9496761
 ## 
 ## $categorical_crossentropy
-## [1] 0.2249935</code></pre>
+## [1] 0.2174644</code></pre>
 
 </div>
 </div>

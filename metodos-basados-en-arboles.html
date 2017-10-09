@@ -562,7 +562,8 @@ Para podar un árbol con costo-complejidad, encontramos para cada <span class="m
 <div id="opcional-predicciones-con-cart" class="section level3">
 <h3><span class="header-section-number">11.1.6</span> (Opcional) Predicciones con CART</h3>
 <p>Podemos hacer predicciones con un sólo árbol. En el caso de spam, haríamos</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">spam_tree &lt;-<span class="kw">rpart</span>(spam <span class="op">~</span><span class="st"> </span>., <span class="dt">data =</span> spam_entrena, 
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">9293</span>) <span class="co"># para hacer reproducible la validación cruzada</span>
+spam_tree &lt;-<span class="kw">rpart</span>(spam <span class="op">~</span><span class="st"> </span>., <span class="dt">data =</span> spam_entrena, 
                   <span class="dt">method =</span> <span class="st">&quot;class&quot;</span>, <span class="dt">control=</span><span class="kw">list</span>(<span class="dt">cp=</span><span class="dv">0</span>, 
                                               <span class="dt">minsplit=</span><span class="dv">5</span>,<span class="dt">minbucket=</span><span class="dv">1</span>))</code></pre></div>
 <p>Ahora mostramos los resultados de cada árbol para cada valor de <span class="math inline">\(\alpha\)</span>. La siguiente función nos da una estimación de validación cruzada del error:</p>
@@ -591,50 +592,50 @@ Para podar un árbol con costo-complejidad, encontramos para cada <span class="m
 ##            CP nsplit rel error  xerror     xstd
 ## 1  0.49087894      0  1.000000 1.00000 0.022431
 ## 2  0.13681592      1  0.509121 0.54975 0.018903
-## 3  0.05223881      2  0.372305 0.45605 0.017616
-## 4  0.03980100      3  0.320066 0.35489 0.015912
-## 5  0.03150912      4  0.280265 0.33582 0.015546
-## 6  0.01160862      5  0.248756 0.30265 0.014869
-## 7  0.01077944      6  0.237148 0.28192 0.014417
-## 8  0.00663350      7  0.226368 0.26866 0.014115
-## 9  0.00497512      9  0.213101 0.25622 0.013822
-## 10 0.00414594     18  0.166667 0.23051 0.013184
-## 11 0.00331675     20  0.158375 0.22886 0.013141
-## 12 0.00276396     24  0.145108 0.21973 0.012902
-## 13 0.00248756     27  0.136816 0.21808 0.012858
-## 14 0.00165837     31  0.126036 0.21393 0.012746
-## 15 0.00130301     44  0.104478 0.20149 0.012403
-## 16 0.00124378     52  0.092869 0.20232 0.012426
-## 17 0.00118455     54  0.090381 0.20232 0.012426
-## 18 0.00110558     61  0.082090 0.20398 0.012473
-## 19 0.00082919     67  0.075456 0.20481 0.012496
-## 20 0.00066335    100  0.048093 0.21476 0.012769
-## 21 0.00041459    107  0.043118 0.22471 0.013033
-## 22 0.00033167    121  0.037313 0.23632 0.013332
-## 23 0.00031095    126  0.035655 0.23549 0.013311
-## 24 0.00027640    140  0.029851 0.23383 0.013269
-## 25 0.00020730    146  0.028192 0.23383 0.013269
-## 26 0.00010365    150  0.027363 0.23466 0.013290
-## 27 0.00000000    158  0.026534 0.23466 0.013290</code></pre>
+## 3  0.05223881      2  0.372305 0.44942 0.017516
+## 4  0.03980100      3  0.320066 0.34163 0.015659
+## 5  0.03150912      4  0.280265 0.30514 0.014922
+## 6  0.01160862      5  0.248756 0.28275 0.014436
+## 7  0.01077944      6  0.237148 0.27612 0.014286
+## 8  0.00663350      7  0.226368 0.25954 0.013901
+## 9  0.00497512      9  0.213101 0.24046 0.013436
+## 10 0.00414594     18  0.166667 0.21227 0.012701
+## 11 0.00331675     20  0.158375 0.21144 0.012679
+## 12 0.00276396     24  0.145108 0.20481 0.012496
+## 13 0.00248756     27  0.136816 0.19320 0.012167
+## 14 0.00165837     31  0.126036 0.18740 0.011997
+## 15 0.00130301     44  0.104478 0.18408 0.011899
+## 16 0.00124378     52  0.092869 0.18657 0.011973
+## 17 0.00118455     54  0.090381 0.18740 0.011997
+## 18 0.00110558     61  0.082090 0.18740 0.011997
+## 19 0.00082919     67  0.075456 0.18823 0.012022
+## 20 0.00066335    100  0.048093 0.19569 0.012238
+## 21 0.00041459    107  0.043118 0.19652 0.012262
+## 22 0.00033167    121  0.037313 0.20896 0.012611
+## 23 0.00031095    126  0.035655 0.21144 0.012679
+## 24 0.00027640    140  0.029851 0.21393 0.012746
+## 25 0.00020730    146  0.028192 0.21393 0.012746
+## 26 0.00010365    150  0.027363 0.21725 0.012836
+## 27 0.00000000    158  0.026534 0.21725 0.012836</code></pre>
 <p>Y usamos la regla de mínimo error o a una desviación estándar del error mínimo:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">arbol_podado &lt;-<span class="st"> </span><span class="kw">prune</span>(spam_tree, <span class="dt">cp =</span>  <span class="fl">0.00276396</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">arbol_podado &lt;-<span class="st"> </span><span class="kw">prune</span>(spam_tree, <span class="dt">cp =</span>  <span class="fl">0.00130301</span>)
 <span class="kw">prp</span>(arbol_podado)</code></pre></div>
 <p><img src="11-arboles_files/figure-html/unnamed-chunk-24-1.png" width="672" /></p>
 <p>Cuyo error de predicción es:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">probs_clase &lt;-<span class="st"> </span><span class="kw">predict</span>(arbol_podado, <span class="dt">newdata=</span>spam_prueba)
 <span class="kw">head</span>(probs_clase)</code></pre></div>
-<pre><code>##            0          1
-## 1 0.03621170 0.96378830
-## 2 0.03621170 0.96378830
-## 3 0.05181347 0.94818653
-## 4 0.94941394 0.05058606
-## 5 0.03621170 0.96378830
-## 6 0.03621170 0.96378830</code></pre>
+<pre><code>##            0        1
+## 1 0.02578797 0.974212
+## 2 0.02578797 0.974212
+## 3 0.03703704 0.962963
+## 4 0.12500000 0.875000
+## 5 0.02578797 0.974212
+## 6 0.02578797 0.974212</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">prop.table</span>(<span class="kw">table</span>((probs_clase[,<span class="dv">2</span>]<span class="op">&gt;</span><span class="fl">0.5</span>),spam_prueba<span class="op">$</span>spam),<span class="dv">2</span>)</code></pre></div>
 <pre><code>##        
 ##                  0          1
-##   FALSE 0.94929881 0.14827018
-##   TRUE  0.05070119 0.85172982</code></pre>
+##   FALSE 0.94282632 0.12191104
+##   TRUE  0.05717368 0.87808896</code></pre>
 </div>
 <div id="arboles-para-regresion" class="section level3">
 <h3><span class="header-section-number">11.1.7</span> Árboles para regresión</h3>
@@ -647,7 +648,8 @@ Para podar un árbol con costo-complejidad, encontramos para cada <span class="m
 <div id="variabilidad-en-el-proceso-de-construccion" class="section level3">
 <h3><span class="header-section-number">11.1.8</span> Variabilidad en el proceso de construcción</h3>
 <p>Existe variabilidad considerable en el proceso de división, lo cual es una debilidad de los árboles. Por ejemplo:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">muestra.<span class="dv">1</span> &lt;-<span class="st"> </span>spam_entrena[<span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(spam_entrena), <span class="kw">nrow</span>(spam_entrena), <span class="dt">replace=</span>T), ]
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">9923</span>)
+muestra.<span class="dv">1</span> &lt;-<span class="st"> </span>spam_entrena[<span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(spam_entrena), <span class="kw">nrow</span>(spam_entrena), <span class="dt">replace=</span>T), ]
 spam.tree.completo.<span class="dv">1</span> &lt;-<span class="kw">rpart</span>(spam <span class="op">~</span><span class="st"> </span>., <span class="dt">data =</span>  muestra.<span class="dv">1</span>, <span class="dt">method =</span> <span class="st">&quot;class&quot;</span>,
                           <span class="dt">control =</span> control_completo)
 arbol.chico.<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">prune</span>(spam.tree.completo.<span class="dv">1</span>, <span class="dt">cp=</span><span class="fl">0.03</span>)
