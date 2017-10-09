@@ -10,7 +10,8 @@ leer_datos <- function(tipo, path){
     con <- file(archivo, "r", blocking = FALSE)
     lineas <- readLines(con = con)
     close(con)
-    paste('Review ',lineas, sep=' ')
+    lineas[1] <- paste('Review ',lineas[1], sep=' ')
+    lineas
   })
   lapply(lista_textos, function(x){
     y <- paste(x, collapse=' ')  
