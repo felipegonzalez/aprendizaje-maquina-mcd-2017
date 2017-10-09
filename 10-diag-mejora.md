@@ -149,7 +149,7 @@ nrow(df)
 df$texto[1]
 ```
 
-[1] "Review  films adapted from comic books have had plenty of success , whether they're about superheroes ( batman , superman , spawn ) , or geared toward kids ( casper ) or the arthouse crowd ( ghost world ) , but there's never really been a comic book like from hell before .  Review  for starters , it was created by alan moore ( and eddie campbell ) , who brought the medium to a whole new level in the mid '80s with a 12-part series called the watchmen .  Review  to say moore and campbell thoroughly researched the subject of jack the ripper would be like saying michael jackson is starting to look a little odd .  Review  the book ( or \" graphic novel , \" if you will ) is over 500 pages long and includes nearly 30 more that consist of nothing but footnotes .  Review  in other words , don't dismiss this film because of its source .  Review  if you can get past the whole comic book thing , you might find another stumbling block in from hell's directors , albert and allen hughes .  Review  getting the hughes brothers to direct this seems almost as ludicrous as casting carrot top in , well , anything , but riddle me this : who better to direct a film that's set in the ghetto and features really violent street crime than the mad geniuses behind menace ii society ?  Review  the ghetto in question is , of course , whitechapel in 1888 london's east end .  Review  it's a filthy , sooty place where the whores ( called \" unfortunates \" ) are starting to get a little nervous about this mysterious psychopath who has been carving through their profession with surgical precision .  Review  when the first stiff turns up , copper peter godley ( robbie coltrane , the world is not enough ) calls in inspector frederick abberline ( johnny depp , blow ) to crack the case .  Review  abberline , a widower , has prophetic dreams he unsuccessfully tries to quell with copious amounts of absinthe and opium .  Review  upon arriving in whitechapel , he befriends an unfortunate named mary kelly ( heather graham , say it isn't so ) and proceeds to investigate the horribly gruesome crimes that even the police surgeon can't stomach .  Review  i don't think anyone needs to be briefed on jack the ripper , so i won't go into the particulars here , other than to say moore and campbell have a unique and interesting theory about both the identity of the killer and the reasons he chooses to slay .  Review  in the comic , they don't bother cloaking the identity of the ripper , but screenwriters terry hayes ( vertical limit ) and rafael yglesias ( les mis ? rables ) do a good job of keeping him hidden from viewers until the very end .  Review  it's funny to watch the locals blindly point the finger of blame at jews and indians because , after all , an englishman could never be capable of committing such ghastly acts .  Review  and from hell's ending had me whistling the stonecutters song from the simpsons for days ( \" who holds back the electric car/who made steve guttenberg a star ? \" ) .  Review  don't worry - it'll all make sense when you see it .  Review  now onto from hell's appearance : it's certainly dark and bleak enough , and it's surprising to see how much more it looks like a tim burton film than planet of the apes did ( at times , it seems like sleepy hollow 2 ) .  Review  the print i saw wasn't completely finished ( both color and music had not been finalized , so no comments about marilyn manson ) , but cinematographer peter deming ( don't say a word ) ably captures the dreariness of victorian-era london and helped make the flashy killing scenes remind me of the crazy flashbacks in twin peaks , even though the violence in the film pales in comparison to that in the black-and-white comic .  Review  oscar winner martin childs' ( shakespeare in love ) production design turns the original prague surroundings into one creepy place .  Review  even the acting in from hell is solid , with the dreamy depp turning in a typically strong performance and deftly handling a british accent .  Review  ians holm ( joe gould's secret ) and richardson ( 102 dalmatians ) log in great supporting roles , but the big surprise here is graham .  Review  i cringed the first time she opened her mouth , imagining her attempt at an irish accent , but it actually wasn't half bad .  Review  the film , however , is all good .  Review  2 : 00 - r for strong violence/gore , sexuality , language and drug content "
+[1] "Review  films adapted from comic books have had plenty of success , whether they're about superheroes ( batman , superman , spawn ) , or geared toward kids ( casper ) or the arthouse crowd ( ghost world ) , but there's never really been a comic book like from hell before .  for starters , it was created by alan moore ( and eddie campbell ) , who brought the medium to a whole new level in the mid '80s with a 12-part series called the watchmen .  to say moore and campbell thoroughly researched the subject of jack the ripper would be like saying michael jackson is starting to look a little odd .  the book ( or \" graphic novel , \" if you will ) is over 500 pages long and includes nearly 30 more that consist of nothing but footnotes .  in other words , don't dismiss this film because of its source .  if you can get past the whole comic book thing , you might find another stumbling block in from hell's directors , albert and allen hughes .  getting the hughes brothers to direct this seems almost as ludicrous as casting carrot top in , well , anything , but riddle me this : who better to direct a film that's set in the ghetto and features really violent street crime than the mad geniuses behind menace ii society ?  the ghetto in question is , of course , whitechapel in 1888 london's east end .  it's a filthy , sooty place where the whores ( called \" unfortunates \" ) are starting to get a little nervous about this mysterious psychopath who has been carving through their profession with surgical precision .  when the first stiff turns up , copper peter godley ( robbie coltrane , the world is not enough ) calls in inspector frederick abberline ( johnny depp , blow ) to crack the case .  abberline , a widower , has prophetic dreams he unsuccessfully tries to quell with copious amounts of absinthe and opium .  upon arriving in whitechapel , he befriends an unfortunate named mary kelly ( heather graham , say it isn't so ) and proceeds to investigate the horribly gruesome crimes that even the police surgeon can't stomach .  i don't think anyone needs to be briefed on jack the ripper , so i won't go into the particulars here , other than to say moore and campbell have a unique and interesting theory about both the identity of the killer and the reasons he chooses to slay .  in the comic , they don't bother cloaking the identity of the ripper , but screenwriters terry hayes ( vertical limit ) and rafael yglesias ( les mis ? rables ) do a good job of keeping him hidden from viewers until the very end .  it's funny to watch the locals blindly point the finger of blame at jews and indians because , after all , an englishman could never be capable of committing such ghastly acts .  and from hell's ending had me whistling the stonecutters song from the simpsons for days ( \" who holds back the electric car/who made steve guttenberg a star ? \" ) .  don't worry - it'll all make sense when you see it .  now onto from hell's appearance : it's certainly dark and bleak enough , and it's surprising to see how much more it looks like a tim burton film than planet of the apes did ( at times , it seems like sleepy hollow 2 ) .  the print i saw wasn't completely finished ( both color and music had not been finalized , so no comments about marilyn manson ) , but cinematographer peter deming ( don't say a word ) ably captures the dreariness of victorian-era london and helped make the flashy killing scenes remind me of the crazy flashbacks in twin peaks , even though the violence in the film pales in comparison to that in the black-and-white comic .  oscar winner martin childs' ( shakespeare in love ) production design turns the original prague surroundings into one creepy place .  even the acting in from hell is solid , with the dreamy depp turning in a typically strong performance and deftly handling a british accent .  ians holm ( joe gould's secret ) and richardson ( 102 dalmatians ) log in great supporting roles , but the big surprise here is graham .  i cringed the first time she opened her mouth , imagining her attempt at an irish accent , but it actually wasn't half bad .  the film , however , is all good .  2 : 00 - r for strong violence/gore , sexuality , language and drug content "
   
 Ahora separamos una muestra de prueba (y una de entrenamiento más chica
 para simular después el proceso de recoger más datos):
@@ -214,7 +214,7 @@ tail(vocabulario)
 ## # A tibble: 6 x 2
 ##   palabra  frec
 ##     <chr> <int>
-## 1     was  1608
+## 1    what  1006
 ## 2    when  1091
 ## 3   which  1153
 ## 4     who  1870
@@ -240,8 +240,8 @@ mod_x <- correr_modelo(df_ent, df_pr, vocabulario, lambda = 1e-1)
 ```
 ## [1] "Error entrenamiento: 0.32"
 ## [1] "Error prueba: 0.36"
-## [1] "Devianza entrena:1.174"
-## [1] "Devianza prueba:1.28"
+## [1] "Devianza entrena:1.179"
+## [1] "Devianza prueba:1.287"
 ```
 
 ## Diagnósticos: sesgo y varianza
@@ -289,10 +289,10 @@ mod_x <- correr_modelo(df_ent_grande, df_pr, vocabulario, lambda = 1e-1)
 ```
 
 ```
-## [1] "Error entrenamiento: 0.32"
-## [1] "Error prueba: 0.35"
-## [1] "Devianza entrena:1.218"
-## [1] "Devianza prueba:1.264"
+## [1] "Error entrenamiento: 0.33"
+## [1] "Error prueba: 0.34"
+## [1] "Devianza entrena:1.223"
+## [1] "Devianza prueba:1.274"
 ```
 Vemos que aunque bajó ligeramente el error de prueba, el error es demasiado alto.
 Esta estrategia no funcionó con este modelo, y hubiéramos perdido tiempo y dinero 
@@ -317,10 +317,10 @@ mod_x <- correr_modelo(df_ent, df_pr, vocabulario, lambda =1e-10)
 ```
 
 ```
-## [1] "Error entrenamiento: 0.28"
-## [1] "Error prueba: 0.35"
-## [1] "Devianza entrena:1.091"
-## [1] "Devianza prueba:1.368"
+## [1] "Error entrenamiento: 0.29"
+## [1] "Error prueba: 0.36"
+## [1] "Devianza entrena:1.107"
+## [1] "Devianza prueba:1.39"
 ```
 
 Y notamos que reducimos un poco el sesgo. Por el momento, seguiremos intentando reducir sesgo. Podemos ahora incluir más variables
@@ -341,7 +341,7 @@ mod_x <- correr_modelo(df_ent, df_pr, vocabulario, lambda=1e-10)
 ## [1] "Error entrenamiento: 0"
 ## [1] "Error prueba: 0.43"
 ## [1] "Devianza entrena:0"
-## [1] "Devianza prueba:15.744"
+## [1] "Devianza prueba:15.804"
 ```
 
 
@@ -367,7 +367,7 @@ mod_x <- correr_modelo(df_ent, df_pr, vocabulario, lambda=1e-6)
 ## [1] "Error entrenamiento: 0"
 ## [1] "Error prueba: 0.36"
 ## [1] "Devianza entrena:0"
-## [1] "Devianza prueba:8.243"
+## [1] "Devianza prueba:8.253"
 ```
 
 
@@ -477,10 +477,10 @@ head(vocabulario %>% arrange(desc(frec)),20)
 ## # A tibble: 20 x 2
 ##       palabra  frec
 ##         <chr> <int>
-##  1     review 22028
-##  2       film  2991
-##  3      movie  1844
-##  4       time   797
+##  1       film  2991
+##  2      movie  1844
+##  3       time   797
+##  4     review   788
 ##  5      story   749
 ##  6  character   639
 ##  7 characters   631
@@ -658,9 +658,9 @@ mod_x <- correr_modelo_cv(df_ent_grande, df_pr, vocabulario, lambda = exp(seq(-5
 ```
 ## [1] "Lambda min: 0.367879441171442"
 ## [1] "Error entrenamiento: 0.01"
-## [1] "Error prueba: 0.2"
+## [1] "Error prueba: 0.21"
 ## [1] "Devianza entrena:0.486"
-## [1] "Devianza prueba:0.906"
+## [1] "Devianza prueba:0.907"
 ```
 
 Y ya casi logramos nuestro objetivo. Podemos intentar con más palabras
@@ -859,26 +859,26 @@ arrange(coef_df, coef) %>% print(n=20)
 ## # A tibble: 4,107 x 2
 ##        palabra        coef
 ##          <chr>       <dbl>
-##  1 (Intercept) -0.28900636
-##  2   ludicrous -0.11993381
-##  3      forgot -0.11559527
-##  4   miserably -0.10598781
-##  5  repetitive -0.10317123
-##  6      asleep -0.09743587
-##  7    designed -0.09428161
-##  8     frankly -0.09176484
-##  9    tiresome -0.09097330
-## 10   painfully -0.09000826
-## 11   insulting -0.08770382
-## 12 implausible -0.08318215
-## 13   cardboard -0.08107360
-## 14   redeeming -0.08054622
-## 15   slightest -0.08029741
-## 16      lethal -0.07775558
-## 17       inept -0.07671683
-## 18 potentially -0.07402287
-## 19       kicks -0.07391823
-## 20   profanity -0.07374146
+##  1 (Intercept) -0.28783557
+##  2   ludicrous -0.11991026
+##  3      forgot -0.11567888
+##  4   miserably -0.10594719
+##  5  repetitive -0.10320366
+##  6      asleep -0.09744848
+##  7    designed -0.09432348
+##  8     frankly -0.09176990
+##  9    tiresome -0.09102741
+## 10   painfully -0.09002551
+## 11   insulting -0.08773765
+## 12 implausible -0.08325748
+## 13   cardboard -0.08112827
+## 14   redeeming -0.08057043
+## 15   slightest -0.08031144
+## 16      lethal -0.07776850
+## 17       inept -0.07671020
+## 18 potentially -0.07399003
+## 19       kicks -0.07396178
+## 20   profanity -0.07377266
 ## # ... with 4,087 more rows
 ```
 
@@ -890,26 +890,26 @@ arrange(coef_df, desc(coef)) %>% print(n=20)
 ## # A tibble: 4,107 x 2
 ##          palabra       coef
 ##            <chr>      <dbl>
-##  1   exceptional 0.10100076
-##  2        lesser 0.09812082
-##  3    underneath 0.09371545
-##  4       triumph 0.08363819
-##  5      identify 0.08277150
-##  6 appropriately 0.08116368
-##  7        enters 0.08086985
-##  8         ideal 0.08023261
-##  9   outstanding 0.07902024
-## 10        shines 0.07575683
-## 11          ease 0.07229817
-## 12        finest 0.07014397
-## 13        beings 0.06877740
-## 14      captures 0.06858859
-## 15     plausible 0.06818160
-## 16         notch 0.06814189
-## 17        nearby 0.06746912
-## 18          tiny 0.06601499
-## 19           gem 0.06419142
-## 20     threatens 0.06313503
+##  1   exceptional 0.10095486
+##  2        lesser 0.09809558
+##  3    underneath 0.09373360
+##  4       triumph 0.08361591
+##  5      identify 0.08275198
+##  6 appropriately 0.08113411
+##  7        enters 0.08084849
+##  8         ideal 0.08022423
+##  9   outstanding 0.07901745
+## 10        shines 0.07573050
+## 11          ease 0.07226285
+## 12        finest 0.07014702
+## 13        beings 0.06877986
+## 14      captures 0.06857886
+## 15     plausible 0.06816794
+## 16         notch 0.06811214
+## 17        nearby 0.06747714
+## 18          tiny 0.06598801
+## 19           gem 0.06417351
+## 20     threatens 0.06313589
 ## # ... with 4,087 more rows
 ```
 
@@ -934,16 +934,16 @@ df_1
 ## # A tibble: 425 x 4
 ##       id     y      prob      error
 ##    <chr> <dbl>     <dbl>      <dbl>
-##  1   222     0 0.9767586 -0.9767586
-##  2  1461     1 0.1292236  0.8707764
-##  3  1050     1 0.1484240  0.8515760
-##  4  1490     1 0.2150220  0.7849780
-##  5  1508     1 0.2216865  0.7783135
-##  6  1960     1 0.2446289  0.7553711
-##  7  1933     1 0.2738587  0.7261413
-##  8    25     0 0.7198569 -0.7198569
-##  9  1447     1 0.3112285  0.6887715
-## 10  1306     1 0.3126126  0.6873874
+##  1   222     0 0.9767814 -0.9767814
+##  2  1461     1 0.1296515  0.8703485
+##  3  1050     1 0.1485507  0.8514493
+##  4  1490     1 0.2148259  0.7851741
+##  5  1508     1 0.2216442  0.7783558
+##  6  1960     1 0.2439941  0.7560059
+##  7  1933     1 0.2737983  0.7262017
+##  8    25     0 0.7199255 -0.7199255
+##  9  1447     1 0.3114848  0.6885152
+## 10  1306     1 0.3124075  0.6875925
 ## # ... with 415 more rows
 ```
 
@@ -952,32 +952,32 @@ df_1
 filter(df, id == 1461) %>% pull(texto)
 ```
 
-[1] "Review  deep rising is one of \" those \" movies .  Review  the kind of movie which serves no purpose except to entertain us .  Review  it does not ask us to think about important questions like life on other planets or the possibility that there is no god . . . screw that , it says boldly , let's see some computer generated monsters rip into , decapitate and generally cause irreparable booboos to a bunch of little known actors .  Review  heh !  Review  them wacky monsters , gotta love 'em .  Review  of course , since we can rent about a thousand b movies with the same kind of story , hollywood must give that little extra \" oumph \" to get people in theaters .  Review  that is where deep rising fails , which is a good thing .  Review  confused ?  Review  let me explain :  Review  despite all them flashy effects and big explosions , deep rising is still , at heart , a good 'ol b movie .  Review  luckily , it's a very good b movie .  Review  the worst cliches in movie history are a b movie's bread and butter .  Review  therefore , things that would destroy a serious movie actually help us have a good time while watching a movie of lower calibre .  Review  of course we know there's a big slimy creature behind that door , that one person will wander off to be picked off by said monster and we always know which persons or person will make it out alive .  Review  we just don't know when or how horrible it will be .  Review  i went to see deep rising with my expections low and my tolerance for bad dialogue high .  Review  imagine my surprise when i discover that deep rising is actually , well , pretty darn funny at times .  Review  a funny b movie ?  Review  well , that's new .  Review  these flicks are not supposed to make us laugh .  Review   ( except for a few unintended laughs once a while . )  Review  and before you know it , treat williams , wes studi and famke jansen appear on the big screen .  Review  hey ! i know them guys ( and gal ) from a couple of other movies .  Review  cool .  Review  familiar faces .  Review  so far so good .  Review  our man treat is the hero , he'll live .  Review  wes is a staple of b movies , he is the token victim .  Review  we know he'll buy the farm but he will take a few creeps with him on the way out .  Review  famke is the babe , 'nuff said .  Review  there is also a guy with glasses ( the guy with glasses always dies ) a black person ( b movie buffs know that the black guy always dies , never fails ) and a very funny , nerdy guy .  Review   ( ah !  Review  comic relief .  Review  how can we possibly explain having to kill him . . . let  Review  him live . )  Review  after the first fifteen minutes i felt right at home .  Review  i know who to root for and who i need to boo too and a gum to chew .  Review   ( please kill me . )  Review  suffice it to say that for the next hour and a half i jumped out of my seat a few times , went \" ewwww \" about a dozen times and nearly had an orgasm over all the explosions and firepower our heroes were packing .  Review  i'm a man , we nottice these things .  Review  all in all , i'd recommend deep rising if you are looking for a good time and care to leave your brain at the door . . . but  Review  bring your sense of humor and excitement in with you .  Review  the acting is decent , the effects top rate .  Review  how to best describe it ?  Review  put together the jet ski scene from hard rain , the bug attacks from starship troopers , a couple of james bond like stunts and all those scenes from friday the thirteenth and freddy where you keep screaming \" don't go there , he's behind you \" and you end up with deep rising .  Review  for creepy crawly goodness , tight t-shirts , major firepower and the need to go to the bathroom every fifteen minutes from seing all that water . "
+[1] "Review  deep rising is one of \" those \" movies .  the kind of movie which serves no purpose except to entertain us .  it does not ask us to think about important questions like life on other planets or the possibility that there is no god . . . screw that , it says boldly , let's see some computer generated monsters rip into , decapitate and generally cause irreparable booboos to a bunch of little known actors .  heh !  them wacky monsters , gotta love 'em .  of course , since we can rent about a thousand b movies with the same kind of story , hollywood must give that little extra \" oumph \" to get people in theaters .  that is where deep rising fails , which is a good thing .  confused ?  let me explain :  despite all them flashy effects and big explosions , deep rising is still , at heart , a good 'ol b movie .  luckily , it's a very good b movie .  the worst cliches in movie history are a b movie's bread and butter .  therefore , things that would destroy a serious movie actually help us have a good time while watching a movie of lower calibre .  of course we know there's a big slimy creature behind that door , that one person will wander off to be picked off by said monster and we always know which persons or person will make it out alive .  we just don't know when or how horrible it will be .  i went to see deep rising with my expections low and my tolerance for bad dialogue high .  imagine my surprise when i discover that deep rising is actually , well , pretty darn funny at times .  a funny b movie ?  well , that's new .  these flicks are not supposed to make us laugh .   ( except for a few unintended laughs once a while . )  and before you know it , treat williams , wes studi and famke jansen appear on the big screen .  hey ! i know them guys ( and gal ) from a couple of other movies .  cool .  familiar faces .  so far so good .  our man treat is the hero , he'll live .  wes is a staple of b movies , he is the token victim .  we know he'll buy the farm but he will take a few creeps with him on the way out .  famke is the babe , 'nuff said .  there is also a guy with glasses ( the guy with glasses always dies ) a black person ( b movie buffs know that the black guy always dies , never fails ) and a very funny , nerdy guy .   ( ah !  comic relief .  how can we possibly explain having to kill him . . . let  him live . )  after the first fifteen minutes i felt right at home .  i know who to root for and who i need to boo too and a gum to chew .   ( please kill me . )  suffice it to say that for the next hour and a half i jumped out of my seat a few times , went \" ewwww \" about a dozen times and nearly had an orgasm over all the explosions and firepower our heroes were packing .  i'm a man , we nottice these things .  all in all , i'd recommend deep rising if you are looking for a good time and care to leave your brain at the door . . . but  bring your sense of humor and excitement in with you .  the acting is decent , the effects top rate .  how to best describe it ?  put together the jet ski scene from hard rain , the bug attacks from starship troopers , a couple of james bond like stunts and all those scenes from friday the thirteenth and freddy where you keep screaming \" don't go there , he's behind you \" and you end up with deep rising .  for creepy crawly goodness , tight t-shirts , major firepower and the need to go to the bathroom every fifteen minutes from seing all that water . "
 
 ```r
 filter(df, id == 1508) %>% pull(texto)
 ```
 
-[1] "Review  capsule : side-splitting comedy that follows its own merciless logic almost through to the end . . .  Review  but not without providing a good deal of genuine laughs .  Review  most comedies these days have one flaw .  Review  they're not funny .  Review  they think they're funny , but they are devoid of anything really penetrating or dastardly .  Review  occasionally a good funny movie sneaks past the deadening hollywood preconceptions of humor and we get a real gem : ruthless people , for instance , which established a microcosm of a setup and played it out to the bitter end .  Review  liar liar is built the same way and is just about as funny .  Review  this is one of the few movies i've seen where i was laughing consistently almost all the way through : instead of a couple of set-pieces that inspired a laugh ( think of the dismal fatal instinct ) , the whole movie works like clockwork .  Review  jim carrey playes a high-powered lawyer , to whom lying is as natural as breathing .  Review  there is one thing he takes seriously , though : his son , and we can sense the affection that they have for each other right away .  Review  but his wife is divorced and seeing another man , and now it looks like they may move away together .  Review  the son goes with them , of course .  Review  the movie sets up this early material with good timing and a remarkable balance of jim carrey's over-the-top persona with reality .  Review  then the plot springs into action : after being snubbed ( not deliberately ) by his father at his birthday , the kid makes a wish as he blows out the birthday candles : that for just one day , dad can't lie .  Review  he gets the wish .  Review  what happens next is sidesplitting .  Review  everything turns into a confrontation : when cornered by a bum for some change , he shouts , \" no !  Review  i'm not giving you any money because i know you'll spend it on booze !  Review  all i want to do is to get to the office without having to step over the debris of our decaying society ! \"  Review  he can't even get into an elevator without earning a black eye .  Review  and what's worse , he's now gotten himself into an expensive divorce settlement that requires him to twist the truth like abstract wire sculpture .  Review  carrey , who i used to find unfunny , has gotten better at his schtick , even if it's a limited one .  Review  he uses it to great effect in this movie .  Review  there is a scene where he tries to test his ability to lie and nearly demolishes his office in the process ( there's a grin breaking out across my face right now , just remembering the scene ) .  Review  he can't even write the lie ; his fingers twitch , his body buckles like someone in the throes of cyanide poisoning , and when he tries to talk it's like he's speaking in tongues .  Review  equally funny is a scene where he beats himself to a pulp ( don't ask why ) , tries to drink water to keep from having outbursts in the courtroom ( it fails , with semi-predictable results ) , and winds up biting the bullet when he gets called into the boardroom to have everyone ask what they think of them .  Review  this scene alone may force people to stop the tape for minutes on end .  Review  the movie sustains its laughs and also its flashes of insight until almost the end .  Review  a shame , too , because the movie insists on having a big , ridiculous climax that involves carrey's character flagging down a plane using a set of motorized stairs , then breaking his leg , etc . a simple reconciliation would do the trick .  Review  why is this stupid pent-up climax always obligatory ?  Review  it's not even part of the movie's real agenda .  Review  thankfully , liar liar survives it , and so does carrey .  Review  maybe they were being merciful , on reflection .  Review  if i'd laughed any more , i might have needed an iron lung . "
+[1] "Review  capsule : side-splitting comedy that follows its own merciless logic almost through to the end . . .  but not without providing a good deal of genuine laughs .  most comedies these days have one flaw .  they're not funny .  they think they're funny , but they are devoid of anything really penetrating or dastardly .  occasionally a good funny movie sneaks past the deadening hollywood preconceptions of humor and we get a real gem : ruthless people , for instance , which established a microcosm of a setup and played it out to the bitter end .  liar liar is built the same way and is just about as funny .  this is one of the few movies i've seen where i was laughing consistently almost all the way through : instead of a couple of set-pieces that inspired a laugh ( think of the dismal fatal instinct ) , the whole movie works like clockwork .  jim carrey playes a high-powered lawyer , to whom lying is as natural as breathing .  there is one thing he takes seriously , though : his son , and we can sense the affection that they have for each other right away .  but his wife is divorced and seeing another man , and now it looks like they may move away together .  the son goes with them , of course .  the movie sets up this early material with good timing and a remarkable balance of jim carrey's over-the-top persona with reality .  then the plot springs into action : after being snubbed ( not deliberately ) by his father at his birthday , the kid makes a wish as he blows out the birthday candles : that for just one day , dad can't lie .  he gets the wish .  what happens next is sidesplitting .  everything turns into a confrontation : when cornered by a bum for some change , he shouts , \" no !  i'm not giving you any money because i know you'll spend it on booze !  all i want to do is to get to the office without having to step over the debris of our decaying society ! \"  he can't even get into an elevator without earning a black eye .  and what's worse , he's now gotten himself into an expensive divorce settlement that requires him to twist the truth like abstract wire sculpture .  carrey , who i used to find unfunny , has gotten better at his schtick , even if it's a limited one .  he uses it to great effect in this movie .  there is a scene where he tries to test his ability to lie and nearly demolishes his office in the process ( there's a grin breaking out across my face right now , just remembering the scene ) .  he can't even write the lie ; his fingers twitch , his body buckles like someone in the throes of cyanide poisoning , and when he tries to talk it's like he's speaking in tongues .  equally funny is a scene where he beats himself to a pulp ( don't ask why ) , tries to drink water to keep from having outbursts in the courtroom ( it fails , with semi-predictable results ) , and winds up biting the bullet when he gets called into the boardroom to have everyone ask what they think of them .  this scene alone may force people to stop the tape for minutes on end .  the movie sustains its laughs and also its flashes of insight until almost the end .  a shame , too , because the movie insists on having a big , ridiculous climax that involves carrey's character flagging down a plane using a set of motorized stairs , then breaking his leg , etc . a simple reconciliation would do the trick .  why is this stupid pent-up climax always obligatory ?  it's not even part of the movie's real agenda .  thankfully , liar liar survives it , and so does carrey .  maybe they were being merciful , on reflection .  if i'd laughed any more , i might have needed an iron lung . "
 
 
 ```r
 filter(df, id == 222) %>% pull(texto) #negativa
 ```
 
-[1] "Review  it's probably inevitable that the popular virtual reality genre ( \" the matrix , \" \" existenz \" ) would collide with the even more popular serial-killer genre ( \" kiss the girls , \" \" se7en \" ) .  Review  the result should have been more interesting than \" the cell . \"  Review  as the movie opens , therapist catharine deane ( jennifer lopez ) treats a catatonic boy ( colton james ) by entering his mind through some sort of virtual reality technique that's never fully explained .  Review  after months of therapy sessions in a surreal desert , catharine has no success to report .  Review  meanwhile , killer carl stargher ( vincent d'onofrio ) has claimed another victim .  Review  his particular hobby is to kidnap young women , keep them in a glass cell overnight , and drown them .  Review  he takes the corpse and soaks it in bleach , then suspends himself over the body and jerks off while watching a video tape of the drowning .  Review  although carl's been doing this for awhile , he's recently become sloppy , and fbi agent peter novak ( vince vaughn ) is closing in fast .  Review  not fast enough , though , to keep carl from sticking another woman ( tara subkoff ) in the cell or to catch him before he suffers a schizophrenic attack that leaves him in a coma .  Review  from the videos in carl's house , peter can see that the drowning cell is automated and will fill with water forty hours after the abduction .  Review  to save the kidnapped girl , peter has to find the cell before the end of the day , and comatose carl's not talking .  Review  so off they go to catharine in the hope that she can go inside carl's mind and find out where the cell is in time .  Review  the focus of \" the cell \" in on the ornate interior of carl's mind , but the universe director tarsem singh creates seems more an exercise in computer-generated spectacle than an exploration of the psychotic personality .  Review  for the most part , it's style without substance .  Review  in his own mind , carl is a decadent emperor in flowing robes , ming the merciless , as well as a frightened boy ( jake thomas ) abused by his father .  Review  all in all , the mind of a psycho killer turns out to be a strangely dull place , and i kept wishing i could fast-forward to the next development .  Review  singh is best known for directing music videos , particularly rem's \" losing my religion , \" and \" the cell \" seems very much like a really long , really slow mtv video with the sound deleted .  Review  singer lopez seems to think she's in a video as well ; she devotes more time to posing in elaborate costumes than she does to acting .  Review  the premise had great promise .  Review  the computer-generated world within carl's mind could have been a bizarre , surreal universe governed by insanity and symbolism rather than logic .  Review  the first room catharine enters in carl's head shows this promise .  Review  she finds a horse standing in center of the room ; suddenly , sheets of sharp-edged glass fall into the horse , dividing it into segments .  Review  the panes of glass separate , pulling apart the pieces of the still-living horse .  Review  this scene is twisted , disturbing , and thought-provoking , because the psychological importance of the horse and its fate is left to the viewer to ponder .  Review  another element that should have been developed is the effect on catharine of merging with the mind of a psychopath .  Review  their minds begin to bleed together at one point in the movie , and this should have provided an opportunity to discover the dark corners of catharine's own psyche .  Review  like sidney lumet's \" the offence \" or michael mann's \" manhunter , \" \" the cell \" could have explored how the madness of the killer brings out a repressed darkness in the investigator .  Review  however , catharine's character is hardly developed at all , and lopez has no depth to offer the role .  Review  bottom line : don't get trapped in this one . "
+[1] "Review  it's probably inevitable that the popular virtual reality genre ( \" the matrix , \" \" existenz \" ) would collide with the even more popular serial-killer genre ( \" kiss the girls , \" \" se7en \" ) .  the result should have been more interesting than \" the cell . \"  as the movie opens , therapist catharine deane ( jennifer lopez ) treats a catatonic boy ( colton james ) by entering his mind through some sort of virtual reality technique that's never fully explained .  after months of therapy sessions in a surreal desert , catharine has no success to report .  meanwhile , killer carl stargher ( vincent d'onofrio ) has claimed another victim .  his particular hobby is to kidnap young women , keep them in a glass cell overnight , and drown them .  he takes the corpse and soaks it in bleach , then suspends himself over the body and jerks off while watching a video tape of the drowning .  although carl's been doing this for awhile , he's recently become sloppy , and fbi agent peter novak ( vince vaughn ) is closing in fast .  not fast enough , though , to keep carl from sticking another woman ( tara subkoff ) in the cell or to catch him before he suffers a schizophrenic attack that leaves him in a coma .  from the videos in carl's house , peter can see that the drowning cell is automated and will fill with water forty hours after the abduction .  to save the kidnapped girl , peter has to find the cell before the end of the day , and comatose carl's not talking .  so off they go to catharine in the hope that she can go inside carl's mind and find out where the cell is in time .  the focus of \" the cell \" in on the ornate interior of carl's mind , but the universe director tarsem singh creates seems more an exercise in computer-generated spectacle than an exploration of the psychotic personality .  for the most part , it's style without substance .  in his own mind , carl is a decadent emperor in flowing robes , ming the merciless , as well as a frightened boy ( jake thomas ) abused by his father .  all in all , the mind of a psycho killer turns out to be a strangely dull place , and i kept wishing i could fast-forward to the next development .  singh is best known for directing music videos , particularly rem's \" losing my religion , \" and \" the cell \" seems very much like a really long , really slow mtv video with the sound deleted .  singer lopez seems to think she's in a video as well ; she devotes more time to posing in elaborate costumes than she does to acting .  the premise had great promise .  the computer-generated world within carl's mind could have been a bizarre , surreal universe governed by insanity and symbolism rather than logic .  the first room catharine enters in carl's head shows this promise .  she finds a horse standing in center of the room ; suddenly , sheets of sharp-edged glass fall into the horse , dividing it into segments .  the panes of glass separate , pulling apart the pieces of the still-living horse .  this scene is twisted , disturbing , and thought-provoking , because the psychological importance of the horse and its fate is left to the viewer to ponder .  another element that should have been developed is the effect on catharine of merging with the mind of a psychopath .  their minds begin to bleed together at one point in the movie , and this should have provided an opportunity to discover the dark corners of catharine's own psyche .  like sidney lumet's \" the offence \" or michael mann's \" manhunter , \" \" the cell \" could have explored how the madness of the killer brings out a repressed darkness in the investigator .  however , catharine's character is hardly developed at all , and lopez has no depth to offer the role .  bottom line : don't get trapped in this one . "
 
 ```r
 filter(df, id == 25) %>% pull(texto) #negativa
 ```
 
-[1] "Review  forgive the fevered criticism but the fervor of the crucible infects .  Review  set in 1692 at salem , massachusetts , the crucible opens with a group of teenage girls passionately singing and dancing around a boiling cauldron in the middle of a forest under the glow of a full moon .  Review  they beckon the names of men as the targets of their love spells .  Review  then one of the girls lets her hair down and sheds her clothes .  Review  not to be outdone in her quest to regain the attention of john proctor ( daniel day lewis ) , abigail ( winona ryder ) suddenly seizes a chicken , beats it against the ground and smears her face and lips with the fresh blood .  Review  taking even adolescent hormone surges into account , surely this chicken-bashing bit is a bit excessive , especially for prim puritan sensibilities ?  Review  surely to the puritan eye this is as close to a coven of witches as it gets ?  Review  the crucible errs from the beginning and arthur miller's name should be summoned for blame here for the addition of the above scene to his screen adaptation of his play .  Review  this is far from a harmless event , a bad start to an already shaky morality tale .  Review  the play describes the film's opening scene during tense exchanges that makes one wonder about the veracity of both accusation and reply , and this adds to the play's charged atmosphere .  Review  in the film , the opening scene becomes an unintentional pandora's box .  Review  not only is credulity stretched but abigail's obsession is unfortunately spotlighted .  Review  it positions the crucible more as a cautionary fable about obsessive and malevolent women than against witch hunts ; it will bring back the memory of a rabbit boiling away in a pot .  Review  not surprisingly , the nighttime forest frenzy does not go unnoticed and when two girls fail to wake the following morning , witches are invoked by those eager to blame .  Review  when the girls are questioned , their confession of guilt is accompanied with an announcement of their return to god and they are thereafter converted to immaculate witnesses , led lustfully by abigail .  Review  with alarming synchronicity our hormonally-advantaged girls zealously gesture and point accusing fingers at innocents , constant reminders that abigail's passion sets all this into inexorable motion .  Review  abigail seizes on this opportunity to rid herself of her rival for john proctor's love , his wife elizabeth ( joan allen ) , by including her among those accused of witchcraft .  Review  appropriately narrow-waisted and equipped with a distractingly white smile ( watch his teeth deteriorate much too quickly to a murky yellow ) , day lewis plays the dashing moral hero with an over-earnestness that longs to be watched .  Review  director nicholas hytner is guilty of encouraging day lewis' foaming-mouth fervour with shots where we stare up at proctor as if he was mounted on a pedestal for our admiration .  Review  otherwise , hytner's direction is unremarkable .  Review  ryder's performance as abigail is as consistent as her mood swings .  Review  her fits of frenzy are energetic enough but the quieter moments are less successful .  Review  abigail supposedly revels in her newfound power , but ryder fails at being convincingly haughty although there is much haughtiness to spare here .  Review  paul scofield is fine as the overzealous judge danforth , but the incessant moral posturings of all the characters along with the recurrent histrionics of the young girls pricks at the nerves .  Review  probably because she is the only refuge of restraint amidst all the huffing and puffing , allen's elizabeth comes out as the most sympathetic character .  Review  a scene near the end featuring a private conversation between the imprisoned elizabeth and john is undeniably powerful because for once we are given a reprieve from the moral bantering and the human consequences are revealed .  Review  unfortunately , when john's audience again increases to more than one his urge to pontificate returns and the human urgency of his situation is lost .  Review  it is clear that miller meant well but i do wish he did it with more delicacy and fewer diversions .  Review  his screenplay is an imperfect creature with the distractions coming out as loud as the message .  Review  the result is a clumsy muddle - i felt like the chicken from the opening scene , head ceaselessly banged with piousness too heavy-handed to be wholly believable .  Review  when the gallows beckoned , it was sweet release indeed .  Review  far from bewitching , the crucible tests the patience . "
+[1] "Review  forgive the fevered criticism but the fervor of the crucible infects .  set in 1692 at salem , massachusetts , the crucible opens with a group of teenage girls passionately singing and dancing around a boiling cauldron in the middle of a forest under the glow of a full moon .  they beckon the names of men as the targets of their love spells .  then one of the girls lets her hair down and sheds her clothes .  not to be outdone in her quest to regain the attention of john proctor ( daniel day lewis ) , abigail ( winona ryder ) suddenly seizes a chicken , beats it against the ground and smears her face and lips with the fresh blood .  taking even adolescent hormone surges into account , surely this chicken-bashing bit is a bit excessive , especially for prim puritan sensibilities ?  surely to the puritan eye this is as close to a coven of witches as it gets ?  the crucible errs from the beginning and arthur miller's name should be summoned for blame here for the addition of the above scene to his screen adaptation of his play .  this is far from a harmless event , a bad start to an already shaky morality tale .  the play describes the film's opening scene during tense exchanges that makes one wonder about the veracity of both accusation and reply , and this adds to the play's charged atmosphere .  in the film , the opening scene becomes an unintentional pandora's box .  not only is credulity stretched but abigail's obsession is unfortunately spotlighted .  it positions the crucible more as a cautionary fable about obsessive and malevolent women than against witch hunts ; it will bring back the memory of a rabbit boiling away in a pot .  not surprisingly , the nighttime forest frenzy does not go unnoticed and when two girls fail to wake the following morning , witches are invoked by those eager to blame .  when the girls are questioned , their confession of guilt is accompanied with an announcement of their return to god and they are thereafter converted to immaculate witnesses , led lustfully by abigail .  with alarming synchronicity our hormonally-advantaged girls zealously gesture and point accusing fingers at innocents , constant reminders that abigail's passion sets all this into inexorable motion .  abigail seizes on this opportunity to rid herself of her rival for john proctor's love , his wife elizabeth ( joan allen ) , by including her among those accused of witchcraft .  appropriately narrow-waisted and equipped with a distractingly white smile ( watch his teeth deteriorate much too quickly to a murky yellow ) , day lewis plays the dashing moral hero with an over-earnestness that longs to be watched .  director nicholas hytner is guilty of encouraging day lewis' foaming-mouth fervour with shots where we stare up at proctor as if he was mounted on a pedestal for our admiration .  otherwise , hytner's direction is unremarkable .  ryder's performance as abigail is as consistent as her mood swings .  her fits of frenzy are energetic enough but the quieter moments are less successful .  abigail supposedly revels in her newfound power , but ryder fails at being convincingly haughty although there is much haughtiness to spare here .  paul scofield is fine as the overzealous judge danforth , but the incessant moral posturings of all the characters along with the recurrent histrionics of the young girls pricks at the nerves .  probably because she is the only refuge of restraint amidst all the huffing and puffing , allen's elizabeth comes out as the most sympathetic character .  a scene near the end featuring a private conversation between the imprisoned elizabeth and john is undeniably powerful because for once we are given a reprieve from the moral bantering and the human consequences are revealed .  unfortunately , when john's audience again increases to more than one his urge to pontificate returns and the human urgency of his situation is lost .  it is clear that miller meant well but i do wish he did it with more delicacy and fewer diversions .  his screenplay is an imperfect creature with the distractions coming out as loud as the message .  the result is a clumsy muddle - i felt like the chicken from the opening scene , head ceaselessly banged with piousness too heavy-handed to be wholly believable .  when the gallows beckoned , it was sweet release indeed .  far from bewitching , the crucible tests the patience . "
 
 ```r
 filter(df, id == 728) %>% pull(texto) #negativa
 ```
 
-[1] "Review  girl 6 is , in a word , a mess .  Review  i was never able to determine what spike lee was trying to accomplish with this film .  Review  there was no sense of where the film was going , or any kind of coherent narrative .  Review  if there was a point to the film , i missed it .  Review  girl 6 , by the way , is the way theresa randle's character is addressed in the phone sex workplace ; all the girls are known by their numbers .  Review  the plot , such as it is : theresa randle is a struggling n . y . actress , and eventually takes a job as a phone-sex operator .  Review  she begins to lose contact with reality , as her job consumes her .  Review  also , she must deal with the advances of her ex-husband ( isiah washington ) .  Review  he is an ex- con thief , and she tries to keep him away , while at the same time , it's clear that she still harbors feelings for him .  Review  her neighbor , jimmy ( spike lee ) functions as the observer ; mediating between the ex- husband and girl 6 .  Review  he also functions as a point of stability , as he watches her become seduced by the lurid world of phone sex .  Review  the soundtrack , consisting of songs by prince , was jarring .  Review  it kept taking my attention from the film - not altogether a bad thing , i'll grant you , as what was transpiring onscreen wasn't that riveting .  Review  for parts of the middle of the film , the music stayed blissfully in the background .  Review  in the opening sequence and one scene later in the film , however , the music was particularly loud and distracting .  Review  of course , i've never really cared for prince's ( or tafkap if you like ) music .  Review  prince fans might love the soundtrack , but it will probably be distracting , even to die-hard fans .  Review  of the performances , the only one that stood out was spike lee's buddy character , jimmy .  Review  he was excellent as the always-broke neighbor of girl 6 .  Review  he should have stuck to acting in this film .  Review  there are several sequences that gave me the impression that he'd like to be oliver stone when he grows up .  Review  there are scenes shot with different types of film , which are purposely grainy , and reminiscent of some of the scenes in oliver stone's natural born killers .  Review  in that film , they worked to propel the narrative .  Review  in this film , they just made me more confused .  Review  there are some amusing moments , and a few insights into the lives of the women who use their voices to make the phone-sex industry the multi-billion dollar industry that it has become .  Review  other than that , though , nothing much happens .  Review  there are a few intense moments , as when one caller becomes frightening , but even that is rather lackluster .  Review  i'm not the biggest fan of spike lee , though i'd agree that he has done some very good work in the past .  Review  in girl 6 , though , he seems to be floundering .  Review  he had an interesting idea , a fairly good setup , and seemed to wander aimlessly from there .  Review  girl 6 earns a grade of d . "
+[1] "Review  girl 6 is , in a word , a mess .  i was never able to determine what spike lee was trying to accomplish with this film .  there was no sense of where the film was going , or any kind of coherent narrative .  if there was a point to the film , i missed it .  girl 6 , by the way , is the way theresa randle's character is addressed in the phone sex workplace ; all the girls are known by their numbers .  the plot , such as it is : theresa randle is a struggling n . y . actress , and eventually takes a job as a phone-sex operator .  she begins to lose contact with reality , as her job consumes her .  also , she must deal with the advances of her ex-husband ( isiah washington ) .  he is an ex- con thief , and she tries to keep him away , while at the same time , it's clear that she still harbors feelings for him .  her neighbor , jimmy ( spike lee ) functions as the observer ; mediating between the ex- husband and girl 6 .  he also functions as a point of stability , as he watches her become seduced by the lurid world of phone sex .  the soundtrack , consisting of songs by prince , was jarring .  it kept taking my attention from the film - not altogether a bad thing , i'll grant you , as what was transpiring onscreen wasn't that riveting .  for parts of the middle of the film , the music stayed blissfully in the background .  in the opening sequence and one scene later in the film , however , the music was particularly loud and distracting .  of course , i've never really cared for prince's ( or tafkap if you like ) music .  prince fans might love the soundtrack , but it will probably be distracting , even to die-hard fans .  of the performances , the only one that stood out was spike lee's buddy character , jimmy .  he was excellent as the always-broke neighbor of girl 6 .  he should have stuck to acting in this film .  there are several sequences that gave me the impression that he'd like to be oliver stone when he grows up .  there are scenes shot with different types of film , which are purposely grainy , and reminiscent of some of the scenes in oliver stone's natural born killers .  in that film , they worked to propel the narrative .  in this film , they just made me more confused .  there are some amusing moments , and a few insights into the lives of the women who use their voices to make the phone-sex industry the multi-billion dollar industry that it has become .  other than that , though , nothing much happens .  there are a few intense moments , as when one caller becomes frightening , but even that is rather lackluster .  i'm not the biggest fan of spike lee , though i'd agree that he has done some very good work in the past .  in girl 6 , though , he seems to be floundering .  he had an interesting idea , a fairly good setup , and seemed to wander aimlessly from there .  girl 6 earns a grade of d . "
 
 Algunos de los errores son difíciles (por ejemplo, una reseña que dice que
 la película es tan mala que es buena). Otros quizá podemos hacer algo con nuestro
@@ -1013,20 +1013,20 @@ vocabulario_bigramas %>% arrange(desc(frec))
 ```
 
 ```
-## # A tibble: 501 x 2
-##       palabra  frec
-##         <chr> <int>
-##  1     of the  6980
-##  2 review the  6423
-##  3     in the  4598
-##  4   the film  3167
-##  5       is a  2321
-##  6      to be  2218
-##  7     to the  2180
-##  8    and the  2018
-##  9       in a  1755
-## 10     on the  1755
-## # ... with 491 more rows
+## # A tibble: 509 x 2
+##      palabra  frec
+##        <chr> <int>
+##  1    of the  6984
+##  2    in the  4609
+##  3  the film  3167
+##  4      is a  2325
+##  5     to be  2218
+##  6    to the  2187
+##  7   and the  2019
+##  8    on the  1780
+##  9      in a  1756
+## 10 the movie  1580
+## # ... with 499 more rows
 ```
 
 ```r
@@ -1034,20 +1034,20 @@ vocabulario_bigramas %>% arrange((frec))
 ```
 
 ```
-## # A tibble: 501 x 2
-##          palabra  frec
-##            <chr> <int>
-##  1       i'm not   133
-##  2 the beginning   133
-##  3   the opening   133
-##  4     their own   133
-##  5       what he   133
-##  6  world review   133
-##  7      and some   134
-##  8   directed by   134
-##  9        he can   134
-## 10       none of   134
-## # ... with 491 more rows
+## # A tibble: 509 x 2
+##            palabra  frec
+##              <chr> <int>
+##  1         and one   117
+##  2          are so   117
+##  3      decides to   117
+##  4        for some   117
+##  5      might have   117
+##  6        piece of   117
+##  7          sci fi   117
+##  8 science fiction   117
+##  9        that his   117
+## 10        the case   117
+## # ... with 499 more rows
 ```
 
 
@@ -1066,11 +1066,11 @@ mod_bigramas <- correr_modelo_cv(df_ent_grande, df_pr, vocabulario_bigramas,
 <img src="10-diag-mejora_files/figure-html/unnamed-chunk-38-1.png" width="672" />
 
 ```
-## [1] "Lambda min: 0.0111089965382423"
-## [1] "Error entrenamiento: 0.19"
-## [1] "Error prueba: 0.31"
-## [1] "Devianza entrena:0.94"
-## [1] "Devianza prueba:1.175"
+## [1] "Lambda min: 0.0122773399030684"
+## [1] "Error entrenamiento: 0.2"
+## [1] "Error prueba: 0.3"
+## [1] "Devianza entrena:0.979"
+## [1] "Devianza prueba:1.213"
 ```
 
 Este resultado no es tan malo. Podemos intentar construir un modelo juntando unigramas
@@ -1098,7 +1098,7 @@ mean(preds_ent != mod_x$entrena$y)
 ```
 
 ```
-## [1] 0.02857143
+## [1] 0.02730159
 ```
 
 ```r
@@ -1107,7 +1107,7 @@ mean(preds_1 != mod_x$prueba$y)
 ```
 
 ```
-## [1] 0.1717647
+## [1] 0.1670588
 ```
 
 #### Ejemplo (opcional)
