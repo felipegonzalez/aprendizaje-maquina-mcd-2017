@@ -277,7 +277,9 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="11.1.9" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#relaciones-lineal"><i class="fa fa-check"></i><b>11.1.9</b> Relaciones lineal</a></li>
 <li class="chapter" data-level="11.1.10" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#ventajas-y-desventajas-de-arboles"><i class="fa fa-check"></i><b>11.1.10</b> Ventajas y desventajas de árboles</a></li>
 </ul></li>
-<li class="chapter" data-level="11.2" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#bosques-aleatorios."><i class="fa fa-check"></i><b>11.2</b> Bosques aleatorios.</a></li>
+<li class="chapter" data-level="11.2" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#bosques-aleatorios."><i class="fa fa-check"></i><b>11.2</b> Bosques aleatorios.</a><ul>
+<li class="chapter" data-level="11.2.1" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#bagging-de-arboles"><i class="fa fa-check"></i><b>11.2.1</b> Bagging de árboles</a></li>
+</ul></li>
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Publicado con bookdown</a></li>
@@ -705,6 +707,29 @@ dat &lt;-<span class="st"> </span><span class="kw">data_frame</span>(<span class
 <li>Perturbar la muestra de entrenamiento de distintas maneras y producir árboles distintos (grandes). La perturbación más usada es tomar muestras bootstrap de los datos y ajustar un árbol a cada muestra bootstrap</li>
 <li>Promediar el resultado de todos estos árboles para hacer predicciones. El proceso de promediar reduce la varianza, sin tener pérdidas en sesgo.</li>
 </ul>
+<div id="bagging-de-arboles" class="section level3">
+<h3><span class="header-section-number">11.2.1</span> Bagging de árboles</h3>
+<p>La idea básica de bagging (<em>bootstrap aggregation</em>) es la siguiente:</p>
+<p>Consideramos el proceso <span class="math inline">\({\mathcal L} \to T_{\mathcal L}\)</span>, que representa el proceso de ajuste de un árbol <span class="math inline">\(T_{\mathcal L}\)</span> a partir de la muestra de entrenamiento <span class="math inline">\({\mathcal L}\)</span>. Si pudiéramos obtener distintas muestras de entrenamiento <span class="math display">\[{\mathcal L}_1, {\mathcal L}_2, \ldots, {\mathcal L}_B,\]</span> y supongamos que construimos los árboles (que suponemos de regresión) <span class="math display">\[T_1, T_2, \ldots, T_B,\]</span> Podríamos mejorar nuestras predicciones construyendo el árbol promedio <span class="math display">\[T(x) = \frac{1}{B}\sum_{i=b}^B  T_b (x)\]</span> ¿Por qué es mejor este árbol promedio que cualquiera de sus componentes? Veamos primero el sesgo. El valor esperado del árbol promedio es <span class="math display">\[E[T(x)] = \frac{1}{B}\sum_{i=b}^B  E[T_b (x)]\]</span> y como cada <span class="math inline">\(T_b(x)\)</span> se construye de la misma manera a partir de <span class="math inline">\({\mathcal L}_b\)</span>, y todas las muestras <span class="math inline">\({\mathcal L}_b\)</span> se extraen de la misma forma, todos los términos de la suma de la derecha son iguales: <span class="math display">\[E[T(x)] =  E[T_1 (x)],\]</span> lo que implica que el sesgo del promedio es igual al sesgo de un solo árbol (que es bajo, pues suponemos que los árboles son grandes).</p>
+<p>Ahora veamos la varianza,</p>
+<p><span class="math display">\[Var[T(x)] = \frac{1}{B^2}\sum_{i=b}^B  Var[T_b (x)],\]</span> pues las muestras<span class="math inline">\({\mathcal L}_b\)</span> se extraen <em>de manera independiente</em> (si esto no fuera cierto, entonces esta ecuación no es válida). Por las mismas razones que arriba, todos los términos de la derecha son iguales, y <span class="math display">\[Var[T(x)] = \frac{1}{B}\ Var[T_1 (x)]\]</span> de modo que la varianza del árbol promedio es mucho más chica que la varianza de un árbol dado (si <span class="math inline">\(B\)</span> es grande).</p>
+<p>Sin embargo, no podemos tomar muestras de entrenamiento repetidamente para ajustar estos árboles. ¿Cómo podemos simular extraer distintas muestras de entrenamiento? Sabemos que si tenemos una muestra de entrenamiento fija <span class="math inline">\({\mathcal L}\)</span>, podemos evaluar la variación de esta muestra tomando <strong>muestras bootstrap</strong> de <span class="math inline">\({\mathcal L}\)</span>, que denotamos por</p>
+<p><span class="math display">\[{\mathcal L}_1^*, {\mathcal L}_2^*, \ldots, {\mathcal L}_B^*,\]</span> si construimos los árboles (que suponemos de regresión) <span class="math display">\[T_1^*, T_2^*, \ldots, T_B^*,\]</span> podríamos mejorar nuestras predicciones construyendo el árbol promedio <span class="math display">\[T^*(x) = \frac{1}{B}\sum_{i=b}^B  T_b^* (x)\]</span> El argumento del sesgo aplica en este caso, pero el de la varianza no exactamente, pues las muestras bootstrap no son independientes (están correlacionadas a través de la muestra de entrenamiento de donde se obtuvieron),a pesar de que las muestras bootstrap se extraen de manera independiente de <span class="math inline">\({\mathcal L}\)</span>. De esta forma, no esperamos una reducción de varianza tan grande como en el caso de muestras independientes.</p>
+
+<div class="comentario">
+<p><strong>Bagging</strong> Sea <span class="math inline">\({\mathcal L} =\{(x^{(i)}, y^{(i)})\}_{i=1}^n\)</span> una muestra de entrenamiento, y sean <span class="math display">\[{\mathcal L}_1^*, {\mathcal L}_2^*, \ldots, {\mathcal L}_B^*,\]</span> muestras bootstrap de <span class="math inline">\({\mathcal L}\)</span> (muestreamos con reemplazo los <strong>pares</strong> <span class="math inline">\((x^{(i)}, y^{(i)})\)</span>, para obtener una muestra de tamaño <span class="math inline">\(n\)</span>).</p>
+<ol style="list-style-type: decimal">
+<li>Para cada muestra bootstrap construimos un árbol <span class="math display">\[{\mathcal L}_b^* \to T_b^*\]</span>.</li>
+<li>(Regresión) Promediamos árboles para reducir varianza <span class="math display">\[T^*(x) = \frac{1}{B}\sum_{i=b}^B  T_b^*(x)\]</span></li>
+<li>(Clasificación) Tomamos votos sobre todos los árboles: <span class="math display">\[T^*(x) = argmax_g \{ \# \{i|T_b^*(x)=g\}\}.\]</span> Podemos también calcular probabilidades promedio sobre todos los árboles.</li>
+</ol>
+Bagging muchas veces reduce el error de predicción gracias a una reducción modesta de varianza.
+</div>
+
+<p><strong>Nota</strong>: No hay garantía de bagging reduzca el error de entrenamiento, especialmente si los árboles base son muy malos clasificadores ¿Puedes pensar en un ejemplo donde empeora?</p>
+<div id="ejemplo-42" class="section level4 unnumbered">
+<h4>Ejemplo</h4>
+<p>Probemos con el ejemplo de spam.</p>
 
 <div id="refs" class="references">
 <div>
@@ -721,6 +746,8 @@ dat &lt;-<span class="st"> </span><span class="kw">data_frame</span>(<span class
 </div>
 <div>
 <p>Srivastava, Nitish, Geoffrey Hinton, Alex Krizhevsky, Ilya Sutskever, and Ruslan Salakhutdinov. 2014. “Dropout: A Simple Way to Prevent Neural Networks from Overfitting.” <em>J. Mach. Learn. Res.</em> 15 (1). JMLR.org: 1929–58. <a href="http://dl.acm.org/citation.cfm?id=2627435.2670313" class="uri">http://dl.acm.org/citation.cfm?id=2627435.2670313</a>.</p>
+</div>
+</div>
 </div>
 </div>
 </div>

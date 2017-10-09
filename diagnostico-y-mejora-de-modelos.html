@@ -277,7 +277,9 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="11.1.9" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#relaciones-lineal"><i class="fa fa-check"></i><b>11.1.9</b> Relaciones lineal</a></li>
 <li class="chapter" data-level="11.1.10" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#ventajas-y-desventajas-de-arboles"><i class="fa fa-check"></i><b>11.1.10</b> Ventajas y desventajas de árboles</a></li>
 </ul></li>
-<li class="chapter" data-level="11.2" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#bosques-aleatorios."><i class="fa fa-check"></i><b>11.2</b> Bosques aleatorios.</a></li>
+<li class="chapter" data-level="11.2" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#bosques-aleatorios."><i class="fa fa-check"></i><b>11.2</b> Bosques aleatorios.</a><ul>
+<li class="chapter" data-level="11.2.1" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#bagging-de-arboles"><i class="fa fa-check"></i><b>11.2.1</b> Bagging de árboles</a></li>
+</ul></li>
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Publicado con bookdown</a></li>
@@ -601,7 +603,7 @@ Refinar el pipeline para producir mejores entradas, o corridas más rápidas, ge
 ## 20      werewolf    18</code></pre>
 <p>Este vocabulario parece que puede ser más útil. Vamos a tener que ajustar la regularización de nuevo (y también el número de entradas). Nota: este proceso también lo podemos hacer con cv.glmnet de manera más rápida.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mod_x &lt;-<span class="st"> </span><span class="kw">correr_modelo_cv</span>(df_ent, df_pr, vocabulario, 
-                          <span class="dt">lambda =</span> <span class="kw">exp</span>(<span class="kw">seq</span>(<span class="op">-</span><span class="dv">10</span>,<span class="dv">2</span>,<span class="fl">0.1</span>)))</code></pre></div>
+                          <span class="dt">lambda =</span> <span class="kw">exp</span>(<span class="kw">seq</span>(<span class="op">-</span><span class="dv">10</span>,<span class="dv">5</span>,<span class="fl">0.1</span>)))</code></pre></div>
 <pre><code>## Joining, by = &quot;palabra&quot;
 ## Joining, by = &quot;palabra&quot;</code></pre>
 <p><img src="10-diag-mejora_files/figure-html/unnamed-chunk-21-1.png" width="672" /></p>
@@ -613,17 +615,17 @@ Refinar el pipeline para producir mejores entradas, o corridas más rápidas, ge
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#mod_x &lt;- correr_modelo(df_ent, df_pr, vocabulario, lambda =1)</span>
 <span class="co">#mod_x &lt;- correr_modelo(df_ent, df_pr, vocabulario, lambda =0.1)</span>
 <span class="co">#mod_x &lt;- correr_modelo(df_ent, df_pr, vocabulario, lambda =0.01)</span></code></pre></div>
-<p>No estamos mejorando. Podemos intentar con un número diferente de entradas (menos, pues nuestro problema es varianza):</p>
+<p>No estamos mejorando. Podemos intentar con un número diferente de entradas:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vocabulario &lt;-<span class="st"> </span><span class="kw">calc_vocabulario</span>(df_ent, <span class="dv">4000</span>, <span class="dt">remove_stop =</span> <span class="ot">TRUE</span>)
-mod_x &lt;-<span class="st"> </span><span class="kw">correr_modelo_cv</span>(df_ent, df_pr, vocabulario, <span class="dt">lambda =</span> <span class="kw">exp</span>(<span class="kw">seq</span>(<span class="op">-</span><span class="dv">10</span>,<span class="dv">2</span>,<span class="fl">0.1</span>)))</code></pre></div>
+mod_x &lt;-<span class="st"> </span><span class="kw">correr_modelo_cv</span>(df_ent, df_pr, vocabulario, <span class="dt">lambda =</span> <span class="kw">exp</span>(<span class="kw">seq</span>(<span class="op">-</span><span class="dv">10</span>,<span class="dv">5</span>,<span class="fl">0.1</span>)))</code></pre></div>
 <pre><code>## Joining, by = &quot;palabra&quot;
 ## Joining, by = &quot;palabra&quot;</code></pre>
 <p><img src="10-diag-mejora_files/figure-html/unnamed-chunk-22-1.png" width="672" /></p>
-<pre><code>## [1] &quot;Lambda min: 7.38905609893065&quot;
-## [1] &quot;Error entrenamiento: 0.02&quot;
-## [1] &quot;Error prueba: 0.24&quot;
-## [1] &quot;Devianza entrena:1.007&quot;
-## [1] &quot;Devianza prueba:1.223&quot;</code></pre>
+<pre><code>## [1] &quot;Lambda min: 29.964100047397&quot;
+## [1] &quot;Error entrenamiento: 0.04&quot;
+## [1] &quot;Error prueba: 0.25&quot;
+## [1] &quot;Devianza entrena:1.252&quot;
+## [1] &quot;Devianza prueba:1.322&quot;</code></pre>
 <p>Y parece que nuestra estrategia no está funcionando muy bien. Regresamos a nuestro modelo con ridge</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vocabulario &lt;-<span class="st"> </span><span class="kw">calc_vocabulario</span>(df_ent, <span class="dv">3000</span>, <span class="dt">remove_stop =</span> <span class="ot">FALSE</span>)
 mod_x &lt;-<span class="st"> </span><span class="kw">correr_modelo_cv</span>(df_ent, df_pr, vocabulario, <span class="dt">lambda =</span> <span class="kw">exp</span>(<span class="kw">seq</span>(<span class="op">-</span><span class="dv">5</span>,<span class="dv">2</span>,<span class="fl">0.1</span>)))</code></pre></div>

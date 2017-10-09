@@ -545,7 +545,7 @@ este proceso también lo podemos hacer con cv.glmnet de manera más rápida.
 
 ```r
 mod_x <- correr_modelo_cv(df_ent, df_pr, vocabulario, 
-                          lambda = exp(seq(-10,2,0.1)))
+                          lambda = exp(seq(-10,5,0.1)))
 ```
 
 ```
@@ -569,12 +569,11 @@ mod_x <- correr_modelo_cv(df_ent, df_pr, vocabulario,
 #mod_x <- correr_modelo(df_ent, df_pr, vocabulario, lambda =0.01)
 ```
 
-No estamos mejorando. Podemos intentar con un número diferente de entradas (menos,
-pues nuestro problema es varianza):
+No estamos mejorando. Podemos intentar con un número diferente de entradas:
 
 ```r
 vocabulario <- calc_vocabulario(df_ent, 4000, remove_stop = TRUE)
-mod_x <- correr_modelo_cv(df_ent, df_pr, vocabulario, lambda = exp(seq(-10,2,0.1)))
+mod_x <- correr_modelo_cv(df_ent, df_pr, vocabulario, lambda = exp(seq(-10,5,0.1)))
 ```
 
 ```
@@ -585,11 +584,11 @@ mod_x <- correr_modelo_cv(df_ent, df_pr, vocabulario, lambda = exp(seq(-10,2,0.1
 <img src="10-diag-mejora_files/figure-html/unnamed-chunk-22-1.png" width="672" />
 
 ```
-## [1] "Lambda min: 7.38905609893065"
-## [1] "Error entrenamiento: 0.02"
-## [1] "Error prueba: 0.24"
-## [1] "Devianza entrena:1.007"
-## [1] "Devianza prueba:1.223"
+## [1] "Lambda min: 29.964100047397"
+## [1] "Error entrenamiento: 0.04"
+## [1] "Error prueba: 0.25"
+## [1] "Devianza entrena:1.252"
+## [1] "Devianza prueba:1.322"
 ```
 
 Y parece que nuestra estrategia no está funcionando muy bien.
