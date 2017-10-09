@@ -67,7 +67,7 @@ tokenizar_datos <- function(df, vocabulario, stem=FALSE, bigrams = FALSE){
   }
   df_frecs <- df_frecs %>%
     group_by(id, palabra, tipo) %>%
-    mutate(frec_doc = n())
+    summarise(frec_doc = n())
   df_frecs_filtrado <- full_join(df_frecs, vocabulario) %>% 
     select(-frec) %>%
     inner_join(vocabulario %>% select(palabra), by = c('palabra')) 
