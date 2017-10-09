@@ -279,7 +279,7 @@ head(calc_vocabulario(df_ent, 100, remove_stop = TRUE))
 
 
 ```{r}
-vocabulario <- calc_vocabulario(df_ent, 3000, remove_stop = TRUE)
+vocabulario <- calc_vocabulario(df_ent, 2000, remove_stop = TRUE)
 head(vocabulario %>% arrange(desc(frec)),20)
 tail(vocabulario %>% arrange(desc(frec)),20)
 ```
@@ -290,7 +290,8 @@ este proceso también lo podemos hacer con cv.glmnet de manera más rápida.
 
 
 ```{r}
-mod_x <- correr_modelo_cv(df_ent, df_pr, vocabulario, lambda = exp(seq(-10,2,0.1)))
+mod_x <- correr_modelo_cv(df_ent, df_pr, vocabulario, 
+                          lambda = exp(seq(-10,2,0.1)))
 #mod_x <- correr_modelo(df_ent, df_pr, vocabulario, lambda =1)
 #mod_x <- correr_modelo(df_ent, df_pr, vocabulario, lambda =0.1)
 #mod_x <- correr_modelo(df_ent, df_pr, vocabulario, lambda =0.01)
@@ -402,16 +403,33 @@ mod_x <- correr_modelo_cv(df_ent_grande, df_pr, voc, alpha=0, lambda = exp(seq(-
 Este camino no se ve mal, pero no hemos logrado mejoras. Aunque quizá valdría la pena
 intentar refinar más y ver qué pasa. 
 
-## Análisis de errores
+## Examen de modelo y Análisis de errores
 
 
-Ahora podemos ver qué errores estamos cometiendo. Busquemos los peores. Corremos el mejor
+
+
+
+
+
+Ahora podemos ver qué errores estamos cometiendo, y cómo está funcionando el modelo. Busquemos los peores. Corremos el mejor
 modelo hasta ahora:
 
 ```{r}
 vocabulario <- calc_vocabulario(df_ent_grande, 4000, remove_stop = FALSE)
 mod_x <- correr_modelo_cv(df_ent_grande, df_pr, vocabulario, lambda = exp(seq(-5,2,0.1)))
 ```
+
+```{r}
+coeficientes <- predict(mod_x$mod, lambda = 'lambda.min', type = 'coefficients') 
+coef_df <- data_frame(palabra = rownames(coeficientes),
+                      coef = coeficientes[,1])
+arrange(coef_df, coef) %>% print(n=20)
+arrange(coef_df, desc(coef)) %>% print(n=20)
+
+```
+
+
+
 
 Y busquemos las diferencias más grandes del la probabilidad ajustada con la
 clase observada

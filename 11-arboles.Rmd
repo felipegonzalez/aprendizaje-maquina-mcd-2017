@@ -20,7 +20,8 @@ knitr::include_graphics('./imagenes/arboles_1.png')
 - Nótese que los árboles pueden capturar interacciones entre las
 variables de entradas. En nuestro ejemplo ficticio, "automóvil" nos
 da información acerca del ingreso, pero solo caundo el nivel de educación
-del jefe de familia es bajo.
+del jefe de familia es bajo. (Ejercicio: si el ingreso fuera una cantidad numérica, ¿cómo escribirías este modelo con una suma
+de términos que involucren las variables mostradas en el diagrama?)
 - Árboles también pueden aproximar relaciones no lineales entre entradas
 y variable de salida (es similar a los ejemplos donde haciamos categorización
 de variables de entrada).
@@ -50,25 +51,25 @@ Para definir el proceso de construcción de los árboles, debemos definir:
 más puros (que una sola clase domine).
 2. ¿Cuándo declarar a un nodo como terminal? ¿Cuándo particionar más profundamente? Idea: dependiendo de la aplicación, buscamos hacer árboles
 chicos, o en otras árboles grandes que después podamos para no sobreajustar.
-3. ¿Cómo hacer predicciones en nodos terminales? IDea: escoger la clase más
+3. ¿Cómo hacer predicciones en nodos terminales? Idea: escoger la clase más
 común en cada nodo terminal (la de máxima probabilidad).
 
 
-### Reglas de partición
+### Tipos de partición
 
 Supongamos que tenemos variables de entrada $(X_1,\ldots, X_p)$. Recursivamente
-particionamos cada nodo escogiendo entre particiones talques que:
+particionamos cada nodo escogiendo entre particiones tales que:
 
 - Dependen de una sola variable de entrada $X_i$
 - Si $X_i$ es continua, la partición es de la forma $\{X_i\leq c\},\{X_i> c\}$,
 para alguna $c$ (punto de corte)
 - Si $X_i$ es categórica, la partición es de la forma
 $\{X_i\in S\},\{X_i\notin S\}$, para algún subconjunto $S$ de categorías de $X_i$.
-- En cada nodo candidatos, escogemos uno de estos cortes para particionar.
+- En cada nodo candidato, escogemos uno de estos cortes para particionar.
 
 ¿Cómo escogemos la partición en cada nodo? En cada nodo, la partición
 se escoge de una manera miope o local, intentando separar las
-calses lo mejor que se pueda (sin considerar qué pasa en cortes hechos
+clases lo mejor que se pueda (sin considerar qué pasa en cortes hechos
 más adelante). En un nodo dado, escogemos la partición que 
 **reduce lo más posible su impureza**:
 
@@ -84,9 +85,10 @@ Este medida se llama entropía. Hay otras posibilidades como medida
 de impureza (por ejemplo, coeficiente de Gini).
 ```
 
+
 #### Ejemplo
 Graficamos la medida de impureza para dos clases:
-```{r}
+```{r, fig.width=5}
 impureza <- function(p){
   -(p*log(p) + (1-p)*log(1-p))
 }
@@ -95,7 +97,10 @@ curve(impureza, 0,1)
 
 Donde vemos que la máxima impureza se alcanza cuando las proporciones de 
 clase en un nodo so 50-50, y la mínima impureza (máxima pureza) se alcanza
-cuando en el nodo solo hay casos de una clase. 
+cuando en el nodo solo hay casos de una clase. Nótese que esta cantidad es proporcional a la devianza del nodo, donde tenemos porbabilidad constante de clase 1 igual a $p$.
+
+
+
 
 ### Reglas de partición y tamaño del árobl
 
@@ -103,10 +108,50 @@ Podemos escribir la regla de partición, que se aplica a cada nodo de un árbol
 
 ```{block2, type='comentario'}
 **Regla de partición**
-En cada nodo, buscamos entre **todas** las variables $X_i$ y t **todos**
+En cada nodo, buscamos entre **todas** las variables $X_i$ y  **todos**
 los puntos de corte $c$ la que da la mayor reducción
-de impureza posible.
+de impureza posible (donde la impureza de un corte es el promedio
+ponderado por casos de las impurezas de los nodos resultantes).
 ```
+
+
+
+#### Ejemplo {-}
+Consideremos un nodo $t$, cuyos casos de entrenamiento son:
+```{r}
+n_t <- c(200,100, 150)
+impureza <- function(p){
+  -sum(p*log(p))
+}
+impureza(n_t/sum(n_t))
+
+```
+Y comparamos con
+```{r}
+n_t <- c(300,10, 140)
+impureza <- function(p){
+  p <- p[p>0]
+  -sum(p*log(p))
+}
+impureza(n_t/sum(n_t))
+```
+
+Ahora supongamos que tenemos un posible cortes, el primero
+resulta en
+```{r}
+n_t <- c(300,10, 140)
+n_1 = c(300,0,0)
+n_2 = c(0,10,140)
+(sum(n_1)/sum(n_t))*impureza(n_1/sum(n_1)) + (sum(n_2)/sum(n_t))*impureza(n_2/sum(n_2))
+```
+Un peor corte es:
+```{r}
+n_t <- c(300,10, 140)
+n_1 = c(200,0,40)
+n_2 = c(100,10,100)
+(sum(n_1)/sum(n_t))*impureza(n_1/sum(n_1)) + (sum(n_2)/sum(n_t))*impureza(n_2/sum(n_2))
+```
+
 
 Lo que resta explicar es qué criterio de paro utilizamos para dejar de particionar.
 
@@ -157,7 +202,13 @@ spam_tree_completo<-rpart(spam ~ ., data = spam_entrena, method = "class",
 prp(spam_tree_completo, type=4, extra=4)
 ```
 
-Podemos hacer predicciones con este árbol. Por ejemplo, en entrenamiento tenemos:
+Podemos examinar la parte de arriba del árbol:
+```{r}
+arbol.chico.1 <- prune(spam_tree_completo, cp=0.07)
+prp(arbol.chico.1, type = 4, extra = 4)
+```
+
+Podemos hacer predicciones con este árbol grande. Por ejemplo, en entrenamiento tenemos:
 
 ```{r}
 prop_clase <- predict(spam_tree_completo, newdata = spam_entrena)
@@ -191,7 +242,7 @@ en la muestra de entrenamiento, pero penaliza por el tamaño del árbol.
 
 Para escoger el tamaño del árbol correcto, definimos
 $T_\alpha \subset T$ como el subárbol de $T$ que
-minimiza la medidad $C_\alpha (T_\alpha)$.
+minimiza la medida $C_\alpha (T_\alpha)$.
 
 Para entender esta decisión, obsérvese que:
 
@@ -318,7 +369,7 @@ prp(arbol.chico.1, type = 4, extra = 4)
 ```{r}
 muestra.1 <- spam_entrena[sample(1:nrow(spam_entrena), nrow(spam_entrena), replace=T), ]
 spam.tree.completo.1 <-rpart(spam ~ ., data =  muestra.1, method = "class",
-                          control = control.completo)
+                          control = control_completo)
 arbol.chico.1 <- prune(spam.tree.completo.1, cp=0.03)
 prp(arbol.chico.1, type = 4, extra = 4)
 ```
@@ -351,7 +402,7 @@ Ventajas:
 3. Son robustos en el sentido de que
  - valores numéricos atípicos no hacen fallar al método
  - no es necesario transformar variables
- - hay formas fáciles de lididar con datos faltantes (cortes sucedáneos)
+ - hay formas fáciles de lidiar con datos faltantes (cortes sucedáneos)
 4. Se ajustan rápidamente yson relativamente fácilmente de interpretar (por ejemplo, son útiles para clasificar en campo)
 5. Árboles grandes generalmente no sufren de sesgo.
 
