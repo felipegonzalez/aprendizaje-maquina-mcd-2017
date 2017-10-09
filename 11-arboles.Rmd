@@ -353,18 +353,18 @@ prop.table(table((probs_clase[,2]>0.5),spam_prueba$spam),2)
 ```
 
 
+### Árboles para regresión
+
+Para problemas de regresión, el criterio de pureza y la predicción
+en cada nodo terminal es diferente:
+
+- En los nodos terminales usamos el promedio los casos de entrenamiento que caen en tal nodo (en lugar de la clase más común)
+- La impureza de define como varianza: si $t$ es un nodo, su impureza está dada por $\frac{1}{n(t)}\sum (y - m)^2, donde la suma es sobre los casos que están en el nodo y $m$ es la media de las $y$'s del nodo.
+
 ### Variabilidad en el proceso de construcción
 
-
-Existe variabilidad considerable en el proceso de división.  Por ejemplo:
-
-```{r}
-muestra.1 <- spam_entrena[sample(1:nrow(spam_entrena), nrow(spam_entrena), replace=T), ]
-spam.tree.completo.1 <-rpart(spam ~ ., data =  muestra.1, method = "class",
-                          control = control_completo)
-arbol.chico.1 <- prune(spam.tree.completo.1, cp=0.03)
-prp(arbol.chico.1, type = 4, extra = 4)
-```
+Existe variabilidad considerable en el proceso de división, lo cual
+es una debilidad de los árboles.  Por ejemplo:
 
 ```{r}
 muestra.1 <- spam_entrena[sample(1:nrow(spam_entrena), nrow(spam_entrena), replace=T), ]
@@ -374,7 +374,21 @@ arbol.chico.1 <- prune(spam.tree.completo.1, cp=0.03)
 prp(arbol.chico.1, type = 4, extra = 4)
 ```
 
-### Relación lineal
+```{r}
+muestra.1 <- spam_entrena[sample(1:nrow(spam_entrena), nrow(spam_entrena), replace=T), ]
+spam.tree.completo.1 <-rpart(spam ~ ., data =  muestra.1, method = "class",
+                          control = control_completo)
+arbol.chico.1 <- prune(spam.tree.completo.1, cp=0.03)
+prp(arbol.chico.1, type = 4, extra = 4)
+```
+
+Pequeñas diferencias en la muestra de entrenamiento produce
+distintas selecciones de variables y puntos de corte, y estructuras
+de árboles muchas veces distintas. Esto introduce varianza considerable
+en las predicciones.
+
+
+### Relaciones lineal
 
 Los árboles pueden requerir ser muy grandes para estimar apropiadamente
 relaciones lineales.
@@ -420,3 +434,18 @@ de árbol totalmente distintas).
 4. Adicoinalmente, no son apropiados cuando hay variables categóricas con 
 muchas niveles: en estos casos, el árbol sobreajusta desde los primeros
 cortes, y las predicciones son malas.
+
+
+## Bosques aleatorios.
+
+Bosques aleatorios es un método de predicción que utiliza familias de
+árboles para hacer predicciones.
+
+Los árboles grandes tienen la ventaja de tener sesgo bajo, pero sufren de varianza alta. Podemos explotar el sesgo bajo si logramos controlar la varianza. Una idea primera para lograr esto es es hacer
+*bagging* de árboles:
+
+- Perturbar la muestra de entrenamiento de distintas maneras y producir árboles distintos (grandes). La perturbación más usada es tomar muestras bootstrap de los datos y ajustar un árbol a cada muestra bootstrap
+- Promediar el resultado de todos estos árboles para hacer predicciones. El proceso de promediar reduce la varianza, sin tener pérdidas en sesgo.
+
+
+
