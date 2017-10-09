@@ -291,17 +291,16 @@ este proceso también lo podemos hacer con cv.glmnet de manera más rápida.
 
 ```{r}
 mod_x <- correr_modelo_cv(df_ent, df_pr, vocabulario, 
-                          lambda = exp(seq(-10,2,0.1)))
+                          lambda = exp(seq(-10,5,0.1)))
 #mod_x <- correr_modelo(df_ent, df_pr, vocabulario, lambda =1)
 #mod_x <- correr_modelo(df_ent, df_pr, vocabulario, lambda =0.1)
 #mod_x <- correr_modelo(df_ent, df_pr, vocabulario, lambda =0.01)
 ```
 
-No estamos mejorando. Podemos intentar con un número diferente de entradas (menos,
-pues nuestro problema es varianza):
+No estamos mejorando. Podemos intentar con un número diferente de entradas:
 ```{r}
 vocabulario <- calc_vocabulario(df_ent, 4000, remove_stop = TRUE)
-mod_x <- correr_modelo_cv(df_ent, df_pr, vocabulario, lambda = exp(seq(-10,2,0.1)))
+mod_x <- correr_modelo_cv(df_ent, df_pr, vocabulario, lambda = exp(seq(-10,5,0.1)))
 ```
 
 Y parece que nuestra estrategia no está funcionando muy bien.
