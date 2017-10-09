@@ -447,5 +447,80 @@ Los árboles grandes tienen la ventaja de tener sesgo bajo, pero sufren de varia
 - Perturbar la muestra de entrenamiento de distintas maneras y producir árboles distintos (grandes). La perturbación más usada es tomar muestras bootstrap de los datos y ajustar un árbol a cada muestra bootstrap
 - Promediar el resultado de todos estos árboles para hacer predicciones. El proceso de promediar reduce la varianza, sin tener pérdidas en sesgo.
 
+### Bagging de árboles
 
 
+La idea básica de bagging (*bootstrap aggregation*) es la siguiente:
+
+Consideramos el proceso ${\mathcal L} \to T_{\mathcal L}$, que representa
+el proceso de ajuste de un árbol $T_{\mathcal L}$ a partir de la muestra de entrenamiento ${\mathcal L}$.  Si pudiéramos obtener
+distintas muestras de entrenamiento
+$${\mathcal L}_1, {\mathcal L}_2, \ldots, {\mathcal L}_B,$$
+y supongamos que construimos los árboles (que suponemos de regresión)
+$$T_1, T_2, \ldots, T_B,$$
+Podríamos mejorar nuestras predicciones construyendo el
+árbol promedio
+$$T(x) = \frac{1}{B}\sum_{i=b}^B  T_b (x)$$
+¿Por qué es mejor este árbol promedio que cualquiera de sus componentes? Veamos primero el sesgo. El valor esperado del árbol
+promedio es
+$$E[T(x)] = \frac{1}{B}\sum_{i=b}^B  E[T_b (x)]$$
+y como cada $T_b(x)$ se construye de la misma manera a partir
+de ${\mathcal L}_b$, y todas las muestras ${\mathcal L}_b$ se 
+extraen de la misma forma, todos los términos de la suma de la derecha son iguales:
+$$E[T(x)] =  E[T_1 (x)],$$
+lo que implica que el sesgo del promedio es igual al sesgo de
+un solo árbol (que es bajo, pues suponemos que los árboles son grandes).
+
+
+Ahora veamos la varianza,
+
+$$Var[T(x)] = \frac{1}{B^2}\sum_{i=b}^B  Var[T_b (x)],$$
+pues las muestras${\mathcal L}_b$ se extraen *de manera independiente* (si esto no fuera cierto, entonces esta ecuación no es válida). Por las mismas razones que arriba, todos los términos de la derecha son iguales, y
+$$Var[T(x)] = \frac{1}{B}\ Var[T_1 (x)]$$
+de modo que la varianza del árbol promedio es mucho más chica
+que la varianza de un árbol dado (si $B$ es grande).
+
+Sin embargo, no podemos tomar muestras de entrenamiento repetidamente
+para ajustar estos árboles. ¿Cómo podemos simular extraer distintas
+muestras de entrenamiento? Sabemos que si tenemos una muestra de entrenamiento fija ${\mathcal L}$, podemos evaluar la variación
+de esta muestra tomando **muestras bootstrap** de ${\mathcal L}$,
+que denotamos por
+
+$${\mathcal L}_1^*, {\mathcal L}_2^*, \ldots, {\mathcal L}_B^*,$$
+si  construimos los árboles (que suponemos de regresión)
+$$T_1^*, T_2^*, \ldots, T_B^*,$$
+podríamos mejorar nuestras predicciones construyendo el
+árbol promedio
+$$T^*(x) = \frac{1}{B}\sum_{i=b}^B  T_b^* (x)$$
+El argumento del sesgo aplica en este caso, pero el de la varianza no
+exactamente, pues las muestras bootstrap no son independientes (están correlacionadas a través de la muestra de entrenamiento de donde se obtuvieron),a pesar de que las muestras bootstrap se extraen de manera independiente de ${\mathcal L}$. De  esta forma, no esperamos una
+reducción de varianza tan grande como en el caso de muestras independientes.
+
+
+```{block2, type='comentario'}
+**Bagging**
+Sea ${\mathcal L} =\{(x^{(i)}, y^{(i)})\}_{i=1}^n$ una muestra de entrenamiento, y sean 
+$${\mathcal L}_1^*, {\mathcal L}_2^*, \ldots, {\mathcal L}_B^*,$$
+ muestras bootstrap de ${\mathcal L}$ (muestreamos con reemplazo
+ los **pares** $(x^{(i)}, y^{(i)})$, para obtener una muestra de tamaño $n$).
+ 
+1. Para cada muestra bootstrap construimos un árbol
+ $${\mathcal L}_b^* \to T_b^*$$.
+2. (Regresión) Promediamos árboles para reducir varianza
+ $$T^*(x) = \frac{1}{B}\sum_{i=b}^B  T_b^*(x)$$
+3. (Clasificación) Tomamos votos sobre todos los árboles:
+ $$T^*(x) = argmax_g \{ \# \{i|T_b^*(x)=g\}\}.$$ Podemos
+ también calcular probabilidades promedio sobre todos
+ los árboles.
+
+Bagging muchas veces reduce el error de predicción gracias
+a una reducción modesta de varianza.
+```
+
+
+**Nota**: No hay garantía de bagging reduzca el error de entrenamiento, especialmente si los árboles base son muy
+malos clasificadores ¿Puedes pensar en un ejemplo donde empeora?
+
+
+#### Ejemplo {-}
+Probemos con el ejemplo de spam.
