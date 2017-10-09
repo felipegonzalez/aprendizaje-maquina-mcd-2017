@@ -324,6 +324,7 @@ problema de varianza o sesgo?
 Podemos hacer predicciones con un sólo árbol. En el caso de spam, haríamos
 
 ```{r}
+set.seed(9293) # para hacer reproducible la validación cruzada
 spam_tree <-rpart(spam ~ ., data = spam_entrena, 
                   method = "class", control=list(cp=0, 
                                               minsplit=5,minbucket=1))
@@ -341,7 +342,7 @@ Y usamos la regla de mínimo error o a una desviación estándar
 del error mínimo:
 
 ```{r}
-arbol_podado <- prune(spam_tree, cp =  0.00276396)
+arbol_podado <- prune(spam_tree, cp =  0.00130301)
 prp(arbol_podado)
 ```
 
@@ -368,6 +369,7 @@ Existe variabilidad considerable en el proceso de división, lo cual
 es una debilidad de los árboles.  Por ejemplo:
 
 ```{r}
+set.seed(9923)
 muestra.1 <- spam_entrena[sample(1:nrow(spam_entrena), nrow(spam_entrena), replace=T), ]
 spam.tree.completo.1 <-rpart(spam ~ ., data =  muestra.1, method = "class",
                           control = control_completo)
