@@ -503,11 +503,12 @@ spam_tree_completo&lt;-<span class="kw">rpart</span>(spam <span class="op">~</sp
 ##   TRUE    26 1172</code></pre>
 <p>y en prueba:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">prop_clase &lt;-<span class="st"> </span><span class="kw">predict</span>(spam_tree_completo, <span class="dt">newdata =</span> spam_prueba)
-<span class="kw">table</span>(prop_clase[,<span class="dv">2</span>]<span class="op">&gt;</span><span class="fl">0.5</span>, spam_prueba<span class="op">$</span>spam )</code></pre></div>
+tab_confusion &lt;-<span class="st"> </span><span class="kw">table</span>(prop_clase[,<span class="dv">2</span>]<span class="op">&gt;</span><span class="fl">0.5</span>, spam_prueba<span class="op">$</span>spam )
+<span class="kw">prop.table</span>(tab_confusion, <span class="dv">2</span>)</code></pre></div>
 <pre><code>##        
-##           0   1
-##   FALSE 839  68
-##   TRUE   88 539</code></pre>
+##                  0          1
+##   FALSE 0.90507012 0.11202636
+##   TRUE  0.09492988 0.88797364</code></pre>
 <p>Y notamos la brecha grande entre prueba y entrenamiento, lo que sugiere sobreajuste. Este árbol es demasiado grande.</p>
 </div>
 </div>
@@ -729,7 +730,46 @@ Bagging muchas veces reduce el error de predicción gracias a una reducción mod
 <p><strong>Nota</strong>: No hay garantía de bagging reduzca el error de entrenamiento, especialmente si los árboles base son muy malos clasificadores ¿Puedes pensar en un ejemplo donde empeora?</p>
 <div id="ejemplo-42" class="section level4 unnumbered">
 <h4>Ejemplo</h4>
-<p>Probemos con el ejemplo de spam.</p>
+<p>Probemos con el ejemplo de spam. Construimos árboles con muestras bootstrap de los datos originales de entrenamiento:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">muestra_bootstrap &lt;-<span class="st"> </span><span class="cf">function</span>(df){
+  df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">sample_n</span>(<span class="kw">nrow</span>(df), <span class="dt">replace =</span> <span class="ot">TRUE</span>)
+}
+arboles_bagged &lt;-<span class="st"> </span><span class="kw">lapply</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">30</span>, <span class="cf">function</span>(i){
+  muestra &lt;-<span class="st"> </span><span class="kw">muestra_bootstrap</span>(spam_entrena)
+  arbol &lt;-<span class="st"> </span><span class="kw">rpart</span>(spam <span class="op">~</span><span class="st"> </span>., <span class="dt">data =</span> muestra, 
+                  <span class="dt">method =</span> <span class="st">&quot;class&quot;</span>, <span class="dt">control=</span><span class="kw">list</span>(<span class="dt">cp=</span><span class="dv">0</span>, 
+                                              <span class="dt">minsplit=</span><span class="dv">5</span>,<span class="dt">minbucket=</span><span class="dv">1</span>))
+  arbol
+})</code></pre></div>
+<p>Examinemos la parte de arriba de algunos de estos árboles:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">prp</span>(<span class="kw">prune</span>(arboles_bagged[[<span class="dv">1</span>]], <span class="dt">cp =</span><span class="fl">0.01</span>))</code></pre></div>
+<p><img src="11-arboles_files/figure-html/unnamed-chunk-31-1.png" width="672" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">prp</span>(<span class="kw">prune</span>(arboles_bagged[[<span class="dv">2</span>]], <span class="dt">cp =</span><span class="fl">0.01</span>))</code></pre></div>
+<p><img src="11-arboles_files/figure-html/unnamed-chunk-31-2.png" width="672" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">prp</span>(<span class="kw">prune</span>(arboles_bagged[[<span class="dv">3</span>]], <span class="dt">cp =</span><span class="fl">0.01</span>))</code></pre></div>
+<p><img src="11-arboles_files/figure-html/unnamed-chunk-31-3.png" width="672" /> Ahora probemos hacer predicciones con los 30 árboles:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(purrr)
+preds_clase &lt;-<span class="st"> </span><span class="kw">lapply</span>(arboles_bagged, <span class="cf">function</span>(arbol){
+  preds &lt;-<span class="st"> </span><span class="kw">predict</span>(arbol, <span class="dt">newdata =</span> spam_prueba)[,<span class="dv">2</span>]
+})
+preds &lt;-<span class="st"> </span>preds_clase <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">reduce</span>(cbind)
+<span class="kw">dim</span>(preds)</code></pre></div>
+<pre><code>## [1] 1534   30</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">preds_bag &lt;-<span class="st"> </span><span class="kw">apply</span>(preds, <span class="dv">1</span>, mean)
+<span class="kw">prop.table</span>(<span class="kw">table</span>(preds_bag <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.5</span>, spam_prueba<span class="op">$</span>spam),<span class="dv">2</span>)</code></pre></div>
+<pre><code>##        
+##                  0          1
+##   FALSE 0.96224380 0.09555189
+##   TRUE  0.03775620 0.90444811</code></pre>
+<p>Y vemos que tenemos una mejora inmediata con respecto un sólo árbol grande (tanto un árbol grande como uno podado con costo-complejidad). El único costo es el cómputo adicional para procesar las muestras bootstrap</p>
+
+<div class="comentario">
+<ul>
+<li>¿Cuántas muestras bootstrap? Bagging generalmente funciona mejor cuando tomamos tantas muestras como sea razonable - aunque también es un parámetro que se puede afinar.</li>
+<li>Bagging por sí solo se usa rara vez. El método más potente es bosques aleatorios, donde e proceso básico es bagging de árboles, pero añadimos ruido adicional en la construcción de árboles.
+</div>
+</li>
+</ul>
 
 <div id="refs" class="references">
 <div>

@@ -312,14 +312,15 @@ y en prueba:
 
 ```r
 prop_clase <- predict(spam_tree_completo, newdata = spam_prueba)
-table(prop_clase[,2]>0.5, spam_prueba$spam )
+tab_confusion <- table(prop_clase[,2]>0.5, spam_prueba$spam )
+prop.table(tab_confusion, 2)
 ```
 
 ```
 ##        
-##           0   1
-##   FALSE 839  68
-##   TRUE   88 539
+##                  0          1
+##   FALSE 0.90507012 0.11202636
+##   TRUE  0.09492988 0.88797364
 ```
 Y notamos la brecha grande entre prueba y entrenamiento, lo que sugiere sobreajuste. Este árbol es demasiado grande.
 
@@ -726,4 +727,86 @@ malos clasificadores ¿Puedes pensar en un ejemplo donde empeora?
 
 
 #### Ejemplo {-}
-Probemos con el ejemplo de spam.
+Probemos con el ejemplo de spam. Construimos árboles con muestras bootstrap
+de los datos originales de entrenamiento:
+
+
+```r
+muestra_bootstrap <- function(df){
+  df %>% sample_n(nrow(df), replace = TRUE)
+}
+arboles_bagged <- lapply(1:30, function(i){
+  muestra <- muestra_bootstrap(spam_entrena)
+  arbol <- rpart(spam ~ ., data = muestra, 
+                  method = "class", control=list(cp=0, 
+                                              minsplit=5,minbucket=1))
+  arbol
+})
+```
+
+Examinemos la parte de arriba de algunos de estos árboles:
+
+
+```r
+prp(prune(arboles_bagged[[1]], cp =0.01))
+```
+
+<img src="11-arboles_files/figure-html/unnamed-chunk-31-1.png" width="672" />
+
+```r
+prp(prune(arboles_bagged[[2]], cp =0.01))
+```
+
+<img src="11-arboles_files/figure-html/unnamed-chunk-31-2.png" width="672" />
+
+```r
+prp(prune(arboles_bagged[[3]], cp =0.01))
+```
+
+<img src="11-arboles_files/figure-html/unnamed-chunk-31-3.png" width="672" />
+Ahora probemos hacer predicciones con los 30 árboles:
+
+
+```r
+library(purrr)
+preds_clase <- lapply(arboles_bagged, function(arbol){
+  preds <- predict(arbol, newdata = spam_prueba)[,2]
+})
+preds <- preds_clase %>% reduce(cbind)
+dim(preds)
+```
+
+```
+## [1] 1534   30
+```
+
+```r
+preds_bag <- apply(preds, 1, mean)
+prop.table(table(preds_bag > 0.5, spam_prueba$spam),2)
+```
+
+```
+##        
+##                  0          1
+##   FALSE 0.96224380 0.09555189
+##   TRUE  0.03775620 0.90444811
+```
+
+Y vemos que tenemos una mejora inmediata con respecto un sólo árbol
+grande (tanto un árbol grande como uno podado con costo-complejidad).
+El único costo es el cómputo adicional para procesar las muestras bootstrap
+
+
+\BeginKnitrBlock{comentario}<div class="comentario">
+- ¿Cuántas muestras bootstrap? Bagging generalmente funciona mejor
+cuando tomamos tantas muestras como sea razonable - aunque también es un 
+parámetro que se puede afinar.
+- Bagging por sí solo se usa rara vez. El método más potente es bosques aleatorios, donde e proceso
+básico es bagging de árboles, pero añadimos ruido adicional en la 
+construcción de árboles.</div>\EndKnitrBlock{comentario}
+
+
+
+
+
+
