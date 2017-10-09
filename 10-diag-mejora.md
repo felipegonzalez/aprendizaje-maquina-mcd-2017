@@ -556,11 +556,11 @@ mod_x <- correr_modelo_cv(df_ent, df_pr, vocabulario,
 <img src="10-diag-mejora_files/figure-html/unnamed-chunk-21-1.png" width="672" />
 
 ```
-## [1] "Lambda min: 0.165298888221587"
-## [1] "Error entrenamiento: 0.03"
-## [1] "Error prueba: 0.25"
-## [1] "Devianza entrena:0.745"
-## [1] "Devianza prueba:1.132"
+## [1] "Lambda min: 3.32011692273655"
+## [1] "Error entrenamiento: 0.04"
+## [1] "Error prueba: 0.26"
+## [1] "Devianza entrena:0.975"
+## [1] "Devianza prueba:1.222"
 ```
 
 ```r
@@ -584,11 +584,11 @@ mod_x <- correr_modelo_cv(df_ent, df_pr, vocabulario, lambda = exp(seq(-10,5,0.1
 <img src="10-diag-mejora_files/figure-html/unnamed-chunk-22-1.png" width="672" />
 
 ```
-## [1] "Lambda min: 0.272531793034013"
-## [1] "Error entrenamiento: 0.05"
-## [1] "Error prueba: 0.24"
-## [1] "Devianza entrena:0.947"
-## [1] "Devianza prueba:1.167"
+## [1] "Lambda min: 29.964100047397"
+## [1] "Error entrenamiento: 0.04"
+## [1] "Error prueba: 0.25"
+## [1] "Devianza entrena:1.252"
+## [1] "Devianza prueba:1.322"
 ```
 
 Y parece que nuestra estrategia no está funcionando muy bien.
@@ -608,11 +608,11 @@ mod_x <- correr_modelo_cv(df_ent, df_pr, vocabulario, lambda = exp(seq(-5,2,0.1)
 <img src="10-diag-mejora_files/figure-html/unnamed-chunk-23-1.png" width="672" />
 
 ```
-## [1] "Lambda min: 0.135335283236613"
-## [1] "Error entrenamiento: 0.01"
-## [1] "Error prueba: 0.21"
-## [1] "Devianza entrena:0.587"
-## [1] "Devianza prueba:1.051"
+## [1] "Lambda min: 3.00416602394643"
+## [1] "Error entrenamiento: 0.03"
+## [1] "Error prueba: 0.24"
+## [1] "Devianza entrena:0.841"
+## [1] "Devianza prueba:1.156"
 ```
 
 Podemos intentar aumentar el número de palabras y aumentar también la
@@ -632,11 +632,11 @@ mod_x <- correr_modelo_cv(df_ent, df_pr, vocabulario, lambda = exp(seq(-5,2,0.1)
 <img src="10-diag-mejora_files/figure-html/unnamed-chunk-24-1.png" width="672" />
 
 ```
-## [1] "Lambda min: 0.272531793034013"
-## [1] "Error entrenamiento: 0.06"
-## [1] "Error prueba: 0.22"
-## [1] "Devianza entrena:0.93"
-## [1] "Devianza prueba:1.138"
+## [1] "Lambda min: 7.38905609893065"
+## [1] "Error entrenamiento: 0.03"
+## [1] "Error prueba: 0.23"
+## [1] "Devianza entrena:1.003"
+## [1] "Devianza prueba:1.203"
 ```
 
 ## Consiguiendo más datos
@@ -664,11 +664,11 @@ mod_x <- correr_modelo_cv(df_ent_grande, df_pr, vocabulario, lambda = exp(seq(-5
 <img src="10-diag-mejora_files/figure-html/unnamed-chunk-26-1.png" width="672" />
 
 ```
-## [1] "Lambda min: 0.0672055127397498"
+## [1] "Lambda min: 0.367879441171442"
 ## [1] "Error entrenamiento: 0.01"
-## [1] "Error prueba: 0.16"
-## [1] "Devianza entrena:0.49"
-## [1] "Devianza prueba:0.833"
+## [1] "Error prueba: 0.2"
+## [1] "Devianza entrena:0.486"
+## [1] "Devianza prueba:0.906"
 ```
 
 Y ya casi logramos nuestro objetivo. Podemos intentar con más palabras
@@ -686,11 +686,11 @@ mod_x <- correr_modelo_cv(df_ent_grande, df_pr, vocabulario, lambda = exp(seq(-5
 <img src="10-diag-mejora_files/figure-html/unnamed-chunk-27-1.png" width="672" />
 
 ```
-## [1] "Lambda min: 0.100258843722804"
-## [1] "Error entrenamiento: 0.03"
-## [1] "Error prueba: 0.16"
-## [1] "Devianza entrena:0.61"
-## [1] "Devianza prueba:0.857"
+## [1] "Lambda min: 0.606530659712633"
+## [1] "Error entrenamiento: 0.01"
+## [1] "Error prueba: 0.17"
+## [1] "Devianza entrena:0.526"
+## [1] "Devianza prueba:0.896"
 ```
 
 
@@ -781,11 +781,11 @@ mod_x <- correr_modelo_cv(df_ent_grande, df_pr, voc_bing, alpha=0,
 <img src="10-diag-mejora_files/figure-html/unnamed-chunk-30-1.png" width="672" />
 
 ```
-## [1] "Lambda min: 0.0907179532894125"
-## [1] "Error entrenamiento: 0.07"
-## [1] "Error prueba: 0.16"
-## [1] "Devianza entrena:0.713"
-## [1] "Devianza prueba:0.902"
+## [1] "Lambda min: 0.496585303791409"
+## [1] "Error entrenamiento: 0.06"
+## [1] "Error prueba: 0.18"
+## [1] "Devianza entrena:0.736"
+## [1] "Devianza prueba:0.961"
 ```
 Estas variables solas no dan un resultado tan bueno (tenemos tanto sesgo
 como varianza altas). Podemos combinar:
@@ -813,11 +813,11 @@ mod_x <- correr_modelo_cv(df_ent_grande, df_pr, voc, alpha=0, lambda = exp(seq(-
 <img src="10-diag-mejora_files/figure-html/unnamed-chunk-31-1.png" width="672" />
 
 ```
-## [1] "Lambda min: 0.0907179532894125"
-## [1] "Error entrenamiento: 0.02"
-## [1] "Error prueba: 0.16"
-## [1] "Devianza entrena:0.561"
-## [1] "Devianza prueba:0.848"
+## [1] "Lambda min: 0.67032004603564"
+## [1] "Error entrenamiento: 0.01"
+## [1] "Error prueba: 0.17"
+## [1] "Devianza entrena:0.547"
+## [1] "Devianza prueba:0.911"
 ```
 
 Este camino no se ve mal, pero no hemos logrado mejoras. Aunque quizá valdría la pena
@@ -848,11 +848,11 @@ mod_x <- correr_modelo_cv(df_ent_grande, df_pr, vocabulario, lambda = exp(seq(-5
 <img src="10-diag-mejora_files/figure-html/unnamed-chunk-32-1.png" width="672" />
 
 ```
-## [1] "Lambda min: 0.100258843722804"
-## [1] "Error entrenamiento: 0.03"
-## [1] "Error prueba: 0.16"
-## [1] "Devianza entrena:0.61"
-## [1] "Devianza prueba:0.857"
+## [1] "Lambda min: 0.740818220681718"
+## [1] "Error entrenamiento: 0.02"
+## [1] "Error prueba: 0.17"
+## [1] "Devianza entrena:0.573"
+## [1] "Devianza prueba:0.914"
 ```
 
 
@@ -865,28 +865,28 @@ arrange(coef_df, coef) %>% print(n=20)
 
 ```
 ## # A tibble: 4,107 x 2
-##         palabra       coef
-##           <chr>      <dbl>
-##  1       forgot -0.4346788
-##  2    ludicrous -0.3636582
-##  3   ridiculous -0.3360632
-##  4     designed -0.3088795
-##  5    painfully -0.3020931
-##  6 embarrassing -0.2983859
-##  7       poorly -0.2818777
-##  8       sloppy -0.2728964
-##  9        inept -0.2624715
-## 10       wasted -0.2437314
-## 11      tedious -0.2399764
-## 12       asleep -0.2284533
-## 13    miserably -0.2271383
-## 14         lame -0.2268213
-## 15        awful -0.2239096
-## 16         mess -0.2175212
-## 17      frankly -0.2111228
-## 18    insulting -0.2101338
-## 19    profanity -0.2040561
-## 20  potentially -0.1945797
+##        palabra        coef
+##          <chr>       <dbl>
+##  1 (Intercept) -0.28900636
+##  2   ludicrous -0.11993381
+##  3      forgot -0.11559527
+##  4   miserably -0.10598781
+##  5  repetitive -0.10317123
+##  6      asleep -0.09743587
+##  7    designed -0.09428161
+##  8     frankly -0.09176484
+##  9    tiresome -0.09097330
+## 10   painfully -0.09000826
+## 11   insulting -0.08770382
+## 12 implausible -0.08318215
+## 13   cardboard -0.08107360
+## 14   redeeming -0.08054622
+## 15   slightest -0.08029741
+## 16      lethal -0.07775558
+## 17       inept -0.07671683
+## 18 potentially -0.07402287
+## 19       kicks -0.07391823
+## 20   profanity -0.07374146
 ## # ... with 4,087 more rows
 ```
 
@@ -896,28 +896,28 @@ arrange(coef_df, desc(coef)) %>% print(n=20)
 
 ```
 ## # A tibble: 4,107 x 2
-##          palabra      coef
-##            <chr>     <dbl>
-##  1   outstanding 0.3501122
-##  2   exceptional 0.2726056
-##  3        finest 0.2439879
-##  4      identify 0.2394560
-##  5   masterpiece 0.2124276
-##  6        beings 0.1963608
-##  7        mature 0.1928157
-##  8         ideal 0.1859262
-##  9    underneath 0.1755901
-## 10 appropriately 0.1627892
-## 11        allows 0.1617993
-## 12    satisfying 0.1534476
-## 13      deserves 0.1518495
-## 14     fantastic 0.1510698
-## 15       triumph 0.1467070
-## 16         notch 0.1352921
-## 17          fits 0.1335066
-## 18         eager 0.1297523
-## 19      portrait 0.1296417
-## 20       greater 0.1261349
+##          palabra       coef
+##            <chr>      <dbl>
+##  1   exceptional 0.10100076
+##  2        lesser 0.09812082
+##  3    underneath 0.09371545
+##  4       triumph 0.08363819
+##  5      identify 0.08277150
+##  6 appropriately 0.08116368
+##  7        enters 0.08086985
+##  8         ideal 0.08023261
+##  9   outstanding 0.07902024
+## 10        shines 0.07575683
+## 11          ease 0.07229817
+## 12        finest 0.07014397
+## 13        beings 0.06877740
+## 14      captures 0.06858859
+## 15     plausible 0.06818160
+## 16         notch 0.06814189
+## 17        nearby 0.06746912
+## 18          tiny 0.06601499
+## 19           gem 0.06419142
+## 20     threatens 0.06313503
 ## # ... with 4,087 more rows
 ```
 
@@ -940,18 +940,18 @@ df_1
 
 ```
 ## # A tibble: 425 x 4
-##       id     y       prob      error
-##    <chr> <dbl>      <dbl>      <dbl>
-##  1  1050     1 0.09369866  0.9063013
-##  2  1461     1 0.10300185  0.8969981
-##  3  1508     1 0.17324385  0.8267562
-##  4   123     0 0.79256610 -0.7925661
-##  5    11     0 0.76311071 -0.7631107
-##  6  1490     1 0.26305103  0.7369490
-##  7  1912     1 0.27211954  0.7278805
-##  8  1263     1 0.29277236  0.7072276
-##  9  1705     1 0.30351823  0.6964818
-## 10  1933     1 0.32399331  0.6760067
+##       id     y      prob      error
+##    <chr> <dbl>     <dbl>      <dbl>
+##  1   222     0 0.9767586 -0.9767586
+##  2  1461     1 0.1292236  0.8707764
+##  3  1050     1 0.1484240  0.8515760
+##  4  1490     1 0.2150220  0.7849780
+##  5  1508     1 0.2216865  0.7783135
+##  6  1960     1 0.2446289  0.7553711
+##  7  1933     1 0.2738587  0.7261413
+##  8    25     0 0.7198569 -0.7198569
+##  9  1447     1 0.3112285  0.6887715
+## 10  1306     1 0.3126126  0.6873874
 ## # ... with 415 more rows
 ```
 
@@ -1017,11 +1017,11 @@ mod_x <- correr_modelo_cv(df_ent_grande, df_pr, vocabulario, lambda = exp(seq(-5
 <img src="10-diag-mejora_files/figure-html/unnamed-chunk-36-1.png" width="672" />
 
 ```
-## [1] "Lambda min: 0.0907179532894125"
-## [1] "Error entrenamiento: 0.03"
-## [1] "Error prueba: 0.16"
-## [1] "Devianza entrena:0.578"
-## [1] "Devianza prueba:0.841"
+## [1] "Lambda min: 0.548811636094027"
+## [1] "Error entrenamiento: 0.01"
+## [1] "Error prueba: 0.18"
+## [1] "Devianza entrena:0.522"
+## [1] "Devianza prueba:0.896"
 ```
 
 ```r
@@ -1083,11 +1083,11 @@ mod_bigramas <- correr_modelo_cv(df_ent_grande, df_pr, vocabulario_bigramas,
 <img src="10-diag-mejora_files/figure-html/unnamed-chunk-37-1.png" width="672" />
 
 ```
-## [1] "Lambda min: 0.060810062625218"
-## [1] "Error entrenamiento: 0.17"
-## [1] "Error prueba: 0.32"
-## [1] "Devianza entrena:0.905"
-## [1] "Devianza prueba:1.159"
+## [1] "Lambda min: 0.0111089965382423"
+## [1] "Error entrenamiento: 0.19"
+## [1] "Error prueba: 0.31"
+## [1] "Devianza entrena:0.94"
+## [1] "Devianza prueba:1.175"
 ```
 
 Este resultado no es malo. Podemos intentar construir un modelo con unigramas

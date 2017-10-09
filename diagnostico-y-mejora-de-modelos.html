@@ -607,11 +607,11 @@ Refinar el pipeline para producir mejores entradas, o corridas más rápidas, ge
 <pre><code>## Joining, by = &quot;palabra&quot;
 ## Joining, by = &quot;palabra&quot;</code></pre>
 <p><img src="10-diag-mejora_files/figure-html/unnamed-chunk-21-1.png" width="672" /></p>
-<pre><code>## [1] &quot;Lambda min: 0.165298888221587&quot;
-## [1] &quot;Error entrenamiento: 0.03&quot;
-## [1] &quot;Error prueba: 0.25&quot;
-## [1] &quot;Devianza entrena:0.745&quot;
-## [1] &quot;Devianza prueba:1.132&quot;</code></pre>
+<pre><code>## [1] &quot;Lambda min: 3.32011692273655&quot;
+## [1] &quot;Error entrenamiento: 0.04&quot;
+## [1] &quot;Error prueba: 0.26&quot;
+## [1] &quot;Devianza entrena:0.975&quot;
+## [1] &quot;Devianza prueba:1.222&quot;</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#mod_x &lt;- correr_modelo(df_ent, df_pr, vocabulario, lambda =1)</span>
 <span class="co">#mod_x &lt;- correr_modelo(df_ent, df_pr, vocabulario, lambda =0.1)</span>
 <span class="co">#mod_x &lt;- correr_modelo(df_ent, df_pr, vocabulario, lambda =0.01)</span></code></pre></div>
@@ -621,33 +621,33 @@ mod_x &lt;-<span class="st"> </span><span class="kw">correr_modelo_cv</span>(df_
 <pre><code>## Joining, by = &quot;palabra&quot;
 ## Joining, by = &quot;palabra&quot;</code></pre>
 <p><img src="10-diag-mejora_files/figure-html/unnamed-chunk-22-1.png" width="672" /></p>
-<pre><code>## [1] &quot;Lambda min: 0.272531793034013&quot;
-## [1] &quot;Error entrenamiento: 0.05&quot;
-## [1] &quot;Error prueba: 0.24&quot;
-## [1] &quot;Devianza entrena:0.947&quot;
-## [1] &quot;Devianza prueba:1.167&quot;</code></pre>
+<pre><code>## [1] &quot;Lambda min: 29.964100047397&quot;
+## [1] &quot;Error entrenamiento: 0.04&quot;
+## [1] &quot;Error prueba: 0.25&quot;
+## [1] &quot;Devianza entrena:1.252&quot;
+## [1] &quot;Devianza prueba:1.322&quot;</code></pre>
 <p>Y parece que nuestra estrategia no está funcionando muy bien. Regresamos a nuestro modelo con ridge</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vocabulario &lt;-<span class="st"> </span><span class="kw">calc_vocabulario</span>(df_ent, <span class="dv">3000</span>, <span class="dt">remove_stop =</span> <span class="ot">FALSE</span>)
 mod_x &lt;-<span class="st"> </span><span class="kw">correr_modelo_cv</span>(df_ent, df_pr, vocabulario, <span class="dt">lambda =</span> <span class="kw">exp</span>(<span class="kw">seq</span>(<span class="op">-</span><span class="dv">5</span>,<span class="dv">2</span>,<span class="fl">0.1</span>)))</code></pre></div>
 <pre><code>## Joining, by = &quot;palabra&quot;
 ## Joining, by = &quot;palabra&quot;</code></pre>
 <p><img src="10-diag-mejora_files/figure-html/unnamed-chunk-23-1.png" width="672" /></p>
-<pre><code>## [1] &quot;Lambda min: 0.135335283236613&quot;
-## [1] &quot;Error entrenamiento: 0.01&quot;
-## [1] &quot;Error prueba: 0.21&quot;
-## [1] &quot;Devianza entrena:0.587&quot;
-## [1] &quot;Devianza prueba:1.051&quot;</code></pre>
+<pre><code>## [1] &quot;Lambda min: 3.00416602394643&quot;
+## [1] &quot;Error entrenamiento: 0.03&quot;
+## [1] &quot;Error prueba: 0.24&quot;
+## [1] &quot;Devianza entrena:0.841&quot;
+## [1] &quot;Devianza prueba:1.156&quot;</code></pre>
 <p>Podemos intentar aumentar el número de palabras y aumentar también la regularización</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vocabulario &lt;-<span class="st"> </span><span class="kw">calc_vocabulario</span>(df_ent, <span class="dv">4000</span>, <span class="dt">remove_stop =</span> <span class="ot">FALSE</span>)
 mod_x &lt;-<span class="st"> </span><span class="kw">correr_modelo_cv</span>(df_ent, df_pr, vocabulario, <span class="dt">lambda =</span> <span class="kw">exp</span>(<span class="kw">seq</span>(<span class="op">-</span><span class="dv">5</span>,<span class="dv">2</span>,<span class="fl">0.1</span>)))</code></pre></div>
 <pre><code>## Joining, by = &quot;palabra&quot;
 ## Joining, by = &quot;palabra&quot;</code></pre>
 <p><img src="10-diag-mejora_files/figure-html/unnamed-chunk-24-1.png" width="672" /></p>
-<pre><code>## [1] &quot;Lambda min: 0.272531793034013&quot;
-## [1] &quot;Error entrenamiento: 0.06&quot;
-## [1] &quot;Error prueba: 0.22&quot;
-## [1] &quot;Devianza entrena:0.93&quot;
-## [1] &quot;Devianza prueba:1.138&quot;</code></pre>
+<pre><code>## [1] &quot;Lambda min: 7.38905609893065&quot;
+## [1] &quot;Error entrenamiento: 0.03&quot;
+## [1] &quot;Error prueba: 0.23&quot;
+## [1] &quot;Devianza entrena:1.003&quot;
+## [1] &quot;Devianza prueba:1.203&quot;</code></pre>
 </div>
 <div id="consiguiendo-mas-datos" class="section level2">
 <h2><span class="header-section-number">10.6</span> Consiguiendo más datos</h2>
@@ -662,22 +662,22 @@ mod_x &lt;-<span class="st"> </span><span class="kw">correr_modelo_cv</span>(df_
 <pre><code>## Joining, by = &quot;palabra&quot;
 ## Joining, by = &quot;palabra&quot;</code></pre>
 <p><img src="10-diag-mejora_files/figure-html/unnamed-chunk-26-1.png" width="672" /></p>
-<pre><code>## [1] &quot;Lambda min: 0.0672055127397498&quot;
+<pre><code>## [1] &quot;Lambda min: 0.367879441171442&quot;
 ## [1] &quot;Error entrenamiento: 0.01&quot;
-## [1] &quot;Error prueba: 0.16&quot;
-## [1] &quot;Devianza entrena:0.49&quot;
-## [1] &quot;Devianza prueba:0.833&quot;</code></pre>
+## [1] &quot;Error prueba: 0.2&quot;
+## [1] &quot;Devianza entrena:0.486&quot;
+## [1] &quot;Devianza prueba:0.906&quot;</code></pre>
 <p>Y ya casi logramos nuestro objetivo. Podemos intentar con más palabras</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vocabulario &lt;-<span class="st"> </span><span class="kw">calc_vocabulario</span>(df_ent_grande, <span class="dv">4000</span>, <span class="dt">remove_stop =</span> <span class="ot">FALSE</span>)
 mod_x &lt;-<span class="st"> </span><span class="kw">correr_modelo_cv</span>(df_ent_grande, df_pr, vocabulario, <span class="dt">lambda =</span> <span class="kw">exp</span>(<span class="kw">seq</span>(<span class="op">-</span><span class="dv">5</span>,<span class="dv">2</span>,<span class="fl">0.1</span>)))</code></pre></div>
 <pre><code>## Joining, by = &quot;palabra&quot;
 ## Joining, by = &quot;palabra&quot;</code></pre>
 <p><img src="10-diag-mejora_files/figure-html/unnamed-chunk-27-1.png" width="672" /></p>
-<pre><code>## [1] &quot;Lambda min: 0.100258843722804&quot;
-## [1] &quot;Error entrenamiento: 0.03&quot;
-## [1] &quot;Error prueba: 0.16&quot;
-## [1] &quot;Devianza entrena:0.61&quot;
-## [1] &quot;Devianza prueba:0.857&quot;</code></pre>
+<pre><code>## [1] &quot;Lambda min: 0.606530659712633&quot;
+## [1] &quot;Error entrenamiento: 0.01&quot;
+## [1] &quot;Error prueba: 0.17&quot;
+## [1] &quot;Devianza entrena:0.526&quot;
+## [1] &quot;Devianza prueba:0.896&quot;</code></pre>
 <p>Y esto funcionó bien. Subir más la regularización no ayuda mucho (pruébalo). Parece que el sesgo lo podemos hacer chico (reducir el error de entrenamiento considerablemente), pero tenemos un problema más grande con la varianza.</p>
 <ul>
 <li>Quizá muchas palabras que estamos usando no tienen qué ver con la calidad de positivo/negativo, y eso induce varianza.</li>
@@ -720,11 +720,11 @@ voc_bing &lt;-<span class="st"> </span>vocabulario <span class="op">%&gt;%</span
 <pre><code>## Joining, by = &quot;palabra&quot;
 ## Joining, by = &quot;palabra&quot;</code></pre>
 <p><img src="10-diag-mejora_files/figure-html/unnamed-chunk-30-1.png" width="672" /></p>
-<pre><code>## [1] &quot;Lambda min: 0.0907179532894125&quot;
-## [1] &quot;Error entrenamiento: 0.07&quot;
-## [1] &quot;Error prueba: 0.16&quot;
-## [1] &quot;Devianza entrena:0.713&quot;
-## [1] &quot;Devianza prueba:0.902&quot;</code></pre>
+<pre><code>## [1] &quot;Lambda min: 0.496585303791409&quot;
+## [1] &quot;Error entrenamiento: 0.06&quot;
+## [1] &quot;Error prueba: 0.18&quot;
+## [1] &quot;Devianza entrena:0.736&quot;
+## [1] &quot;Devianza prueba:0.961&quot;</code></pre>
 <p>Estas variables solas no dan un resultado tan bueno (tenemos tanto sesgo como varianza altas). Podemos combinar:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vocabulario &lt;-<span class="st"> </span><span class="kw">calc_vocabulario</span>(df_ent_grande, <span class="dv">3000</span>, <span class="dt">remove_stop =</span><span class="ot">FALSE</span>)
 voc &lt;-<span class="st"> </span><span class="kw">bind_rows</span>(vocabulario, voc_bing <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(palabra, frec)) <span class="op">%&gt;%</span><span class="st"> </span>unique
@@ -734,11 +734,11 @@ voc &lt;-<span class="st"> </span><span class="kw">bind_rows</span>(vocabulario,
 <pre><code>## Joining, by = &quot;palabra&quot;
 ## Joining, by = &quot;palabra&quot;</code></pre>
 <p><img src="10-diag-mejora_files/figure-html/unnamed-chunk-31-1.png" width="672" /></p>
-<pre><code>## [1] &quot;Lambda min: 0.0907179532894125&quot;
-## [1] &quot;Error entrenamiento: 0.02&quot;
-## [1] &quot;Error prueba: 0.16&quot;
-## [1] &quot;Devianza entrena:0.561&quot;
-## [1] &quot;Devianza prueba:0.848&quot;</code></pre>
+<pre><code>## [1] &quot;Lambda min: 0.67032004603564&quot;
+## [1] &quot;Error entrenamiento: 0.01&quot;
+## [1] &quot;Error prueba: 0.17&quot;
+## [1] &quot;Devianza entrena:0.547&quot;
+## [1] &quot;Devianza prueba:0.911&quot;</code></pre>
 <p>Este camino no se ve mal, pero no hemos logrado mejoras. Aunque quizá valdría la pena intentar refinar más y ver qué pasa.</p>
 </div>
 <div id="examen-de-modelo-y-analisis-de-errores" class="section level2">
@@ -749,63 +749,63 @@ mod_x &lt;-<span class="st"> </span><span class="kw">correr_modelo_cv</span>(df_
 <pre><code>## Joining, by = &quot;palabra&quot;
 ## Joining, by = &quot;palabra&quot;</code></pre>
 <p><img src="10-diag-mejora_files/figure-html/unnamed-chunk-32-1.png" width="672" /></p>
-<pre><code>## [1] &quot;Lambda min: 0.100258843722804&quot;
-## [1] &quot;Error entrenamiento: 0.03&quot;
-## [1] &quot;Error prueba: 0.16&quot;
-## [1] &quot;Devianza entrena:0.61&quot;
-## [1] &quot;Devianza prueba:0.857&quot;</code></pre>
+<pre><code>## [1] &quot;Lambda min: 0.740818220681718&quot;
+## [1] &quot;Error entrenamiento: 0.02&quot;
+## [1] &quot;Error prueba: 0.17&quot;
+## [1] &quot;Devianza entrena:0.573&quot;
+## [1] &quot;Devianza prueba:0.914&quot;</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">coeficientes &lt;-<span class="st"> </span><span class="kw">predict</span>(mod_x<span class="op">$</span>mod, <span class="dt">lambda =</span> <span class="st">&#39;lambda.min&#39;</span>, <span class="dt">type =</span> <span class="st">&#39;coefficients&#39;</span>) 
 coef_df &lt;-<span class="st"> </span><span class="kw">data_frame</span>(<span class="dt">palabra =</span> <span class="kw">rownames</span>(coeficientes),
                       <span class="dt">coef =</span> coeficientes[,<span class="dv">1</span>])
 <span class="kw">arrange</span>(coef_df, coef) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">print</span>(<span class="dt">n=</span><span class="dv">20</span>)</code></pre></div>
 <pre><code>## # A tibble: 4,107 x 2
-##         palabra       coef
-##           &lt;chr&gt;      &lt;dbl&gt;
-##  1       forgot -0.4346788
-##  2    ludicrous -0.3636582
-##  3   ridiculous -0.3360632
-##  4     designed -0.3088795
-##  5    painfully -0.3020931
-##  6 embarrassing -0.2983859
-##  7       poorly -0.2818777
-##  8       sloppy -0.2728964
-##  9        inept -0.2624715
-## 10       wasted -0.2437314
-## 11      tedious -0.2399764
-## 12       asleep -0.2284533
-## 13    miserably -0.2271383
-## 14         lame -0.2268213
-## 15        awful -0.2239096
-## 16         mess -0.2175212
-## 17      frankly -0.2111228
-## 18    insulting -0.2101338
-## 19    profanity -0.2040561
-## 20  potentially -0.1945797
+##        palabra        coef
+##          &lt;chr&gt;       &lt;dbl&gt;
+##  1 (Intercept) -0.28900636
+##  2   ludicrous -0.11993381
+##  3      forgot -0.11559527
+##  4   miserably -0.10598781
+##  5  repetitive -0.10317123
+##  6      asleep -0.09743587
+##  7    designed -0.09428161
+##  8     frankly -0.09176484
+##  9    tiresome -0.09097330
+## 10   painfully -0.09000826
+## 11   insulting -0.08770382
+## 12 implausible -0.08318215
+## 13   cardboard -0.08107360
+## 14   redeeming -0.08054622
+## 15   slightest -0.08029741
+## 16      lethal -0.07775558
+## 17       inept -0.07671683
+## 18 potentially -0.07402287
+## 19       kicks -0.07391823
+## 20   profanity -0.07374146
 ## # ... with 4,087 more rows</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">arrange</span>(coef_df, <span class="kw">desc</span>(coef)) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">print</span>(<span class="dt">n=</span><span class="dv">20</span>)</code></pre></div>
 <pre><code>## # A tibble: 4,107 x 2
-##          palabra      coef
-##            &lt;chr&gt;     &lt;dbl&gt;
-##  1   outstanding 0.3501122
-##  2   exceptional 0.2726056
-##  3        finest 0.2439879
-##  4      identify 0.2394560
-##  5   masterpiece 0.2124276
-##  6        beings 0.1963608
-##  7        mature 0.1928157
-##  8         ideal 0.1859262
-##  9    underneath 0.1755901
-## 10 appropriately 0.1627892
-## 11        allows 0.1617993
-## 12    satisfying 0.1534476
-## 13      deserves 0.1518495
-## 14     fantastic 0.1510698
-## 15       triumph 0.1467070
-## 16         notch 0.1352921
-## 17          fits 0.1335066
-## 18         eager 0.1297523
-## 19      portrait 0.1296417
-## 20       greater 0.1261349
+##          palabra       coef
+##            &lt;chr&gt;      &lt;dbl&gt;
+##  1   exceptional 0.10100076
+##  2        lesser 0.09812082
+##  3    underneath 0.09371545
+##  4       triumph 0.08363819
+##  5      identify 0.08277150
+##  6 appropriately 0.08116368
+##  7        enters 0.08086985
+##  8         ideal 0.08023261
+##  9   outstanding 0.07902024
+## 10        shines 0.07575683
+## 11          ease 0.07229817
+## 12        finest 0.07014397
+## 13        beings 0.06877740
+## 14      captures 0.06858859
+## 15     plausible 0.06818160
+## 16         notch 0.06814189
+## 17        nearby 0.06746912
+## 18          tiny 0.06601499
+## 19           gem 0.06419142
+## 20     threatens 0.06313503
 ## # ... with 4,087 more rows</code></pre>
 <p>Y busquemos las diferencias más grandes del la probabilidad ajustada con la clase observada</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">y &lt;-<span class="st"> </span>mod_x<span class="op">$</span>prueba<span class="op">$</span>y
@@ -816,18 +816,18 @@ df_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">data
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">error =</span> y <span class="op">-</span><span class="st"> </span>prob) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">arrange</span>(<span class="kw">desc</span>(<span class="kw">abs</span>(error)))
 df_<span class="dv">1</span></code></pre></div>
 <pre><code>## # A tibble: 425 x 4
-##       id     y       prob      error
-##    &lt;chr&gt; &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;
-##  1  1050     1 0.09369866  0.9063013
-##  2  1461     1 0.10300185  0.8969981
-##  3  1508     1 0.17324385  0.8267562
-##  4   123     0 0.79256610 -0.7925661
-##  5    11     0 0.76311071 -0.7631107
-##  6  1490     1 0.26305103  0.7369490
-##  7  1912     1 0.27211954  0.7278805
-##  8  1263     1 0.29277236  0.7072276
-##  9  1705     1 0.30351823  0.6964818
-## 10  1933     1 0.32399331  0.6760067
+##       id     y      prob      error
+##    &lt;chr&gt; &lt;dbl&gt;     &lt;dbl&gt;      &lt;dbl&gt;
+##  1   222     0 0.9767586 -0.9767586
+##  2  1461     1 0.1292236  0.8707764
+##  3  1050     1 0.1484240  0.8515760
+##  4  1490     1 0.2150220  0.7849780
+##  5  1508     1 0.2216865  0.7783135
+##  6  1960     1 0.2446289  0.7553711
+##  7  1933     1 0.2738587  0.7261413
+##  8    25     0 0.7198569 -0.7198569
+##  9  1447     1 0.3112285  0.6887715
+## 10  1306     1 0.3126126  0.6873874
 ## # ... with 415 more rows</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">filter</span>(df, id <span class="op">==</span><span class="st"> </span><span class="dv">1461</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(texto)</code></pre></div>
 <pre><code>## [1] &quot;Review  deep rising is one of \&quot; those \&quot; movies .  Review  the kind of movie which serves no purpose except to entertain us .  Review  it does not ask us to think about important questions like life on other planets or the possibility that there is no god . . . screw that , it says boldly , let&#39;s see some computer generated monsters rip into , decapitate and generally cause irreparable booboos to a bunch of little known actors .  Review  heh !  Review  them wacky monsters , gotta love &#39;em .  Review  of course , since we can rent about a thousand b movies with the same kind of story , hollywood must give that little extra \&quot; oumph \&quot; to get people in theaters .  Review  that is where deep rising fails , which is a good thing .  Review  confused ?  Review  let me explain :  Review  despite all them flashy effects and big explosions , deep rising is still , at heart , a good &#39;ol b movie .  Review  luckily , it&#39;s a very good b movie .  Review  the worst cliches in movie history are a b movie&#39;s bread and butter .  Review  therefore , things that would destroy a serious movie actually help us have a good time while watching a movie of lower calibre .  Review  of course we know there&#39;s a big slimy creature behind that door , that one person will wander off to be picked off by said monster and we always know which persons or person will make it out alive .  Review  we just don&#39;t know when or how horrible it will be .  Review  i went to see deep rising with my expections low and my tolerance for bad dialogue high .  Review  imagine my surprise when i discover that deep rising is actually , well , pretty darn funny at times .  Review  a funny b movie ?  Review  well , that&#39;s new .  Review  these flicks are not supposed to make us laugh .  Review   ( except for a few unintended laughs once a while . )  Review  and before you know it , treat williams , wes studi and famke jansen appear on the big screen .  Review  hey ! i know them guys ( and gal ) from a couple of other movies .  Review  cool .  Review  familiar faces .  Review  so far so good .  Review  our man treat is the hero , he&#39;ll live .  Review  wes is a staple of b movies , he is the token victim .  Review  we know he&#39;ll buy the farm but he will take a few creeps with him on the way out .  Review  famke is the babe , &#39;nuff said .  Review  there is also a guy with glasses ( the guy with glasses always dies ) a black person ( b movie buffs know that the black guy always dies , never fails ) and a very funny , nerdy guy .  Review   ( ah !  Review  comic relief .  Review  how can we possibly explain having to kill him . . . let  Review  him live . )  Review  after the first fifteen minutes i felt right at home .  Review  i know who to root for and who i need to boo too and a gum to chew .  Review   ( please kill me . )  Review  suffice it to say that for the next hour and a half i jumped out of my seat a few times , went \&quot; ewwww \&quot; about a dozen times and nearly had an orgasm over all the explosions and firepower our heroes were packing .  Review  i&#39;m a man , we nottice these things .  Review  all in all , i&#39;d recommend deep rising if you are looking for a good time and care to leave your brain at the door . . . but  Review  bring your sense of humor and excitement in with you .  Review  the acting is decent , the effects top rate .  Review  how to best describe it ?  Review  put together the jet ski scene from hard rain , the bug attacks from starship troopers , a couple of james bond like stunts and all those scenes from friday the thirteenth and freddy where you keep screaming \&quot; don&#39;t go there , he&#39;s behind you \&quot; and you end up with deep rising .  Review  for creepy crawly goodness , tight t-shirts , major firepower and the need to go to the bathroom every fifteen minutes from seing all that water . &quot;</code></pre>
@@ -845,11 +845,11 @@ mod_x &lt;-<span class="st"> </span><span class="kw">correr_modelo_cv</span>(df_
 <pre><code>## Joining, by = &quot;palabra&quot;
 ## Joining, by = &quot;palabra&quot;</code></pre>
 <p><img src="10-diag-mejora_files/figure-html/unnamed-chunk-36-1.png" width="672" /></p>
-<pre><code>## [1] &quot;Lambda min: 0.0907179532894125&quot;
-## [1] &quot;Error entrenamiento: 0.03&quot;
-## [1] &quot;Error prueba: 0.16&quot;
-## [1] &quot;Devianza entrena:0.578&quot;
-## [1] &quot;Devianza prueba:0.841&quot;</code></pre>
+<pre><code>## [1] &quot;Lambda min: 0.548811636094027&quot;
+## [1] &quot;Error entrenamiento: 0.01&quot;
+## [1] &quot;Error prueba: 0.18&quot;
+## [1] &quot;Devianza entrena:0.522&quot;
+## [1] &quot;Devianza prueba:0.896&quot;</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">vocabulario_bigramas &lt;-<span class="st"> </span><span class="kw">calc_vocabulario</span>(df_ent_grande, <span class="dv">500</span>, <span class="dt">bigram =</span> <span class="ot">TRUE</span>)
 vocabulario_bigramas <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">arrange</span>(<span class="kw">desc</span>(frec))</code></pre></div>
 <pre><code>## # A tibble: 501 x 2
@@ -888,11 +888,11 @@ mod_bigramas &lt;-<span class="st"> </span><span class="kw">correr_modelo_cv</sp
 <pre><code>## Joining, by = &quot;palabra&quot;
 ## Joining, by = &quot;palabra&quot;</code></pre>
 <p><img src="10-diag-mejora_files/figure-html/unnamed-chunk-37-1.png" width="672" /></p>
-<pre><code>## [1] &quot;Lambda min: 0.060810062625218&quot;
-## [1] &quot;Error entrenamiento: 0.17&quot;
-## [1] &quot;Error prueba: 0.32&quot;
-## [1] &quot;Devianza entrena:0.905&quot;
-## [1] &quot;Devianza prueba:1.159&quot;</code></pre>
+<pre><code>## [1] &quot;Lambda min: 0.0111089965382423&quot;
+## [1] &quot;Error entrenamiento: 0.19&quot;
+## [1] &quot;Error prueba: 0.31&quot;
+## [1] &quot;Devianza entrena:0.94&quot;
+## [1] &quot;Devianza prueba:1.175&quot;</code></pre>
 <p>Este resultado no es malo. Podemos intentar construir un modelo con unigramas y bigramas:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">y &lt;-<span class="st"> </span>mod_x<span class="op">$</span>entrena<span class="op">$</span>y
 x_<span class="dv">1</span> &lt;-<span class="st"> </span>mod_x<span class="op">$</span>entrena<span class="op">$</span>x
