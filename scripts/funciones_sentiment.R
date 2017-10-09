@@ -167,7 +167,7 @@ correr_modelo_cv <- function(df_ent, df_pr, vocabulario,
   length(mat_ent$y)
   mat_pr <- obtener_xy(df_filt_pr)
   
-  mod_reg <- cv.glmnet(x = mat_ent$x , y = mat_ent$y , alpha = alpha, 
+  mod_reg <- cv.glmnet(x = mat_ent$x , y = mat_ent$y , alpha = 0.1, 
                        lambda = lambda, standardize = standardize,
                     family ='binomial')
   plot(mod_reg)
