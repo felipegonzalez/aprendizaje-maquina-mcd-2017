@@ -80,7 +80,7 @@ length(negativos)
 length(positivos)
 ```
 
-```{r}
+```{r, results='asis'}
 read_file(negativos[1])
 read_file(positivos[1])
 ```
@@ -99,7 +99,7 @@ necesitamos al menos una tasa de correctos de 90\% para que el score sea confiab
 Empezamos por construir funciones para leer datos (ver script). 
 Construimos un data frame:
 
-```{r}
+```{r, results = 'asis'}
 source('./scripts/funciones_sentiment.R')
 df <- prep_df('./datos/sentiment/') %>% unnest(texto)
 nrow(df)
@@ -441,11 +441,14 @@ probs <- predict(mod_x$mod, newx = x, type ='response', s='lambda.min')
 df_1 <- data_frame(id = rownames(x), y=y, prob = probs[,1]) %>%
   mutate(error = y - prob) %>% arrange(desc(abs(error)))
 df_1
+```
+
+```{r, results='asis'}
 filter(df, id == 1461) %>% pull(texto)
 filter(df, id == 1508) %>% pull(texto)
 ```
 
-```{r}
+```{r, results='asis'}
 filter(df, id == 222) %>% pull(texto) #negativa
 filter(df, id == 25) %>% pull(texto) #negativa
 filter(df, id == 728) %>% pull(texto) #negativa
@@ -475,7 +478,7 @@ mod_bigramas <- correr_modelo_cv(df_ent_grande, df_pr, vocabulario_bigramas,
 
 ```
 
-Este resultado no es malo. Podemos intentar construir un modelo con unigramas
+Este resultado no es tan malo. Podemos intentar construir un modelo juntando unigramas
 y bigramas:
 
 ```{r}
