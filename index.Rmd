@@ -23,11 +23,10 @@ description: "Notas y material para el curso de aprendizaje de máquina 2017 (IT
 - Validación cruzada y métodos de remuestreo
 - Regularización y selección de modelos
 - Redes neuronales
+- Diagnóstico y mejora en problemas de aprendizaje supervisado.
 - Árboles y bosques aleatorios
 - Máquinas de soporte vectorial
-- Diagnóstico y mejora en problemas de aprendizaje supervisado.
-- Componentes principales
-- Análisis de conglomerados
+- Componentes principales y análisis de conglomerados
 
 
 ### Evaluación {-}
@@ -47,15 +46,12 @@ description: "Notas y material para el curso de aprendizaje de máquina 2017 (IT
 
 - An Introduction to Statistical Learning, @ISL 
 - Curso de Machine Learning de Andrew Ng, @Ngcoursera
+- Deep Learning, @Goodfellow-et-al-2016
 
 ### Otras referencias {-}
 
-- Pattern Recognition and Machine Learning
-- The Elements of Statistical Learning
-
-### Otros materiales {-}
-
-- Statistical Modeling: The Two Cultures [@breiman2001]
+- [Pattern Recognition and Machine Learning](http://www.springer.com/us/book/9780387310732), @Bishop
+- [The Elements of Statistical Learning, Hastie, Tibshirani y Friedman](https://web.stanford.edu/~hastie/ElemStatLearn/), @ESL
 
 
 
