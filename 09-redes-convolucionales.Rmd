@@ -188,7 +188,7 @@ plot(as.cimg(digito_f))
 
 
 
-### Filtros convolucionales para redes neuronales
+## Filtros convolucionales para redes neuronales
 
 En redes neuronales, la idea es que que qeremos aprender estos
 filtros a partir de los datos. La imagen filtrada nos da las entradas
@@ -235,7 +235,7 @@ knitr::include_graphics('./imagenes/conv_4.png')
 
 
 
-### Capas de agregación (pooling)
+## Capas de agregación (pooling)
 
 En procesamiento de imágenes y redes convolucionales también se utilizan
 capas de pooling. Estas se encargan de resumir pixeles adyacentes. Una
@@ -256,7 +256,7 @@ esté activo)
 tenemos menos parámetros que tratar en las siguientes capas
 
 
-### Ejemplo (arquitectura LeNet):
+## Ejemplo (arquitectura LeNet):
 
 Las capas de pooling generalmente se aplican después de las convoluciones,
 y hacia al final usamos capas totalmente conexas. Estas últimas capas
