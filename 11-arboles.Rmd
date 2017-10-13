@@ -749,7 +749,7 @@ Regresamos a nuestro ejemplo de spam. Intentemos con 500 árboles, y
 ```{r, warning=FALSE, message=FALSE}
 library(randomForest)
 bosque_spam <-randomForest(factor(spam) ~ ., data = spam_entrena, 
-                           ntree = 1500, mtry = 6)
+                           ntree = 1500, mtry = 6, importance=TRUE)
 ```
 
 Evaluamos desempeño, donde vemos que obtenemos una mejora inmediata con respecto
@@ -850,28 +850,139 @@ Esta es la estimación OOB (out-of-bag) para este modelo particular.
 
 ------
 
-¿Cuántos casos tenemos para hacer prueba?
+En un principio podemos pensar que quizá por mala suerte obtenemos
+pocos elementos OOB para evaluar el error, pero en realidad para muestras
+no tan chicas obtenemos una fracción considerable.
 
 ```{block2, type='comentario'}
 Cuando el tamaño de muestra $n$ es grande, el porcentaje esperado de casos que
-no están en la muestra bootstrap es de 37\%
+no están en la muestra bootstrap es alrededor del 37\%
 ```
 
 Demuestra usando probabilidad y teoría de muestras con reemplazo.
 
+
+
 ```{block2, type='comentario'}
 **Estimación OOB del error**
 
-Para un bosque aleatorio con árboles $T_1^*, T_2^*, \ldots, T_B^*$, y conjunto de 
+Consideramos un bosque aleatorio $T_{ba}$con árboles $T_1^*, T_2^*, \ldots, T_B^*$, y conjunto de 
 entrenamiento original
-${\mathcal L} =\{(x^(i), y^(i)\}_{i=1}^n$, la estimación OOB del error de predicción del bosque es
-
+${\mathcal L} =\{(x^(i), y^(i)\}_{i=1}^n$. 
+Para cada caso de entrenamiento $(x^(i), y^(i))$ consideramos todos los árboles
+que **no** usaron este caso para construirse, y construimos un bosque $T_{ba}^(i)$
+basado solamente en esos árboles.
+La predicción OOB de $T_{ba}$ para $(x^(i), y^(i))$ es
+$$y^_{oob}^(i) = T_{ba}(x^(i))$$
+El error OOB del árbol $T_{ba}$ está dado por 
+1. Regresión (error cuadrático medio)
+$$\hat{Err}_{oob} = \frac{1}{n} (y^{(i)} - y^_{oob}^(i))^2$$
+2. Clasificación (error de clasificación)
+$$\hat{Err}_{oob} = \frac{1}{n} I(y^{(i)} = y^_{oob}^(i))$$
 
 ```
+
+- Para cada dato de entrenamiento, hacemos predicciones usando solamente los árboles
+que no consideraron ese dato en su construcción. Estas predicciones son las que evaluamos
+- Es una especie de validación cruzada (se puede demostrar que es similar a 
+validacion cruzada leave-one-out), pero es barata en términos computacionales.
+- Como discutimos en validación cruzada, esto hace OOB una buena medida de error para
+afinar los parámetros del modelo (principalmente el número $m$ de variables que se escogen
+en cada corte).
+
+#### Ejempo {-}
+Para el ejemplo de spam, podemos ver el error OOB ( y matriz de confusión también OOB):
+```{r}
+bosque_spam
+```
+
+Que comparamos con
+```{r}
+probas <- predict(bosque_spam, newdata = spam_prueba, type='prob')
+prop_bosque <- probas[,2]
+tab <- table(prop_bosque> 0.5, spam_prueba$spam) %>% prop.table(2) %>% round(3)
+1-diag(tab)
+```
+
+Podemos comparar con el cálculo de entrenamiento, que como sabemos típicamente
+es una mala estimación del error de predicción:
 
 ```{r}
-plot(bosque_spam)
+probas <- predict(bosque_spam, newdata = spam_entrena, type='prob')
+prop_bosque <- probas[,2]
+table(prop_bosque> 0.5, spam_entrena$spam)
+tab <- table(prop_bosque> 0.5, spam_entrena$spam) %>% prop.table(2) %>% round(3)
+1-diag(tab)
+
 ```
+
+---
+
+
+### Importancia de variables 
+
+Usando muestras bootstrap y error OOB, es posible tener mediciones útiles de la
+importancia de una variable en el modelo en un bosque aleatorio (todo esto también
+fue inventado por Breiman).
+
+En primer lugar, consideremos qué significa que una variable sea importante
+desde el punto predictivo en un modelo. Podemos considerar, por ejemplo:
+
+- *Si quitamos una variable, y el error de predicción se degrada, la variable es importante*.
+Este no es un buen enfoque, porque muchas veces tenemos conjuntos de variables correlacionadas.
+Si quitamos una variable, otras pueden hacer su trabajo, y el modelo no se degrada mucho (piensa
+en regresión, en donde incluso esta variable eliminada puede tener un coeficiente grande e influir
+mucho en la predicción). También requiere ajustar modelos adicionales.
+- *Si las predicciones cambian mucho cuando una variable cambia, entonces la variable es importante*. 
+Este concepto funciona mejor, al menos desde el punto de vista predictivo. Su defecto es 
+que movimientos de una variable sola (marginales) no reflejan la estructura de los datos - es posible
+que los cambios que observemos al mover una variable no tengan mucha relevancia en nuestro problema
+
+La idea de Breiman es como sigue:
+
+Consideramos un árbol $T^*_j$ del bosque, con muestra bootstrap ${\mathcal L}^*_i$. Calculamos
+un tipo de error out-of-bag para el árbol, promediando sobre todos los elementos de ${\mathcal L}$ que no están en ${\mathcal L}^*_i$
+
+$$\widehat{Err}_{oob}(T^*_j) = \frac{1}{A_j}\sum_{(x^{(i)}, y^{(i)}) \in {\mathcal L} -{\mathcal L}^*_i} L(y^{(i)}, T^*_j(x^{(i)}))$$
+Ahora *permutamos* al azar la variable $X_k$ en la muestra OOB ${\mathcal L} -{\mathcal L}^*_i$.
+Describimos esta operación como $x^{(i)} \to x^{(i)}_k$.
+Calculamos el error nuevamente:
+
+$$\widehat{Err}_{k}(T^*_j) = \frac{1}{A_j}\sum_{(x^{(i)}, y^{(i)}) \in {\mathcal L} -{\mathcal L}^*_i} L(y^{(i)}, T^*_j(x_k^{(i)}))$$
+Ahora calculamos la degradación del error out-of-bag debido a la permutación:
+$$ D_k(T_j^*) = \widehat{Err}_{k}(T^*_j) - \widehat{Err}_{oob}(T^*_j) $$
+
+Y promediamos sobre el bosque entero
+$$I_k =\frac{1}{B} \sum_{j=1}^B D_k(T^*_j)$$
+y a esta cantidad le llamamos la **importancia** de la variable $k$ en el bosque
+aleatorio. Es el decremento promedio de capacidad predictiva cuando "quitamos" la variable
+$X_k$.
+
+Nótese que:
+
+- No podemos "quitar" la variable en el ajuste de los árboles, pues entonces otras variables
+pueden hacer su trabajo, subestimando su importancia.
+- No podemos "quitar" la variable al medir el error OOB, pues se necesitan todas las
+variables para poder clasificar con cada árbol (pues cada árbol usa esa variable, o tiene
+probabilidad de usarla).
+- Pero podemos permutar a la hora de probar (no entrenar), rompiendo la relación que
+hay entre $X_k$ y la variable respuesta.
+- Este método funciona bien con bosques aleatorios, pues el proceso de aleatorización
+en la selección de variables aminora el problema de enmascaramiento que notamos en árboles.
+
+#### Ejemplo{-}
+En nuestro ejemplo de spam
+```{r}
+imp <- importance(bosque_spam, type=1)
+importancia_df <- data_frame(variable = rownames(imp), MeanDecreaseAccuracy = imp[,1]) %>% 
+  arrange(desc(MeanDecreaseAccuracy))
+importancia_df
+```
+
+
+
+
+
 
 
 
