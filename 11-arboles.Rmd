@@ -391,7 +391,7 @@ de árboles muchas veces distintas. Esto introduce varianza considerable
 en las predicciones.
 
 
-### Relaciones lineal
+### Relaciones lineales
 
 Los árboles pueden requerir ser muy grandes para estimar apropiadamente
 relaciones lineales.
@@ -439,18 +439,16 @@ muchas niveles: en estos casos, el árbol sobreajusta desde los primeros
 cortes, y las predicciones son malas.
 
 
-## Bosques aleatorios.
+## Bagging de árboles
 
 Bosques aleatorios es un método de predicción que utiliza familias de
 árboles para hacer predicciones.
 
 Los árboles grandes tienen la ventaja de tener sesgo bajo, pero sufren de varianza alta. Podemos explotar el sesgo bajo si logramos controlar la varianza. Una idea primera para lograr esto es es hacer
-*bagging* de árboles:
+**bagging** de árboles:
 
 - Perturbar la muestra de entrenamiento de distintas maneras y producir árboles distintos (grandes). La perturbación más usada es tomar muestras bootstrap de los datos y ajustar un árbol a cada muestra bootstrap
 - Promediar el resultado de todos estos árboles para hacer predicciones. El proceso de promediar reduce la varianza, sin tener pérdidas en sesgo.
-
-### Bagging de árboles
 
 
 La idea básica de bagging (*bootstrap aggregation*) es la siguiente:
@@ -475,26 +473,39 @@ lo que implica que el sesgo del promedio es igual al sesgo de
 un solo árbol (que es bajo, pues suponemos que los árboles son grandes).
 
 
-Ahora veamos la varianza,
+Ahora veamos la varianza. Como las muestras ${\mathcal L}_b$ se extraen *de manera independiente*, entonces
 
-$$Var[T(x)] = \frac{1}{B^2}\sum_{i=b}^B  Var[T_b (x)],$$
-pues las muestras${\mathcal L}_b$ se extraen *de manera independiente* (si esto no fuera cierto, entonces esta ecuación no es válida). Por las mismas razones que arriba, todos los términos de la derecha son iguales, y
+$$Var[T(x)] = Var\left( \frac{1}{B}\sum_{i=b}^B  T_b (x)\right) = \frac{1}{B^2}\sum_{i=b}^B  Var[T_b (x)],$$
+pues los distintos $T_b(x)$ no están correlacionados (en ese caso, varianza
+de la suma es la suma de las varianzas), y las constantes salen de la varianza
+al cuadrado. Por las mismas razones que arriba, todos los términos de la derecha son iguales, y
 $$Var[T(x)] = \frac{1}{B}\ Var[T_1 (x)]$$
 de modo que la varianza del árbol promedio es mucho más chica
 que la varianza de un árbol dado (si $B$ es grande).
 
 Sin embargo, no podemos tomar muestras de entrenamiento repetidamente
 para ajustar estos árboles. ¿Cómo podemos simular extraer distintas
-muestras de entrenamiento? Sabemos que si tenemos una muestra de entrenamiento fija ${\mathcal L}$, podemos evaluar la variación
+muestras de entrenamiento?
+
+```{block2, type='comentario'}
+Sabemos que si tenemos una muestra de entrenamiento fija ${\mathcal L}$, podemos evaluar la variación
 de esta muestra tomando **muestras bootstrap** de ${\mathcal L}$,
 que denotamos por
 
 $${\mathcal L}_1^*, {\mathcal L}_2^*, \ldots, {\mathcal L}_B^*,$$
-si  construimos los árboles (que suponemos de regresión)
+
+Recordatorio: una muestra bootstrap de $\mathcal L$ es una muestra con con reemplazo
+de ${\mathcal L}$ del mismo tamaño que ${\mathcal L}$.
+```
+
+
+Entonces la idea es  construimos los árboles (que suponemos de regresión)
 $$T_1^*, T_2^*, \ldots, T_B^*,$$
 podríamos mejorar nuestras predicciones construyendo el
 árbol promedio
 $$T^*(x) = \frac{1}{B}\sum_{i=b}^B  T_b^* (x)$$
+para suavizar la variación de cada árbol individual.
+
 El argumento del sesgo aplica en este caso, pero el de la varianza no
 exactamente, pues las muestras bootstrap no son independientes (están correlacionadas a través de la muestra de entrenamiento de donde se obtuvieron),a pesar de que las muestras bootstrap se extraen de manera independiente de ${\mathcal L}$. De  esta forma, no esperamos una
 reducción de varianza tan grande como en el caso de muestras independientes.
@@ -525,7 +536,7 @@ a una reducción modesta de varianza.
 malos clasificadores ¿Puedes pensar en un ejemplo donde empeora?
 
 
-#### Ejemplo {-}
+### Ejemplo 
 Probemos con el ejemplo de spam. Construimos árboles con muestras bootstrap
 de los datos originales de entrenamiento:
 
@@ -577,6 +588,139 @@ parámetro que se puede afinar.
 básico es bagging de árboles, pero añadimos ruido adicional en la 
 construcción de árboles.
 ```
+
+
+### Mejorando bagging
+
+El factor que limita la mejora de desempeño de bagging es que
+los árboles están correlacionados a través de la muestra de entrenamiento. Como
+vimos, si los árboles fueran independientes, entonces mejoramos por un factor
+de $B$ (número de muestras independientes). Veamos un argumento para entender
+cómo esa correlación limita las mejoras:
+
+
+Quiséramos calcular (para una $x$ fija)
+
+$$Var(T(x)) = Var\left(\frac{1}{B}\sum_{i=1}^B T^*_i\right)$$
+
+donde cada $T^*_i$ se construye a partir de una muestra bootstrap de ${\mathcal L}$.
+Nótese que esta varianza es sobre la muestra de entrenamiento ${\mathcal L}$. Usando
+la fórmula de la varianza para sumas generales:
+\begin{equation}
+Var(T(x)) = Var\left(\frac{1}{B}\sum_{i=1}^B T^*_i\right) =
+\sum_{i=1}^B \frac{1}{B^2} Var(T^*_i(x)) + \frac{1}{B^2}\sum_{i < j} Cov(T_i^*, T_j^*)
+  (\#eq:varianza-ensamble)
+\end{equation}
+
+Ponemos ahora
+
+$$\sigma^2(x) = Var(T_i^*)$$
+que son todas iguales porque los árboles bootstrap se extraen de la misma forma
+ese extraen de la misma manera (${\mathcal L}\to\{\mathcal L}^*\to T^*$).
+
+
+Escribimos ahora
+$$\rho(x) = corr(T_i^*, T_j^*)$$
+que es una correlación sobre ${\mathcal L}$ (asegúrate que entiendes este término). Todas
+estas correlaciones son iguales pues cada par de árboles se construye de la misma forma.
+
+Así que la fórmula \@ref(eq:varianza-ensamble) queda
+
+\begin{equation}
+Var(T(x)) = 
+ \frac{1}{B} \sigma^2(x) + \frac{B-1}{B}` \rho(x)\sigma^2(x) =
+ \sigma^2(x)\left(\frac{1}{B}  + \left(1-\frac{1}{B}\right )\rho(x)     \right)
+  (\#eq:varianza-ensamble-2)
+\end{equation}
+
+En el límite (cuando B es muy grande, es decir, promediamos muchos árboles):
+
+\begin{equation}
+Var(T(x)) = Var\left(\frac{1}{B}\sum_{i=1}^B T^*_i\right) \approx
+ \sigma^2(x)\rho(x)     
+  (\#eq:varianza-ensamble-3)
+\end{equation}
+
+Si $\rho(x)=0$ (árboles no correlacionados), la varianza del ensemble
+es la fracción $1/B$ de la varianza de un solo árbol, y obtenemos una
+mejora considerable en varianza. En el otro extremo,
+si la correlación es alta $\rho(x)\approx 1$, entonces no obtenemos ganancias
+por promediar árboles y la varianza del ensamble es similar a la de un solo árbol.
+
+
+```{block2, type='comentario'}
+- Cuando hacemos bagging de árboles, la limitación de mejora cuando promediamos
+muchos árboles está dada por la correlación entre ellos: cuanto más grande
+es la correlación, menor beneficio en reducción de varianza obtenemos.
+- Si alteramos el proceso para producir árboles menos correlacionados (menor $\rho(x)$), podemos
+mejorar el desempeño de bagging. Sin embargo, estas alteraciones generalmente
+están acompañadas de incrementos en la varianza ($\sigma^x(x)). 
+```
+
+La idea es entonces es intentar decorrelacionar árboles sin inducir demasiada varianza.
+
+
+## Bosques aleatorios
+
+Los bosques aleatorios son una versión de árboles de bagging decorrelacionados. El proceso
+es como sigue.
+
+El proceso de decorrelación consiste en que cada vez que tengamos que hacer
+un corte en un árbol de bagging, escoger al azar un número de variables y usar estas
+para buscar la mejor variable y el mejor punto de corte, como hicimos en la construcción
+de árboles.
+
+```{block2}
+**Bosques aleatorios**
+Sea $m$ fija.
+Sea ${\mathcal L} =\{(x^{(i)}, y^{(i)})\}_{i=1}^n$ una muestra de entrenamiento, y sean 
+$${\mathcal L}_1^*, {\mathcal L}_2^*, \ldots, {\mathcal L}_B^*,$$
+ muestras bootstrap de ${\mathcal L}$ (muestreamos con reemplazo
+ los **pares** $(x^{(i)}, y^{(i)})$, para obtener una muestra de tamaño $n$).
+ 
+1. Para cada muestra bootstrap construimos un árbol
+ $${\mathcal L}_b^* \to T_b^*$$ de la siguiente forma:
+  - En cada nodo candidato a particionar, escogemos al azar $m$ variables de las disponibles
+  - Buscamos la mejor variable y punto de corte (como en un árbol normal) pero *solo entre
+  las variables que seleccionamos al azar*.
+  - Seguimos hasta construir un árbol grande.
+2. (Regresión) Promediamos árboles para reducir varianza
+ $$T^*(x) = \frac{1}{B}\sum_{i=b}^B  T_b^*(x)$$
+3. (Clasificación) Tomamos votos sobre todos los árboles:
+ $$T^*(x) = argmax_g \{ \# \{i|T_b^*(x)=g\}\}.$$ Podemos
+ también calcular probabilidades promedio sobre todos
+ los árboles.
+
+Bosques aleatorios muchas veces reduce el error de predicción gracias
+a una reducción a veces considerable de varianza. El objetivo final es reducir
+la varianza alta que producen árboles normales debido a la forma tan agresiva
+de construir sus cortes.
+```
+
+**Observaciones**
+1. El número de variables $m$ que se seleccionan en cada nodo es un parámetro
+que hay que escoger (usando validación, validación cruzada).
+2. Ojo: no se selecciona un conjunto de $m$ variables para cada árbol. En la construcción
+de cada árbol, en cada nodo se seleccionan $m$ variables como candidatas para cortes.
+3. Como inducimos aleatoriedad en la construcción de árboles,
+este proceso reduce la correlación entre árboles del bosque, aunque también incrementa
+su varianza. Los bosques aleatorios funcionan bien cuando la mejora en correlación 
+es más grande que la pérdida en varianza.
+4. Reducir $m$, a grandes rasgos:
+  - Aumenta el sesgo del bosque (pues es más restringido el proceso de construcción)
+  - Disminuye la correlación entre árboles y aumenta la varianza de cada árbol
+5. Intrementar $m$
+  - Disminuye el sesgo del bosque (menos restricción)
+  - Aumenta la correlacción entre árobles y disminuye la varianza de cada árbol
+
+
+### Ejemplo
+Regresamos a nuestro ejemplo de spam:
+
+```{r}
+
+```
+
 
 
 
