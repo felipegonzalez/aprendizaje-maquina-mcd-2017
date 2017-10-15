@@ -170,15 +170,15 @@ correr_modelo_cv <- function(df_ent, df_pr, vocabulario,
   
   mod_reg <- cv.glmnet(x = mat_ent$x , y = mat_ent$y , alpha = alpha, 
                        lambda = lambda, standardize = standardize,
-                    family ='binomial')
+                    family ='binomial', parallel = TRUE)
   list(mod = mod_reg, entrena = mat_ent, prueba = mat_pr)
 }
 
 describir_modelo_cv <- function(corrida){
   #corrida es la salida de función correr_modelo_cv  
   mod_reg <- corrida$mod
-  mat_ent <- corrida$mat_ent
-  mat_pr <- corrida$mat_pr
+  mat_ent <- corrida$entrena
+  mat_pr <- corrida$prueba
   plot(mod_reg)
   preds <- predict(mod_reg, newx = mat_ent$x, type ='class', s = 'lambda.min')
   preds_pr <- predict(mod_reg, newx = mat_pr$x, type ='class', s= 'lambda.min')
@@ -197,7 +197,7 @@ describir_modelo_cv <- function(corrida){
   print(paste0('Error prueba: ', round(err_prueba,2)))
   print(paste0('Devianza entrena:', dev_entrena ))
   print(paste0('Devianza prueba:', dev_prueba ))
-  list(mod = mod_reg, entrena = mat_ent, prueba = mat_pr)
+  #list(mod = mod_reg, entrena = mat_ent, prueba = mat_pr)
 }
 
 
