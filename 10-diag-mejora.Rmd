@@ -428,6 +428,7 @@ voc_bing <- vocabulario %>% inner_join(bing %>% rename(palabra = word))
 dim(voc_bing)
 mod_x <- correr_modelo_cv(df_ent_grande, df_pr, voc_bing, alpha=0,
                        lambda = exp(seq(-5,2,0.1)))
+describir_modelo_cv(mod_x)
 ```
 Estas variables solas no dan un resultado tan bueno (tenemos tanto sesgo
 como varianza altas). Podemos combinar:
@@ -437,6 +438,8 @@ vocabulario <- calc_vocabulario(df_ent_grande, 3000, remove_stop =FALSE)
 voc <- bind_rows(vocabulario, voc_bing %>% select(palabra, frec)) %>% unique
 dim(voc)
 mod_x <- correr_modelo_cv(df_ent_grande, df_pr, voc, alpha=0, lambda = exp(seq(-5,2,0.1)))
+describir_modelo_cv(mod_x)
+
 ```
 
 Este camino no se ve mal, pero no hemos logrado mejoras. Aunque quizá valdría la pena
@@ -456,6 +459,8 @@ modelo hasta ahora:
 ```{r}
 vocabulario <- calc_vocabulario(df_ent_grande, 4000, remove_stop = FALSE)
 mod_x <- correr_modelo_cv(df_ent_grande, df_pr, vocabulario, lambda = exp(seq(-5,2,0.1)))
+describir_modelo_cv(mod_x)
+
 ```
 
 ```{r}
@@ -505,6 +510,7 @@ de simplemente usar palabras.
 ```{r}
 vocabulario <- calc_vocabulario(df_ent_grande, 3800, remove_stop = FALSE)
 mod_x <- correr_modelo_cv(df_ent_grande, df_pr, vocabulario, lambda = exp(seq(-5,2,0.1)))
+describir_modelo_cv(mod_x)
 vocabulario_bigramas <- calc_vocabulario(df_ent_grande, 500, bigram = TRUE)
 vocabulario_bigramas %>% arrange(desc(frec))
 vocabulario_bigramas %>% arrange((frec))
@@ -515,7 +521,7 @@ library(stringr)
 mod_bigramas <- correr_modelo_cv(df_ent_grande, df_pr, vocabulario_bigramas, 
                                 alpha=1,
                           lambda = exp(seq(-7,2,0.1)), bigram = TRUE)
-
+describir_modelo_cv(mod_bigramas)
 ```
 
 Este resultado no es tan malo. Podemos intentar construir un modelo juntando unigramas
