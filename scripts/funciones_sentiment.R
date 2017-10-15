@@ -101,11 +101,11 @@ convertir_lista <- function(df, vocabulario, stem = FALSE){
     select(-frec) %>%
     inner_join(vocabulario %>% select(id_palabra), by = c('id_palabra')) %>%
     filter(!is.na(id))
-  y_df <- df_filt %>% ungroup %>% select(id, tipo) %>% unique
+  y_df <- df_filt %>% select(id, tipo) %>% unique
   y_tipo <- y_df %>% pull(tipo)
   y <- as.numeric(y_tipo == 'pos')
-  y <- y[!is.na(y)]
-  df_filt$id_palabra <- as.integer(df_filt$id_palabra)
+  #y <- y[!is.na(y)]
+  #df_filt$id_palabra <- as.integer(df_filt$id_palabra)
   lista <- split(df_filt$id_palabra, df_filt$id)
   out <- lapply(lista, function(elem) {c(1L, elem)})
   ids <- names(out)
@@ -171,10 +171,17 @@ correr_modelo_cv <- function(df_ent, df_pr, vocabulario,
   mod_reg <- cv.glmnet(x = mat_ent$x , y = mat_ent$y , alpha = alpha, 
                        lambda = lambda, standardize = standardize,
                     family ='binomial')
+  list(mod = mod_reg, entrena = mat_ent, prueba = mat_pr)
+}
+
+describir_modelo_cv <- function(corrida){
+  #corrida es la salida de función correr_modelo_cv  
+  mod_reg <- corrida$mod
+  mat_ent <- corrida$mat_ent
+  mat_pr <- corrida$mat_pr
   plot(mod_reg)
   preds <- predict(mod_reg, newx = mat_ent$x, type ='class', s = 'lambda.min')
   preds_pr <- predict(mod_reg, newx = mat_pr$x, type ='class', s= 'lambda.min')
-  
   probs <- predict(mod_reg, newx = mat_ent$x, type ='link', s = 'lambda.min')
   probs_pr <- predict(mod_reg, newx = mat_pr$x, type ='link', s= 'lambda.min')
   dev_entrena <- round(-2*mean(mat_ent$y*probs - log(1+exp(probs)) ),3)
