@@ -67,6 +67,7 @@ library(readr)
 library(ggplot2)
 library(dplyr)
 library(tidyr)
+usar_cache <- TRUE
 ```
 
 Cada reseña está un archivo de texto, y tenemos 1000 de cada tipo:
@@ -290,8 +291,16 @@ este proceso también lo podemos hacer con cv.glmnet de manera más rápida.
 
 
 ```{r}
-mod_x <- correr_modelo_cv(df_ent, df_pr, vocabulario, 
+require(doMC)
+registerDoMC(cores=4)
+if(!usar_cache){
+  mod_x <- correr_modelo_cv(df_ent, df_pr, vocabulario, 
                           lambda = exp(seq(-10,5,0.1)))
+  saveRDS(mod_x, file = './cache_obj/mod_sentiment_1.rds')
+} else {
+  mod_x <- readRDS('./cache_obj/mod_sentiment_1.rds')
+  describir_modelo_cv(mod_x)
+}
 #mod_x <- correr_modelo(df_ent, df_pr, vocabulario, lambda =1)
 #mod_x <- correr_modelo(df_ent, df_pr, vocabulario, lambda =0.1)
 #mod_x <- correr_modelo(df_ent, df_pr, vocabulario, lambda =0.01)
@@ -300,7 +309,13 @@ mod_x <- correr_modelo_cv(df_ent, df_pr, vocabulario,
 No estamos mejorando. Podemos intentar con un número diferente de entradas:
 ```{r}
 vocabulario <- calc_vocabulario(df_ent, 4000, remove_stop = TRUE)
-mod_x <- correr_modelo_cv(df_ent, df_pr, vocabulario, lambda = exp(seq(-10,5,0.1)))
+if(!usar_cache){
+  mod_x <- correr_modelo_cv(df_ent, df_pr, vocabulario, lambda = exp(seq(-10,5,0.1)))
+  saveRDS(mod_x, file = './cache_obj/mod_sentiment_2.rds')
+} else {
+  mod_x <- readRDS('./cache_obj/mod_sentiment_2.rds')
+  describir_modelo_cv(mod_x)
+}
 ```
 
 Y parece que nuestra estrategia no está funcionando muy bien.
@@ -308,7 +323,14 @@ Regresamos a nuestro modelo con ridge
 
 ```{r}
 vocabulario <- calc_vocabulario(df_ent, 3000, remove_stop = FALSE)
+
+if(!usar_cache){
 mod_x <- correr_modelo_cv(df_ent, df_pr, vocabulario, lambda = exp(seq(-5,2,0.1)))
+  saveRDS(mod_x, file = './cache_obj/mod_sentiment_3.rds')
+} else {
+  mod_x <- readRDS('./cache_obj/mod_sentiment_3.rds')
+  describir_modelo_cv(mod_x)
+}
 ```
 
 Podemos intentar aumentar el número de palabras y aumentar también la
@@ -316,7 +338,13 @@ regularización
 
 ```{r}
 vocabulario <- calc_vocabulario(df_ent, 4000, remove_stop = FALSE)
-mod_x <- correr_modelo_cv(df_ent, df_pr, vocabulario, lambda = exp(seq(-5,2,0.1)))
+if(!usar_cache){
+  mod_x <- correr_modelo_cv(df_ent, df_pr, vocabulario, lambda = exp(seq(-5,2,0.1)))
+  saveRDS(mod_x, file = './cache_obj/mod_sentiment_4.rds')
+} else {
+  mod_x <- readRDS('./cache_obj/mod_sentiment_4.rds')
+  describir_modelo_cv(mod_x)
+}
 ```
 
 ## Consiguiendo más datos
@@ -334,13 +362,25 @@ podríamos etiquetar más reviews: esto es relativamente barato y rápido
 
 ```{r}
 vocabulario <- calc_vocabulario(df_ent_grande, 3000, remove_stop = FALSE)
-mod_x <- correr_modelo_cv(df_ent_grande, df_pr, vocabulario, lambda = exp(seq(-5,2,0.1)))
+if(!usar_cache){
+  mod_x <- correr_modelo_cv(df_ent_grande, df_pr, vocabulario, lambda = exp(seq(-5,2,0.1)))
+  saveRDS(mod_x, file = './cache_obj/mod_sentiment_5.rds')
+} else {
+  mod_x <- readRDS('./cache_obj/mod_sentiment_5.rds')
+  describir_modelo_cv(mod_x)
+}
 ```
 
 Y ya casi logramos nuestro objetivo. Podemos intentar con más palabras
 ```{r}
 vocabulario <- calc_vocabulario(df_ent_grande, 4000, remove_stop = FALSE)
-mod_x <- correr_modelo_cv(df_ent_grande, df_pr, vocabulario, lambda = exp(seq(-5,2,0.1)))
+if(!usar_cache){
+  mod_x <- correr_modelo_cv(df_ent_grande, df_pr, vocabulario, lambda = exp(seq(-5,2,0.1)))
+  saveRDS(mod_x, file = './cache_obj/mod_sentiment_6.rds')
+} else {
+  mod_x <- readRDS('./cache_obj/mod_sentiment_6.rds')
+  describir_modelo_cv(mod_x)
+}
 ```
 
 
@@ -515,7 +555,7 @@ if(Sys.info()['nodename'] == 'vainilla.local'){
   Sys.setenv(TENSORFLOW_PYTHON="/usr/local/bin/python")
 }
 library(keras)
-vocabulario <- calc_vocabulario(df_ent_grande, 4000, remove_stop = FALSE)
+vocabulario <- calc_vocabulario(df_ent_grande, 2000, remove_stop = FALSE)
 dim(vocabulario)
 entrena <- convertir_lista(df_ent_grande, vocabulario)
 prueba <- convertir_lista(df_pr, vocabulario)
@@ -533,30 +573,27 @@ x_test <- prueba$x %>%
 
 model <- keras_model_sequential()
 model %>% 
-  # Start off with an efficient embedding layer which maps
-  # the vocab indices into embedding_dims dimensions
-  layer_embedding(input_dim = nrow(vocabulario)+2, output_dim = 20, 
+  layer_embedding(input_dim = nrow(vocabulario)+1, output_dim = 30, 
                   input_length=2000,
-                  embeddings_regularizer = regularizer_l2(0.00)) %>%
-  layer_dropout(0.5) %>%
+                  embeddings_regularizer = regularizer_l2(0.01)) %>%
+  #layer_dropout(0.5) %>%
   layer_conv_1d(
-    filters = 30, kernel_size=3, 
+    filters = 20, kernel_size=3, 
     padding = "valid", activation = "relu", strides = 1,
     kernel_regularizer = regularizer_l2(0.01)) %>%
-  # Apply max pooling:
-  layer_dropout(0.5) %>%
+  #  layer_dropout(0.5) %>%
   layer_global_max_pooling_1d() %>%
-  # Add a vanilla hidden layer:
-  layer_dense(20, activation ='relu') %>%
-  layer_dropout(0.5) %>%
-  layer_dense(1) %>%
-  layer_activation("sigmoid")
+  layer_dense(20, activation ='relu',
+              kernel_regularizer = regularizer_l2(0.001)) %>%
+  #layer_dropout(0.5) %>%
+  layer_dense(1, activation='sigmoid', kernel_regularizer = regularizer_l2(0.001)) 
 
 
 # Compile model
 model %>% compile(
   loss = "binary_crossentropy",
-  optimizer = optimizer_adam(lr=0.001),
+  #optimizer = optimizer_sgd(lr=0.001, momentum=0.0),
+  optimizer = optimizer_adam(),
   metrics = c("accuracy","binary_crossentropy")
 )
 
@@ -564,7 +601,7 @@ model %>%
   fit(
     x_train, entrena$y,
     batch_size = 128,
-    epochs = 100,
+    epochs = 200,
     #  callback = callback_early_stopping(monitor='val_loss', patience=50),
     validation_data = list(x_test, prueba$y)
   )
