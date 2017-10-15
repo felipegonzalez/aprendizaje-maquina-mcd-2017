@@ -873,12 +873,12 @@ Para cada caso de entrenamiento $(x^(i), y^(i))$ consideramos todos los árboles
 que **no** usaron este caso para construirse, y construimos un bosque $T_{ba}^(i)$
 basado solamente en esos árboles.
 La predicción OOB de $T_{ba}$ para $(x^(i), y^(i))$ es
-$$y^_{oob}^(i) = T_{ba}(x^(i))$$
+$$y_{oob}^{(i)} = T_{ba}(x^(i))$$
 El error OOB del árbol $T_{ba}$ está dado por 
 1. Regresión (error cuadrático medio)
-$$\hat{Err}_{oob} = \frac{1}{n} (y^{(i)} - y^_{oob}^(i))^2$$
+$$\hat{Err}_{oob} = \frac{1}{n} \sum_{i=1}^n (y^{(i)} - y_{oob}^{(i)})^2$$
 2. Clasificación (error de clasificación)
-$$\hat{Err}_{oob} = \frac{1}{n} I(y^{(i)} = y^_{oob}^(i))$$
+$$\hat{Err}_{oob} = \frac{1}{n}\sum_{i=1}^n I(y^{(i)} = y_{oob}^{(i)})$$
 
 ```
 
@@ -915,6 +915,20 @@ tab <- table(prop_bosque> 0.5, spam_entrena$spam) %>% prop.table(2) %>% round(3)
 1-diag(tab)
 
 ```
+
+Podemos también monitorear el error OOB conforme agregamos más árboles. Esta gráfica
+es útil para entender qué tanto esta mejorando el bosque dependiendo del número de árboles:
+
+```{r}
+err_spam <- bosque_spam$err.rate %>% as_data_frame %>% mutate(ntrees = row_number()) 
+head(err_spam)
+err_spam <- err_spam %>% gather(métrica, valor, -ntrees)
+ggplot(err_spam, aes(x=ntrees, y=valor, colour=métrica)) + geom_line()
+```
+
+Además de la estimación OOB del error de clasificación, en la gráfica están las estimaciones OOB
+dada cada una de las clases (probabilidad de clasificar correctamente dada la clase: en
+problemas binarios son tasa de falsos positivos y tasa de falsos negativos).
 
 ---
 
@@ -960,28 +974,70 @@ $X_k$.
 
 Nótese que:
 
-- No podemos "quitar" la variable en el ajuste de los árboles, pues entonces otras variables
+- No podemos "quitar" la variable durante el entrenamiento de los árboles, pues entonces otras variables
 pueden hacer su trabajo, subestimando su importancia.
 - No podemos "quitar" la variable al medir el error OOB, pues se necesitan todas las
 variables para poder clasificar con cada árbol (pues cada árbol usa esa variable, o tiene
 probabilidad de usarla).
-- Pero podemos permutar a la hora de probar (no entrenar), rompiendo la relación que
+- Pero podemos permutar a la hora calcular el error OOB (y no durante el entrenamiento), 
+rompiendo la relación que
 hay entre $X_k$ y la variable respuesta.
-- Este método funciona bien con bosques aleatorios, pues el proceso de aleatorización
-en la selección de variables aminora el problema de enmascaramiento que notamos en árboles.
+- Aunque podríamos usar esta medida para árboles, no es muy buena idea por el problema
+de "enmascaramiento". Este problema se aminora en los bosques aleatorios pues todas las 
+variables tienen oportunidad de aportar cortes en ausencia de otras variables.
 
 #### Ejemplo{-}
 En nuestro ejemplo de spam
-```{r}
+```{r, fig.asp=1.5}
 imp <- importance(bosque_spam, type=1)
 importancia_df <- data_frame(variable = rownames(imp), MeanDecreaseAccuracy = imp[,1]) %>% 
   arrange(desc(MeanDecreaseAccuracy))
 importancia_df
+importancia_df <- importancia_df %>% mutate(variable = reorder(variable, MeanDecreaseAccuracy))
+ggplot(importancia_df , aes(x=variable, y= MeanDecreaseAccuracy)) + geom_point() +
+  coord_flip()
 ```
 
+---
 
+### Ajustando árboles aleatorios.
 
+- El parámetros más importante de afinar es $m$, el número de variables que se escogen
+al azar en cada nodo.
+- A veces podemos obtener algunas ventajas de afinar el número mínimo de observaciones por
+nodo terminal y/o el número mínimo de observaciones por nodo para considerar hacer cortes adicionales
+- Usualmente corremos tantos árboles como podamos (cientos, miles), o hasta que se
+estabiliza el error. Aumentar más arboles rara vez producen sobreajuste adicional (aunque esto no 
+quiere decir que los bosques aleatorios no puedan sobreajustar!)
 
+#### Ejemplo {-}
+
+Consideremos datos de (casas en venta en Ames, Iowa)[https://ww2.amstat.org/publications/jse/v19n3/decock.pdf]. Queremos
+predecir el precio listado de una casa en función de las características de las casa.
+
+El análisis completo (desde limpieza y exploración) está en scripts/ames-housing.Rmd
+
+### Ventajas y desventajas de árboles aleatorios
+
+Ventajas:
+
+- Entre los métodos estándar (off-the shelf), son quizá el
+mejor método: tienen excelentes tasas de error de predicción.
+- Los bosques aleatorios son relativamente fáciles de entrenar (usualmente 1 o 2 parámetros)
+y rápidos de ajustar. 
+- Heredan las ventajas de los árboles: no hay necesidad de transformar variables o construir interacciones (pues los árboles pueden descubrirlas), son robustos a valores atípicos.
+- Igual que con los árboles, las predicciones de los bosques siempre están en el rango
+de las variables de predicción (no extrapolan)
+
+Desventajas:
+- Pueden ser lentos en la predicción, pues muchas veces 
+requieren evaluar grandes cantidades
+de árboles.
+- No es tan simple adaptarlos a distiintos tipos de problemas (por ejemplo, como
+redes neuronales, que combinando capas podemos construir modelos ad-hoc a problemas
+particulares).
+- La falta de extrapolación puede ser también un defecto (por ejemplo, cuando hay
+una estructura lineal aproximada).
 
 
 
