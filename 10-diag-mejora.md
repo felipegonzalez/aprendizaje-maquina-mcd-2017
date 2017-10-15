@@ -536,13 +536,31 @@ este proceso también lo podemos hacer con cv.glmnet de manera más rápida.
 
 
 ```r
-mod_x <- correr_modelo_cv(df_ent, df_pr, vocabulario, 
-                          lambda = exp(seq(-10,5,0.1)))
+require(doMC)
 ```
 
 ```
-## Joining, by = "palabra"
-## Joining, by = "palabra"
+## Loading required package: doMC
+```
+
+```
+## Loading required package: iterators
+```
+
+```
+## Loading required package: parallel
+```
+
+```r
+registerDoMC(cores=4)
+if(!usar_cache){
+  mod_x <- correr_modelo_cv(df_ent, df_pr, vocabulario, 
+                          lambda = exp(seq(-10,5,0.1)))
+  saveRDS(mod_x, file = './cache_obj/mod_sentiment_1.rds')
+} else {
+  mod_x <- readRDS('./cache_obj/mod_sentiment_1.rds')
+  describir_modelo_cv(mod_x)
+}
 ```
 
 <img src="10-diag-mejora_files/figure-html/unnamed-chunk-21-1.png" width="672" />
@@ -565,12 +583,13 @@ No estamos mejorando. Podemos intentar con un número diferente de entradas:
 
 ```r
 vocabulario <- calc_vocabulario(df_ent, 4000, remove_stop = TRUE)
-mod_x <- correr_modelo_cv(df_ent, df_pr, vocabulario, lambda = exp(seq(-10,5,0.1)))
-```
-
-```
-## Joining, by = "palabra"
-## Joining, by = "palabra"
+if(!usar_cache){
+  mod_x <- correr_modelo_cv(df_ent, df_pr, vocabulario, lambda = exp(seq(-10,5,0.1)))
+  saveRDS(mod_x, file = './cache_obj/mod_sentiment_2.rds')
+} else {
+  mod_x <- readRDS('./cache_obj/mod_sentiment_2.rds')
+  describir_modelo_cv(mod_x)
+}
 ```
 
 <img src="10-diag-mejora_files/figure-html/unnamed-chunk-22-1.png" width="672" />
@@ -589,12 +608,14 @@ Regresamos a nuestro modelo con ridge
 
 ```r
 vocabulario <- calc_vocabulario(df_ent, 3000, remove_stop = FALSE)
-mod_x <- correr_modelo_cv(df_ent, df_pr, vocabulario, lambda = exp(seq(-5,2,0.1)))
-```
 
-```
-## Joining, by = "palabra"
-## Joining, by = "palabra"
+if(!usar_cache){
+mod_x <- correr_modelo_cv(df_ent, df_pr, vocabulario, lambda = exp(seq(-5,2,0.1)))
+  saveRDS(mod_x, file = './cache_obj/mod_sentiment_3.rds')
+} else {
+  mod_x <- readRDS('./cache_obj/mod_sentiment_3.rds')
+  describir_modelo_cv(mod_x)
+}
 ```
 
 <img src="10-diag-mejora_files/figure-html/unnamed-chunk-23-1.png" width="672" />
@@ -613,12 +634,13 @@ regularización
 
 ```r
 vocabulario <- calc_vocabulario(df_ent, 4000, remove_stop = FALSE)
-mod_x <- correr_modelo_cv(df_ent, df_pr, vocabulario, lambda = exp(seq(-5,2,0.1)))
-```
-
-```
-## Joining, by = "palabra"
-## Joining, by = "palabra"
+if(!usar_cache){
+  mod_x <- correr_modelo_cv(df_ent, df_pr, vocabulario, lambda = exp(seq(-5,2,0.1)))
+  saveRDS(mod_x, file = './cache_obj/mod_sentiment_4.rds')
+} else {
+  mod_x <- readRDS('./cache_obj/mod_sentiment_4.rds')
+  describir_modelo_cv(mod_x)
+}
 ```
 
 <img src="10-diag-mejora_files/figure-html/unnamed-chunk-24-1.png" width="672" />
@@ -645,12 +667,13 @@ podríamos etiquetar más reviews: esto es relativamente barato y rápido
 
 ```r
 vocabulario <- calc_vocabulario(df_ent_grande, 3000, remove_stop = FALSE)
-mod_x <- correr_modelo_cv(df_ent_grande, df_pr, vocabulario, lambda = exp(seq(-5,2,0.1)))
-```
-
-```
-## Joining, by = "palabra"
-## Joining, by = "palabra"
+if(!usar_cache){
+  mod_x <- correr_modelo_cv(df_ent_grande, df_pr, vocabulario, lambda = exp(seq(-5,2,0.1)))
+  saveRDS(mod_x, file = './cache_obj/mod_sentiment_5.rds')
+} else {
+  mod_x <- readRDS('./cache_obj/mod_sentiment_5.rds')
+  describir_modelo_cv(mod_x)
+}
 ```
 
 <img src="10-diag-mejora_files/figure-html/unnamed-chunk-26-1.png" width="672" />
@@ -667,12 +690,13 @@ Y ya casi logramos nuestro objetivo. Podemos intentar con más palabras
 
 ```r
 vocabulario <- calc_vocabulario(df_ent_grande, 4000, remove_stop = FALSE)
-mod_x <- correr_modelo_cv(df_ent_grande, df_pr, vocabulario, lambda = exp(seq(-5,2,0.1)))
-```
-
-```
-## Joining, by = "palabra"
-## Joining, by = "palabra"
+if(!usar_cache){
+  mod_x <- correr_modelo_cv(df_ent_grande, df_pr, vocabulario, lambda = exp(seq(-5,2,0.1)))
+  saveRDS(mod_x, file = './cache_obj/mod_sentiment_6.rds')
+} else {
+  mod_x <- readRDS('./cache_obj/mod_sentiment_6.rds')
+  describir_modelo_cv(mod_x)
+}
 ```
 
 <img src="10-diag-mejora_files/figure-html/unnamed-chunk-27-1.png" width="672" />
@@ -770,14 +794,18 @@ mod_x <- correr_modelo_cv(df_ent_grande, df_pr, voc_bing, alpha=0,
 ## Joining, by = "palabra"
 ```
 
+```r
+describir_modelo_cv(mod_x)
+```
+
 <img src="10-diag-mejora_files/figure-html/unnamed-chunk-30-1.png" width="672" />
 
 ```
-## [1] "Lambda min: 0.135335283236613"
+## [1] "Lambda min: 0.122456428252982"
 ## [1] "Error entrenamiento: 0.02"
-## [1] "Error prueba: 0.18"
-## [1] "Devianza entrena:0.399"
-## [1] "Devianza prueba:0.775"
+## [1] "Error prueba: 0.17"
+## [1] "Devianza entrena:0.381"
+## [1] "Devianza prueba:0.774"
 ```
 Estas variables solas no dan un resultado tan bueno (tenemos tanto sesgo
 como varianza altas). Podemos combinar:
@@ -802,14 +830,18 @@ mod_x <- correr_modelo_cv(df_ent_grande, df_pr, voc, alpha=0, lambda = exp(seq(-
 ## Joining, by = "palabra"
 ```
 
+```r
+describir_modelo_cv(mod_x)
+```
+
 <img src="10-diag-mejora_files/figure-html/unnamed-chunk-31-1.png" width="672" />
 
 ```
-## [1] "Lambda min: 0.110803158362334"
+## [1] "Lambda min: 0.0907179532894125"
 ## [1] "Error entrenamiento: 0"
 ## [1] "Error prueba: 0.13"
-## [1] "Devianza entrena:0.168"
-## [1] "Devianza prueba:0.64"
+## [1] "Devianza entrena:0.147"
+## [1] "Devianza prueba:0.633"
 ```
 
 Este camino no se ve mal, pero no hemos logrado mejoras. Aunque quizá valdría la pena
@@ -837,14 +869,18 @@ mod_x <- correr_modelo_cv(df_ent_grande, df_pr, vocabulario, lambda = exp(seq(-5
 ## Joining, by = "palabra"
 ```
 
+```r
+describir_modelo_cv(mod_x)
+```
+
 <img src="10-diag-mejora_files/figure-html/unnamed-chunk-32-1.png" width="672" />
 
 ```
-## [1] "Lambda min: 0.0742735782143339"
+## [1] "Lambda min: 0.0820849986238988"
 ## [1] "Error entrenamiento: 0"
 ## [1] "Error prueba: 0.12"
-## [1] "Devianza entrena:0.127"
-## [1] "Devianza prueba:0.621"
+## [1] "Devianza entrena:0.136"
+## [1] "Devianza prueba:0.623"
 ```
 
 
@@ -859,26 +895,26 @@ arrange(coef_df, coef) %>% print(n=20)
 ## # A tibble: 4,107 x 2
 ##         palabra       coef
 ##           <chr>      <dbl>
-##  1  (Intercept) -0.5202993
-##  2     tiresome -0.3177686
-##  3       sloppy -0.3172574
-##  4      tedious -0.3126577
-##  5     designed -0.2874723
-##  6    profanity -0.2859466
-##  7       forgot -0.2846777
-##  8    insulting -0.2731769
-##  9    redeeming -0.2682002
-## 10    ludicrous -0.2666633
-## 11       asleep -0.2635447
-## 12 embarrassing -0.2597261
-## 13         alas -0.2535202
-## 14    miserably -0.2524217
-## 15     lifeless -0.2470858
-## 16       random -0.2423485
-## 17    abilities -0.2382746
-## 18   ridiculous -0.2345950
-## 19        inept -0.2342536
-## 20    stupidity -0.2310142
+##  1  (Intercept) -0.5104659
+##  2       sloppy -0.3049259
+##  3     tiresome -0.3041222
+##  4      tedious -0.2995033
+##  5     designed -0.2752456
+##  6       forgot -0.2752196
+##  7    profanity -0.2741518
+##  8    insulting -0.2635200
+##  9    redeeming -0.2582221
+## 10    ludicrous -0.2569009
+## 11       asleep -0.2525127
+## 12 embarrassing -0.2501103
+## 13    miserably -0.2436195
+## 14         alas -0.2433399
+## 15     lifeless -0.2375580
+## 16       random -0.2340050
+## 17    abilities -0.2284854
+## 18        inept -0.2272352
+## 19   ridiculous -0.2266569
+## 20    stupidity -0.2233172
 ## # ... with 4,087 more rows
 ```
 
@@ -890,26 +926,26 @@ arrange(coef_df, desc(coef)) %>% print(n=20)
 ## # A tibble: 4,107 x 2
 ##         palabra      coef
 ##           <chr>     <dbl>
-##  1   refreshing 0.3059454
-##  2       beings 0.2885485
-##  3   underneath 0.2874046
-##  4   commanding 0.2600559
-##  5  outstanding 0.2446216
-##  6    marvelous 0.2363481
-##  7       finest 0.2298207
-##  8     identify 0.2282767
-##  9    enjoyment 0.2276357
-## 10        ralph 0.2241629
-## 11  exceptional 0.2202450
-## 12    threatens 0.2180045
-## 13       mature 0.2159176
-## 14        anger 0.2156787
-## 15      luckily 0.2135683
-## 16       enters 0.2131698
-## 17      overall 0.2096731
-## 18 breathtaking 0.2081317
-## 19      popcorn 0.2065266
-## 20     portrait 0.2045239
+##  1   refreshing 0.2928763
+##  2       beings 0.2754203
+##  3   underneath 0.2751466
+##  4   commanding 0.2502302
+##  5  outstanding 0.2367210
+##  6    marvelous 0.2269661
+##  7       finest 0.2226550
+##  8     identify 0.2198893
+##  9    enjoyment 0.2178993
+## 10        ralph 0.2132248
+## 11  exceptional 0.2124156
+## 12        anger 0.2082285
+## 13       mature 0.2080578
+## 14    threatens 0.2079872
+## 15      luckily 0.2052777
+## 16       enters 0.2048924
+## 17      overall 0.2012073
+## 18 breathtaking 0.2004415
+## 19      popcorn 0.1985406
+## 20     portrait 0.1957565
 ## # ... with 4,087 more rows
 ```
 
@@ -934,16 +970,16 @@ df_1
 ## # A tibble: 425 x 4
 ##       id     y       prob      error
 ##    <chr> <dbl>      <dbl>      <dbl>
-##  1  1508     1 0.03703643  0.9629636
-##  2  1461     1 0.04592738  0.9540726
-##  3  1490     1 0.09001622  0.9099838
-##  4   222     0 0.89631498 -0.8963150
-##  5  1933     1 0.10591536  0.8940846
-##  6  1642     1 0.13099916  0.8690008
-##  7    25     0 0.86449563 -0.8644956
-##  8   728     0 0.85955485 -0.8595548
-##  9  1050     1 0.14632991  0.8536701
-## 10   415     0 0.84982386 -0.8498239
+##  1  1508     1 0.04079128  0.9592087
+##  2  1461     1 0.04895588  0.9510441
+##  3  1490     1 0.09491609  0.9050839
+##  4  1933     1 0.10969336  0.8903066
+##  5   222     0 0.88869902 -0.8886990
+##  6    25     0 0.85875753 -0.8587575
+##  7  1642     1 0.14257363  0.8574264
+##  8   728     0 0.85126829 -0.8512683
+##  9  1050     1 0.15208815  0.8479119
+## 10   415     0 0.84431790 -0.8443179
 ## # ... with 415 more rows
 ```
 
@@ -997,14 +1033,18 @@ mod_x <- correr_modelo_cv(df_ent_grande, df_pr, vocabulario, lambda = exp(seq(-5
 ## Joining, by = "palabra"
 ```
 
+```r
+describir_modelo_cv(mod_x)
+```
+
 <img src="10-diag-mejora_files/figure-html/unnamed-chunk-37-1.png" width="672" />
 
 ```
-## [1] "Lambda min: 0.0820849986238988"
+## [1] "Lambda min: 0.0907179532894125"
 ## [1] "Error entrenamiento: 0"
 ## [1] "Error prueba: 0.11"
-## [1] "Devianza entrena:0.143"
-## [1] "Devianza prueba:0.626"
+## [1] "Devianza entrena:0.153"
+## [1] "Devianza prueba:0.628"
 ```
 
 ```r
@@ -1061,6 +1101,10 @@ mod_bigramas <- correr_modelo_cv(df_ent_grande, df_pr, vocabulario_bigramas,
 ```
 ## Joining, by = "palabra"
 ## Joining, by = "palabra"
+```
+
+```r
+describir_modelo_cv(mod_bigramas)
 ```
 
 <img src="10-diag-mejora_files/figure-html/unnamed-chunk-38-1.png" width="672" />
@@ -1127,7 +1171,7 @@ if(Sys.info()['nodename'] == 'vainilla.local'){
   Sys.setenv(TENSORFLOW_PYTHON="/usr/local/bin/python")
 }
 library(keras)
-vocabulario <- calc_vocabulario(df_ent_grande, 4000, remove_stop = FALSE)
+vocabulario <- calc_vocabulario(df_ent_grande, 2000, remove_stop = FALSE)
 dim(vocabulario)
 entrena <- convertir_lista(df_ent_grande, vocabulario)
 prueba <- convertir_lista(df_pr, vocabulario)
@@ -1144,30 +1188,27 @@ x_test <- prueba$x %>%
 ```r
 model <- keras_model_sequential()
 model %>% 
-  # Start off with an efficient embedding layer which maps
-  # the vocab indices into embedding_dims dimensions
-  layer_embedding(input_dim = nrow(vocabulario)+2, output_dim = 20, 
+  layer_embedding(input_dim = nrow(vocabulario)+1, output_dim = 30, 
                   input_length=2000,
-                  embeddings_regularizer = regularizer_l2(0.00)) %>%
-  layer_dropout(0.5) %>%
+                  embeddings_regularizer = regularizer_l2(0.01)) %>%
+  #layer_dropout(0.5) %>%
   layer_conv_1d(
-    filters = 30, kernel_size=3, 
+    filters = 20, kernel_size=3, 
     padding = "valid", activation = "relu", strides = 1,
     kernel_regularizer = regularizer_l2(0.01)) %>%
-  # Apply max pooling:
-  layer_dropout(0.5) %>%
+  #  layer_dropout(0.5) %>%
   layer_global_max_pooling_1d() %>%
-  # Add a vanilla hidden layer:
-  layer_dense(20, activation ='relu') %>%
-  layer_dropout(0.5) %>%
-  layer_dense(1) %>%
-  layer_activation("sigmoid")
+  layer_dense(20, activation ='relu',
+              kernel_regularizer = regularizer_l2(0.001)) %>%
+  #layer_dropout(0.5) %>%
+  layer_dense(1, activation='sigmoid', kernel_regularizer = regularizer_l2(0.001)) 
 
 
 # Compile model
 model %>% compile(
   loss = "binary_crossentropy",
-  optimizer = optimizer_adam(lr=0.001),
+  #optimizer = optimizer_sgd(lr=0.001, momentum=0.0),
+  optimizer = optimizer_adam(),
   metrics = c("accuracy","binary_crossentropy")
 )
 
@@ -1175,7 +1216,7 @@ model %>%
   fit(
     x_train, entrena$y,
     batch_size = 128,
-    epochs = 100,
+    epochs = 200,
     #  callback = callback_early_stopping(monitor='val_loss', patience=50),
     validation_data = list(x_test, prueba$y)
   )
