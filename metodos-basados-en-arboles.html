@@ -25,7 +25,7 @@
 <meta name="author" content="Felipe González">
 
 
-<meta name="date" content="2017-10-15">
+<meta name="date" content="2017-10-16">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -975,7 +975,7 @@ Cuando el tamaño de muestra <span class="math inline">\(n\)</span> es grande, e
 
 <div class="comentario">
 <p><strong>Estimación OOB del error</strong></p>
-<p>Consideramos un bosque aleatorio <span class="math inline">\(T_{ba}\)</span>con árboles <span class="math inline">\(T_1^*, T_2^*, \ldots, T_B^*\)</span>, y conjunto de entrenamiento original <span class="math inline">\({\mathcal L} =\{(x^(i), y^(i)\}_{i=1}^n\)</span>. Para cada caso de entrenamiento <span class="math inline">\((x^(i), y^(i))\)</span> consideramos todos los árboles que <strong>no</strong> usaron este caso para construirse, y construimos un bosque <span class="math inline">\(T_{ba}^(i)\)</span> basado solamente en esos árboles. La predicción OOB de <span class="math inline">\(T_{ba}\)</span> para <span class="math inline">\((x^(i), y^(i))\)</span> es <span class="math display">\[y_{oob}^{(i)} = T_{ba}(x^(i))\]</span> El error OOB del árbol <span class="math inline">\(T_{ba}\)</span> está dado por 1. Regresión (error cuadrático medio) <span class="math display">\[\hat{Err}_{oob} = \frac{1}{n} \sum_{i=1}^n (y^{(i)} - y_{oob}^{(i)})^2\]</span> 2. Clasificación (error de clasificación) <span class="math display">\[\hat{Err}_{oob} = \frac{1}{n}\sum_{i=1}^n I(y^{(i)} = y_{oob}^{(i)})\]</span></p>
+<p>Consideramos un bosque aleatorio <span class="math inline">\(T_{ba}\)</span>con árboles <span class="math inline">\(T_1^*, T_2^*, \ldots, T_B^*\)</span>, y conjunto de entrenamiento original <span class="math inline">\({\mathcal L} =\{(x^{(i)}, y^{(i)}\}_{i=1}^n\)</span>. Para cada caso de entrenamiento <span class="math inline">\((x^(i), y^(i))\)</span> consideramos todos los árboles que <strong>no</strong> usaron este caso para construirse, y construimos un bosque <span class="math inline">\(T_{ba}^(i)\)</span> basado solamente en esos árboles. La predicción OOB de <span class="math inline">\(T_{ba}\)</span> para <span class="math inline">\((x^(i), y^(i))\)</span> es <span class="math display">\[y_{oob}^{(i)} = T_{ba}(x^(i))\]</span> El error OOB del árbol <span class="math inline">\(T_{ba}\)</span> está dado por 1. Regresión (error cuadrático medio) <span class="math display">\[\hat{Err}_{oob} = \frac{1}{n} \sum_{i=1}^n (y^{(i)} - y_{oob}^{(i)})^2\]</span> 2. Clasificación (error de clasificación) <span class="math display">\[\hat{Err}_{oob} = \frac{1}{n}\sum_{i=1}^n I(y^{(i)} = y_{oob}^{(i)})\]</span></p>
 </div>
 
 <ul>

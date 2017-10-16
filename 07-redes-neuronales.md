@@ -1264,13 +1264,13 @@ score
 
 ```
 ## $loss
-## [1] 0.435285
+## [1] 0.4345558
 ## 
 ## $acc
 ## [1] 0.7921687
 ## 
 ## $binary_crossentropy
-## [1] 0.4310052
+## [1] 0.4303887
 ```
 
 ```r
@@ -1281,8 +1281,8 @@ tab_confusion
 ```
 ##    y_valid
 ##       0   1
-##   0 194  40
-##   1  29  69
+##   0 193  39
+##   1  30  70
 ```
 
 ```r
@@ -1292,8 +1292,8 @@ prop.table(tab_confusion, 2)
 ```
 ##    y_valid
 ##             0         1
-##   0 0.8699552 0.3669725
-##   1 0.1300448 0.6330275
+##   0 0.8654709 0.3577982
+##   1 0.1345291 0.6422018
 ```
 
 Es importante monitorear las curvas de aprendizaje (entrenamiento y
