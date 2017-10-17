@@ -25,7 +25,7 @@
 <meta name="author" content="Felipe González">
 
 
-<meta name="date" content="2017-10-16">
+<meta name="date" content="2017-10-17">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -806,7 +806,7 @@ En aprendizaje supervisado, nuestro objetivo es reducir el error reducible tanto
 <div id="notacion" class="section level4 unnumbered">
 <h4>Notación</h4>
 <p>Las observaciones o datos que usaremos para construir nuestras estimaciones las denotamos como sigue.</p>
-<p>Cada {} (o caso, o ejemplo) está dada por un el valor de una variable de entrada <span class="math inline">\(X\)</span> y un valor de la variable de salida <span class="math inline">\(Y\)</span>. Cuando tenemos <span class="math inline">\(N\)</span> ejemplos de entrenamiento, los escribimos como los pares <span class="math display">\[(x^{(1)},y^{(1)}), (x^{(2)},y^{(2)}) \ldots, (x^{(N)},y^{(N)})\]</span>. Cuando los datos de entrada contienen <span class="math inline">\(p\)</span> variables o atributos, escribimos <span class="math display">\[x^{(i)} = (x_1^{(i)}, x_2^{(i)},\ldots, x_p^{(i)})\]</span></p>
+<p>Cada <em>observación</em> (o caso, o ejemplo) está dada por un el valor de una variable de entrada <span class="math inline">\(X\)</span> y un valor de la variable de salida <span class="math inline">\(Y\)</span>. Cuando tenemos <span class="math inline">\(N\)</span> ejemplos de entrenamiento, los escribimos como los pares <span class="math display">\[(x^{(1)},y^{(1)}), (x^{(2)},y^{(2)}) \ldots, (x^{(N)},y^{(N)})\]</span>. Cuando los datos de entrada contienen <span class="math inline">\(p\)</span> variables o atributos, escribimos <span class="math display">\[x^{(i)} = (x_1^{(i)}, x_2^{(i)},\ldots, x_p^{(i)})\]</span></p>
 <p>Escribimos también la matriz de entradas de dimensión Nxp: <span class="math display">\[\underline{X} =  \left ( \begin{array}{cccc}
 x_1^{(1)} &amp; x_2^{(1)} &amp; \ldots  &amp; x_p^{(1)} \\
 x_1^{(2)} &amp; x_2^{(2)} &amp; \ldots  &amp; x_p^{(2)}\\
@@ -815,7 +815,7 @@ x_1^{(N)} &amp; x_2^{(N)} &amp; \ldots  &amp; x_p^{(N)} \\
  \end{array} \right)\]</span> y <span class="math display">\[\underline{y} =(y^{(1)},y^{(2)}, \ldots, y^{(N)})^t.\]</span></p>
 <p>Adicionalmente, usamos la notación</p>
 <p><span class="math display">\[{\mathcal L}=\{ (x^{(1)},y^{(1)}), (x^{(2)},y^{(2)}), \ldots, (x^{(N)},y^{(N)}) \}\]</span></p>
-<p>para denotar al conjunto de datos con los que construimos nuestro modelo. A este conjunto le llamaremos {} (learning set)</p>
+<p>para denotar al conjunto de datos con los que construimos nuestro modelo. A este conjunto le llamaremos <em>conjunto o muestra de entrenamiento</em> (learning set)</p>
 </div>
 </div>
 <div id="como-estimar-f" class="section level2">
@@ -828,7 +828,7 @@ x_1^{(N)} &amp; x_2^{(N)} &amp; \ldots  &amp; x_p^{(N)} \\
 <p>que son funciones lineales en dos variables. En este caso, tenemos tres parámetros <span class="math inline">\((\beta_0,\beta_1,\beta_2)\)</span>, que describen a la familia completa.</p>
 <p>Usando los datos de entrenamiento, entrenamos este modelo para encontrar <span class="math inline">\((\beta_0,\beta_1,\beta_2)\)</span> tales que</p>
 <p><span class="math display">\[y^{(i)} \approx \beta_0 + \beta_1 x_1^{(i)} + \beta_2 x_2^{(i)},\]</span> es decir, el modelo ajustado regresa valores cercanos a los observados. Esta aproximación se traducirá en un problema de optimización.</p>
-<p>En general, este enfoque es muy tratable numéricamente pues el problema se reduce a estimar tres valores numéricos, en lugar de intentar estimar una función <span class="math inline">\(f\)</span> arbitraria. Su desventaja es que quizá ningún miembro familia de modelos establecida (por ejemplo, modelos lineales) puede aproximar razonablemente bien a la verdadera función <span class="math inline">\(f\)</span>. Es decir, estos métodos tienen {} potencial grande. Por ejemplo:</p>
+<p>En general, este enfoque es muy tratable numéricamente pues el problema se reduce a estimar tres valores numéricos, en lugar de intentar estimar una función <span class="math inline">\(f\)</span> arbitraria. Su desventaja es que quizá ningún miembro familia de modelos establecida (por ejemplo, modelos lineales) puede aproximar razonablemente bien a la verdadera función <span class="math inline">\(f\)</span>. Es decir, estos métodos tienen <em>sesgo</em> potencial grande. Por ejemplo:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mod_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">lm</span>(mpg<span class="op">~</span>year<span class="op">+</span>weight, <span class="dt">data=</span>Auto)
 Auto<span class="op">$</span>fit &lt;-<span class="st"> </span><span class="kw">predict</span>(mod_<span class="dv">1</span>)
 weight &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="dv">1600</span>, <span class="dv">5200</span>, <span class="dt">by=</span><span class="dv">100</span>)
@@ -881,7 +881,7 @@ dat.grid<span class="op">$</span>pred.mpg &lt;-<span class="st"> </span>values<s
 <ul>
 <li><p>Aprendizaje de máquina: algoritmos que aprenden de los datos para predecir cantidades numéricas, o clasificar (aprendizaje supervisado), o para encontrar estructura en los datos (aprendizaje no supervisado).</p></li>
 <li>En aprendizaje supervisado, el esquema general es:</li>
-<li>un algoritmo aprende de una muestra de entrenamiento <span class="math inline">\({\mathcal L}\)</span>, que es generada por el proceso generador de datos que nos interesa. Eso quiere decir que produce una función <span class="math inline">\(\hat{f}\)</span> (a partir de <span class="math inline">\({\mathcal L}\)</span>) que nos sirve para hacer predicciones <span class="math inline">\(x \to \hat{f}(x)\)</span> de <span class="math inline">\(y\)</span></li>
+<li>Un algoritmo aprende de una muestra de entrenamiento <span class="math inline">\({\mathcal L}\)</span>, que es generada por el proceso generador de datos que nos interesa. Eso quiere decir que produce una función <span class="math inline">\(\hat{f}\)</span> (a partir de <span class="math inline">\({\mathcal L}\)</span>) que nos sirve para hacer predicciones <span class="math inline">\(x \to \hat{f}(x)\)</span> de <span class="math inline">\(y\)</span></li>
 <li>El error de predicción del algoritmo es <span class="math inline">\(Err\)</span>, que mide en promedio qué tan lejos están las predicciones de valores reales.</li>
 <li>Para estimar esta cantidad usamos una muestra de prueba <span class="math inline">\({\mathcal T}\)</span>, que es independiente de <span class="math inline">\({\mathcal L}\)</span>.</li>
 <li><p>Esta es porque nos interesa el desempeño futuro de <span class="math inline">\(\hat{f}\)</span> para nuevos casos que el algoritmo no ha visto (esto es aprender).</p></li>

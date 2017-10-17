@@ -25,7 +25,7 @@
 <meta name="author" content="Felipe González">
 
 
-<meta name="date" content="2017-10-16">
+<meta name="date" content="2017-10-17">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -671,12 +671,12 @@ history &lt;-<span class="st"> </span>modelo <span class="op">%&gt;%</span><span
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">get_weights</span>(modelo)</code></pre></div>
 <pre><code>## [[1]]
 ##            [,1]
-## [1,] -0.6903110
-## [2,]  0.2279709
-## [3,]  0.3872573
+## [1,] -0.6661155
+## [2,]  0.1132148
+## [3,]  0.4380174
 ## 
 ## [[2]]
-## [1] 1.674652</code></pre>
+## [1] 1.674041</code></pre>
 <p>Y verificamos que concuerda con la salida de <em>glm</em>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mod_logistico &lt;-<span class="st"> </span><span class="kw">glm</span>(g <span class="op">~</span><span class="st"> </span>x_<span class="dv">1</span> <span class="op">+</span><span class="st"> </span>x_<span class="dv">2</span><span class="op">+</span><span class="st"> </span>x_<span class="dv">3</span>, <span class="dt">data =</span> dat_ent, <span class="dt">family =</span> <span class="st">&#39;binomial&#39;</span>) 
 <span class="kw">coef</span>(mod_logistico)</code></pre></div>
@@ -741,13 +741,13 @@ history &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><s
 score &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">evaluate</span>(x_test, y_test)
 score</code></pre></div>
 <pre><code>## $loss
-## [1] 0.2919326
+## [1] 0.2908826
 ## 
 ## $acc
-## [1] 0.9317389
+## [1] 0.9347285
 ## 
 ## $categorical_crossentropy
-## [1] 0.2908861</code></pre>
+## [1] 0.2898324</code></pre>
 <p>Podemos también intentar con el ejemplo de spam:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(readr)
 <span class="kw">library</span>(tidyr)
@@ -783,13 +783,13 @@ tab_confusion &lt;-<span class="st"> </span><span class="kw">table</span>(modelo
 tab_confusion</code></pre></div>
 <pre><code>##    y_valid
 ##       0   1
-##   0 871  35
-##   1  56 572</code></pre>
+##   0 878  39
+##   1  49 568</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">prop.table</span>(tab_confusion, <span class="dv">2</span>)</code></pre></div>
 <pre><code>##    y_valid
 ##              0          1
-##   0 0.93959008 0.05766063
-##   1 0.06040992 0.94233937</code></pre>
+##   0 0.94714132 0.06425041
+##   1 0.05285868 0.93574959</code></pre>
 </div>
 </div>
 <div id="activaciones-relu" class="section level2">
@@ -841,13 +841,13 @@ history &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><s
 score &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">evaluate</span>(x_test, y_test)
 score</code></pre></div>
 <pre><code>## $loss
-## [1] 13.29196
+## [1] 0.2963342
 ## 
 ## $acc
-## [1] 0.1788739
+## [1] 0.9422023
 ## 
 ## $categorical_crossentropy
-## [1] 13.23338</code></pre>
+## [1] 0.2163561</code></pre>
 </div>
 </div>
 <div id="dropout-para-regularizacion" class="section level2">
@@ -938,36 +938,36 @@ hist_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">as
 <p><img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-46-1.png" width="480" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">get_weights</span>(modelo_dropout)[[<span class="dv">3</span>]]</code></pre></div>
 <pre><code>##              [,1]
-##  [1,] -1.82971692
-##  [2,] -1.42119825
-##  [3,] -0.99923241
-##  [4,] -1.14948046
-##  [5,]  0.17017941
-##  [6,]  0.30933022
-##  [7,]  0.07736446
-##  [8,] -1.43510377
-##  [9,] -1.89557719
-## [10,] -1.24194586
-## [11,] -1.63068318
-## [12,]  1.11690128
-## [13,]  0.93066734
-## [14,] -1.33279550
-## [15,] -1.14112091
-## [16,]  1.35788369
-## [17,]  1.22860217
-## [18,]  0.16021885
-## [19,] -1.49027884
-## [20,]  0.90137875
-## [21,]  0.31141052
-## [22,]  1.21480846
-## [23,]  1.35649180
-## [24,] -1.33003211
-## [25,] -1.68882275
-## [26,]  1.01718652
-## [27,] -1.43984282
-## [28,]  0.64665610
-## [29,] -1.30274773
-## [30,]  1.33905447</code></pre>
+##  [1,]  1.15686095
+##  [2,]  0.52239096
+##  [3,] -1.54463482
+##  [4,]  1.03521371
+##  [5,]  0.55465335
+##  [6,] -1.04281068
+##  [7,]  0.14215796
+##  [8,]  1.32866502
+##  [9,] -1.25350845
+## [10,] -1.39693844
+## [11,]  1.10490739
+## [12,] -1.63433850
+## [13,]  1.11369586
+## [14,] -1.92479396
+## [15,]  1.40803504
+## [16,] -1.83823788
+## [17,]  1.04956234
+## [18,]  1.20509386
+## [19,]  0.20446195
+## [20,] -1.55792403
+## [21,] -1.28173935
+## [22,] -1.03357184
+## [23,]  0.09939833
+## [24,] -1.16113222
+## [25,] -1.23728800
+## [26,]  0.49256578
+## [27,] -1.69306076
+## [28,] -1.73897338
+## [29,] -1.37874019
+## [30,]  1.06438684</code></pre>
 <p>¿Cuáles de estas unidades tienen peso positivo y negativo en la capa final?</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pesos_capa_f &lt;-<span class="st"> </span><span class="kw">get_weights</span>(modelo_dropout)[[<span class="dv">3</span>]]
 <span class="kw">graf_pesos</span>(pesos[, pesos_capa_f <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.5</span>], <span class="dt">mostrar_facets =</span> <span class="ot">TRUE</span>)</code></pre></div>
@@ -1010,13 +1010,13 @@ history &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><s
 score &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">evaluate</span>(x_test, y_test)
 score</code></pre></div>
 <pre><code>## $loss
-## [1] 0.2343105
+## [1] 0.2225233
 ## 
 ## $acc
-## [1] 0.9481814
+## [1] 0.9501744
 ## 
 ## $categorical_crossentropy
-## [1] 0.2301956</code></pre>
+## [1] 0.2186742</code></pre>
 
 </div>
 </div>
