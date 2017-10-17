@@ -635,7 +635,7 @@ Las observaciones o datos que usaremos para construir nuestras estimaciones
 las denotamos como sigue.
 
 Cada *observación* (o caso, o ejemplo) 
-está dada por un el valor de una variable de entrada $X$
+está dada por el valor de una variable de entrada $X$
 y un valor de la variable de salida $Y$. 
 Cuando tenemos $N$ ejemplos de entrenamiento, los
 escribimos como los pares
