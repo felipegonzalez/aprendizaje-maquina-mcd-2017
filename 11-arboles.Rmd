@@ -629,7 +629,7 @@ Así que la fórmula \@ref(eq:varianza-ensamble) queda
 
 \begin{equation}
 Var(T(x)) = 
- \frac{1}{B} \sigma^2(x) + \frac{B-1}{B}` \rho(x)\sigma^2(x) =
+ \frac{1}{B} \sigma^2(x) + \frac{B-1}{B} \rho(x)\sigma^2(x) =
  \sigma^2(x)\left(\frac{1}{B}  + \left(1-\frac{1}{B}\right )\rho(x)     \right)
   (\#eq:varianza-ensamble-2)
 \end{equation}
@@ -958,6 +958,8 @@ Consideramos un árbol $T^*_j$ del bosque, con muestra bootstrap ${\mathcal L}^*
 un tipo de error out-of-bag para el árbol, promediando sobre todos los elementos de ${\mathcal L}$ que no están en ${\mathcal L}^*_i$
 
 $$\widehat{Err}_{oob}(T^*_j) = \frac{1}{A_j}\sum_{(x^{(i)}, y^{(i)}) \in {\mathcal L} -{\mathcal L}^*_i} L(y^{(i)}, T^*_j(x^{(i)}))$$
+donde $A_j$ es el tamaño de ${\mathcal L} -{\mathcal L}^*_i}$.
+
 Ahora *permutamos* al azar la variable $X_k$ en la muestra OOB ${\mathcal L} -{\mathcal L}^*_i$.
 Describimos esta operación como $x^{(i)} \to x^{(i)}_k$.
 Calculamos el error nuevamente:
@@ -1039,7 +1041,9 @@ particulares).
 - La falta de extrapolación puede ser también un defecto (por ejemplo, cuando hay
 una estructura lineal aproximada).
 
+### Tarea (para 23 de octubre)
 
+- Las instrucciones están en *scripts/tarea_arboles_bosques.Rmd*
 
 
 
