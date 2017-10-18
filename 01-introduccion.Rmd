@@ -634,8 +634,8 @@ a variables que no conocemos.
 Las observaciones o datos que usaremos para construir nuestras estimaciones
 las denotamos como sigue.
 
-Cada {\em observación} (o caso, o ejemplo) 
-está dada por un el valor de una variable de entrada $X$
+Cada *observación* (o caso, o ejemplo) 
+está dada por el valor de una variable de entrada $X$
 y un valor de la variable de salida $Y$. 
 Cuando tenemos $N$ ejemplos de entrenamiento, los
 escribimos como los pares
@@ -657,7 +657,7 @@ Adicionalmente, usamos la notación
 $${\mathcal L}=\{ (x^{(1)},y^{(1)}), (x^{(2)},y^{(2)}), \ldots, (x^{(N)},y^{(N)}) \}$$
 
 para denotar al conjunto de datos con los que construimos nuestro
-modelo. A este conjunto le llamaremos {\em conjunto o muestra de entrenamiento}
+modelo. A este conjunto le llamaremos *conjunto o muestra de entrenamiento*
 (learning set)
 
 
@@ -693,7 +693,7 @@ se reduce a estimar tres valores numéricos, en lugar de intentar estimar una fu
 arbitraria. Su desventaja es que quizá ningún miembro
 familia de modelos establecida (por ejemplo, modelos lineales) puede aproximar
 razonablemente bien a la verdadera función $f$. Es decir,
-estos métodos tienen {\em sesgo} potencial grande. Por ejemplo:
+estos métodos tienen *sesgo* potencial grande. Por ejemplo:
 
 
 ```{r, fig.width=8, fig.asp=0.7}
@@ -774,7 +774,7 @@ numéricas, o clasificar (aprendizaje supervisado), o para encontrar estructura 
 datos (aprendizaje no supervisado).
 
 - En aprendizaje supervisado, el esquema general es: 
-  - un algoritmo aprende de una
+  - Un algoritmo aprende de una
 muestra de entrenamiento ${\mathcal L}$, que es generada por el proceso generador de datos que nos interesa. Eso quiere decir que produce una función $\hat{f}$ (a partir de ${\mathcal L}$) que nos sirve para hacer predicciones $x \to \hat{f}(x)$ de $y$
   - El error de predicción del algoritmo es $Err$, que mide en promedio qué tan lejos están las predicciones de valores reales.
   - Para estimar esta cantidad usamos una muestra de prueba ${\mathcal T}$, que
