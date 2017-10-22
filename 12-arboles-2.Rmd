@@ -30,7 +30,7 @@ Para ajustar este tipo de modelos, buscamos minimizar
 la pérdida de entrenamiento:
 
 \begin{equation}
-\min_{(\beta_m,b_m)} \sum_{i=1}^N L(y^{(i)}, \sum_{k=1}^M T_k(x^{(i)}))
+\min \sum_{i=1}^N L(y^{(i)}, \sum_{k=1}^M T_k(x^{(i)}))
 \end{equation}
 
 Este puede ser un problema difícil, dependiendo de la familia 
@@ -54,11 +54,10 @@ Por ejemplo, para pérdida cuadrática (en regresión), buscamos resolver
 
 Si ponemos 
 $$ r_{m-1}^{(i)} = y^{(i)} - f_{m-1}(x^{(i)}),$$
-que es el error para el caso $i$ y el modelo $f_{m-1}$, entonces
+que es el error para el caso $i$ bajo el modelo $f_{m-1}$, entonces
 reescribimos el problema anterior como
-r_{m-1}^{(i)}
 \begin{equation}
-\min_{(\beta,b)} \sum_{i=1}^N ( r_{m-1}^{(i)} - T(x^{(i)}))^2
+\min_{T} \sum_{i=1}^N ( r_{m-1}^{(i)} - T(x^{(i)}))^2
 \end{equation}
 
 Este problema consiste en *ajustar un árbol a los residuales o errores
@@ -82,7 +81,7 @@ Esta idea es la base del siguiente algoritmo:
 1. Tomamos $f_0(x)=0$
 2. Para $m=1$ hasta $M$, 
   - Resolvemos
-$$(\beta_m, b_m) = argmin_{T} \sum_{i=1}^N L(y^{(i)}, f_{m-1}(x^{(i)}) + T(x^{(i)}))$$
+$$T_m = argmin_{T} \sum_{i=1}^N L(y^{(i)}, f_{m-1}(x^{(i)}) + T(x^{(i)}))$$
   - Ponemos
 $$f_m(x) = f_{m-1}(x) + T_m(x)$$
 3. Nuestro predictor final es $f(x) = \sum_{m=1}^M T_(x)$.
@@ -200,12 +199,15 @@ Así que hacemos lo mismo que en regresión logística. Ponemos
 
 $$f(x) = \sum_{k=1}^m T_k(x),$$
 
-y entonces las probabilidades 
+y entonces las probabilidades son
 $$p(x) = h(f(x)),$$
 
-donde $h(z)=1/(1-e^{-z})$ es la función logística. La optimización de la etapa $m$ según fsam es
+donde $h(z)=1/(1+e^{-z})$ es la función logística. La optimización de la etapa $m$ según fsam es
 
-$$(\beta_m, b_m) = argmin_{T} \sum_{i=1}^N L(y^{(i)}, f_{m-1}(x^{(i)}) + T(x^{(i)}))$$
+\begin{equation}
+T = argmin_{T} \sum_{i=1}^N L(y^{(i)}, f_{m-1}(x^{(i)}) + T(x^{(i)}))
+(\#eq:fsam-paso)
+\end{equation}
 
 y queremos usar la devianza como función de pérdida. Por razones
 de comparación (con nuestro libro de texto y con el algoritmo Adaboost
@@ -235,18 +237,18 @@ que tenemos que ajustar. Una solución a esta, que intenta resolver aproximadame
 
 ## Gradient boosting
 
-La idea de gradient boosting es replicar la idea del residual, y usar
-árboles de regresión para resolver ****.
+La idea de gradient boosting es replicar la idea del residual en regresión, y usar
+árboles de regresión para resolver \@ref(eq:fsam-paso).
 
 Gradient boosting es una técnica general para funciones de pérdida
-generales. Regresamos entonces a nuestro problema original
+generales.Regresamos entonces a nuestro problema original
 
 $$(\beta_m, b_m) = argmin_{(\beta,b)} \sum_{i=1}^N L(y^{(i)}, f_{m-1}(x^{(i)}) + T(x^{(i)}))$$
 
 La pregunta es: ¿hacia dónde tenemos qué mover la predicción de
 $f_{m-1}(x^{(i)})$ sumando
-el término $T(x^{(i)}))$? Consideremos un solo término de esta suma,
-y denotemos $z_i = T(x^{(i)}))$. Queremos agregar una cantidad $z_i$
+el término $T(x^{(i)})$? Consideremos un solo término de esta suma,
+y denotemos $z_i = T(x^{(i)})$. Queremos agregar una cantidad $z_i$
 tal que el valor de la pérdida
 $$L(y, f_{m-1}(x^{(i)})+z_i)$$
 se reduzca. Entonces sabemos que podemos mover la z en la dirección opuesta al gradiente
@@ -258,14 +260,50 @@ $$T(x^{(i)})\approx -\gamma \frac{\partial L}{\partial z}(y^{(i)}, f_{m-1}(x^{(i
 Para tener esta aproximación, podemos poner
 $$g_{i,m} = -\frac{\partial L}{\partial z}(y^{(i)}, f_{m-1}(x^{(i)}))$$
 e intentar resolver
-$$\min_T (g_{i,m} - T(x^{(i)}))^2,$$
+\begin{equation}
+\min_T (g_{i,m} - T(x^{(i)}))^2,
+(\#eq:min-cuad-boost)
+\end{equation}
+
 es decir, intentamos replicar los gradientes lo más que sea posible. **Este problema lo podemos resolver con un árbol usual de regresión**. Finalmente,
-escogemos $\gamma$ (tamaño de paso) suficientemente chica y ponemos
-$$f_m(x) = f_{m-1}(x)+\gamma T(x)$$
+podríamos escoger $\nu$ (tamaño de paso) suficientemente chica y ponemos
+$$f_m(x) = f_{m-1}(x)+\nu T(x).$$
+
+Podemos hacer un refinamiento adicional para mejorar el algoritmo como sigue, que consiste en encontrar los cortes del árbol $T$ según \@ref(eq:min-cuad-boost), pero optimizando por separado los valores que T(x) toma en cada una de las regiones encontradas.
+
+### Algoritmo
 
 ```{block2, type='comentario'}
 **Gradient boosting**
+
+1. Inicializar con $f_0(x) =\gamma$
+
+2. Para $m=0,1,\ldots, M$, 
+
+  - Para $i=1,\ldots, n$, calculamos el residual
+  $$r_{i,m}=-\frac{\partial L}{\partial z}(y^{(i)}, f_{m-1}(x^{(i)}))$$
+  
+  - Ajustamos un árbol de regresión  a la respuesta $r_{1,m},r_{2,m},\ldots, r_{n,m}$. Supongamos que tiene regiones $R_{j,m}$.
+
+  - Resolvemos (optimizamos directamente el valor que toma el árbol en cada región - este es un problema univariado, más fácil de resolver)
+  $$\gamma_{j,m} = argmin_\gamma \sum_{x^{(i)}\in R_{j,m}} L(y^{(i)},f_{m-1}(x^{i})+\gamma )$$
+    para cada región $R_{j,m}$ del árbol del inciso anterior.
+  - Actualizamos $$f_m (x) = f_{m-1}(x) +\sum_j \gamma_{j,m} I(x\in R_{j,m})$$
+  3. El predictor final es $f_M(x)$.
 ```
+
+
+### Funciones de pérdida
+
+Para aplicar gradient boosting, tenemos primero que poder calcular
+el gradiente de la función de pérdida. Algunos ejemplos populares:
+
+- Pérdida cuadrática: $L(y,z)=(y-z)^2$, 
+$\frac{\partial L}{\partial z} = -2(y-z)$.
+- Përdida absoluta (más robusta que la cuadrática) $L(y,z)=|y-z|$,
+$\frac{\partial L}{\partial z} = signo(y-z)$.
+- Devianza binomial $L(y, z)$ = -\log(1+e^{-yz}), $y\in\{-1,1\}$,
+$\frac{\partial L}{\partial z} = I(y=1) - p(x)$.
 
 
 
