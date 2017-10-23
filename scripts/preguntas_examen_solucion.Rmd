@@ -1,0 +1,104 @@
+---
+title: "Preguntas de examen"
+output: html_notebook
+---
+
+
+
+## Pregunta 10
+
+Simulamos datos al azar
+
+```{r}
+library(tidyverse)
+y <- rbinom(50, 1, 0.5)
+x <- matrix(rnorm(50*5000,0,1), 50, 5000)
+```
+
+Seleccionamos variables (30) con correlación más alta
+
+```{r}
+correlaciones <- cor(x, y)
+vars_selec <- order(correlaciones, decreasing=TRUE)[1:50]
+correlaciones[vars_selec]
+```
+
+```{r}
+library(glmnet)
+modelo <- cv.glmnet(y=y, x= x[,vars_selec], alpha=0, family='binomial',
+                    lambda = exp(seq(-8,5,1)), type.measure = 'class')
+plot(modelo)
+```
+
+El error de validación cruzada es casi cero. Sin embargo,
+el error de prueba con una muestra grande tiene que ser alrededor de 0.5:
+
+```{r}
+y_p <- rbinom(1000, 1, 0.5)
+x_p <- matrix(rnorm(1000*5000,0,1), 1000, 5000)
+preds_p <- predict.cv.glmnet(modelo, newx = x_p[, vars_selec])
+mean((preds_p > 0) == y_p)
+```
+
+
+El problema es que la selección de variables tiene que estar dentro
+del proceso de validación cruzada. Calculemos los errores de esta forma:
+
+
+```{r}
+est_val_cruzada <- sapply(1:10, function(i){
+  x_vc <- x[-((5*i -4):(5*i)),]
+  y_vc <- y[-((5*i -4):(5*i))]
+  correlaciones_vc <- cor(x_vc, y_vc)
+  vars_selec <- order(correlaciones_vc, decreasing=TRUE)[1:50]
+  mod <- glmnet(y=y_vc, x= x_vc[,vars_selec], alpha=0, family='binomial',
+                    lambda = 0)
+  preds_p <- predict(mod, newx = x[((5*i -4):(5*i)),vars_selec])
+  mean((preds_p > 0) == y_p[((5*i -4):(5*i))])
+})
+mean(est_val_cruzada)
+```
+
+Que da una buena estimación del error de predicción
+
+
+
+## Pregunta 25
+
+```{r}
+if(Sys.info()['nodename'] == 'vainilla.local'){
+  # esto es por mi instalación particular de tensorflow - típicamente
+  # no es necesario que corras esta línea.
+  Sys.setenv(TENSORFLOW_PYTHON="/usr/local/bin/python")
+}
+library(keras)
+```
+
+```{r}
+model <- keras_model_sequential()
+model %>% layer_conv_2d(filters = 2, kernel_size = c(3,3),
+                        input_shape = c(5,5,1)) %>%
+  layer_flatten() %>%
+  layer_dense(2) %>%
+  layer_dense(1)
+get_weights(model)        
+
+```
+Que son un total de parámetros igual a
+
+```{r}
+length(unlist(get_weights(model)))
+```
+
+### Pregunta 24
+
+
+
+```{r}
+model <- keras_model_sequential()
+model %>% layer_dense(3,input_shape = 5) %>%
+  layer_dense(2) %>%
+  layer_dense(1)
+length(unlist(get_weights(model)))
+
+```
