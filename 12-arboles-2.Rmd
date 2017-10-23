@@ -14,7 +14,7 @@ tiene  alto poder predictivo.
 
 Aunque existen versiones de boosting (Adaboost) desde los 90s, una buena
 manera de entender los algoritmos es mediante un proceso general
-de modeloado por estapas (FSAM).
+de modelado por estapas (FSAM).
 
 ### Discusión
 Consideramos primero un problema de regresión, que queremos atacar
@@ -136,7 +136,7 @@ agregar_arbol <- function(arboles_fsam, dat, plot=TRUE){
   dat$preds_nuevo <- predict(arboles_fsam[[n+1]])
   dat$preds <- predecir_arboles(arboles_fsam, x=dat$x)
   g_res <- ggplot(dat, aes(x = x)) + geom_line(aes(y=preds_nuevo)) +
-    geom_point(aes(y=res)) + labs(title = 'Residuales') + ylim(c(-6,6))
+    geom_point(aes(y=res)) + labs(title = 'Residuales') + ylim(c(-10,10))
   g_agregado <- ggplot(dat, aes(x=x)) + geom_line(aes(y=preds), col = 'red',
                                                   size=1.1) +
     geom_point(aes(y=y)) + labs(title ='Ajuste')
@@ -223,12 +223,12 @@ que a su vez se puede escribir como (demostrar):
 $$L(y,z) = 2\log(1+e^{-yz})$$
 Ahora consideremos cómo se ve nuestro problema de optimización:
 
-$$(\beta_m, b_m) = argmin_{(\beta,b)} -2\sum_{i=1}^N \log (1+ e^{-y^{(i)}(f_{m-1}(x^{(i)}) + T(x^{(i)})})$$
+$$T = argmin_{T} 2\sum_{i=1}^N \log (1+ e^{-y^{(i)}(f_{m-1}(x^{(i)}) + T(x^{(i)})})$$
 
 Nótese que sólo optimizamos con respecto a $T$, así que
 podemos escribir
 
-$$(\beta_m, b_m) = argmin_{(\beta,b)} -2\sum_{i=1}^N \log (1+ d_{m,i}e^{- T(x^{(i)})})$$
+$$T = argmin_{T} 2\sum_{i=1}^N \log (1+ d_{m,i}e^{- y^{(i)}T(x^{(i)})})$$
 
 Y vemos que el problema es más difícil que en regresión. No podemos usar
 un ajuste de árbol usual de regresión o clasificación, *como hicimos en
@@ -298,12 +298,43 @@ Podemos hacer un refinamiento adicional para mejorar el algoritmo como sigue, qu
 Para aplicar gradient boosting, tenemos primero que poder calcular
 el gradiente de la función de pérdida. Algunos ejemplos populares:
 
-- Pérdida cuadrática: $L(y,z)=(y-z)^2$, 
-$\frac{\partial L}{\partial z} = -2(y-z)$.
-- Përdida absoluta (más robusta que la cuadrática) $L(y,z)=|y-z|$,
-$\frac{\partial L}{\partial z} = signo(y-z)$.
-- Devianza binomial $L(y, z)$ = -\log(1+e^{-yz}), $y\in\{-1,1\}$,
-$\frac{\partial L}{\partial z} = I(y=1) - p(x)$.
+- Pérdida cuadrática: $L(y,f(x))=(y-f(x))^2$, 
+$\frac{\partial L}{\partial z} = -2(y-f(x))$.
+- Pérdida absoluta (más robusta a atípicos que la cuadrática) $L(y,f(x))=|y-f(x)|$,
+$\frac{\partial L}{\partial z} = signo(y-f(x))$.
+- Devianza binomial $L(y, f(x))$ = -\log(1+e^{-yf(x)}), $y\in\{-1,1\}$,
+$\frac{\partial L}{\partial z} = I(y=1) - h(f(x))$.
+- Adaboost, pérdida exponencial (para clasificación) $L(y,z) = e^{-yf(x)}$,
+$y\in\{-1,1\}$,
+$\frac{\partial L}{\partial z} = -ye^{-yf(x)}$.
+
+## Aplicación de Gradient Boosting
+
+Para ajustar modelos con gradient boosting, tenemos que considerar:
+
+### Número de árboles M
+Se monitorea el error sobre una muestra de validación cuando agregamos
+cada árboles. Escogemos el número de árboles de manera que minimize el
+error de validación. Demasiados árboles pueden producir sobreajuste.
+
+### Tamaño de árboles
+Los árboles se construyen de tamaño fijo $J$, donde $J$ es el número
+de cortes. Usualmente $J=1,2,\ldots, 10$, y es un parámetro que hay que
+elegir. $J$ más grande permite interacciones de orden más alto entre 
+las variables de entrada. Se intenta con varias $J$ y $M$ para minimizar
+el error de vaidación.
+
+### Tasa de aprendizaje
+Funciona bien modificar el algoritmo usando una tasa de aprendizae
+$0<\nu<1$:
+$$f_m(x) = f_{m-1}(x) + \nu \sum_j \gamma_{j,m} I(x\in R_{j,m})$$
+Igualmente se prueba con varios valores de $0<nu<1$ (típicamente $\nu<0.1$)
+para mejorar el desempeño en validación. **Nota**: cuando hacemos $\nu$ más chica, es necesario hacer $M$ más grande (correr más árboles) para obtener desempeño 
+óptimo.
+
+## Ejemplo
+
+
 
 
 
