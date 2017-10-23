@@ -313,11 +313,13 @@ $\frac{\partial L}{\partial z} = -ye^{-yf(x)}$.
 Para ajustar modelos con gradient boosting, tenemos que considerar:
 
 ### Número de árboles M
+
 Se monitorea el error sobre una muestra de validación cuando agregamos
 cada árboles. Escogemos el número de árboles de manera que minimize el
 error de validación. Demasiados árboles pueden producir sobreajuste.
 
 ### Tamaño de árboles
+
 Los árboles se construyen de tamaño fijo $J$, donde $J$ es el número
 de cortes. Usualmente $J=1,2,\ldots, 10$, y es un parámetro que hay que
 elegir. $J$ más grande permite interacciones de orden más alto entre 
