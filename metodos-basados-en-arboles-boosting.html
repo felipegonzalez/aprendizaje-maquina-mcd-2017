@@ -32,8 +32,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   
   
-<link rel="prev" href="redes-neuronales-parte-2.html">
-<link rel="next" href="diagnostico-y-mejora-de-modelos.html">
+<link rel="prev" href="metodos-basados-en-arboles.html">
+
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -327,316 +327,239 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="redes-convolucionales" class="section level1">
-<h1><span class="header-section-number">Clase 9</span> Redes convolucionales</h1>
-<p>Las redes convolucionales son un tipo de arquitectura de red que utiliza ciertos supuestos acerca de los pesos, en contraste a las redes totalmente conexas donde los pesos pueden tomar cualquier valor. Esos supuestos están adaptados para explotar la estructura señales, por ejemplo: sonido o imágenes. En estos dos casos, se trata de entradas que tienen una <strong>estructura adicional de proximidad</strong> (es decir, hay un concepto de pixeles cercanos y lejanos, igual de tiempos cercanos o lejanos). Las redes convolucionales son la arquitectura más exitosa para tratar con este tipo de problemas con estructura espacial o temporal.</p>
-<p>Hay tres consecuencias básicos que producen el uso de convoluciones, que explicamos primero intuitivamente:</p>
-<ul>
-<li><p><strong>Conexiones ralas</strong>: existen unidades que solo están conectadas a una fracción relativamente chica de las unidades de la capa anterior (en lugar de todas, como en redes totalmente conexas). Por ejemplo: una unidad que busca detectar una forma en una esquina de una imagen no necesita estar conectada a pixeles de otras partes de la imagen.</p></li>
-<li><p><strong>Parámetros compartidos</strong>: diferentes unidades tienen pesos compartidos. Por ejemplo: una unidad que quiere detectar el sonido de cierto animal al principio de la grabación puede utilizar los mismos pesos aplicados a otra parte de la grabación. Podemos “mover” el detector (con los mismos pesos) a lo largo de la grabación para ver en dónde detecta el sonido que nos interesa.</p></li>
-<li><p><strong>Equivarianza</strong>: Una translación de una entrada (en tiempo o espacio), produce una traslación equivalente en la salida. Por ejemplo, Si una unidad asociada a la esquina superior derecha de una imagen detecta un número, entonces habrá otra unidad que puede detectar el número en la esquina inferior.</p></li>
-</ul>
-<div id="filtros-convolucionales" class="section level2">
-<h2><span class="header-section-number">9.1</span> Filtros convolucionales</h2>
-<div id="filtros-en-una-dimension" class="section level3 unnumbered">
-<h3>Filtros en una dimensión</h3>
-<p>Comenzamos por considerar filtros para una serie de tiempo.</p>
+<div id="metodos-basados-en-arboles-boosting" class="section level1">
+<h1><span class="header-section-number">Clase 12</span> Métodos basados en árboles: boosting</h1>
+<p>Boosting también utiliza la idea de un “ensamble” de árboles. Es diferente a bagging y bosques aleatoriso en que la sucesión de árboles de boosting se ‘adapta’ al comportamiento del predictor a lo largo de las iteraciones, haciendo reponderaciones de los datos de entrenamiento para que el algoritmo se concentre en las predicciones más pobres.</p>
+<p>Igual que bosques aleatorios, boosting es también un método que generalmente tiene alto poder predictivo.</p>
+<div id="algoritmo-fsam-forward-stagewise-additive-modeling" class="section level2">
+<h2><span class="header-section-number">12.1</span> Algoritmo FSAM (forward stagewise additive modeling)</h2>
+<p>Aunque existen versiones de boosting (Adaboost) desde los 90s, una buena manera de entender los algoritmos es mediante un proceso general de modelado por estapas (FSAM).</p>
+<div id="discusion-1" class="section level3">
+<h3><span class="header-section-number">12.1.1</span> Discusión</h3>
+<p>Consideramos primero un problema de regresión, que queremos atacar con un predictor de la forma <span class="math display">\[f(x) = \sum_{k=1}^m \beta_k b_k(x),\]</span> donde los <span class="math inline">\(b_m\)</span> son árboles. Podemos absorber el coeficiente <span class="math inline">\(\beta_k\)</span> dentro del árbol <span class="math inline">\(b_k(x)\)</span>, y escribimos</p>
+<p><span class="math display">\[f(x) = \sum_{k=1}^m T_k(x),\]</span></p>
+<p>Para ajustar este tipo de modelos, buscamos minimizar la pérdida de entrenamiento:</p>
+<span class="math display">\[\begin{equation}
+\min \sum_{i=1}^N L(y^{(i)}, \sum_{k=1}^M T_k(x^{(i)}))
+\end{equation}\]</span>
+<p>Este puede ser un problema difícil, dependiendo de la familia que usemos para los árboles <span class="math inline">\(T_k\)</span> que usamos, y sería difícil resolver por fuerza bruta. Para resolver este problema, podemos intentar una heurística secuencial o por etapas:</p>
+<p>Si tenemos <span class="math display">\[f_{m-1}(x) = \sum_{k=1}^{m-1} T_k(x),\]</span></p>
+<p>intentamos resolver el problema (añadir un término adicional)</p>
+<span class="math display">\[\begin{equation}
+\min_{T} \sum_{i=1}^N L(y^{(i)}, f_{m-1}(x^{(i)}) + T(x^{(i)}))
+\end{equation}\]</span>
+<p>Por ejemplo, para pérdida cuadrática (en regresión), buscamos resolver</p>
+<span class="math display">\[\begin{equation}
+\min_{T} \sum_{i=1}^N (y^{(i)} - f_{m-1}(x^{(i)}) - T(x^{(i)}))^2
+\end{equation}\]</span>
+Si ponemos <span class="math display">\[ r_{m-1}^{(i)} = y^{(i)} - f_{m-1}(x^{(i)}),\]</span> que es el error para el caso <span class="math inline">\(i\)</span> bajo el modelo <span class="math inline">\(f_{m-1}\)</span>, entonces reescribimos el problema anterior como
+<span class="math display">\[\begin{equation}
+\min_{T} \sum_{i=1}^N ( r_{m-1}^{(i)} - T(x^{(i)}))^2
+\end{equation}\]</span>
+<p>Este problema consiste en <em>ajustar un árbol a los residuales o errores del paso anterior</em>. Otra manera de decir esto es que añadimos un término adicional que intenta corregir los que el modelo anterior no pudo predecir bien. La idea es repetir este proceso para ir reduciendo los residuales, agregando un árbol a la vez.</p>
 
 <div class="comentario">
-Un <strong>filtro</strong> es una transformación de una señal que pretende extraer ciertas características y suprimir otras.
+La primera idea central de boosting es concentrarnos, en el siguiente paso, en los datos donde tengamos errores, e intentar corregir añadiendo un término adicional al modelo.
 </div>
 
-<p>Por ejemplo, consideramos la siguiente serie, y promedios móviles centrados de longitud 5. Los promedios móviles filtran las componentes de frecuencia alta (variaciones en tiempos cortos), y nos dejan con la variación de menor frecuencia:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(ggplot2)
-<span class="kw">library</span>(dplyr)
-<span class="kw">library</span>(tidyr)
-<span class="kw">library</span>(RcppRoll)
-h &lt;-<span class="st"> </span><span class="cf">function</span>(x){<span class="kw">ifelse</span>(x<span class="op">&gt;</span><span class="dv">0</span>,x,<span class="dv">0</span>)}
-datos &lt;-<span class="st"> </span><span class="kw">data_frame</span>(<span class="dt">t =</span> <span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(BJsales),
-                    <span class="dt">serie =</span> <span class="kw">as.numeric</span>(BJsales) <span class="op">+</span><span class="st"> </span><span class="kw">rnorm</span>(<span class="kw">length</span>(BJsales), <span class="dv">0</span>, <span class="dv">10</span>)) <span class="op">%&gt;%</span>
-<span class="st">          </span><span class="kw">mutate</span>(<span class="dt">promedio_mov =</span> <span class="kw">roll_mean</span>(serie, <span class="dv">5</span>, <span class="dt">align=</span><span class="st">&#39;center&#39;</span>, <span class="dt">fill =</span> <span class="ot">NA</span>))
-<span class="kw">ggplot</span>(<span class="kw">filter</span>(datos, t <span class="op">&lt;</span><span class="st"> </span><span class="dv">100</span>), <span class="kw">aes</span>(<span class="dt">x=</span>t, <span class="dt">y=</span>serie)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">y=</span>promedio_mov), <span class="dt">colour=</span><span class="st">&#39;red&#39;</span>, <span class="dt">size=</span><span class="fl">1.2</span>)</code></pre></div>
-<p><img src="09-redes-convolucionales_files/figure-html/unnamed-chunk-2-1.png" width="480" /></p>
-<p>Podemos escribir este filtro de la siguiente manera: si <span class="math inline">\(x_t\)</span> representa la serie original, y <span class="math inline">\(y_t\)</span> la serie filtrada, entonces <span class="math display">\[ y_t = \frac{1}{5}(x_{t-2} + x_{t-1} + x_t + x_{t+1}+x_{t+2})\]</span></p>
-Podemos escribir esta operación poniendo <span class="math display">\[f =\frac{1}{5} (\ldots, 0,0,1,1,1,1,1,0,0,\ldots)\]</span> donde <span class="math inline">\(f_s=1/5\)</span> para <span class="math inline">\(s=-2,-1,0,1,2\)</span> y cero en otro caso. Entonces <span class="math display">\[y_t = \cdots + x_{t-2}f_{-2} +    x_{t-1}f_{-1} +    x_{t}f_{0}   +x_{t+1}f_{1} +x_{t+2}f_{2}\]</span> Que también se puede escribir como
-<span class="math display">\[\begin{equation}
-y_t = \sum_{s=-\infty}^{\infty} x_s f_{t-s}
-\end{equation}\]</span>
-<p>Nótese que estamos moviendo el filtro <span class="math inline">\(f\)</span> a lo largo de la serie (tiempo) y aplicándolo cada vez.</p>
-<p>Este es un ejemplo de <strong>filtro convolucional</strong>: es una vector <span class="math inline">\(f\)</span> que se aplica a la serie <span class="math inline">\(x\)</span> como en la ecuación anterior para obtener una serie transformada (filtrada) <span class="math inline">\(y\)</span>.</p>
-<p>Otro ejemplo son las primeras diferencias, que toma valores altos cuando la serie crece y bajos cuando decrece (extrae los incrementos)</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">datos &lt;-<span class="st"> </span>datos <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">dif =</span> promedio_mov <span class="op">-</span><span class="st"> </span><span class="kw">lag</span>(promedio_mov)) 
-<span class="kw">ggplot</span>(datos, <span class="kw">aes</span>(<span class="dt">x=</span>t, <span class="dt">y=</span>dif)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span><span class="kw">geom_abline</span>(<span class="dt">slope=</span><span class="dv">0</span>, <span class="dt">intercept=</span><span class="dv">0</span>)</code></pre></div>
-<pre><code>## Warning: Removed 5 rows containing missing values (geom_path).</code></pre>
-<p><img src="09-redes-convolucionales_files/figure-html/unnamed-chunk-3-1.png" width="672" /> ¿Cuál es el filtro <span class="math inline">\(f\)</span> en este caso?</p>
 </div>
-<div id="filtros-convolucionales-en-dos-dimensiones" class="section level3 unnumbered">
-<h3>Filtros convolucionales en dos dimensiones</h3>
-<p>En dos dimensiones, nuestro filtro es una matriz <span class="math inline">\(f_{i,j}\)</span>, que se aplica a una matriz <span class="math inline">\(x_{i,j}\)</span> (podemos pensar que es una imagen) alrededor de cada posible pixel, para obtener la matriz (imagen) filtrada <span class="math inline">\(y_{i,j}\)</span> dada por</p>
-<span class="math display">\[\begin{equation}
-y_{a,b} = \sum_{s,t=-\infty}^{\infty} x_{s,t} f_{s-a,t-b}
-\end{equation}\]</span>
-<p>A la matriz <span class="math inline">\(f\)</span> se le llama matriz convolucional, kernel o máscara del filtro</p>
-<p>Por ejemplo, consideremos el filtro de 3x3</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">filtro_difuminar &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">rep</span>(<span class="dv">1</span><span class="op">/</span><span class="dv">9</span>,<span class="dv">9</span>), <span class="dv">3</span>,<span class="dv">3</span>, <span class="dt">byrow=</span>T)
-filtro_difuminar</code></pre></div>
-<pre><code>##           [,1]      [,2]      [,3]
-## [1,] 0.1111111 0.1111111 0.1111111
-## [2,] 0.1111111 0.1111111 0.1111111
-## [3,] 0.1111111 0.1111111 0.1111111</code></pre>
-<p>El centro de este filtro se sobrepone sobre la cada pixel de la imagen <span class="math inline">\(x\)</span>, se multiplican los valores de la imagen por los del filtro y se suma para obtener el nuevo pixel de la imagen <span class="math inline">\(y\)</span>. Por ejemplo, si tenemos la imagen</p>
-<p>¿Qué efecto tiene este filtro? Este filtro promedia los pixeles de un parche de 3x3 de la imagen, o suaviza la imagen. Es el análogo en 2 dimensiones del filtro de promedios móviles que vimos arriba.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(imager)
-estatua &lt;-<span class="st"> </span><span class="kw">load.image</span>(<span class="st">&#39;imagenes/escultura.jpg&#39;</span>) <span class="op">%&gt;%</span><span class="st"> </span>grayscale
-<span class="kw">plot</span>(estatua)</code></pre></div>
-<p><img src="09-redes-convolucionales_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">estatua_mat &lt;-<span class="st"> </span><span class="kw">as.array</span>(estatua)
-<span class="kw">dim</span>(estatua_mat)</code></pre></div>
-<pre><code>## [1] 174 240   1   1</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">estatua_dif &lt;-<span class="st"> </span><span class="kw">array</span>(<span class="dv">0</span>, <span class="kw">c</span>(<span class="kw">dim</span>(estatua)[<span class="dv">1</span>]<span class="op">-</span><span class="dv">1</span>, <span class="kw">dim</span>(estatua)[<span class="dv">2</span>]<span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>))
-<span class="co"># Ojo: esta manera es muy lenta: si necesitas convoluciones a mano busca</span>
-<span class="co"># paquetes apropiados</span>
-<span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">2</span><span class="op">:</span><span class="kw">dim</span>(estatua_dif)[<span class="dv">1</span>]){
-  <span class="cf">for</span>(j <span class="cf">in</span> <span class="dv">2</span><span class="op">:</span><span class="kw">dim</span>(estatua_dif)[<span class="dv">2</span>]){
-    estatua_dif[i,j,<span class="dv">1</span>,<span class="dv">1</span>] &lt;-<span class="st"> </span><span class="kw">sum</span>(filtro_difuminar<span class="op">*</span>estatua[(i<span class="op">-</span><span class="dv">1</span>)<span class="op">:</span>(i<span class="op">+</span><span class="dv">1</span>),(j<span class="op">-</span><span class="dv">1</span>)<span class="op">:</span>(j<span class="op">+</span><span class="dv">1</span>),<span class="dv">1</span>,<span class="dv">1</span>])
-  }
-}
-<span class="kw">plot</span>(<span class="kw">as.cimg</span>(estatua_dif), <span class="dt">axes=</span><span class="ot">FALSE</span>)</code></pre></div>
-<p><img src="09-redes-convolucionales_files/figure-html/unnamed-chunk-5-2.png" width="672" /></p>
-<p>Podemos intentar otro filtro, que detecta bordes de arriba hacia abajo (es decir, cambios de intensidad que van de bajos a altos conforme bajamos en la imagen):</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">filtro_borde &lt;-<span class="st"> </span>(<span class="kw">matrix</span>(<span class="kw">c</span>(<span class="op">-</span><span class="dv">1</span>,<span class="op">-</span><span class="dv">1</span>,<span class="op">-</span><span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>), <span class="dv">3</span>,<span class="dv">3</span>, <span class="dt">byrow=</span>T))
-filtro_borde</code></pre></div>
-<pre><code>##      [,1] [,2] [,3]
-## [1,]   -1   -1   -1
-## [2,]    0    0    0
-## [3,]    1    1    1</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">estatua_filtrada &lt;-<span class="st"> </span><span class="kw">array</span>(<span class="dv">0</span>, <span class="kw">c</span>(<span class="kw">dim</span>(estatua_dif)[<span class="dv">1</span>]<span class="op">-</span><span class="dv">1</span>, <span class="kw">dim</span>(estatua_dif)[<span class="dv">2</span>]<span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>))
-<span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">2</span><span class="op">:</span><span class="kw">dim</span>(estatua_filtrada)[<span class="dv">1</span>]){
-  <span class="cf">for</span>(j <span class="cf">in</span> <span class="dv">2</span><span class="op">:</span><span class="kw">dim</span>(estatua_filtrada)[<span class="dv">2</span>]){
-    estatua_filtrada[i,j,<span class="dv">1</span>,<span class="dv">1</span>] &lt;-<span class="st"> </span><span class="kw">sum</span>(<span class="kw">t</span>(filtro_borde)<span class="op">*</span>estatua_dif[(i<span class="op">-</span><span class="dv">1</span>)<span class="op">:</span>(i<span class="op">+</span><span class="dv">1</span>),(j<span class="op">-</span><span class="dv">1</span>)<span class="op">:</span>(j<span class="op">+</span><span class="dv">1</span>),<span class="dv">1</span>,<span class="dv">1</span>])
-  }
-}
-<span class="kw">plot</span>(<span class="kw">as.cimg</span>(estatua_filtrada))</code></pre></div>
-<p><img src="09-redes-convolucionales_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
-<p>Este filtro toma valores altos cuando hay un gradiente de intensidad de arriba hacia abajo.</p>
-<p>¿Cómo harías un filtro que detecta curvas? Considera el siguiente ejemplo, en donde construimos un detector de diagonales:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(keras)
-mnist &lt;-<span class="st"> </span><span class="kw">dataset_mnist</span>()
-digito &lt;-<span class="st"> </span><span class="kw">t</span>(mnist<span class="op">$</span>train<span class="op">$</span>x[<span class="dv">10</span>,,])
-<span class="kw">plot</span>(<span class="kw">as.cimg</span>(digito))</code></pre></div>
-<p><img src="09-redes-convolucionales_files/figure-html/unnamed-chunk-8-1.png" width="288" /></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">filtro_diag &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">rep</span>(<span class="op">-</span><span class="dv">1</span>,<span class="dv">25</span>), <span class="dv">5</span>, <span class="dv">5</span>)
-<span class="kw">diag</span>(filtro_diag) &lt;-<span class="st"> </span><span class="dv">2</span>
-<span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="dv">4</span>){
-  filtro_diag[i, i<span class="op">+</span><span class="dv">1</span>] &lt;-<span class="st"> </span><span class="dv">1</span>
-  filtro_diag[i<span class="op">+</span><span class="dv">1</span>, i] &lt;-<span class="st"> </span><span class="dv">1</span>
-}
-filtro_diag_<span class="dv">1</span> &lt;-<span class="st"> </span>filtro_diag[, <span class="dv">5</span><span class="op">:</span><span class="dv">1</span>]
-filtro_diag_<span class="dv">1</span></code></pre></div>
-<pre><code>##      [,1] [,2] [,3] [,4] [,5]
-## [1,]   -1   -1   -1    1    2
-## [2,]   -1   -1    1    2    1
-## [3,]   -1    1    2    1   -1
-## [4,]    1    2    1   -1   -1
-## [5,]    2    1   -1   -1   -1</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">digito_f &lt;-<span class="st"> </span><span class="kw">array</span>(<span class="dv">0</span>, <span class="kw">c</span>(<span class="kw">dim</span>(digito)[<span class="dv">1</span>]<span class="op">-</span><span class="dv">2</span>, <span class="kw">dim</span>(digito)[<span class="dv">2</span>]<span class="op">-</span><span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">1</span>))
-<span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">3</span><span class="op">:</span><span class="kw">dim</span>(digito_f)[<span class="dv">1</span>]){
-  <span class="cf">for</span>(j <span class="cf">in</span> <span class="dv">3</span><span class="op">:</span><span class="kw">dim</span>(digito_f)[<span class="dv">2</span>]){
-    digito_f[i,j,<span class="dv">1</span>,<span class="dv">1</span>] &lt;-<span class="st"> </span><span class="kw">sum</span>((filtro_diag_<span class="dv">1</span>)<span class="op">*</span>digito[(i<span class="op">-</span><span class="dv">2</span>)<span class="op">:</span>(i<span class="op">+</span><span class="dv">2</span>),(j<span class="op">-</span><span class="dv">2</span>)<span class="op">:</span>(j<span class="op">+</span><span class="dv">2</span>)])
-  }
-}
-<span class="kw">plot</span>(<span class="kw">as.cimg</span>(digito_f))</code></pre></div>
-<p><img src="09-redes-convolucionales_files/figure-html/unnamed-chunk-8-2.png" width="288" /></p>
-</div>
-</div>
-<div id="filtros-convolucionales-para-redes-neuronales" class="section level2">
-<h2><span class="header-section-number">9.2</span> Filtros convolucionales para redes neuronales</h2>
-<p>En redes neuronales, la idea es que que qeremos aprender estos filtros a partir de los datos. La imagen filtrada nos da las entradas de la siguiente capa.</p>
-<p>Entonces, supongamos que un filtro de 3x3 está dado por ciertos pesos</p>
-<p><span class="math display">\[ f = \left[ {\begin{array}{ccccc}
-\theta_{1,1} &amp; \theta_{1,2} &amp; \theta_{1,3} \\
-\theta_{2,1} &amp; \theta_{2,2} &amp; \theta_{2,3} \\
-\theta_{3,1} &amp; \theta_{3,2} &amp; \theta_{3,3} \\
-\end{array} } \right]
-\]</span></p>
-<p>Este filtro lo aplicaremos a cada parche de la imagen de entrada. Empezamos aplicando el filtro sobre la parte superior izquierda de la imagen para calcular la primera unidad de salida <span class="math inline">\(a_1\)</span></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="st">&#39;./imagenes/conv_1.png&#39;</span>)</code></pre></div>
-<p><img src="imagenes/conv_1.png" width="470" /></p>
-<p>Ahora nos movemos un pixel a la derecha y aplicamos el filtro para obtener la unidad <span class="math inline">\(a_2\)</span>. Podemos poner las unidades en el orden de la imagen para entender mejor las unidades:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="st">&#39;./imagenes/conv_2.png&#39;</span>)</code></pre></div>
-<p><img src="imagenes/conv_2.png" width="477" /></p>
-<p>Al aplicar el filtro a lo largo de toda la imagen, obtenemos 9 unidades de salida:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="st">&#39;./imagenes/conv_3.png&#39;</span>)</code></pre></div>
-<p><img src="imagenes/conv_3.png" width="479" /></p>
-<p>Finalmente, podemos agregar más parámetros para otros filtros:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="st">&#39;./imagenes/conv_4.png&#39;</span>)</code></pre></div>
-<p><img src="imagenes/conv_4.png" width="494" /></p>
-</div>
-<div id="capas-de-agregacion-pooling" class="section level2">
-<h2><span class="header-section-number">9.3</span> Capas de agregación (pooling)</h2>
-<p>En procesamiento de imágenes y redes convolucionales también se utilizan capas de pooling. Estas se encargan de resumir pixeles adyacentes. Una de las más populares es el max pooling, donde en cada parche de la imagen tomamos el máximo.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="st">&#39;./imagenes/pooling_1.png&#39;</span>)</code></pre></div>
-<p><img src="imagenes/pooling_1.png" width="460" /></p>
-<p>Hay dos razones para usar estas agregaciones:</p>
+<div id="algoritmo-fsam" class="section level3">
+<h3><span class="header-section-number">12.1.2</span> Algoritmo FSAM</h3>
+<p>Esta idea es la base del siguiente algoritmo:</p>
+
+<div class="comentario">
+<p><strong>Algoritmo FSAM</strong> (forward stagewise additive modeling)</p>
+<ol style="list-style-type: decimal">
+<li>Tomamos <span class="math inline">\(f_0(x)=0\)</span></li>
+<li>Para <span class="math inline">\(m=1\)</span> hasta <span class="math inline">\(M\)</span>,</li>
+</ol>
 <ul>
-<li>Obtener invarianza a translaciones adicional (en un parche de la imagen, solo importa si alguno de las unidades agregadas está activa para que el max-pooling esté activo)</li>
-<li>Reduce el tamaño de la imagen (o de una capa de convolución) y en consecuencia tenemos menos parámetros que tratar en las siguientes capas</li>
+<li>Resolvemos <span class="math display">\[T_m = argmin_{T} \sum_{i=1}^N L(y^{(i)}, f_{m-1}(x^{(i)}) + T(x^{(i)}))\]</span></li>
+<li>Ponemos <span class="math display">\[f_m(x) = f_{m-1}(x) + T_m(x)\]</span></li>
+</ul>
+<ol start="3" style="list-style-type: decimal">
+<li>Nuestro predictor final es <span class="math inline">\(f(x) = \sum_{m=1}^M T_(x)\)</span>.
+</div>
+</li>
+</ol>
+<p><strong>Observaciones</strong>: Generalmente los árboles sobre los que optimizamos están restringidos a una familia relativamente chica: por ejemplo, árboles de profundidad no mayor a <span class="math inline">\(2,3,\ldots, 8\)</span>.</p>
+<p>Este algoritmo se puede aplicar directamente para problemas de regresión, como vimos en la discusión anterior: simplemente hay que ajustar árboles a los residuales del modelo del paso anterior. Sin embargo, no está claro cómo aplicarlo cuando la función de pérdida no es mínimos cuadrados (por ejemplo, regresión logística). Quizá tendríamos que escribir funciones ad-hoc para hacer la minimización del paso de FSAM</p>
+<div id="ejemplo-regresion" class="section level4 unnumbered">
+<h4>Ejemplo (regresión)</h4>
+<p>Podemos hacer FSAM directamente sobre un problema de regresión.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">227818</span>)
+<span class="kw">library</span>(rpart)
+<span class="kw">library</span>(tidyverse)
+x &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">200</span>, <span class="dv">0</span>, <span class="dv">30</span>)
+y &lt;-<span class="st"> </span><span class="dv">2</span><span class="op">*</span><span class="kw">ifelse</span>(x <span class="op">&lt;</span><span class="st"> </span><span class="dv">0</span>, <span class="dv">0</span>, <span class="kw">sqrt</span>(x)) <span class="op">+</span><span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">200</span>, <span class="dv">0</span>, <span class="fl">0.5</span>)
+dat &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">x=</span>x, <span class="dt">y=</span>y)</code></pre></div>
+<p>Pondremos los árboles de cada paso en una lista. Podemos comenzar con una constante en lugar de 0.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">arboles_fsam &lt;-<span class="st"> </span><span class="kw">list</span>()
+arboles_fsam[[<span class="dv">1</span>]] &lt;-<span class="st"> </span><span class="kw">rpart</span>(y<span class="op">~</span>x, <span class="dt">data =</span> dat, 
+                           <span class="dt">control =</span> <span class="kw">list</span>(<span class="dt">maxdepth=</span><span class="dv">0</span>))
+arboles_fsam[[<span class="dv">1</span>]]</code></pre></div>
+<pre><code>## n= 200 
+## 
+## node), split, n, deviance, yval
+##       * denotes terminal node
+## 
+## 1) root 200 5370.398 4.675925 *</code></pre>
+<p>Ahora construirmos nuestra función de predicción y el paso que agrega un árbol</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">predecir_arboles &lt;-<span class="st"> </span><span class="cf">function</span>(arboles_fsam, x){
+  preds &lt;-<span class="st"> </span><span class="kw">lapply</span>(arboles_fsam, <span class="cf">function</span>(arbol){
+    <span class="kw">predict</span>(arbol, <span class="kw">data.frame</span>(<span class="dt">x=</span>x))
+  })
+  <span class="kw">reduce</span>(preds, <span class="st">`</span><span class="dt">+</span><span class="st">`</span>)
+}
+agregar_arbol &lt;-<span class="st"> </span><span class="cf">function</span>(arboles_fsam, dat, <span class="dt">plot=</span><span class="ot">TRUE</span>){
+  n &lt;-<span class="st"> </span><span class="kw">length</span>(arboles_fsam)
+  preds &lt;-<span class="st"> </span><span class="kw">predecir_arboles</span>(arboles_fsam, <span class="dt">x=</span>dat<span class="op">$</span>x)
+  dat<span class="op">$</span>res &lt;-<span class="st"> </span>y <span class="op">-</span><span class="st"> </span>preds
+  arboles_fsam[[n<span class="op">+</span><span class="dv">1</span>]] &lt;-<span class="st"> </span><span class="kw">rpart</span>(res <span class="op">~</span><span class="st"> </span>x, <span class="dt">data =</span> dat, 
+                           <span class="dt">control =</span> <span class="kw">list</span>(<span class="dt">maxdepth =</span> <span class="dv">1</span>))
+  dat<span class="op">$</span>preds_nuevo &lt;-<span class="st"> </span><span class="kw">predict</span>(arboles_fsam[[n<span class="op">+</span><span class="dv">1</span>]])
+  dat<span class="op">$</span>preds &lt;-<span class="st"> </span><span class="kw">predecir_arboles</span>(arboles_fsam, <span class="dt">x=</span>dat<span class="op">$</span>x)
+  g_res &lt;-<span class="st"> </span><span class="kw">ggplot</span>(dat, <span class="kw">aes</span>(<span class="dt">x =</span> x)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">y=</span>preds_nuevo)) <span class="op">+</span>
+<span class="st">    </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">y=</span>res)) <span class="op">+</span><span class="st"> </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&#39;Residuales&#39;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">ylim</span>(<span class="kw">c</span>(<span class="op">-</span><span class="dv">10</span>,<span class="dv">10</span>))
+  g_agregado &lt;-<span class="st"> </span><span class="kw">ggplot</span>(dat, <span class="kw">aes</span>(<span class="dt">x=</span>x)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">y=</span>preds), <span class="dt">col =</span> <span class="st">&#39;red&#39;</span>,
+                                                  <span class="dt">size=</span><span class="fl">1.1</span>) <span class="op">+</span>
+<span class="st">    </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">y=</span>y)) <span class="op">+</span><span class="st"> </span><span class="kw">labs</span>(<span class="dt">title =</span><span class="st">&#39;Ajuste&#39;</span>)
+  <span class="cf">if</span>(plot){
+    <span class="kw">print</span>(g_res)
+    <span class="kw">print</span>(g_agregado)
+  }
+  arboles_fsam
+}</code></pre></div>
+<p>Ahora construiremos el primer árbol. Usaremos ‘troncos’ (stumps), árboles con un solo corte: Los primeros residuales son simplemente las <span class="math inline">\(y\)</span>’s observadas</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">arboles_fsam &lt;-<span class="st"> </span><span class="kw">agregar_arbol</span>(arboles_fsam, dat)</code></pre></div>
+<pre><code>## Warning: Removed 8 rows containing missing values (geom_point).</code></pre>
+<p><img src="12-arboles-2_files/figure-html/unnamed-chunk-6-1.png" width="384" /><img src="12-arboles-2_files/figure-html/unnamed-chunk-6-2.png" width="384" /></p>
+<p>Ajustamos un árbol de regresión a los residuales:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">arboles_fsam &lt;-<span class="st"> </span><span class="kw">agregar_arbol</span>(arboles_fsam, dat)</code></pre></div>
+<p><img src="12-arboles-2_files/figure-html/unnamed-chunk-7-1.png" width="384" /><img src="12-arboles-2_files/figure-html/unnamed-chunk-7-2.png" width="384" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">arboles_fsam &lt;-<span class="st"> </span><span class="kw">agregar_arbol</span>(arboles_fsam, dat)</code></pre></div>
+<p><img src="12-arboles-2_files/figure-html/unnamed-chunk-8-1.png" width="384" /><img src="12-arboles-2_files/figure-html/unnamed-chunk-8-2.png" width="384" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">arboles_fsam &lt;-<span class="st"> </span><span class="kw">agregar_arbol</span>(arboles_fsam, dat)</code></pre></div>
+<p><img src="12-arboles-2_files/figure-html/unnamed-chunk-9-1.png" width="384" /><img src="12-arboles-2_files/figure-html/unnamed-chunk-9-2.png" width="384" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">arboles_fsam &lt;-<span class="st"> </span><span class="kw">agregar_arbol</span>(arboles_fsam, dat)</code></pre></div>
+<p><img src="12-arboles-2_files/figure-html/unnamed-chunk-10-1.png" width="384" /><img src="12-arboles-2_files/figure-html/unnamed-chunk-10-2.png" width="384" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">arboles_fsam &lt;-<span class="st"> </span><span class="kw">agregar_arbol</span>(arboles_fsam, dat)</code></pre></div>
+<p><img src="12-arboles-2_files/figure-html/unnamed-chunk-11-1.png" width="384" /><img src="12-arboles-2_files/figure-html/unnamed-chunk-11-2.png" width="384" /></p>
+<p>Después de 20 iteraciones obtenemos:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="cf">for</span>(j <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="dv">19</span>){
+arboles_fsam &lt;-<span class="st"> </span><span class="kw">agregar_arbol</span>(arboles_fsam, dat, <span class="dt">plot =</span> <span class="ot">FALSE</span>)
+}
+arboles_fsam &lt;-<span class="st"> </span><span class="kw">agregar_arbol</span>(arboles_fsam, dat)</code></pre></div>
+<p><img src="12-arboles-2_files/figure-html/unnamed-chunk-12-1.png" width="384" /><img src="12-arboles-2_files/figure-html/unnamed-chunk-12-2.png" width="384" /></p>
+</div>
+</div>
+<div id="fsam-para-clasificacion-binaria." class="section level3">
+<h3><span class="header-section-number">12.1.3</span> FSAM para clasificación binaria.</h3>
+<p>Para problemas de clasificación, no tiene mucho sentido trabajar con un modelo aditivo sobre las probabilidades:</p>
+<p><span class="math display">\[p(x) = \sum_{k=1}^m T_k(x),\]</span></p>
+<p>Así que hacemos lo mismo que en regresión logística. Ponemos</p>
+<p><span class="math display">\[f(x) = \sum_{k=1}^m T_k(x),\]</span></p>
+<p>y entonces las probabilidades son <span class="math display">\[p(x) = h(f(x)),\]</span></p>
+<p>donde <span class="math inline">\(h(z)=1/(1+e^{-z})\)</span> es la función logística. La optimización de la etapa <span class="math inline">\(m\)</span> según fsam es</p>
+<span class="math display" id="eq:fsam-paso">\[\begin{equation}
+T = argmin_{T} \sum_{i=1}^N L(y^{(i)}, f_{m-1}(x^{(i)}) + T(x^{(i)}))
+\tag{12.1}
+\end{equation}\]</span>
+<p>y queremos usar la devianza como función de pérdida. Por razones de comparación (con nuestro libro de texto y con el algoritmo Adaboost que mencionaremos más adelante), escogemos usar <span class="math display">\[y \in \{1,-1\}\]</span></p>
+<p>en lugar de nuestro tradicional <span class="math inline">\(y \in \{1,0\}\)</span>. En ese caso, la devianza binomial se ve como</p>
+<p><span class="math display">\[L(y, z) = -\left [ (y+1)\log h(z) - (y-1)\log(1-h(z))\right ],\]</span> que a su vez se puede escribir como (demostrar):</p>
+<p><span class="math display">\[L(y,z) = 2\log(1+e^{-yz})\]</span> Ahora consideremos cómo se ve nuestro problema de optimización:</p>
+<p><span class="math display">\[T = argmin_{T} 2\sum_{i=1}^N \log (1+ e^{-y^{(i)}(f_{m-1}(x^{(i)}) + T(x^{(i)})})\]</span></p>
+<p>Nótese que sólo optimizamos con respecto a <span class="math inline">\(T\)</span>, así que podemos escribir</p>
+<p><span class="math display">\[T = argmin_{T} 2\sum_{i=1}^N \log (1+ d_{m,i}e^{- y^{(i)}T(x^{(i)})})\]</span></p>
+<p>Y vemos que el problema es más difícil que en regresión. No podemos usar un ajuste de árbol usual de regresión o clasificación, <em>como hicimos en regresión</em>. No está claro, por ejemplo, cuál debería ser el residual que tenemos que ajustar. Una solución a esta, que intenta resolver aproximadamente este problema de minimización, es <strong>gradient boosting</strong></p>
+</div>
+</div>
+<div id="gradient-boosting" class="section level2">
+<h2><span class="header-section-number">12.2</span> Gradient boosting</h2>
+<p>La idea de gradient boosting es replicar la idea del residual en regresión, y usar árboles de regresión para resolver <a href="metodos-basados-en-arboles-boosting.html#eq:fsam-paso">(12.1)</a>.</p>
+<p>Gradient boosting es una técnica general para funciones de pérdida generales.Regresamos entonces a nuestro problema original</p>
+<p><span class="math display">\[(\beta_m, b_m) = argmin_{(\beta,b)} \sum_{i=1}^N L(y^{(i)}, f_{m-1}(x^{(i)}) + T(x^{(i)}))\]</span></p>
+<p>La pregunta es: ¿hacia dónde tenemos qué mover la predicción de <span class="math inline">\(f_{m-1}(x^{(i)})\)</span> sumando el término <span class="math inline">\(T(x^{(i)})\)</span>? Consideremos un solo término de esta suma, y denotemos <span class="math inline">\(z_i = T(x^{(i)})\)</span>. Queremos agregar una cantidad <span class="math inline">\(z_i\)</span> tal que el valor de la pérdida <span class="math display">\[L(y, f_{m-1}(x^{(i)})+z_i)\]</span> se reduzca. Entonces sabemos que podemos mover la z en la dirección opuesta al gradiente</p>
+<p><span class="math display">\[z_i = -\gamma \frac{\partial L}{\partial z}(y^{(i)}, f_{m-1}(x^{(i)}))\]</span></p>
+Sin embargo, necesitamos que las <span class="math inline">\(z_i\)</span> estén generadas por una función <span class="math inline">\(T(x)\)</span> que se pueda evaluar en toda <span class="math inline">\(x\)</span>. Quisiéramos que <span class="math display">\[T(x^{(i)})\approx -\gamma \frac{\partial L}{\partial z}(y^{(i)}, f_{m-1}(x^{(i)}))\]</span> Para tener esta aproximación, podemos poner <span class="math display">\[g_{i,m} = -\frac{\partial L}{\partial z}(y^{(i)}, f_{m-1}(x^{(i)}))\]</span> e intentar resolver
+<span class="math display" id="eq:min-cuad-boost">\[\begin{equation}
+\min_T (g_{i,m} - T(x^{(i)}))^2,
+\tag{12.2}
+\end{equation}\]</span>
+<p>es decir, intentamos replicar los gradientes lo más que sea posible. <strong>Este problema lo podemos resolver con un árbol usual de regresión</strong>. Finalmente, podríamos escoger <span class="math inline">\(\nu\)</span> (tamaño de paso) suficientemente chica y ponemos <span class="math display">\[f_m(x) = f_{m-1}(x)+\nu T(x).\]</span></p>
+<p>Podemos hacer un refinamiento adicional para mejorar el algoritmo como sigue, que consiste en encontrar los cortes del árbol <span class="math inline">\(T\)</span> según <a href="metodos-basados-en-arboles-boosting.html#eq:min-cuad-boost">(12.2)</a>, pero optimizando por separado los valores que T(x) toma en cada una de las regiones encontradas.</p>
+<div id="algoritmo" class="section level3">
+<h3><span class="header-section-number">12.2.1</span> Algoritmo</h3>
+
+<div class="comentario">
+<p><strong>Gradient boosting</strong></p>
+<ol style="list-style-type: decimal">
+<li><p>Inicializar con <span class="math inline">\(f_0(x) =\gamma\)</span></p></li>
+<li><p>Para <span class="math inline">\(m=0,1,\ldots, M\)</span>,</p></li>
+</ol>
+<ul>
+<li><p>Para <span class="math inline">\(i=1,\ldots, n\)</span>, calculamos el residual <span class="math display">\[r_{i,m}=-\frac{\partial L}{\partial z}(y^{(i)}, f_{m-1}(x^{(i)}))\]</span></p></li>
+<li><p>Ajustamos un árbol de regresión a la respuesta <span class="math inline">\(r_{1,m},r_{2,m},\ldots, r_{n,m}\)</span>. Supongamos que tiene regiones <span class="math inline">\(R_{j,m}\)</span>.</p></li>
+<li>Resolvemos (optimizamos directamente el valor que toma el árbol en cada región - este es un problema univariado, más fácil de resolver) <span class="math display">\[\gamma_{j,m} = argmin_\gamma \sum_{x^{(i)}\in R_{j,m}} L(y^{(i)},f_{m-1}(x^{i})+\gamma )\]</span> para cada región <span class="math inline">\(R_{j,m}\)</span> del árbol del inciso anterior.</li>
+<li>Actualizamos <span class="math display">\[f_m (x) = f_{m-1}(x) +\sum_j \gamma_{j,m} I(x\in R_{j,m})\]</span></li>
+</ul>
+<ol start="3" style="list-style-type: decimal">
+<li>El predictor final es <span class="math inline">\(f_M(x)\)</span>.
+</div>
+</li>
+</ol>
+</div>
+<div id="funciones-de-perdida" class="section level3">
+<h3><span class="header-section-number">12.2.2</span> Funciones de pérdida</h3>
+<p>Para aplicar gradient boosting, tenemos primero que poder calcular el gradiente de la función de pérdida. Algunos ejemplos populares:</p>
+<ul>
+<li>Pérdida cuadrática: <span class="math inline">\(L(y,f(x))=(y-f(x))^2\)</span>, <span class="math inline">\(\frac{\partial L}{\partial z} = -2(y-f(x))\)</span>.</li>
+<li>Pérdida absoluta (más robusta a atípicos que la cuadrática) <span class="math inline">\(L(y,f(x))=|y-f(x)|\)</span>, <span class="math inline">\(\frac{\partial L}{\partial z} = signo(y-f(x))\)</span>.</li>
+<li>Devianza binomial <span class="math inline">\(L(y, f(x))\)</span> = -(1+e^{-yf(x)}), <span class="math inline">\(y\in\{-1,1\}\)</span>, <span class="math inline">\(\frac{\partial L}{\partial z} = I(y=1) - h(f(x))\)</span>.</li>
+<li>Adaboost, pérdida exponencial (para clasificación) <span class="math inline">\(L(y,z) = e^{-yf(x)}\)</span>, <span class="math inline">\(y\in\{-1,1\}\)</span>, <span class="math inline">\(\frac{\partial L}{\partial z} = -ye^{-yf(x)}\)</span>.</li>
 </ul>
 </div>
-<div id="ejemplo-arquitectura-lenet" class="section level2">
-<h2><span class="header-section-number">9.4</span> Ejemplo (arquitectura LeNet):</h2>
-<p>Las capas de pooling generalmente se aplican después de las convoluciones, y hacia al final usamos capas totalmente conexas. Estas últimas capas se encargan de combinar la información de las capas de convolución anteriores, que detectan patrones simples, para obtener unidades que se encargan de detectar patrones más complejos.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="st">&#39;./imagenes/lenet_1.png&#39;</span>)</code></pre></div>
-<p><img src="imagenes/lenet_1.png" width="476" /></p>
-<pre><code>## [1] 7291  257</code></pre>
-<pre><code>## 
-##    0    1    2    3    4    5    6    7    8    9 
-## 1194 1005  731  658  652  556  664  645  542  644</code></pre>
-<p>Ponemos el rango entre [0,1] (pixeles positivos) y usamos codificación dummy</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x_train &lt;-<span class="st"> </span>digitos_entrena <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="kw">contains</span>(<span class="st">&#39;pixel&#39;</span>)) <span class="op">%&gt;%</span><span class="st"> </span>as.matrix <span class="op">+</span><span class="st"> </span><span class="dv">1</span>
-x_train &lt;-<span class="st"> </span>x_train<span class="op">/</span><span class="dv">2</span>
-<span class="kw">dim</span>(x_train) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="kw">nrow</span>(x_train), <span class="dv">16</span>, <span class="dv">16</span>, <span class="dv">1</span>)
-x_test &lt;-<span class="st"> </span>digitos_prueba <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="kw">contains</span>(<span class="st">&#39;pixel&#39;</span>)) <span class="op">%&gt;%</span><span class="st"> </span>as.matrix <span class="op">+</span><span class="st"> </span><span class="dv">1</span>
-x_test &lt;-<span class="st"> </span>x_test<span class="op">/</span><span class="dv">2</span>
-<span class="kw">dim</span>(x_test) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="kw">nrow</span>(x_test), <span class="dv">16</span>, <span class="dv">16</span>, <span class="dv">1</span>)
-y_train &lt;-<span class="st"> </span><span class="kw">to_categorical</span>(digitos_entrena<span class="op">$</span>digito, <span class="dv">10</span>)
-y_test &lt;-<span class="st"> </span><span class="kw">to_categorical</span>(digitos_prueba<span class="op">$</span>digito, <span class="dv">10</span>)</code></pre></div>
-<p>Para fines de interpretación, agregaremos regularización ridge además de dropout (puedes obtener buen desempeño usando solamente dropout):</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">usar_cache &lt;-<span class="st"> </span><span class="ot">TRUE</span>
-<span class="cf">if</span>(<span class="op">!</span>usar_cache){
-<span class="kw">set.seed</span>(<span class="dv">213</span>)
-model_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">keras_model_sequential</span>() 
-model_<span class="dv">2</span> <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">layer_conv_2d</span>(<span class="dt">filters =</span> <span class="dv">8</span>, <span class="dt">kernel_size =</span> <span class="kw">c</span>(<span class="dv">5</span>,<span class="dv">5</span>), <span class="dt">activation =</span> <span class="st">&#39;relu&#39;</span>,
-              <span class="dt">input_shape =</span> <span class="kw">c</span>(<span class="dv">16</span>,<span class="dv">16</span>,<span class="dv">1</span>), <span class="dt">padding =</span><span class="st">&#39;same&#39;</span>,
-              <span class="dt">kernel_regularizer =</span> <span class="kw">regularizer_l2</span>(<span class="fl">0.01</span>) ) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">layer_max_pooling_2d</span>(<span class="dt">pool_size =</span> <span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">2</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">layer_dropout</span>(<span class="dt">rate =</span> <span class="fl">0.25</span>) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">layer_conv_2d</span>(<span class="dt">filters =</span> <span class="dv">12</span>, <span class="dt">kernel_size =</span> <span class="kw">c</span>(<span class="dv">3</span>,<span class="dv">3</span>), <span class="dt">activation =</span> <span class="st">&#39;relu&#39;</span>,
-                <span class="dt">kernel_regularizer =</span> <span class="kw">regularizer_l2</span>(<span class="fl">0.01</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">layer_max_pooling_2d</span>(<span class="dt">pool_size =</span> <span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">2</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">layer_dropout</span>(<span class="dt">rate =</span> <span class="fl">0.25</span>) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">layer_flatten</span>() <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">layer_dense</span>(<span class="dt">units =</span> <span class="dv">100</span>, <span class="dt">activation =</span> <span class="st">&#39;relu&#39;</span>) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">layer_dropout</span>(<span class="dt">rate =</span> <span class="fl">0.5</span>) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">layer_dense</span>(<span class="dt">units =</span> <span class="dv">10</span>, <span class="dt">activation =</span> <span class="st">&#39;softmax&#39;</span>)
+</div>
+<div id="aplicacion-de-gradient-boosting" class="section level2">
+<h2><span class="header-section-number">12.3</span> Aplicación de Gradient Boosting</h2>
+<p>Para ajustar modelos con gradient boosting, tenemos que considerar:</p>
+<div id="numero-de-arboles-m" class="section level3">
+<h3><span class="header-section-number">12.3.1</span> Número de árboles M</h3>
+<p>Se monitorea el error sobre una muestra de validación cuando agregamos cada árboles. Escogemos el número de árboles de manera que minimize el error de validación. Demasiados árboles pueden producir sobreajuste.</p>
+</div>
+<div id="tamano-de-arboles" class="section level3">
+<h3><span class="header-section-number">12.3.2</span> Tamaño de árboles</h3>
+<p>Los árboles se construyen de tamaño fijo <span class="math inline">\(J\)</span>, donde <span class="math inline">\(J\)</span> es el número de cortes. Usualmente <span class="math inline">\(J=1,2,\ldots, 10\)</span>, y es un parámetro que hay que elegir. <span class="math inline">\(J\)</span> más grande permite interacciones de orden más alto entre las variables de entrada. Se intenta con varias <span class="math inline">\(J\)</span> y <span class="math inline">\(M\)</span> para minimizar el error de vaidación.</p>
+</div>
+<div id="tasa-de-aprendizaje" class="section level3">
+<h3><span class="header-section-number">12.3.3</span> Tasa de aprendizaje</h3>
+<p>Funciona bien modificar el algoritmo usando una tasa de aprendizae <span class="math inline">\(0&lt;\nu&lt;1\)</span>: <span class="math display">\[f_m(x) = f_{m-1}(x) + \nu \sum_j \gamma_{j,m} I(x\in R_{j,m})\]</span> Igualmente se prueba con varios valores de <span class="math inline">\(0&lt;nu&lt;1\)</span> (típicamente <span class="math inline">\(\nu&lt;0.1\)</span>) para mejorar el desempeño en validación. <strong>Nota</strong>: cuando hacemos <span class="math inline">\(\nu\)</span> más chica, es necesario hacer <span class="math inline">\(M\)</span> más grande (correr más árboles) para obtener desempeño óptimo.</p>
+</div>
+</div>
+<div id="ejemplo-47" class="section level2">
+<h2><span class="header-section-number">12.4</span> Ejemplo</h2>
 
-model_<span class="dv">2</span> <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">compile</span>(
-  <span class="dt">loss =</span> <span class="st">&#39;categorical_crossentropy&#39;</span>,
-  <span class="dt">optimizer =</span> <span class="kw">optimizer_sgd</span>(<span class="dt">lr =</span> <span class="fl">0.05</span>,  <span class="dt">momentum =</span> <span class="fl">0.5</span>),
-  <span class="dt">metrics =</span> <span class="kw">c</span>(<span class="st">&#39;accuracy&#39;</span>,<span class="st">&#39;categorical_crossentropy&#39;</span>)
-)
-history &lt;-<span class="st"> </span>model_<span class="dv">2</span> <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">fit</span>(
-  x_train, y_train, 
-  <span class="dt">epochs =</span> <span class="dv">200</span>, <span class="dt">batch_size =</span> <span class="dv">256</span>, 
-  <span class="dt">validation_data =</span> <span class="kw">list</span>(x_test, y_test)
-)
-model_serialized &lt;-<span class="st"> </span><span class="kw">serialize_model</span>(model_<span class="dv">2</span>)
-<span class="kw">saveRDS</span>(model_serialized, <span class="dt">file=</span> <span class="st">&#39;cache_obj/red_conv_ser.rds&#39;</span>)
-} <span class="cf">else</span> {
-  model_serialized &lt;-<span class="st"> </span><span class="kw">readRDS</span>(<span class="dt">file =</span> <span class="st">&#39;cache_obj/red_conv_ser.rds&#39;</span>)
-  model_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">unserialize_model</span>(model_serialized)
-}
-score &lt;-<span class="st"> </span>model_<span class="dv">2</span> <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">evaluate</span>(x_test, y_test)
-score</code></pre></div>
-<pre><code>## $loss
-## [1] 0.2057457
-## 
-## $acc
-## [1] 0.959143
-## 
-## $categorical_crossentropy
-## [1] 0.1473516</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">score_entrena &lt;-<span class="st"> </span>model_<span class="dv">2</span> <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">evaluate</span>(x_train, y_train)
-score_entrena</code></pre></div>
-<pre><code>## $loss
-## [1] 0.1045686
-## 
-## $acc
-## [1] 0.9877932
-## 
-## $categorical_crossentropy
-## [1] 0.04617448</code></pre>
-<p>Y ahora graficamos los filtros aprendidos en la primera capa:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(scales)</code></pre></div>
-<pre><code>## 
-## Attaching package: &#39;scales&#39;</code></pre>
-<pre><code>## The following object is masked from &#39;package:readr&#39;:
-## 
-##     col_factor</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">wts &lt;-<span class="st"> </span><span class="kw">get_weights</span>(model_<span class="dv">2</span>)
-capa_<span class="dv">1</span> &lt;-<span class="st"> </span>wts[[<span class="dv">1</span>]] 
-capa_list &lt;-<span class="st"> </span><span class="kw">lapply</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">8</span>, <span class="cf">function</span>(i){
-  <span class="kw">data_frame</span>(<span class="dt">val =</span> <span class="kw">as.numeric</span>(<span class="kw">t</span>(capa_<span class="dv">1</span>[,,<span class="dv">1</span>,i])), <span class="dt">pixel =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">25</span>, <span class="dt">unidad=</span>i)
-}) <span class="op">%&gt;%</span><span class="st"> </span>bind_rows <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">y =</span> (pixel<span class="op">-</span><span class="dv">1</span>) <span class="op">%%</span><span class="st"> </span><span class="dv">5</span>, <span class="dt">x =</span> (pixel<span class="op">-</span><span class="dv">1</span>) <span class="op">%/%</span><span class="st"> </span><span class="dv">5</span>) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">group_by</span>(unidad) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">val =</span> (val<span class="op">-</span><span class="kw">mean</span>(val))<span class="op">/</span><span class="kw">sd</span>(val))
-capa_list</code></pre></div>
-<pre><code>## # A tibble: 200 x 5
-## # Groups:   unidad [8]
-##           val pixel unidad     y     x
-##         &lt;dbl&gt; &lt;int&gt;  &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt;
-##  1 -1.4653404     1      1     0     0
-##  2 -0.9698185     2      1     1     0
-##  3  1.0867707     3      1     2     0
-##  4  1.5496123     4      1     3     0
-##  5  0.6970253     5      1     4     0
-##  6 -1.6848534     6      1     0     1
-##  7 -1.4587731     7      1     1     1
-##  8  0.8354561     8      1     2     1
-##  9  1.3157807     9      1     3     1
-## 10  0.1034943    10      1     4     1
-## # ... with 190 more rows</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(capa_list, <span class="kw">aes</span>(<span class="dt">x=</span>x, <span class="dt">y=</span><span class="op">-</span>y)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_raster</span>(<span class="kw">aes</span>(<span class="dt">fill=</span>val), <span class="dt">interpolate=</span><span class="ot">FALSE</span>) <span class="op">+</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>unidad, <span class="dt">ncol=</span><span class="dv">4</span>) <span class="op">+</span><span class="st"> </span><span class="kw">coord_equal</span>()<span class="op">+</span><span class="kw">scale_fill_gradient2</span>(<span class="dt">low =</span> <span class="st">&quot;black&quot;</span>, <span class="dt">mid=</span><span class="st">&#39;gray50&#39;</span>,<span class="dt">high =</span> <span class="st">&quot;white&quot;</span>)    </code></pre></div>
-<p><img src="09-redes-convolucionales_files/figure-html/unnamed-chunk-18-1.png" width="384" /></p>
-<p>Podemos ver las activaciones de la primera capa para algunos dígitos (después de pooling):</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">capa &lt;-<span class="st"> </span><span class="kw">keras_model_sequential</span>()
-capa <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">layer_conv_2d</span>(<span class="dt">filters =</span> <span class="dv">8</span>, <span class="dt">kernel_size =</span> <span class="kw">c</span>(<span class="dv">5</span>,<span class="dv">5</span>), <span class="dt">activation =</span> <span class="st">&#39;relu&#39;</span>,
-              <span class="dt">input_shape =</span> <span class="kw">c</span>(<span class="dv">16</span>,<span class="dv">16</span>,<span class="dv">1</span>), <span class="dt">padding=</span><span class="st">&#39;same&#39;</span>,<span class="dt">weights =</span> wts[<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>]) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">layer_max_pooling_2d</span>()
-probas &lt;-<span class="st"> </span><span class="kw">predict_proba</span>(capa, x_train[<span class="dv">1</span><span class="op">:</span><span class="dv">50</span>,,,,<span class="dt">drop=</span><span class="ot">FALSE</span>])
-
-graf_activaciones &lt;-<span class="st"> </span><span class="cf">function</span>(probas, ind){
-  probas_ind &lt;-<span class="st"> </span>probas[ind,,,]
-  unidades_df &lt;-<span class="st"> </span><span class="kw">lapply</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">dim</span>(probas_ind)[<span class="dv">3</span>], <span class="cf">function</span>(i){
-    mat &lt;-<span class="st"> </span><span class="kw">t</span>(probas_ind[,,i])
-    <span class="kw">data_frame</span>(<span class="dt">val =</span> <span class="kw">as.numeric</span>(mat), <span class="dt">pixel =</span> <span class="dv">1</span><span class="op">:</span>(<span class="dv">8</span><span class="op">*</span><span class="dv">8</span>), <span class="dt">unidad=</span>i) <span class="op">%&gt;%</span>
-<span class="st">      </span><span class="kw">mutate</span>(<span class="dt">y =</span> (pixel<span class="op">-</span><span class="dv">1</span>) <span class="op">%%</span><span class="st"> </span><span class="dv">8</span>, <span class="dt">x =</span> (pixel<span class="op">-</span><span class="dv">1</span>) <span class="op">%/%</span><span class="st"> </span><span class="dv">8</span>)  <span class="op">%&gt;%</span>
-<span class="st">      </span><span class="kw">group_by</span>(unidad) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">val=</span>(val<span class="op">-</span><span class="kw">mean</span>(val))<span class="op">/</span><span class="kw">sd</span>(val))
-  })
-  dat &lt;-<span class="st"> </span><span class="kw">bind_rows</span>(unidades_df)
-  <span class="kw">ggplot</span>(dat, <span class="kw">aes</span>(<span class="dt">x=</span>x, <span class="dt">y=</span><span class="op">-</span>y, <span class="dt">fill=</span>val)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_tile</span>() <span class="op">+</span><span class="st"> </span><span class="kw">facet_wrap</span>(<span class="op">~</span>unidad) <span class="op">+</span>
-<span class="st">    </span><span class="kw">scale_fill_gradient2</span>(<span class="dt">low =</span> <span class="st">&quot;black&quot;</span>, <span class="dt">mid=</span><span class="st">&#39;gray20&#39;</span>,<span class="dt">high =</span> <span class="st">&quot;white&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">coord_equal</span>()
-}
-<span class="kw">graf_activaciones</span>(probas, <span class="dv">4</span>)</code></pre></div>
-<p><img src="09-redes-convolucionales_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">graf_activaciones</span>(probas, <span class="dv">5</span>)</code></pre></div>
-<p><img src="09-redes-convolucionales_files/figure-html/unnamed-chunk-19-2.png" width="672" /></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">graf_activaciones</span>(probas, <span class="dv">15</span>)</code></pre></div>
-<p><img src="09-redes-convolucionales_files/figure-html/unnamed-chunk-19-3.png" width="672" /></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">graf_activaciones</span>(probas, <span class="dv">8</span>)</code></pre></div>
-<p><img src="09-redes-convolucionales_files/figure-html/unnamed-chunk-19-4.png" width="672" /></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">graf_activaciones</span>(probas, <span class="dv">33</span>)</code></pre></div>
-<p><img src="09-redes-convolucionales_files/figure-html/unnamed-chunk-19-5.png" width="672" /></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#image((x_train[4,1:16,16:1,1]))</span></code></pre></div>
-<p>Y los filtros aprendidos en la segunda capa:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">capa_<span class="dv">2</span> &lt;-<span class="st"> </span>wts[[<span class="dv">3</span>]] 
-out &lt;-<span class="st"> </span><span class="kw">list</span>()
-<span class="cf">for</span>(j <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="dv">8</span>){
-  out_temp &lt;-<span class="st"> </span><span class="kw">list</span>()
-  <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="dv">12</span>){
-  dat_lay &lt;-<span class="st"> </span><span class="kw">data_frame</span>(<span class="dt">val =</span> <span class="kw">as.numeric</span>(capa_<span class="dv">2</span>[,,j,i]), <span class="dt">pixel =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">9</span>, <span class="dt">unidad=</span>i, <span class="dt">otra=</span>j) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">y =</span> (pixel<span class="op">-</span><span class="dv">1</span>) <span class="op">%%</span><span class="st"> </span><span class="dv">3</span>, <span class="dt">x =</span> (pixel<span class="op">-</span><span class="dv">1</span>) <span class="op">%/%</span><span class="st"> </span><span class="dv">3</span>) 
-  out_temp[[i]] &lt;-<span class="st"> </span>dat_lay
-  }
-  out[[j]] &lt;-<span class="st"> </span><span class="kw">bind_rows</span>(out_temp)
-}
-capa_out &lt;-<span class="st"> </span><span class="kw">bind_rows</span>(out)
-<span class="kw">ggplot</span>(capa_out, <span class="kw">aes</span>(<span class="dt">x=</span>x, <span class="dt">y=</span><span class="op">-</span>y)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_tile</span>(<span class="kw">aes</span>(<span class="dt">fill=</span>val)) <span class="op">+</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">facet_grid</span>(otra<span class="op">~</span>unidad) <span class="op">+</span><span class="st"> </span><span class="kw">coord_equal</span>()<span class="op">+</span><span class="kw">scale_fill_gradient2</span>(<span class="dt">low =</span> <span class="st">&quot;black&quot;</span>, <span class="dt">mid=</span><span class="st">&#39;gray50&#39;</span>,<span class="dt">high =</span> <span class="st">&quot;white&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">theme</span>(<span class="dt">strip.background =</span> <span class="kw">element_blank</span>(), <span class="dt">strip.text =</span> <span class="kw">element_blank</span>())    </code></pre></div>
-<p><img src="09-redes-convolucionales_files/figure-html/unnamed-chunk-20-1.png" width="672" /></p>
-
+<div id="refs" class="references">
+<div>
+<p>Bishop, Christopher M. 2006. <em>Pattern Recognition and Machine Learning (Information Science and Statistics)</em>. Secaucus, NJ, USA: Springer-Verlag New York, Inc.</p>
+</div>
+<div>
+<p>Goodfellow, Ian, Yoshua Bengio, and Aaron Courville. 2016. <em>Deep Learning</em>. MIT Press.</p>
+</div>
+<div>
+<p>Hastie, Trevor, Robert Tibshirani, and Jerome Friedman. 2017. <em>The Elements of Statistical Learning</em>. Springer Series in Statistics. Springer New York Inc. <a href="http://web.stanford.edu/~hastie/ElemStatLearn/" class="uri">http://web.stanford.edu/~hastie/ElemStatLearn/</a>.</p>
+</div>
+<div>
+<p>James, Gareth, Daniela Witten, Trevor Hastie, and Robert Tibshirani. 2014. <em>An Introduction to Statistical Learning: With Applications in R</em>. Springer Publishing Company, Incorporated. <a href="http://www-bcf.usc.edu/~gareth/ISL/" class="uri">http://www-bcf.usc.edu/~gareth/ISL/</a>.</p>
+</div>
+<div>
+<p>Ng, Andrew. 2017. “Machine Learning.” <a href="https://www.coursera.org/learn/machine-learning" class="uri">https://www.coursera.org/learn/machine-learning</a>.</p>
+</div>
+<div>
+<p>Srivastava, Nitish, Geoffrey Hinton, Alex Krizhevsky, Ilya Sutskever, and Ruslan Salakhutdinov. 2014. “Dropout: A Simple Way to Prevent Neural Networks from Overfitting.” <em>J. Mach. Learn. Res.</em> 15 (1). JMLR.org: 1929–58. <a href="http://dl.acm.org/citation.cfm?id=2627435.2670313" class="uri">http://dl.acm.org/citation.cfm?id=2627435.2670313</a>.</p>
+</div>
+</div>
 </div>
 </div>
             </section>
@@ -644,8 +567,8 @@ capa_out &lt;-<span class="st"> </span><span class="kw">bind_rows</span>(out)
           </div>
         </div>
       </div>
-<a href="redes-neuronales-parte-2.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="diagnostico-y-mejora-de-modelos.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="metodos-basados-en-arboles.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -674,7 +597,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/felipegonzalez/aprendizaje-maquina-2017/edit/master/09-redes-convolucionales.Rmd",
+"link": "https://github.com/felipegonzalez/aprendizaje-maquina-2017/edit/master/12-arboles-2.Rmd",
 "text": "Edit"
 },
 "download": ["aprendizaje-maquina.pdf", "aprendizaje-maquina.epub"],

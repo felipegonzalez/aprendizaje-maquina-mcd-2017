@@ -1298,14 +1298,16 @@ En primer lugar, consideremos qué significa que una variable sea importante
 desde el punto predictivo en un modelo. Podemos considerar, por ejemplo:
 
 - *Si quitamos una variable, y el error de predicción se degrada, la variable es importante*.
-Este no es un buen enfoque, porque muchas veces tenemos conjuntos de variables correlacionadas.
-Si quitamos una variable, otras pueden hacer su trabajo, y el modelo no se degrada mucho (piensa
+Este no es un muy buen enfoque, porque muchas veces tenemos conjuntos de variables correlacionadas.
+Aún cuando una variable influya en la predicción, si la quitamos, otras 
+variable pueden hacer su trabajo, y el modelo no se degrada mucho (piensa
 en regresión, en donde incluso esta variable eliminada puede tener un coeficiente grande e influir
 mucho en la predicción). También requiere ajustar modelos adicionales.
 - *Si las predicciones cambian mucho cuando una variable cambia, entonces la variable es importante*. 
 Este concepto funciona mejor, al menos desde el punto de vista predictivo. Su defecto es 
 que movimientos de una variable sola (marginales) no reflejan la estructura de los datos - es posible
-que los cambios que observemos al mover una variable no tengan mucha relevancia en nuestro problema
+que los cambios que observemos al mover una variable no tengan tanta relevancia en nuestro problema (cuando movemos una variable, las distribuciones de otras variables
+cambian también en los datos).
 
 La idea de Breiman es como sigue:
 
@@ -1382,7 +1384,7 @@ ggplot(importancia_df , aes(x=variable, y= MeanDecreaseAccuracy)) + geom_point()
 
 ### Ajustando árboles aleatorios.
 
-- El parámetros más importante de afinar es $m$, el número de variables que se escogen
+- El parámetro más importante de afinar es $m$, el número de variables que se escogen
 al azar en cada nodo.
 - A veces podemos obtener algunas ventajas de afinar el número mínimo de observaciones por
 nodo terminal y/o el número mínimo de observaciones por nodo para considerar hacer cortes adicionales
@@ -1395,7 +1397,7 @@ quiere decir que los bosques aleatorios no puedan sobreajustar!)
 Consideremos datos de (casas en venta en Ames, Iowa)[https://ww2.amstat.org/publications/jse/v19n3/decock.pdf]. Queremos
 predecir el precio listado de una casa en función de las características de las casa.
 
-El análisis completo (desde limpieza y exploración) está en scripts/ames-housing.Rmd
+El análisis completo (desde limpieza y exploración) está en scripts/bosque-housing.Rmd
 
 ### Ventajas y desventajas de árboles aleatorios
 
