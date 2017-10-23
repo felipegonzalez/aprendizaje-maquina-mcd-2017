@@ -1,0 +1,438 @@
+---
+title: "Ames Housing"
+output:
+  html_document:
+    df_print: paged
+---
+
+
+Las variables de este conjunto son:
+
+
+- SalePrice - the property's sale price in dollars. This is the target variable that you're trying to predict.
+- MSSubClass: The building class
+- MSZoning: The general zoning classification
+- LotFrontage: Linear feet of street connected to property
+- LotArea: Lot size in square feet
+- Street: Type of road access
+- Alley: Type of alley access
+- LotShape: General shape of property
+- LandContour: Flatness of the property
+- Utilities: Type of utilities available
+- LotConfig: Lot configuration
+- LandSlope: Slope of property
+- Neighborhood: Physical locations within Ames city limits
+- Condition1: Proximity to main road or railroad
+- Condition2: Proximity to main road or railroad (if a second is present)
+- BldgType: Type of dwelling
+- HouseStyle: Style of dwelling
+- OverallQual: Overall material and finish quality
+- OverallCond: Overall condition rating
+- YearBuilt: Original construction date
+- YearRemodAdd: Remodel date
+- RoofStyle: Type of roof
+- RoofMatl: Roof material
+- Exterior1st: Exterior covering on house
+- Exterior2nd: Exterior covering on house (if more than one material)
+- MasVnrType: Masonry veneer type
+- MasVnrArea: Masonry veneer area in square feet
+- ExterQual: Exterior material quality
+- ExterCond: Present condition of the material on the exterior
+- Foundation: Type of foundation
+- BsmtQual: Quality of the basement
+- BsmtCond: General condition of the basement
+- BsmtExposure: Walkout or garden level basement walls
+- BsmtFinType1: Quality of basement finished area
+- BsmtFinSF1: Type 1 finished square feet
+- BsmtFinType2: Quality of second finished area (if present)
+- BsmtFinSF2: Type 2 finished square feet
+- BsmtUnfSF: Unfinished square feet of basement area
+- TotalBsmtSF: Total square feet of basement area
+- Heating: Type of heating
+- HeatingQC: Heating quality and condition
+- CentralAir: Central air conditioning
+- Electrical: Electrical system
+- 1stFlrSF: First Floor square feet
+- 2ndFlrSF: Second floor square feet
+- LowQualFinSF: Low quality finished square feet (all floors)
+- GrLivArea: Above grade (ground) living area square feet
+- BsmtFullBath: Basement full bathrooms
+- BsmtHalfBath: Basement half bathrooms
+- FullBath: Full bathrooms above grade
+- HalfBath: Half baths above grade
+- Bedroom: Number of bedrooms above basement level
+- Kitchen: Number of kitchens
+- KitchenQual: Kitchen quality
+- TotRmsAbvGrd: Total rooms above grade (does not include bathrooms)
+- Functional: Home functionality rating
+- Fireplaces: Number of fireplaces
+- FireplaceQu: Fireplace quality
+- GarageType: Garage location
+- GarageYrBlt: Year garage was built
+- GarageFinish: Interior finish of the garage
+- GarageCars: Size of garage in car capacity
+- GarageArea: Size of garage in square feet
+- GarageQual: Garage quality
+- GarageCond: Garage condition
+- PavedDrive: Paved driveway
+- WoodDeckSF: Wood deck area in square feet
+- OpenPorchSF: Open porch area in square feet
+- EnclosedPorch: Enclosed porch area in square feet
+- 3SsnPorch: Three season porch area in square feet
+- ScreenPorch: Screen porch area in square feet
+- PoolArea: Pool area in square feet
+- PoolQC: Pool quality
+- Fence: Fence quality
+- MiscFeature: Miscellaneous feature not covered in other categories
+- MiscVal: $Value of miscellaneous feature
+- MoSold: Month Sold
+- YrSold: Year Sold
+- SaleType: Type of sale
+- SaleCondition: Condition of sale
+
+
+Podemos ver los niveles de cada variable y más explicaciones en el archivo
+*data/houseprices/data_description.txt*
+
+
+```{r, message=FALSE, warning=FALSE}
+library(tidyverse)
+
+entrena <- read_csv('../datos/houseprices/house-prices-train.csv')
+prueba  <- read_csv('../datos/houseprices/house-prices-test.csv')
+nrow(entrena)
+nrow(prueba)
+```
+
+```{r}
+head(entrena)
+```
+
+
+
+
+```{r}
+entrena_larga <- entrena %>% gather(variable, valor, -Id)
+prueba_larga <- prueba %>% gather(variable, valor, -Id)
+```
+
+
+## Distribuciones de variable respuesta y otras
+Consideramos algunas variables que sabemos deben ser importantes y algunas gráficas:
+
+```{r}
+table(is.na(entrena$SalePrice))
+qplot(entrena$SalePrice) + scale_x_log10(breaks= 100000*c(0.5,1,2,4,8))
+qplot(entrena$`1stFlrSF`, entrena$SalePrice)
+qplot(entrena$`2ndFlrSF`, entrena$SalePrice)
+entrena$Neighborhood <- reorder(entrena$Neighborhood, entrena$SalePrice)
+ggplot(entrena, aes(x=Neighborhood, y= entrena$SalePrice)) + geom_boxplot() +
+  coord_flip() + scale_y_log10(breaks= 100000*c(0.5,1,2,4,8))
+```
+
+## Datos faltantes
+
+Contar faltantes
+
+```{r}
+faltantes <- entrena_larga %>% group_by(variable) %>% 
+  summarise(na_conteo = sum(is.na(valor)), val_distintos = length(unique(valor)),
+            categorica = all(is.na(as.numeric(valor)))) %>% 
+  arrange(desc(na_conteo)) %>% print(n = 20)
+filter(faltantes, categorica)
+filter(faltantes, !categorica)
+```
+
+Estas variables son faltantes cuando no hay alberca, otros features, callejón,
+reja, chimenea, o está conectada a la calle:
+
+- PoolQC: Pool quality
+- MiscFeature: Miscellaneous feature not covered in other categories
+- Alley: Type of alley access
+- Fence: Fence quality
+- FireplaceQu: Fireplace quality
+- LotFrontage: Linear feet of street connected to property
+
+Estas variables son faltantes cuando la casa no tiene garage:
+
+- GarageType: Garage location
+- GarageYrBlt: Year garage was built
+- GarageFinish: Interior finish of the garage
+- GarageCars: Size of garage in car capacity
+- GarageArea: Size of garage in square feet
+- GarageQual: Garage quality
+- GarageCond: Garage condition
+
+Cuando no tienen sótano:
+
+- BsmtQual: Quality of the basement
+- BsmtCond: General condition of the basement
+- BsmtExposure: Walkout or garden level basement walls
+- BsmtFinType1: Quality of basement finished area
+- BsmtFinType2: Quality of second finished area (if present)
+
+Cuando no tienen masonry veneer:
+
+- MasVnrType: Masonry veneer type
+- MasVnrArea: Masonry veneer area in square feet
+
+Y hay un faltante en la variable *Electrical*. Hay varias opciones para tratar
+con datos faltantes (por ejemplo, existe la función *rfImpute*). Sin embargo,
+estos son faltantes son estructurales (la medición de calidad de alberca no existe
+si no hay alberca - no son datos censurados por algún proceso.
+
+
+```{r}
+vars_faltantes <- filter(faltantes, na_conteo > 0) %>% pull(variable)
+niveles_faltantes <- entrena_larga %>%  filter(variable %in% vars_faltantes) %>%
+  group_by(variable) %>% mutate(n_distintos=n_distinct(valor)) %>%
+  group_by(variable, valor) %>% 
+  summarise(n = n(), n_distintos = first(n_distintos))
+
+niveles_faltantes %>% filter(n_distintos < 50)
+```
+
+
+
+Por lo pronto, recordamos que tenemos
+que correr un modelo lo más pronto posible. Intentemos entonces regresión logística,
+haciendo imputación con una categoría adicional o la media (para variables numéricas).
+
+
+```{r}
+limpiar_faltantes <- function(datos, datos_p = NULL, to_factor = FALSE){
+  #limpieza de faltantes y tipos de variables
+  if(is.null(datos_p)){
+    datos_p <- datos
+  }
+  #abajo vamos a inferir el tipo de variable, pero podemos tener error si hay
+  #variables categóricas codificadas con números. Viendo data_description.txt, solo hay
+  #una, que arreglamos así:
+  datos <- datos %>% group_by(variable) %>% mutate(valor = ifelse(variable!='MSSubClass', valor, paste0('nivel_',valor)))
+  datos_p <- datos_p %>% group_by(variable) %>% mutate(valor = ifelse(variable!='MSSubClass', valor,paste0('nivel_',valor)))                                                
+  # inferir el tipo de variable (categórica o numérica)
+  tipo_vars <- datos %>% group_by(variable) %>% 
+    summarise(categorica = all(is.na(as.numeric(valor))))
+  datos <- datos %>% left_join(tipo_vars) %>% ungroup
+  datos_p <- datos_p %>% left_join(tipo_vars) %>% ungroup
+  
+
+  #medias de datos de entrenamiento
+  datos_num_medias <- datos %>% filter(!categorica) %>%
+                mutate(valor = as.numeric(valor)) %>%
+                group_by(variable) %>% 
+                summarise(media = mean(valor, na.rm = TRUE))
+  
+  #categoría más popular de datos de entrenamiento
+  cats <- datos %>% filter(categorica) %>%
+                    group_by(variable, valor) %>%
+                           summarise(n = n()) %>%
+                           filter(!is.na(valor)) 
+                           
+   max_cat <- cats %>% group_by(variable) %>%
+                           summarise(max_cat = valor[which.max(n)])
+
+   cats <- cats %>% select(variable, valor) %>% group_by(variable) %>% nest
+  #imputación
+  datos_cat <- datos_p %>% filter(categorica)
+  datos_num <- datos_p %>% filter(!categorica)
+
+  #procesar categóricas
+  datos_cat <- datos_cat %>% left_join(max_cat %>% select(variable, max_cat)) %>%
+                             group_by(variable) %>%
+                             mutate(valor = ifelse(is.na(valor), max_cat, valor))
+  #quitar factores nuevos en datos de prueba
+  datos_cat <- datos_cat %>% group_by(variable) %>% left_join(cats) %>%
+          group_by(variable) %>%
+          mutate(valor = ifelse(valor %in% first(data), valor, max_cat[1]))
+                    
+  datos_1 <- datos_cat %>% select(Id, variable, valor) %>% 
+                           spread(variable, valor, convert=TRUE)
+  if(to_factor){
+    datos_1 <- datos_1 %>% unclass %>% data.frame
+  }
+  # procesar numéricas
+  datos_2 <- datos_num %>% left_join(datos_num_medias) %>%
+                           mutate(valor = ifelse(is.na(valor), media,  valor)) %>%
+                           select(Id, variable, valor) %>% 
+                           spread(variable, valor, convert=TRUE)
+  # unir tablas
+  bind_cols(datos_1, datos_2)
+  }
+
+```
+
+
+
+## Bosque aleatorio
+
+Podemos intentar construir un bosque con esta primera aproximación de datos.
+Vamos a usar el logaritmo del precio (por el análisis que vimos arriba). No es
+necesario log-transformar las otras variables para bosques aleatorios (pues
+es una transformación monótona). Preparamos los datos:
+
+```{r, warning=FALSE, message=FALSE}
+library(randomForest)
+entrena_na <- limpiar_faltantes(entrena_larga, to_factor = TRUE) %>% 
+  select(-Id, -Utilities) %>% as.data.frame
+prueba_na <- limpiar_faltantes(entrena_larga, prueba_larga, to_factor = TRUE) %>% 
+  select(-Id, -Utilities) %>% as.data.frame
+names(entrena_na) <- paste('v', names(entrena_na), sep='') #evitar nombres no válidos de variables
+names(prueba_na) <- paste('v', names(prueba_na), sep='') #evitar nombres no válidos de variables
+
+```
+
+Corremos el bosque:
+
+```{r}
+bosque_precios <- randomForest(log(vSalePrice) ~., data = entrena_na, 
+                               mtry = 10, ntree=1500, importance=TRUE)
+bosque_precios
+```
+
+Y examinamos la evolución del error al agregar más árboles y el error final (OOB)
+
+```{r}
+plot(bosque_precios)
+sqrt(last(bosque_precios$mse))
+```
+
+Y podemos ver las importancias, que dan resultados interesantes:
+
+```{r}
+imp <-  importance(bosque_precios)[,1]
+data_frame( variable = names(imp), importance = round(imp,1)) %>% arrange(desc(imp))
+```
+
+Y además podemos ver cómo se comparan las predicciones OOB con la variable que
+queremos predecir:
+
+```{r}
+pred_oob <- predict(bosque_precios)
+qplot(exp(pred_oob), entrena_na$vSalePrice) + 
+  scale_x_log10(breaks= 100000*c(0.5,1,2,4,8))+
+  scale_y_log10(breaks= 100000*c(0.5,1,2,4,8))
+```
+
+Error de entrenamiento
+```{r}
+pred_entrena <- predict(bosque_precios, newdata = entrena_na)
+sd(pred_entrena-log(entrena_na$vSalePrice))
+```
+
+Lo que indica que podemos trabajar tanto con sesgo como varianza. Podemos
+mejorar haciendo algunas transformaciones de variable. Pero antes, afinamos
+los parámetros del bosque:
+
+```{r, warning=FALSE, message=FALSE, cache=TRUE}
+entrena_na <- limpiar_faltantes(entrena_larga, to_factor = TRUE) %>%
+  select(-Id, -Utilities) 
+names(entrena_na) <- paste('v', names(entrena_na), sep='')
+
+bosque_oob <- function(entrena_na, mtry, nodesize){
+  bosque_precios <- randomForest(log(vSalePrice) ~., data = entrena_na, 
+                               mtry = mtry, ntree = 500, nodesize = nodesize,
+                               importance=TRUE)
+  error_oob <- last(bosque_precios$mse)
+  #print(paste(c('mtry:', mtry, ' nodesize:', nodesize, ' ErrorOOB:', round(sqrt(error_oob),4)), collapse=''))
+  error_oob
+}
+df_res <- expand.grid(mtry = c(5,10,20,30,40,50), nodesize = c(2,5,10,20))
+df_res <- df_res %>% rowwise %>% mutate(mse_oob = bosque_oob(entrena_na, mtry, nodesize))
+ggplot(df_res, aes(x=mtry, y= sqrt(mse_oob), colour=factor(nodesize), group=nodesize)) + geom_line() + geom_point()
+sqrt(min(df_res$mse_oob))
+```
+
+
+
+## Otras opciones para datos faltantes
+
+Ahora podemos refinar nuestro script de faltantes. Todas estas opciones pueden
+ayudar o no en la predicción! Podemos:
+
+- Usar una categoría adicional "No disponible" para faltantes estructurales (por ejemplo,
+condiciones del garage si no hay garage)
+- Para variables numéricas, imputar 0 cuando sea más apropiado (por ejemplo,
+tamaño de "Frontage" si no conecta con la calle)
+- Agrupar variables categóricas con muchos niveles (aquellos niveles chicos) 
+
+
+```{r}
+limpiar_faltantes_2 <- function(datos, datos_p = NULL, min_cat = 10,
+                              to_factor = FALSE){
+  #limpieza de faltantes y tipos de variables
+  if(is.null(datos_p)){
+    datos_p <- datos
+  }
+  # inferir el tipo de variable (categórica o numérica)
+  tipo_vars <- datos %>% group_by(variable) %>% 
+    summarise(categorica = all(is.na(as.numeric(valor))))
+  datos <- datos %>% left_join(tipo_vars) %>% ungroup
+  datos_p <- datos_p %>% left_join(tipo_vars) %>% ungroup
+  
+
+  #valores a imputar para numéricas (ver análisis del principio: usamos 0)
+  datos_num_medias <- datos %>% filter(!categorica) %>%
+                group_by(variable) %>% 
+                summarise(media = 0)
+                            
+
+  # Reasignación para categóricas
+  reasignar <- datos %>% filter(categorica) %>%
+                         mutate(valor = ifelse(is.na(valor), 'no-disponible', valor)) %>%
+                         group_by(variable, valor) %>%
+                         summarise(n = n()) %>%
+                         mutate(valor_nuevo = ifelse(n <= min_cat, 'Otros' , valor))
+
+  #imputación
+  datos_cat <- datos_p %>% filter(categorica)
+  datos_num <- datos_p %>% filter(!categorica)
+
+
+  #procesar categóricas
+  #primero agregamos categoría no disponible
+  datos_cat <- datos_cat %>% mutate(valor = ifelse(is.na(valor), 'no-disponible' ,valor))
+  #reasignaos
+  datos_cat  <- datos_cat %>% left_join(reasignar) %>%
+                      mutate(valor = valor_nuevo) %>% select(Id, variable, valor)
+  # aquí falta limpiar cateogrías nuevas en muestra de prueba
+  datos_1 <- datos_cat %>% select(Id, variable, valor) %>% 
+                           spread(variable, valor, convert=TRUE)
+  if(to_factor){
+    datos_1 <- datos_1 %>% unclass %>% data.frame
+  }
+  # procesar numéricas
+  datos_2 <- datos_num %>% left_join(datos_num_medias) %>%
+                           mutate(valor = ifelse(is.na(valor), media,  valor)) %>%
+                           select(Id, variable, valor) %>% 
+                           spread(variable, valor, convert=TRUE)
+  # unir tablas
+  bind_cols(datos_1, datos_2)
+  }
+
+```
+
+
+
+```{r, warning=FALSE, message=FALSE}
+library(randomForest)
+entrena_na <- limpiar_faltantes_2(entrena_larga, to_factor = TRUE) %>% 
+  select(-Id, -Utilities) %>% as.data.frame
+prueba_na <- limpiar_faltantes_2(entrena_larga, prueba_larga, to_factor = TRUE) %>% 
+  select(-Id, -Utilities) %>% as.data.frame
+names(entrena_na) <- paste('v', names(entrena_na), sep='')
+names(prueba_na) <- paste('v', names(prueba_na), sep='')
+
+table(entrena_na$vPoolQC)
+```
+
+
+```{r, warning=FALSE, message=FALSE, cache=TRUE}
+df_res <- expand.grid(mtry = c(5,10,20,30,40,50), nodesize = c(2,5,10,20))
+df_res <- df_res %>% rowwise %>% mutate(mse_oob = bosque_oob(entrena_na, mtry, nodesize))
+ggplot(df_res, aes(x=mtry, y= sqrt(mse_oob), colour=factor(nodesize), group=nodesize)) + geom_line() + geom_point()
+sqrt(min(df_res$mse_oob))
+```
+
+
+
