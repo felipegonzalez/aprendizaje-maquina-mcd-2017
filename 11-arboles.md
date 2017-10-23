@@ -25,7 +25,7 @@ variables de entradas. En nuestro ejemplo ficticio, "automóvil" nos
 da información acerca del ingreso, pero solo caundo el nivel de educación
 del jefe de familia es bajo. (Ejercicio: si el ingreso fuera una cantidad numérica, ¿cómo escribirías este modelo con una suma
 de términos que involucren las variables mostradas en el diagrama?)
-- Árboles también pueden aproximar relaciones no lineales entre entradas
+- Los árboles también pueden aproximar relaciones no lineales entre entradas
 y variable de salida (es similar a los ejemplos donde haciamos categorización
 de variables de entrada).
 - Igual que en redes neuronales, en lugar de buscar puntos de corte o interacciones
@@ -77,7 +77,7 @@ $\{X_i\in S\},\{X_i\notin S\}$, para algún subconjunto $S$ de categorías de $X
 se escoge de una manera miope o local, intentando separar las
 clases lo mejor que se pueda (sin considerar qué pasa en cortes hechos
 más adelante). En un nodo dado, escogemos la partición que 
-**reduce lo más posible su impureza**:
+**reduce lo más posible su impureza**.
 
 ### Medidas de impureza
 
@@ -150,7 +150,7 @@ impureza(n_t/sum(n_t))
 ## [1] 0.7181575
 ```
 
-Ahora supongamos que tenemos un posible cortes, el primero
+Ahora supongamos que tenemos un posible corte, el primero
 resulta en
 
 ```r
@@ -338,7 +338,7 @@ donde
 - $\vert T\vert$ es el número de nodos terminales del árbol
 - $\alpha>0$ es un parámetro de penalización del tamaño del árbol.
 
-Este medida de complejidad incluye qué tan bien clasifica el árbol
+Esta medida de complejidad incluye qué tan bien clasifica el árbol
 en la muestra de entrenamiento, pero penaliza por el tamaño del árbol.
 
 
@@ -370,7 +370,7 @@ prp(arbol.chico.1, type = 4, extra = 4)
 
 <img src="11-arboles_files/figure-html/unnamed-chunk-16-1.png" width="672" />
 
-Si disminuimos el coeficiente $alpha$.
+Si disminuimos el coeficiente $\alpha$.
 
 
 ```r
@@ -429,7 +429,7 @@ fancyRpartPlot(arbol.chico.1, sub='')
 <img src="11-arboles_files/figure-html/unnamed-chunk-21-1.png" width="672" />
 
 
-**Nota**: Enfoques de predicción basados en solo árbol para
+**Nota**: Enfoques de predicción basados en un solo árbol para
 clasificación y regresión son típicamente superados en 
 predicción por otros métodos. ¿Cuál crees que sea la razón? ¿Es un
 problema de varianza o sesgo?
@@ -557,7 +557,7 @@ Para problemas de regresión, el criterio de pureza y la predicción
 en cada nodo terminal es diferente:
 
 - En los nodos terminales usamos el promedio los casos de entrenamiento que caen en tal nodo (en lugar de la clase más común)
-- La impureza de define como varianza: si $t$ es un nodo, su impureza está dada por $\frac{1}{n(t)}\sum (y - m)^2, donde la suma es sobre los casos que están en el nodo y $m$ es la media de las $y$'s del nodo.
+- La impureza de define como varianza: si $t$ es un nodo, su impureza está dada por $\frac{1}{n(t)}\sum (y - m)^2$, donde la suma es sobre los casos que están en el nodo y $m$ es la media de las $y$'s del nodo.
 
 ### Variabilidad en el proceso de construcción
 
@@ -625,7 +625,7 @@ Ventajas:
  - valores numéricos atípicos no hacen fallar al método
  - no es necesario transformar variables
  - hay formas fáciles de lidiar con datos faltantes (cortes sucedáneos)
-4. Se ajustan rápidamente yson relativamente fácilmente de interpretar (por ejemplo, son útiles para clasificar en campo)
+4. Se ajustan rápidamente yson relativamente fáciles de interpretar (por ejemplo, son útiles para clasificar en campo)
 5. Árboles grandes generalmente no sufren de sesgo.
 
 Desventajas:
@@ -633,7 +633,7 @@ Desventajas:
 1. Tienen dificultades en capturar estructuras lineales
 2. En la interpretación, tienen la dificultad de que muchas veces
 algunas variables de entrada "enmascaran" a otras. Que una variable de entrada
-no esté en el árbol no quiere decir que nosea "importante" para predecir
+no esté en el árbol no quiere decir que no sea "importante" para predecir
 (regresión ridge lidia mejor con esto).
 3. Son inestables (varianza alta) por construcción: es local/miope, basada
 en cortes duros si/no. Esto produce desempeño predictivo relativamente malo
@@ -702,7 +702,7 @@ Recordatorio: una muestra bootstrap de $\mathcal L$ es una muestra con con reemp
 de ${\mathcal L}$ del mismo tamaño que ${\mathcal L}$.</div>\EndKnitrBlock{comentario}
 
 
-Entonces la idea es  construimos los árboles (que suponemos de regresión)
+Entonces la idea es que construimos los árboles (que suponemos de regresión)
 $$T_1^*, T_2^*, \ldots, T_B^*,$$
 podríamos mejorar nuestras predicciones construyendo el
 árbol promedio
@@ -812,7 +812,7 @@ El único costo es el cómputo adicional para procesar las muestras bootstrap
 - ¿Cuántas muestras bootstrap? Bagging generalmente funciona mejor
 cuando tomamos tantas muestras como sea razonable - aunque también es un 
 parámetro que se puede afinar.
-- Bagging por sí solo se usa rara vez. El método más potente es bosques aleatorios, donde e proceso
+- Bagging por sí solo se usa rara vez. El método más potente es bosques aleatorios, donde el proceso
 básico es bagging de árboles, pero añadimos ruido adicional en la 
 construcción de árboles.</div>\EndKnitrBlock{comentario}
 
@@ -835,15 +835,14 @@ Nótese que esta varianza es sobre la muestra de entrenamiento ${\mathcal L}$. U
 la fórmula de la varianza para sumas generales:
 \begin{equation}
 Var(T(x)) = Var\left(\frac{1}{B}\sum_{i=1}^B T^*_i\right) =
-\sum_{i=1}^B \frac{1}{B^2} Var(T^*_i(x)) + \frac{1}{B^2}\sum_{i < j} Cov(T_i^*, T_j^*)
+\sum_{i=1}^B \frac{1}{B^2} Var(T^*_i(x)) + \frac{2}{B^2}\sum_{i < j} Cov(T_i^*, T_j^*)
   (\#eq:varianza-ensamble)
 \end{equation}
 
 Ponemos ahora
 
 $$\sigma^2(x) = Var(T_i^*)$$
-que son todas iguales porque los árboles bootstrap se extraen de la misma forma
-ese extraen de la misma manera (${\mathcal L}\to {\mathcal L}^*\to T^*$).
+que son todas iguales porque los árboles bootstrap se extraen de la misma manera (${\mathcal L}\to {\mathcal L}^*\to T^*$).
 
 
 Escribimos ahora
@@ -880,7 +879,7 @@ muchos árboles está dada por la correlación entre ellos: cuanto más grande
 es la correlación, menor beneficio en reducción de varianza obtenemos.
 - Si alteramos el proceso para producir árboles menos correlacionados (menor $\rho(x)$), podemos
 mejorar el desempeño de bagging. Sin embargo, estas alteraciones generalmente
-están acompañadas de incrementos en la varianza ($\sigma^x(x)). </div>\EndKnitrBlock{comentario}
+están acompañadas de incrementos en la varianza ($\sigma^x(x)$). </div>\EndKnitrBlock{comentario}
 
 
 ## Bosques aleatorios
@@ -899,10 +898,10 @@ por ejemplo que $G_1,G_2,\ldots, G_M$ son clasificadores débiles, por ejemplo
 $$P(correcto) = P(G_i=G)=0.6$$ 
 para un problema con probabilidad base $P(G=1)=0.5$. Supongamos que los predictores
 son independientes, y sea $G^*$ el clasificador que se construye por mayoría
-de votos a partir de $G_1,G_2,\ldots, G_B$, es decir
+de votos a partir de $G_1,G_2,\ldots, G_M$, es decir
 $G^*=1$ si y sólo si $\#\{ G_i = 1\} > M/2$.
 
-Podemos ver que el número de aciertos (X) de $G_1,G_2,\ldots, G_B$, por independencia,
+Podemos ver que el número de aciertos (X) de $G_1,G_2,\ldots, G_M$, por independencia,
 es binomial $Bin(M, 0.6)$. Si $M$ es grande, podemos aproximar esta distribución
 con una normal con media $M*0.6$ y varianza $0.6*0.4*M$. Esto implica que
 
@@ -966,7 +965,7 @@ es más grande que la pérdida en varianza.
 
 ### Ejemplo
 Regresamos a nuestro ejemplo de spam. Intentemos con 500 árboles, y 
-7 variables (de 58 variables) para escoger como candidatos en cada corte:
+6 variables (de 58 variables) para escoger como candidatos en cada corte:
 
 
 ```r
@@ -1172,11 +1171,11 @@ Demuestra usando probabilidad y teoría de muestras con reemplazo.
 Consideramos un bosque aleatorio $T_{ba}$con árboles $T_1^*, T_2^*, \ldots, T_B^*$, y conjunto de 
 entrenamiento original
 ${\mathcal L} =\{(x^{(i)}, y^{(i)}\}_{i=1}^n$. 
-Para cada caso de entrenamiento $(x^(i), y^(i))$ consideramos todos los árboles
-que **no** usaron este caso para construirse, y construimos un bosque $T_{ba}^(i)$
+Para cada caso de entrenamiento $(x^{(i)}, y^{(i)})$ consideramos todos los árboles
+que **no** usaron este caso para construirse, y construimos un bosque $T_{ba}^{(i)}$
 basado solamente en esos árboles.
-La predicción OOB de $T_{ba}$ para $(x^(i), y^(i))$ es
-$$y_{oob}^{(i)} = T_{ba}(x^(i))$$
+La predicción OOB de $T_{ba}^{(i)}$ para $(x^{(i)}, y^{(i)})$ es
+$$y_{oob}^{(i)} = T_{ba}^{(i)}(x^{(i)})$$
 El error OOB del árbol $T_{ba}$ está dado por 
 1. Regresión (error cuadrático medio)
 $$\hat{Err}_{oob} = \frac{1}{n} \sum_{i=1}^n (y^{(i)} - y_{oob}^{(i)})^2$$
@@ -1188,7 +1187,7 @@ $$\hat{Err}_{oob} = \frac{1}{n}\sum_{i=1}^n I(y^{(i)} = y_{oob}^{(i)})$$
 que no consideraron ese dato en su construcción. Estas predicciones son las que evaluamos
 - Es una especie de validación cruzada (se puede demostrar que es similar a 
 validacion cruzada leave-one-out), pero es barata en términos computacionales.
-- Como discutimos en validación cruzada, esto hace OOB una buena medida de error para
+- Como discutimos en validación cruzada, esto hace de OOB una buena medida de error para
 afinar los parámetros del modelo (principalmente el número $m$ de variables que se escogen
 en cada corte).
 

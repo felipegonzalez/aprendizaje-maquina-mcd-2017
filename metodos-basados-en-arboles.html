@@ -340,7 +340,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <ul>
 <li>Con este árbol podemos clasificar nuevos hogares.</li>
 <li>Nótese que los árboles pueden capturar interacciones entre las variables de entradas. En nuestro ejemplo ficticio, “automóvil” nos da información acerca del ingreso, pero solo caundo el nivel de educación del jefe de familia es bajo. (Ejercicio: si el ingreso fuera una cantidad numérica, ¿cómo escribirías este modelo con una suma de términos que involucren las variables mostradas en el diagrama?)</li>
-<li>Árboles también pueden aproximar relaciones no lineales entre entradas y variable de salida (es similar a los ejemplos donde haciamos categorización de variables de entrada).</li>
+<li>Los árboles también pueden aproximar relaciones no lineales entre entradas y variable de salida (es similar a los ejemplos donde haciamos categorización de variables de entrada).</li>
 <li>Igual que en redes neuronales, en lugar de buscar puntos de corte o interacciones a mano, con los árboles intentamos encontrarlos de manera automática.</li>
 </ul>
 </div>
@@ -370,7 +370,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li>Si <span class="math inline">\(X_i\)</span> es categórica, la partición es de la forma <span class="math inline">\(\{X_i\in S\},\{X_i\notin S\}\)</span>, para algún subconjunto <span class="math inline">\(S\)</span> de categorías de <span class="math inline">\(X_i\)</span>.</li>
 <li>En cada nodo candidato, escogemos uno de estos cortes para particionar.</li>
 </ul>
-<p>¿Cómo escogemos la partición en cada nodo? En cada nodo, la partición se escoge de una manera miope o local, intentando separar las clases lo mejor que se pueda (sin considerar qué pasa en cortes hechos más adelante). En un nodo dado, escogemos la partición que <strong>reduce lo más posible su impureza</strong>:</p>
+<p>¿Cómo escogemos la partición en cada nodo? En cada nodo, la partición se escoge de una manera miope o local, intentando separar las clases lo mejor que se pueda (sin considerar qué pasa en cortes hechos más adelante). En un nodo dado, escogemos la partición que <strong>reduce lo más posible su impureza</strong>.</p>
 </div>
 <div id="medidas-de-impureza" class="section level3">
 <h3><span class="header-section-number">11.1.3</span> Medidas de impureza</h3>
@@ -416,7 +416,7 @@ impureza &lt;-<span class="st"> </span><span class="cf">function</span>(p){
 }
 <span class="kw">impureza</span>(n_t<span class="op">/</span><span class="kw">sum</span>(n_t))</code></pre></div>
 <pre><code>## [1] 0.7181575</code></pre>
-<p>Ahora supongamos que tenemos un posible cortes, el primero resulta en</p>
+<p>Ahora supongamos que tenemos un posible corte, el primero resulta en</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">n_t &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">300</span>,<span class="dv">10</span>, <span class="dv">140</span>)
 n_<span class="dv">1</span> =<span class="st"> </span><span class="kw">c</span>(<span class="dv">300</span>,<span class="dv">0</span>,<span class="dv">0</span>)
 n_<span class="dv">2</span> =<span class="st"> </span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">10</span>,<span class="dv">140</span>)
@@ -547,7 +547,7 @@ tab_confusion &lt;-<span class="st"> </span><span class="kw">table</span>(prop_a
 <li><span class="math inline">\(\vert T\vert\)</span> es el número de nodos terminales del árbol</li>
 <li><span class="math inline">\(\alpha&gt;0\)</span> es un parámetro de penalización del tamaño del árbol.</li>
 </ul>
-<p>Este medida de complejidad incluye qué tan bien clasifica el árbol en la muestra de entrenamiento, pero penaliza por el tamaño del árbol.</p>
+<p>Esta medida de complejidad incluye qué tan bien clasifica el árbol en la muestra de entrenamiento, pero penaliza por el tamaño del árbol.</p>
 <p>Para escoger el tamaño del árbol correcto, definimos <span class="math inline">\(T_\alpha \subset T\)</span> como el subárbol de <span class="math inline">\(T\)</span> que minimiza la medida <span class="math inline">\(C_\alpha (T_\alpha)\)</span>.</p>
 <p>Para entender esta decisión, obsérvese que:</p>
 <ul>
@@ -561,7 +561,7 @@ tab_confusion &lt;-<span class="st"> </span><span class="kw">table</span>(prop_a
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">arbol.chico.<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">prune</span>(spam_tree_completo, <span class="dt">cp=</span><span class="fl">0.2</span>)
 <span class="kw">prp</span>(arbol.chico.<span class="dv">1</span>, <span class="dt">type =</span> <span class="dv">4</span>, <span class="dt">extra =</span> <span class="dv">4</span>)</code></pre></div>
 <p><img src="11-arboles_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
-<p>Si disminuimos el coeficiente <span class="math inline">\(alpha\)</span>.</p>
+<p>Si disminuimos el coeficiente <span class="math inline">\(\alpha\)</span>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">arbol.chico.<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">prune</span>(spam_tree_completo, <span class="dt">cp=</span><span class="fl">0.07</span>)
 <span class="kw">prp</span>(arbol.chico.<span class="dv">1</span>, <span class="dt">type =</span> <span class="dv">4</span>, <span class="dt">extra =</span> <span class="dv">4</span>)</code></pre></div>
 <p><img src="11-arboles_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
@@ -582,7 +582,7 @@ Para podar un árbol con costo-complejidad, encontramos para cada <span class="m
 <span class="kw">fancyRpartPlot</span>(arbol.chico.<span class="dv">1</span>, <span class="dt">sub=</span><span class="st">&#39;&#39;</span>)</code></pre></div>
 <pre><code>## Loading required package: RColorBrewer</code></pre>
 <p><img src="11-arboles_files/figure-html/unnamed-chunk-21-1.png" width="672" /></p>
-<p><strong>Nota</strong>: Enfoques de predicción basados en solo árbol para clasificación y regresión son típicamente superados en predicción por otros métodos. ¿Cuál crees que sea la razón? ¿Es un problema de varianza o sesgo?</p>
+<p><strong>Nota</strong>: Enfoques de predicción basados en un solo árbol para clasificación y regresión son típicamente superados en predicción por otros métodos. ¿Cuál crees que sea la razón? ¿Es un problema de varianza o sesgo?</p>
 </div>
 </div>
 <div id="opcional-predicciones-con-cart" class="section level3">
@@ -668,7 +668,7 @@ spam_tree &lt;-<span class="kw">rpart</span>(spam <span class="op">~</span><span
 <p>Para problemas de regresión, el criterio de pureza y la predicción en cada nodo terminal es diferente:</p>
 <ul>
 <li>En los nodos terminales usamos el promedio los casos de entrenamiento que caen en tal nodo (en lugar de la clase más común)</li>
-<li>La impureza de define como varianza: si <span class="math inline">\(t\)</span> es un nodo, su impureza está dada por $(y - m)^2, donde la suma es sobre los casos que están en el nodo y <span class="math inline">\(m\)</span> es la media de las <span class="math inline">\(y\)</span>’s del nodo.</li>
+<li>La impureza de define como varianza: si <span class="math inline">\(t\)</span> es un nodo, su impureza está dada por <span class="math inline">\(\frac{1}{n(t)}\sum (y - m)^2\)</span>, donde la suma es sobre los casos que están en el nodo y <span class="math inline">\(m\)</span> es la media de las <span class="math inline">\(y\)</span>’s del nodo.</li>
 </ul>
 </div>
 <div id="variabilidad-en-el-proceso-de-construccion" class="section level3">
@@ -716,13 +716,13 @@ dat &lt;-<span class="st"> </span><span class="kw">data_frame</span>(<span class
 <li>hay formas fáciles de lidiar con datos faltantes (cortes sucedáneos)</li>
 </ul>
 <ol start="4" style="list-style-type: decimal">
-<li>Se ajustan rápidamente yson relativamente fácilmente de interpretar (por ejemplo, son útiles para clasificar en campo)</li>
+<li>Se ajustan rápidamente yson relativamente fáciles de interpretar (por ejemplo, son útiles para clasificar en campo)</li>
 <li>Árboles grandes generalmente no sufren de sesgo.</li>
 </ol>
 <p>Desventajas:</p>
 <ol style="list-style-type: decimal">
 <li>Tienen dificultades en capturar estructuras lineales</li>
-<li>En la interpretación, tienen la dificultad de que muchas veces algunas variables de entrada “enmascaran” a otras. Que una variable de entrada no esté en el árbol no quiere decir que nosea “importante” para predecir (regresión ridge lidia mejor con esto).</li>
+<li>En la interpretación, tienen la dificultad de que muchas veces algunas variables de entrada “enmascaran” a otras. Que una variable de entrada no esté en el árbol no quiere decir que no sea “importante” para predecir (regresión ridge lidia mejor con esto).</li>
 <li>Son inestables (varianza alta) por construcción: es local/miope, basada en cortes duros si/no. Esto produce desempeño predictivo relativamente malo (p ej: una pequeña diferencia en cortes iniciales puede resultar en estructuras de árbol totalmente distintas).</li>
 <li>Adicoinalmente, no son apropiados cuando hay variables categóricas con muchas niveles: en estos casos, el árbol sobreajusta desde los primeros cortes, y las predicciones son malas.</li>
 </ol>
@@ -748,7 +748,7 @@ dat &lt;-<span class="st"> </span><span class="kw">data_frame</span>(<span class
 Recordatorio: una muestra bootstrap de <span class="math inline">\(\mathcal L\)</span> es una muestra con con reemplazo de <span class="math inline">\({\mathcal L}\)</span> del mismo tamaño que <span class="math inline">\({\mathcal L}\)</span>.
 </div>
 
-<p>Entonces la idea es construimos los árboles (que suponemos de regresión) <span class="math display">\[T_1^*, T_2^*, \ldots, T_B^*,\]</span> podríamos mejorar nuestras predicciones construyendo el árbol promedio <span class="math display">\[T^*(x) = \frac{1}{B}\sum_{i=b}^B  T_b^* (x)\]</span> para suavizar la variación de cada árbol individual.</p>
+<p>Entonces la idea es que construimos los árboles (que suponemos de regresión) <span class="math display">\[T_1^*, T_2^*, \ldots, T_B^*,\]</span> podríamos mejorar nuestras predicciones construyendo el árbol promedio <span class="math display">\[T^*(x) = \frac{1}{B}\sum_{i=b}^B  T_b^* (x)\]</span> para suavizar la variación de cada árbol individual.</p>
 <p>El argumento del sesgo aplica en este caso, pero el de la varianza no exactamente, pues las muestras bootstrap no son independientes (están correlacionadas a través de la muestra de entrenamiento de donde se obtuvieron),a pesar de que las muestras bootstrap se extraen de manera independiente de <span class="math inline">\({\mathcal L}\)</span>. De esta forma, no esperamos una reducción de varianza tan grande como en el caso de muestras independientes.</p>
 
 <div class="comentario">
@@ -800,7 +800,7 @@ preds &lt;-<span class="st"> </span>preds_clase <span class="op">%&gt;%</span><s
 <div class="comentario">
 <ul>
 <li>¿Cuántas muestras bootstrap? Bagging generalmente funciona mejor cuando tomamos tantas muestras como sea razonable - aunque también es un parámetro que se puede afinar.</li>
-<li>Bagging por sí solo se usa rara vez. El método más potente es bosques aleatorios, donde e proceso básico es bagging de árboles, pero añadimos ruido adicional en la construcción de árboles.
+<li>Bagging por sí solo se usa rara vez. El método más potente es bosques aleatorios, donde el proceso básico es bagging de árboles, pero añadimos ruido adicional en la construcción de árboles.
 </div>
 </li>
 </ul>
@@ -813,11 +813,11 @@ preds &lt;-<span class="st"> </span>preds_clase <span class="op">%&gt;%</span><s
 donde cada <span class="math inline">\(T^*_i\)</span> se construye a partir de una muestra bootstrap de <span class="math inline">\({\mathcal L}\)</span>. Nótese que esta varianza es sobre la muestra de entrenamiento <span class="math inline">\({\mathcal L}\)</span>. Usando la fórmula de la varianza para sumas generales:
 <span class="math display" id="eq:varianza-ensamble">\[\begin{equation}
 Var(T(x)) = Var\left(\frac{1}{B}\sum_{i=1}^B T^*_i\right) =
-\sum_{i=1}^B \frac{1}{B^2} Var(T^*_i(x)) + \frac{1}{B^2}\sum_{i &lt; j} Cov(T_i^*, T_j^*)
+\sum_{i=1}^B \frac{1}{B^2} Var(T^*_i(x)) + \frac{2}{B^2}\sum_{i &lt; j} Cov(T_i^*, T_j^*)
   \tag{11.1}
 \end{equation}\]</span>
 <p>Ponemos ahora</p>
-<p><span class="math display">\[\sigma^2(x) = Var(T_i^*)\]</span> que son todas iguales porque los árboles bootstrap se extraen de la misma forma ese extraen de la misma manera (<span class="math inline">\({\mathcal L}\to {\mathcal L}^*\to T^*\)</span>).</p>
+<p><span class="math display">\[\sigma^2(x) = Var(T_i^*)\]</span> que son todas iguales porque los árboles bootstrap se extraen de la misma manera (<span class="math inline">\({\mathcal L}\to {\mathcal L}^*\to T^*\)</span>).</p>
 <p>Escribimos ahora <span class="math display">\[\rho(x) = corr(T_i^*, T_j^*)\]</span> que es una correlación sobre <span class="math inline">\({\mathcal L}\)</span> (asegúrate que entiendes este término). Todas estas correlaciones son iguales pues cada par de árboles se construye de la misma forma.</p>
 <p>Así que la fórmula <a href="metodos-basados-en-arboles.html#eq:varianza-ensamble">(11.1)</a> queda</p>
 <span class="math display" id="eq:varianza-ensamble-2">\[\begin{equation}
@@ -837,7 +837,7 @@ Var(T(x)) = Var\left(\frac{1}{B}\sum_{i=1}^B T^*_i\right) \approx
 <div class="comentario">
 <ul>
 <li>Cuando hacemos bagging de árboles, la limitación de mejora cuando promediamos muchos árboles está dada por la correlación entre ellos: cuanto más grande es la correlación, menor beneficio en reducción de varianza obtenemos.</li>
-<li>Si alteramos el proceso para producir árboles menos correlacionados (menor <span class="math inline">\(\rho(x)\)</span>), podemos mejorar el desempeño de bagging. Sin embargo, estas alteraciones generalmente están acompañadas de incrementos en la varianza ($^x(x)).
+<li>Si alteramos el proceso para producir árboles menos correlacionados (menor <span class="math inline">\(\rho(x)\)</span>), podemos mejorar el desempeño de bagging. Sin embargo, estas alteraciones generalmente están acompañadas de incrementos en la varianza (<span class="math inline">\(\sigma^x(x)\)</span>).
 </div>
 </li>
 </ul>
@@ -848,8 +848,8 @@ Var(T(x)) = Var\left(\frac{1}{B}\sum_{i=1}^B T^*_i\right) \approx
 <p>Los bosques aleatorios son una versión de árboles de bagging decorrelacionados. Esto se logra <em>introduciendo variabilidad en la construcción de los árboles</em> (esto es paradójico - pero la explicación está arriba: aunque la varianza empeora (de cada árbol), la decorrelación de árboles puede valer la pena).</p>
 <div id="sabiduria-de-las-masas" class="section level3">
 <h3><span class="header-section-number">11.3.1</span> Sabiduría de las masas</h3>
-<p>Una explicación simple de este proceso que se cita frecuentemente es el fenómeno de la sabiduría de las masas: cuando promediamos estimaciones pobres de un gran número de personas (digamos ignorantes), obtenemos mejores estimaciones que cualquiera de las componentes individuales, o incluso mejores que estimaciones de expertos. Supongamos por ejemplo que <span class="math inline">\(G_1,G_2,\ldots, G_M\)</span> son clasificadores débiles, por ejemplo <span class="math display">\[P(correcto) = P(G_i=G)=0.6\]</span> para un problema con probabilidad base <span class="math inline">\(P(G=1)=0.5\)</span>. Supongamos que los predictores son independientes, y sea <span class="math inline">\(G^*\)</span> el clasificador que se construye por mayoría de votos a partir de <span class="math inline">\(G_1,G_2,\ldots, G_B\)</span>, es decir <span class="math inline">\(G^*=1\)</span> si y sólo si <span class="math inline">\(\#\{ G_i = 1\} &gt; M/2\)</span>.</p>
-<p>Podemos ver que el número de aciertos (X) de <span class="math inline">\(G_1,G_2,\ldots, G_B\)</span>, por independencia, es binomial <span class="math inline">\(Bin(M, 0.6)\)</span>. Si <span class="math inline">\(M\)</span> es grande, podemos aproximar esta distribución con una normal con media <span class="math inline">\(M*0.6\)</span> y varianza <span class="math inline">\(0.6*0.4*M\)</span>. Esto implica que</p>
+<p>Una explicación simple de este proceso que se cita frecuentemente es el fenómeno de la sabiduría de las masas: cuando promediamos estimaciones pobres de un gran número de personas (digamos ignorantes), obtenemos mejores estimaciones que cualquiera de las componentes individuales, o incluso mejores que estimaciones de expertos. Supongamos por ejemplo que <span class="math inline">\(G_1,G_2,\ldots, G_M\)</span> son clasificadores débiles, por ejemplo <span class="math display">\[P(correcto) = P(G_i=G)=0.6\]</span> para un problema con probabilidad base <span class="math inline">\(P(G=1)=0.5\)</span>. Supongamos que los predictores son independientes, y sea <span class="math inline">\(G^*\)</span> el clasificador que se construye por mayoría de votos a partir de <span class="math inline">\(G_1,G_2,\ldots, G_M\)</span>, es decir <span class="math inline">\(G^*=1\)</span> si y sólo si <span class="math inline">\(\#\{ G_i = 1\} &gt; M/2\)</span>.</p>
+<p>Podemos ver que el número de aciertos (X) de <span class="math inline">\(G_1,G_2,\ldots, G_M\)</span>, por independencia, es binomial <span class="math inline">\(Bin(M, 0.6)\)</span>. Si <span class="math inline">\(M\)</span> es grande, podemos aproximar esta distribución con una normal con media <span class="math inline">\(M*0.6\)</span> y varianza <span class="math inline">\(0.6*0.4*M\)</span>. Esto implica que</p>
 <p><span class="math display">\[P(G^* correcto)=P(X &gt; 0.5M) \approx 
 P\left( Z &gt; \frac{0.5M-0.6M}{\sqrt(0.24M)}\right) = P\left(Z &gt; -2.041 \sqrt{M}\right)\]</span></p>
 <p>Y ahora observamos que cuando <span class="math inline">\(M\)</span> es grande, la cantidad de la derecha tiende a 1: la masa, en promedio, tiene la razón!</p>
@@ -874,7 +874,7 @@ P\left( Z &gt; \frac{0.5M-0.6M}{\sqrt(0.24M)}\right) = P\left(Z &gt; -2.041 \sqr
 </div>
 <div id="ejemplo-43" class="section level3">
 <h3><span class="header-section-number">11.3.2</span> Ejemplo</h3>
-<p>Regresamos a nuestro ejemplo de spam. Intentemos con 500 árboles, y 7 variables (de 58 variables) para escoger como candidatos en cada corte:</p>
+<p>Regresamos a nuestro ejemplo de spam. Intentemos con 500 árboles, y 6 variables (de 58 variables) para escoger como candidatos en cada corte:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(randomForest)
 bosque_spam &lt;-<span class="kw">randomForest</span>(<span class="kw">factor</span>(spam) <span class="op">~</span><span class="st"> </span>., <span class="dt">data =</span> spam_entrena, 
                            <span class="dt">ntree =</span> <span class="dv">1500</span>, <span class="dt">mtry =</span> <span class="dv">6</span>, <span class="dt">importance=</span><span class="ot">TRUE</span>)</code></pre></div>
@@ -993,13 +993,13 @@ Cuando el tamaño de muestra <span class="math inline">\(n\)</span> es grande, e
 
 <div class="comentario">
 <p><strong>Estimación OOB del error</strong></p>
-<p>Consideramos un bosque aleatorio <span class="math inline">\(T_{ba}\)</span>con árboles <span class="math inline">\(T_1^*, T_2^*, \ldots, T_B^*\)</span>, y conjunto de entrenamiento original <span class="math inline">\({\mathcal L} =\{(x^{(i)}, y^{(i)}\}_{i=1}^n\)</span>. Para cada caso de entrenamiento <span class="math inline">\((x^(i), y^(i))\)</span> consideramos todos los árboles que <strong>no</strong> usaron este caso para construirse, y construimos un bosque <span class="math inline">\(T_{ba}^(i)\)</span> basado solamente en esos árboles. La predicción OOB de <span class="math inline">\(T_{ba}\)</span> para <span class="math inline">\((x^(i), y^(i))\)</span> es <span class="math display">\[y_{oob}^{(i)} = T_{ba}(x^(i))\]</span> El error OOB del árbol <span class="math inline">\(T_{ba}\)</span> está dado por 1. Regresión (error cuadrático medio) <span class="math display">\[\hat{Err}_{oob} = \frac{1}{n} \sum_{i=1}^n (y^{(i)} - y_{oob}^{(i)})^2\]</span> 2. Clasificación (error de clasificación) <span class="math display">\[\hat{Err}_{oob} = \frac{1}{n}\sum_{i=1}^n I(y^{(i)} = y_{oob}^{(i)})\]</span></p>
+<p>Consideramos un bosque aleatorio <span class="math inline">\(T_{ba}\)</span>con árboles <span class="math inline">\(T_1^*, T_2^*, \ldots, T_B^*\)</span>, y conjunto de entrenamiento original <span class="math inline">\({\mathcal L} =\{(x^{(i)}, y^{(i)}\}_{i=1}^n\)</span>. Para cada caso de entrenamiento <span class="math inline">\((x^{(i)}, y^{(i)})\)</span> consideramos todos los árboles que <strong>no</strong> usaron este caso para construirse, y construimos un bosque <span class="math inline">\(T_{ba}^{(i)}\)</span> basado solamente en esos árboles. La predicción OOB de <span class="math inline">\(T_{ba}^{(i)}\)</span> para <span class="math inline">\((x^{(i)}, y^{(i)})\)</span> es <span class="math display">\[y_{oob}^{(i)} = T_{ba}^{(i)}(x^{(i)})\]</span> El error OOB del árbol <span class="math inline">\(T_{ba}\)</span> está dado por 1. Regresión (error cuadrático medio) <span class="math display">\[\hat{Err}_{oob} = \frac{1}{n} \sum_{i=1}^n (y^{(i)} - y_{oob}^{(i)})^2\]</span> 2. Clasificación (error de clasificación) <span class="math display">\[\hat{Err}_{oob} = \frac{1}{n}\sum_{i=1}^n I(y^{(i)} = y_{oob}^{(i)})\]</span></p>
 </div>
 
 <ul>
 <li>Para cada dato de entrenamiento, hacemos predicciones usando solamente los árboles que no consideraron ese dato en su construcción. Estas predicciones son las que evaluamos</li>
 <li>Es una especie de validación cruzada (se puede demostrar que es similar a validacion cruzada leave-one-out), pero es barata en términos computacionales.</li>
-<li>Como discutimos en validación cruzada, esto hace OOB una buena medida de error para afinar los parámetros del modelo (principalmente el número <span class="math inline">\(m\)</span> de variables que se escogen en cada corte).</li>
+<li>Como discutimos en validación cruzada, esto hace de OOB una buena medida de error para afinar los parámetros del modelo (principalmente el número <span class="math inline">\(m\)</span> de variables que se escogen en cada corte).</li>
 </ul>
 </div>
 <div id="ejempo" class="section level4 unnumbered">
