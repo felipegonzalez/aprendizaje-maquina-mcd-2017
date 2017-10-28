@@ -1,10 +1,21 @@
 # Métodos basados en árboles: boosting
 
-Boosting también utiliza la idea de un "ensamble" de árboles. Es diferente
-a bagging y bosques aleatoriso en que la sucesión de árboles de boosting se 
+Boosting también utiliza la idea de un "ensamble" de árboles. La diferencia
+grande con
+ bagging y bosques aleatorios en que la sucesión de árboles de boosting se 
 'adapta' al comportamiento del predictor a lo largo de las iteraciones, 
 haciendo reponderaciones de los datos de entrenamiento para que el algoritmo
-se concentre en las predicciones más pobres.
+se concentre en las predicciones más pobres. Boosting generalmente funciona
+bien con árboles chicos (cada uno con sesgo alto), mientras que bosques
+aleatorios funciona con árboles grandes (sesgo bajo). 
+
+- En boosting usamos muchos árboles chicos adaptados secuencialmente. La disminución
+del sesgo proviene de usar distintos árboles que se encargan de adaptar el predictor
+a distintas partes del conjunto de entrenamiento. El control de varianza se
+logra con tasas de aprendizaje y tamaño de árboles, como veremos más adelante.
+
+- En bosques aleatorios usamos muchos árboles grandes, cada uno con una muestra
+de entrenamiento perturbada (bootstrap). El control de varianza se logra promediando sobre esas muestras bootstrap de entrenamiento.
 
 Igual que bosques aleatorios, boosting es también un método que generalmente
 tiene  alto poder predictivo.
@@ -17,10 +28,10 @@ manera de entender los algoritmos es mediante un proceso general
 de modelado por estapas (FSAM).
 
 ### Discusión
-Consideramos primero un problema de regresión, que queremos atacar
+Consideramos primero un problema de *regresión*, que queremos atacar
 con un predictor de la forma
 $$f(x) = \sum_{k=1}^m \beta_k b_k(x),$$
-donde los $b_m$ son árboles. Podemos absorber el coeficiente $\beta_k$
+donde los $b_k$ son árboles. Podemos absorber el coeficiente $\beta_k$
 dentro del árbol $b_k(x)$, y escribimos
 
 $$f(x) = \sum_{k=1}^m T_k(x),$$
@@ -34,7 +45,7 @@ la pérdida de entrenamiento:
 \end{equation}
 
 Este puede ser un problema difícil, dependiendo de la familia 
-que usemos para los árboles $T_k$ que usamos, y sería difícil resolver por fuerza bruta. Para resolver este problema, podemos
+que usemos para los árboles $T_k$, y sería difícil resolver por fuerza bruta. Para resolver este problema, podemos
 intentar una heurística secuencial o por etapas:
 
 Si  tenemos
@@ -93,7 +104,7 @@ Generalmente los árboles sobre los que optimizamos están restringidos a una fa
 $2,3,\ldots, 8$.
 
 Este algoritmo se puede aplicar directamente para problemas de regresión, como vimos en la discusión anterior: simplemente hay que ajustar árboles a los residuales del modelo del paso anterior. Sin embargo, no está claro cómo aplicarlo cuando la función de pérdida no es mínimos cuadrados (por ejemplo,
-regresión logística). Quizá tendríamos que escribir funciones ad-hoc para hacer la minimización del paso de FSAM
+regresión logística). 
 
 
 #### Ejemplo (regresión) {-}
@@ -233,7 +244,8 @@ $$T = argmin_{T} 2\sum_{i=1}^N \log (1+ d_{m,i}e^{- y^{(i)}T(x^{(i)})})$$
 Y vemos que el problema es más difícil que en regresión. No podemos usar
 un ajuste de árbol usual de regresión o clasificación, *como hicimos en
 regresión*. No está claro, por ejemplo, cuál debería ser el residual
-que tenemos que ajustar. Una solución a esta, que intenta resolver aproximadamente este problema de minimización, es **gradient boosting**
+que tenemos que ajustar (aunque parece un problema donde los casos
+de entrenamiento están ponderados por $d_{m,i}$). Una solución para resolver aproximadamente este problema de minimización, es **gradient boosting**.
 
 ## Gradient boosting
 
@@ -243,7 +255,7 @@ La idea de gradient boosting es replicar la idea del residual en regresión, y u
 Gradient boosting es una técnica general para funciones de pérdida
 generales.Regresamos entonces a nuestro problema original
 
-$$(\beta_m, b_m) = argmin_{(\beta,b)} \sum_{i=1}^N L(y^{(i)}, f_{m-1}(x^{(i)}) + T(x^{(i)}))$$
+$$(\beta_m, b_m) = argmin_{T} \sum_{i=1}^N L(y^{(i)}, f_{m-1}(x^{(i)}) + T(x^{(i)}))$$
 
 La pregunta es: ¿hacia dónde tenemos qué mover la predicción de
 $f_{m-1}(x^{(i)})$ sumando
@@ -269,7 +281,7 @@ es decir, intentamos replicar los gradientes lo más que sea posible. **Este pro
 podríamos escoger $\nu$ (tamaño de paso) suficientemente chica y ponemos
 $$f_m(x) = f_{m-1}(x)+\nu T(x).$$
 
-Podemos hacer un refinamiento adicional para mejorar el algoritmo como sigue, que consiste en encontrar los cortes del árbol $T$ según \@ref(eq:min-cuad-boost), pero optimizando por separado los valores que T(x) toma en cada una de las regiones encontradas.
+Podemos hacer un refinamiento adicional que consiste en encontrar los cortes del árbol $T$ según \@ref(eq:min-cuad-boost), pero optimizando por separado los valores que T(x) toma en cada una de las regiones encontradas.
 
 ### Algoritmo
 
@@ -296,7 +308,7 @@ Podemos hacer un refinamiento adicional para mejorar el algoritmo como sigue, qu
 ### Funciones de pérdida
 
 Para aplicar gradient boosting, tenemos primero que poder calcular
-el gradiente de la función de pérdida. Algunos ejemplos populares:
+el gradiente de la función de pérdida. Algunos ejemplos populares son:
 
 - Pérdida cuadrática: $L(y,f(x))=(y-f(x))^2$, 
 $\frac{\partial L}{\partial z} = -2(y-f(x))$.
@@ -307,6 +319,40 @@ $\frac{\partial L}{\partial z} = I(y=1) - h(f(x))$.
 - Adaboost, pérdida exponencial (para clasificación) $L(y,z) = e^{-yf(x)}$,
 $y\in\{-1,1\}$,
 $\frac{\partial L}{\partial z} = -ye^{-yf(x)}$.
+
+### Discusión: adaboost (opcional)
+
+Adaboost es uno de los algoritmos originales para boosting, y no es necesario
+usar gradient boosting para aplicarlo. La razón es que  los árboles de clasificación
+$T(x)$ toman valores $T(x)\in \{-1,1\}$, y el paso de optimización
+\@ref(eq:fsam-paso) de cada árbol queda
+
+$$T = argmin_{T} \sum_{i=1}^N e^{-y^{(i)}f_{m-1}(x^{(i)})} e^{-y^{(i)}T(x^{(i)})}
+$$
+$$T = argmin_{T} \sum_{i=1}^N d_{m,i} e^{-y^{(i)}T(x^{(i)})}
+$$
+De modo que la función objetivo toma dos valores: Si $T(x^{i})$ clasifica
+correctamente, entonces $e^{-y^{(i)}T(x^{(i)})}=e^{-1}$, y si
+clasifica incorrectamente $e^{-y^{(i)}T(x^{(i)})}=e^{1}$. Podemos entonces
+encontrar el árbol $T$ construyendo un árbol usual pero con datos ponderados
+por $d_{m,i}$, donde buscamos maximizar la tasa de clasificación correcta (puedes
+ver más en nuestro libro de texto, o en [@ESL].
+
+¿Cuáles son las consecuencias de usar la pérdida exponencial? Una es que perdemos
+la conexión con los modelos logísticos e interpretación de probabilidad que tenemos
+cuando usamos la devianza. Sin embargo, son similares: compara cómo se ve
+la devianza (como la formulamos arriba, con $y\in\{-1,1\}$) con la pérdida exponencial.
+
+## Ejemplo {-}
+
+Podemos usar el paquete de R *gbm* para hacer gradient boosting. Para el 
+caso de precios de casas de la sección anterior:
+
+```{r}
+
+```
+
+
 
 ## Aplicación de Gradient Boosting
 
@@ -334,7 +380,7 @@ Igualmente se prueba con varios valores de $0<nu<1$ (típicamente $\nu<0.1$)
 para mejorar el desempeño en validación. **Nota**: cuando hacemos $\nu$ más chica, es necesario hacer $M$ más grande (correr más árboles) para obtener desempeño 
 óptimo.
 
-## Ejemplo
+## Ejemplo {-}
 
 
 
