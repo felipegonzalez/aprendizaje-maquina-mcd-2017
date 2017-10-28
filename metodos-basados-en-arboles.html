@@ -25,7 +25,7 @@
 <meta name="author" content="Felipe González">
 
 
-<meta name="date" content="2017-10-24">
+<meta name="date" content="2017-10-28">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -299,13 +299,15 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="12.2" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#gradient-boosting"><i class="fa fa-check"></i><b>12.2</b> Gradient boosting</a><ul>
 <li class="chapter" data-level="12.2.1" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#algoritmo"><i class="fa fa-check"></i><b>12.2.1</b> Algoritmo</a></li>
 <li class="chapter" data-level="12.2.2" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#funciones-de-perdida"><i class="fa fa-check"></i><b>12.2.2</b> Funciones de pérdida</a></li>
+<li class="chapter" data-level="12.2.3" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#discusion-adaboost-opcional"><i class="fa fa-check"></i><b>12.2.3</b> Discusión: adaboost (opcional)</a></li>
 </ul></li>
+<li class="chapter" data-level="" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#ejemplo-47"><i class="fa fa-check"></i>Ejemplo</a></li>
 <li class="chapter" data-level="12.3" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#aplicacion-de-gradient-boosting"><i class="fa fa-check"></i><b>12.3</b> Aplicación de Gradient Boosting</a><ul>
 <li class="chapter" data-level="12.3.1" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#numero-de-arboles-m"><i class="fa fa-check"></i><b>12.3.1</b> Número de árboles M</a></li>
 <li class="chapter" data-level="12.3.2" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#tamano-de-arboles"><i class="fa fa-check"></i><b>12.3.2</b> Tamaño de árboles</a></li>
 <li class="chapter" data-level="12.3.3" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#tasa-de-aprendizaje"><i class="fa fa-check"></i><b>12.3.3</b> Tasa de aprendizaje</a></li>
 </ul></li>
-<li class="chapter" data-level="12.4" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#ejemplo-47"><i class="fa fa-check"></i><b>12.4</b> Ejemplo</a></li>
+<li class="chapter" data-level="" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#ejemplo-48"><i class="fa fa-check"></i>Ejemplo</a></li>
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Publicado con bookdown</a></li>
@@ -1060,11 +1062,11 @@ prop_bosque &lt;-<span class="st"> </span>probas[,<span class="dv">2</span>]
 <p>En primer lugar, consideremos qué significa que una variable sea importante desde el punto predictivo en un modelo. Podemos considerar, por ejemplo:</p>
 <ul>
 <li><em>Si quitamos una variable, y el error de predicción se degrada, la variable es importante</em>. Este no es un muy buen enfoque, porque muchas veces tenemos conjuntos de variables correlacionadas. Aún cuando una variable influya en la predicción, si la quitamos, otras variable pueden hacer su trabajo, y el modelo no se degrada mucho (piensa en regresión, en donde incluso esta variable eliminada puede tener un coeficiente grande e influir mucho en la predicción). También requiere ajustar modelos adicionales.</li>
-<li><em>Si las predicciones cambian mucho cuando una variable cambia, entonces la variable es importante</em>. Este concepto funciona mejor, al menos desde el punto de vista predictivo. Su defecto es que movimientos de una variable sola (marginales) no reflejan la estructura de los datos - es posible que los cambios que observemos al mover una variable no tengan tanta relevancia en nuestro problema (cuando movemos una variable, las distribuciones de otras variables cambian también en los datos).</li>
+<li><em>Si las predicciones cambian mucho cuando una variable cambia, entonces la variable es importante</em>. Este concepto funciona mejor, al menos desde el punto de vista predictivo. Su defecto es que debemos decidir qué cambios queremos medir. Si el modelo es simple (por ejemplo, lineal), entonces es relativamente fácil usar cambios marginales. Pero en modelos no lineales cambios marginales no necesariamente evalúan correctamente el efecto de la variable sobre las predicciones. La situación se complica adicionalmente si hay interacciones con otras variables, lo que típicamente sucede en métodos basados en árbles.</li>
 </ul>
-<p>La idea de Breiman es como sigue:</p>
+<p>La idea de Breiman, que intenta atender estas observaciones, es como sigue:</p>
 <p>Consideramos un árbol <span class="math inline">\(T^*_j\)</span> del bosque, con muestra bootstrap <span class="math inline">\({\mathcal L}^*_i\)</span>. Calculamos un tipo de error out-of-bag para el árbol, promediando sobre todos los elementos de <span class="math inline">\({\mathcal L}\)</span> que no están en <span class="math inline">\({\mathcal L}^*_i\)</span></p>
-<p><span class="math display">\[\widehat{Err}_{oob}(T^*_j) = \frac{1}{A_j}\sum_{(x^{(i)}, y^{(i)}) \in {\mathcal L} -{\mathcal L}^*_i} L(y^{(i)}, T^*_j(x^{(i)}))\]</span> donde <span class="math inline">\(A_j\)</span> es el tamaño de <span class="math inline">\({\mathcal L} -{\mathcal L}^*_i}\)</span>.</p>
+<p><span class="math display">\[\widehat{Err}_{oob}(T^*_j) = \frac{1}{A_j}\sum_{(x^{(i)}, y^{(i)}) \in {\mathcal L} -{\mathcal L}^*_i} L(y^{(i)}, T^*_j(x^{(i)}))\]</span> donde <span class="math inline">\(A_j\)</span> es el tamaño de <span class="math inline">\({\mathcal L} -{\mathcal L}^*_i\)</span>.</p>
 <p>Ahora <em>permutamos</em> al azar la variable <span class="math inline">\(X_k\)</span> en la muestra OOB <span class="math inline">\({\mathcal L} -{\mathcal L}^*_i\)</span>. Describimos esta operación como <span class="math inline">\(x^{(i)} \to x^{(i)}_k\)</span>. Calculamos el error nuevamente:</p>
 <p><span class="math display">\[\widehat{Err}_{k}(T^*_j) = \frac{1}{A_j}\sum_{(x^{(i)}, y^{(i)}) \in {\mathcal L} -{\mathcal L}^*_i} L(y^{(i)}, T^*_j(x_k^{(i)}))\]</span> Ahora calculamos la degradación del error out-of-bag debido a la permutación: <span class="math display">\[ D_k(T_j^*) = \widehat{Err}_{k}(T^*_j) - \widehat{Err}_{oob}(T^*_j) \]</span></p>
 <p>Y promediamos sobre el bosque entero <span class="math display">\[I_k =\frac{1}{B} \sum_{j=1}^B D_k(T^*_j)\]</span> y a esta cantidad le llamamos la <strong>importancia</strong> de la variable <span class="math inline">\(k\)</span> en el bosque aleatorio. Es el decremento promedio de capacidad predictiva cuando “quitamos” la variable <span class="math inline">\(X_k\)</span>.</p>
@@ -1106,7 +1108,7 @@ importancia_df</code></pre></div>
 <div id="ajustando-arboles-aleatorios." class="section level3">
 <h3><span class="header-section-number">11.3.5</span> Ajustando árboles aleatorios.</h3>
 <ul>
-<li>El parámetro más importante de afinar es <span class="math inline">\(m\)</span>, el número de variables que se escogen al azar en cada nodo.</li>
+<li>El parámetro más importante de afinar es usualmente <span class="math inline">\(m\)</span>, el número de variables que se escogen al azar en cada nodo.</li>
 <li>A veces podemos obtener algunas ventajas de afinar el número mínimo de observaciones por nodo terminal y/o el número mínimo de observaciones por nodo para considerar hacer cortes adicionales</li>
 <li>Usualmente corremos tantos árboles como podamos (cientos, miles), o hasta que se estabiliza el error. Aumentar más arboles rara vez producen sobreajuste adicional (aunque esto no quiere decir que los bosques aleatorios no puedan sobreajustar!)</li>
 </ul>
@@ -1125,7 +1127,7 @@ importancia_df</code></pre></div>
 <li>Heredan las ventajas de los árboles: no hay necesidad de transformar variables o construir interacciones (pues los árboles pueden descubrirlas), son robustos a valores atípicos.</li>
 <li>Igual que con los árboles, las predicciones de los bosques siempre están en el rango de las variables de predicción (no extrapolan)</li>
 </ul>
-<p>Desventajas: - Pueden ser lentos en la predicción, pues muchas veces requieren evaluar grandes cantidades de árboles. - No es tan simple adaptarlos a distiintos tipos de problemas (por ejemplo, como redes neuronales, que combinando capas podemos construir modelos ad-hoc a problemas particulares). - La falta de extrapolación puede ser también un defecto (por ejemplo, cuando hay una estructura lineal aproximada).</p>
+<p>Desventajas: - Pueden ser lentos en la predicción, pues muchas veces requieren evaluar grandes cantidades de árboles. - No es tan simple adaptarlos a distintos tipos de problemas (por ejemplo, como redes neuronales, que combinando capas podemos construir modelos ad-hoc a problemas particulares). - La falta de extrapolación puede ser también un defecto (por ejemplo, cuando hay una estructura lineal aproximada).</p>
 </div>
 <div id="tarea-para-23-de-octubre" class="section level3">
 <h3><span class="header-section-number">11.3.7</span> Tarea (para 23 de octubre)</h3>
