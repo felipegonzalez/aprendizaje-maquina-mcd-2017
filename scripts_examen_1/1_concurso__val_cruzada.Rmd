@@ -1,0 +1,405 @@
+---
+title: "1. Image based sensor for garage door: regresión y validación cruzada"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+if(Sys.info()['nodename'] == 'vainilla.local'){
+  # esto es por mi instalación particular de tensorflow - típicamente
+  # no es necesario que corras esta línea.
+  Sys.setenv(TENSORFLOW_PYTHON="/usr/local/bin/python")
+}
+library(keras)
+```
+
+```{r, warning=FALSE, message=FALSE}
+entrena <- readRDS('./concurso/entrena_imagenes.rds')
+prueba <-  readRDS('./concurso/prueba_imagenes.rds')
+```
+
+```{r}
+
+mostrar_imagen <- function(renglon, dat){
+  v <- as.numeric(dat %>% dplyr::select(contains('X'))%>% .[renglon,])
+  mat <- (t(matrix(v, nrow=190, ncol=200, byrow=T))[,190:1])
+  image(mat, axes = F, col=gray(0:255/255))
+}
+
+mostrar_imagen(1, entrena)
+mostrar_imagen(225, entrena)
+```
+
+
+
+```{r}
+set.seed(3434)
+x_entrena <- entrena %>% select(-estado, -hora) %>% as.matrix 
+x_prueba <- prueba %>% select(-hora, -id) %>% as.matrix 
+```
+Regresión
+```{r}
+library(doMC)
+registerDoMC(4)
+library(glmnet)
+#x_entrena <- entrena %>% select(-estado, -hora) %>% as.matrix 
+y_entrena <- as.numeric(entrena$estado == 'cerrada')
+mod <- cv.glmnet(x = x_entrena[,], y = y_entrena, alpha=0.5, nfolds = 10, 
+                 family='binomial', parallel=TRUE, lambda = exp(seq(-10,1,0.5)))
+plot(mod)
+```
+
+```{r}
+entropia_cruzada <- function(y,z){
+  df <- data_frame(y=y, z=z) 
+  y <- df$y
+  z <- df$z
+  -mean(y*z-log(1+exp(z)))
+  #p <- 1/(1+exp(-z))
+  #-mean(y*log(p)+(1-y)*log(1-p))
+}
+```
+Calculamos entropía para entrenamiento y nuestra estimación de validación 
+cruzada:
+
+```{r}
+preds_pr <- predict(mod, newx = x_prueba, type='link', s = mod$lambda.min)
+preds_ent <- predict(mod, newx = x_entrena, type='link', s = mod$lambda.min)
+entropia_cruzada(y_entrena, preds_ent[,1])
+min(mod$cvm)/2
+```
+
+El error de entrenamiento de validación parece bajo. Ahora enviamos nuestra solución:
+
+```{r}
+solucion_d <- read_csv('../concurso/derived.csv')
+index_pub <- solucion_d$Usage=='Public'
+index_private <- solucion_d$Usage=='Private'
+sol_pub <- filter(solucion_d, Usage == 'Public')
+sol_private <- filter(solucion_d, Usage == 'Private')
+```
+
+```{r}
+df <- data_frame(z = preds_pr[index_pub], y=solucion_d$estado[index_pub])
+entropia_cruzada(df$y, df$z)
+
+```
+
+
+Y vemos que hay una diferencia gigantesca entre nuestro resultado y el resultado
+de validación. ¿Qué está pasando? Lo que es seguro es que necesitamos tener una manera de estimar el error de nuestros modelos, pues en otro caso trabajamos
+a ciegas (o con 3 oportunidades al día!).
+
+
+Consideramos entonces:
+- ¿Es un problema de variación muestral? Quizá la muestra del public leaderboard
+es muy chica (son alrededor de 170 casos, 30\% de la muestra de prueba)
+- ¿Es el sesgo que discutimos de validación cruzada? (Que nos ayuda a escoger modelos
+pero a veces no es tan buen estimador el error de predicción)
+- ¿Los datos de prueba son muy diferentes a los de entrenamiento?
+- ¿Estamos escogiendo mal los conjuntos de validación?
+
+
+Veamos primero la variación muestral y sesgo de validación cruzada. 
+Podemos simular restando 150 casos de la muestra
+de entrenamiento, ajustando con el resto,  repitiendo algunas veces:
+
+
+Si separamos unos 150 casos de entrenamiento y hacemos el ajuste:
+
+```{r}
+set.seed(664)
+for(k in 1:5){
+  ind_valida <- sample(1:nrow(x_entrena), 150)
+  mod <- cv.glmnet(x = x_entrena[-ind_valida,], y = y_entrena[-ind_valida], alpha=0.5, nfolds = 10, 
+                 family='binomial', parallel=TRUE, lambda = exp(seq(-10,1,0.5)))
+  print(paste0("Error validación cruzada : ",min(mod$cvm)/2))
+  preds_pr <- predict(mod, newx = x_entrena[ind_valida,], type='link', s = mod$lambda.1se)
+  df <- data_frame(z = preds_pr[,1], y=y_entrena[ind_valida])
+  print("Error muestra de validación : ")
+  print(entropia_cruzada(df$y, df$z))
+}
+```
+
+Y vemos que el problema no es con el posible sesgo de validación cruzada, 
+pues la estimación de validación cruzada es muy similar a la estimación
+con muestra de validación. Adicionalmente, también notamos
+que no se trata de un problema de variación muestral
+debido a la muestra de prueba chica (arriba
+mostramos una variación del orden de 0.04- 0.10 para validación cruzada, mientras
+que la diferencia entre validación cruzada y leaderboard público es 
+0.01 vs 0.33 ) .
+
+
+Entonces nos queda pensar 
+¿en qué son diferentes datos de entrenamiento y prueba?, o ¿estamos escogiendo mal los conjuntos de validación?
+
+La variable más simple para comparar muestras, en este caso, es el tiempo:
+```{r}
+library(lubridate)
+ent_hora <- data_frame(datetime = ymd_hms(entrena$hora), tipo='entrena')
+pr_hora <- data_frame(datetime = ymd_hms(prueba$hora), tipo='prueba')
+fecha_hora <- bind_rows(ent_hora, pr_hora) %>% mutate(indice = row_number())
+ggplot(fecha_hora, aes(x=indice, y = datetime, colour=tipo)) + geom_line() 
+```
+
+Donde notamos en primer lugar que los datos de prueba siempre ocurren después
+de los de entrenamiento. Esto es un primer problema: 
+una fuente de error adicional es que los procesos cambian con el tiempo, y es normal
+esperar mayores errores cuanto más lejos en el futuro nos movemos (degradación de los
+modelos con el tiempo).
+
+Sin embargo, en este caso hay algo más serio que invalida nuestra validación cruzada.
+Notamos que los datos están en grupos:
+
+```{r}
+ggplot(filter(fecha_hora,tipo=='entrena'), aes(x=indice, y = datetime, colour=tipo)) + 
+  geom_point(size=0.5)
+```
+
+Por ejemplo, para un día:
+
+
+```{r}
+ggplot(filter(fecha_hora,tipo=='entrena', datetime < ymd_hms("2015-07-24 05:40:53 UTC")), aes(x=indice, y = datetime, colour=tipo)) + 
+  geom_point(size=0.5)
+```
+
+¿Cómo se ve un segmento? Tomemos por ejemplo las primeras 9 imágenes:
+
+```{r}
+entrena$hora[1:9]
+op <- par(mfrow = c(3,3),
+          oma = c(5,4,0,0) + 0.1,
+          mar = c(0,0,1,1) + 0.1)
+for(i in 1:9){
+  mostrar_imagen(i, entrena)
+}
+```
+
+Otro segmento:
+
+```{r}
+entrena$hora[37:41]
+op <- par(mfrow = c(3,3),
+          oma = c(5,4,0,0) + 0.1,
+          mar = c(0,0,1,1) + 0.1)
+for(i in 37:41){
+  mostrar_imagen(i, entrena)
+}
+
+```
+
+Y vemos que los casos del conjunto de entrenamiento y prueba están organizados en
+fotografías agrupadas alrededor de segmentos cortos del día. **Si hacemos validación al azar,
+o validación cruzada al azar, entonces el error es bajo porque es probable que
+tengamos algunas fotos de cada segmento para aprender en el conjunto de entrenamiento,
+y entonces es fácil predecir para las fotos de ese segmento que cayeron en validación**.
+
+Esto último es un error, porque a la hora
+de aplicar el modelo en la realidad (o a la muestra de prueba), esto no se cumple:
+no tenemos esas fotos etiquetadas de "ayuda", y nuestro desempeño se degrada considerablemente.
+
+En resumen: la validación cruzada al azar y validación al azar no estiman el error de predicción
+para esta tarea: estiman el error de predicción que tendríamos si tuvieramos fotos etiquetadas
+cerca de la foto que nos interesa clasificar.
+
+
+## Mejora del proceso de validación
+
+En este punto podemos tomar distintos caminos:
+
+- Usar los últimos datos del conjunto de entrenamiento para hacer validación.
+- Hacer validación cruzada donde quitamos segmentos completos de fotos.
+- Hacer algún modelo que tenga características de series de tiempo
+
+La última es la opción más complicada: pensar que estamos examinando video, no fotografías,
+y usar algún método adecuado para esto. Podemos intentar más fácilmente las primeras dos
+
+
+Primero separemos en segmentos nuestros datos de entrenamiento:
+
+```{r}
+library(lubridate)
+entrena_seg <- entrena %>% select(hora, estado) %>% mutate(fecha_hora = ymd_hms(hora)) %>%
+  mutate(diferencia = fecha_hora - lag(fecha_hora, default = 0))
+quantile(entrena_seg$diferencia, probs=seq(0.05,0.95,0.05))
+```
+
+De aquí vemos que el sistema probablemente toma fotografías alrededor
+de cada 17 segundos. Los valores grandes resultan de la selección de la muestra
+que fue etiquetada (pues esta muestra fue construida etiquetando segmentos de fotografías).
+Podemos cortar, por ejemplo, en 3000 segundos.
+
+```{r}
+entrena_seg <- entrena_seg %>% mutate(dif_grande = diferencia > 9700) %>%
+                mutate(segmento = cumsum(dif_grande))
+entrena_seg %>% select(fecha_hora, diferencia, segmento) %>% print(n = 30)
+max(entrena_seg$segmento)
+# distribución de número de fotografías por segmento
+entrena_seg %>% group_by(segmento) %>% tally
+
+```
+
+Ahora podemos agregar el segmento para usar en la validación cruzada (quitamos un segmento,
+ajustamos con el resto, y luego probamos con el segmento eliminado). 
+
+```{r}
+entrena_seg <- entrena_seg %>% mutate(foldid = (segmento %/% 2)+1)
+table(entrena_seg$foldid)
+```
+
+Y ahora corremos glmnet con validación cruzada dada por los *folds* que acabamos
+de calcular (en lugar de hacerlo al azar, que es el default)
+
+```{r}
+mod <- cv.glmnet(x = x_entrena[,], y = y_entrena, alpha=1, foldid=entrena_seg$foldid, 
+                 family='binomial', parallel=TRUE, lambda = exp(seq(-10,1,0.5)))
+```
+
+Examinamos las estimaciones
+
+```{r}
+plot(mod)
+mod$cvm
+mod$cvsd
+```
+
+Y estos valores se ven mejor (son más grandes), aunque vemos que tendremos
+dificultades para escoger modelos óptimos: los intervalos de validación cruzada
+son grandes.Probemos el de lambda.1se:
+
+```{r}
+mod$lambda.1se
+mod$lambda.min
+indice_min <- mod$lambda == mod$lambda.min
+indice_1se <- mod$lambda == mod$lambda.1se
+mod$cvm[indice_min]
+mod$cvm[indice_1se]
+
+```
+
+
+
+Enviamos una soluciones:
+
+```{r}
+mod$lambda.1se
+preds_pr <- predict(mod, newx = x_prueba, type='link', s = mod$lambda.1se)
+df <- data_frame(z = preds_pr[index_pub,1], y=solucion_d$estado[index_pub])
+entropia_cruzada(df$y, df$z)
+```
+
+Cuyo desempeño sobre la muestra de prueba total (aquí podemos hacerlo para confirmar,
+normalmente esto no estaría disponible) es
+
+```{r}
+preds_pr <- predict(mod, newx = x_prueba, type='link', s = mod$lambda.1se)
+df <- data_frame(z = preds_pr[index_private,1], y=solucion_d$estado[index_private])
+entropia_cruzada(df$y, df$z)
+```
+
+Y vemos que mejoró considerablemente nuestra estimación. Todavía podemos
+sufrir por la variación de las muestras chicas, pero estamos en mejor posición
+para buscar buenos modelos.
+
+**Observación**: como vimos arriba, todavía hay variación considerable
+en la muestra. Puedes obtener resultados distintos dependiendo que lambda
+escojas en particular (y puede el leaderboard privado puede variar en
++/- 0.02). 
+
+
+## Afinando regresión regularizada 
+
+Probaremos cambiando el valor alpha que selecciona el tipo de penalización
+y estimando con nuestros cortes de validación cruzada. Podemos 
+agregar también la variable hora.
+
+
+```{r}
+library(lubridate)
+hora <- hour(entrena$hora)
+hora_2 <- hora^2
+x_entrena_h <- cbind(x_entrena, hora, hora_2)
+hora_p <- hour(prueba$hora)
+hora_p_2 <- hora_p^2
+x_prueba_h <- cbind(x_prueba, hora_p, hora_p_2)
+
+error_1se <- function(alpha){
+  print(alpha)
+  mod <- cv.glmnet(x = x_entrena_h, y = y_entrena, alpha=alpha, foldid=entrena_seg$foldid, 
+                 family='binomial', parallel=TRUE, lambda = exp(seq(-10,1,0.5)))
+  data_frame(alpha = alpha, error_vc = mod$cvm, lambda = mod$lambda) %>%
+    mutate(error_sd = mod$cvsd) %>%
+    mutate(lambda_1se = (mod$lambda.1se==lambda)) %>%
+    mutate(lambda_min = (mod$lambda.min==lambda))
+}
+corridas <- lapply(seq(0.1, 1, by = 0.1), error_1se)
+```
+
+
+```{r}
+corridas_df <- bind_rows(corridas)
+ggplot(corridas_df, aes(x=lambda, y=error_vc, group=alpha, colour=factor(alpha))) +
+  geom_point() + geom_line() + scale_x_log10(breaks=round(exp(seq(-10,0,by=1)),4)) + 
+  scale_y_continuous(breaks = seq(0.2, 1.4, by=0.1))
+```
+El modelo de lasso parece ser el mejor, con un error de validación cruzada
+```{r}
+filter(corridas_df, lambda_1se)
+```
+
+Lasso tiene el mejor desempeño. Ajustamos con todos los datos y hacemos
+nuestra entrega:
+
+```{r}
+mod_1 <- glmnet(x = x_entrena_h, y = y_entrena, lambda= 0.006, alpha = 1, family = 'binomial')
+preds_pr <- predict(mod_1, newx = x_prueba_h, type='link')
+df <- data_frame(z = preds_pr[index_pub,1], y=solucion_d$estado[index_pub])
+entropia_cruzada(df$y, df$z)
+```
+Que en el privado da 
+
+```{r}
+df <- data_frame(z = preds_pr[index_private,1], y=solucion_d$estado[index_private])
+entropia_cruzada(df$y, df$z)
+```
+
+Variaciones: 
+
+- usar lambda.min o algún valor entre lambda.min y lambda.1se (con esto basta para
+tener menos de 0.18) - aunque esto es jugar con el leaderboard.
+
+¿Qué pixeles fueron escogidos por este modelo?
+
+```{r}
+mostrar_imagen_1 <- function(renglon){
+  v <- renglon
+  mat <- (t(matrix(v, nrow=190, ncol=200, byrow=T))[,190:1])
+  image(mat, axes = F)
+}
+coefs_1 <- coef(mod_1)[,1][-c(1, 38001,38002)]
+mostrar_imagen(59, entrena)
+mostrar_imagen(80, entrena)
+mostrar_imagen(120, entrena)
+mostrar_imagen(180, entrena)
+mostrar_imagen(285, entrena)
+mostrar_imagen_1(renglon = coefs_1)
+```
+
+### Diagnóstico
+
+El error de entrenamiento es:
+```{r}
+entrena_pr <- predict(mod_1, newx = x_entrena_h, type='link')
+df <- data_frame(z = entrena_pr[,1], y = y_entrena)
+table(df$z>0, y_entrena)
+print("Devianza (entropía cruzada)")
+entropia_cruzada(df$y, df$z)
+```
+
+Así que probablemente nuestro problema más grave es varianza (el error de validación cruzada
+es de  alrededor de 0.23, y el clasificador es cercano a perfecto en la muestra
+de entrenamiento) que no podemos resolver
+regularizando el modelo lineal (en estos modelos lineales, el sesgo nos gana cuando regularizamos demasiado).
+
