@@ -286,8 +286,8 @@ Podemos hacer un refinamiento adicional que consiste en encontrar los cortes del
 ### Algoritmo
 
 ```{block2, type='comentario'}
-**Gradient boosting**
-
+**Gradient boosting** (versión simple)
+  
 1. Inicializar con $f_0(x) =\gamma$
 
 2. Para $m=0,1,\ldots, M$, 
@@ -300,7 +300,7 @@ Podemos hacer un refinamiento adicional que consiste en encontrar los cortes del
   - Resolvemos (optimizamos directamente el valor que toma el árbol en cada región - este es un problema univariado, más fácil de resolver)
   $$\gamma_{j,m} = argmin_\gamma \sum_{x^{(i)}\in R_{j,m}} L(y^{(i)},f_{m-1}(x^{i})+\gamma )$$
     para cada región $R_{j,m}$ del árbol del inciso anterior.
-  - Actualizamos $$f_m (x) = f_{m-1}(x) +\sum_j \gamma_{j,m} I(x\in R_{j,m})$$
+  - Actualizamos $$f_m (x) = f_{m-1}(x) \sum_j \gamma_{j,m} I(x\in R_{j,m})$$
   3. El predictor final es $f_M(x)$.
 ```
 
@@ -343,26 +343,200 @@ la conexión con los modelos logísticos e interpretación de probabilidad que t
 cuando usamos la devianza. Sin embargo, son similares: compara cómo se ve
 la devianza (como la formulamos arriba, con $y\in\{-1,1\}$) con la pérdida exponencial.
 
-## Ejemplo {-}
+### Ejemplo {-}
 
 Podemos usar el paquete de R *gbm* para hacer gradient boosting. Para el 
-caso de precios de casas de la sección anterior:
+caso de precios de casas de la sección anterior (un problema de regresión).
+
+
+Fijaremos el número de árboles en 50, de profundidad 3, usando
+75\% de la muestra para entrenar y el restante para validación:
 
 ```{r}
+library(gbm)
+entrena <- read_rds('datos/ameshousing-entrena-procesado.rds')
+set.seed(23411)
+
+ajustar_boost <- function(entrena, ...){
+  mod_boosting <- gbm(log(vSalePrice) ~.,  data = entrena,
+                distribution = 'gaussian',
+                n.trees = 200, 
+                interaction.depth = 3,
+                shrinkage = 1, # tasa de aprendizaje
+                bag.fraction = 1,
+                train.fraction = 0.75)
+  mod_boosting
+}
+
+house_boosting <- ajustar_boost(entrena)
+dat_entrenamiento <- data_frame(entrena = sqrt(house_boosting$train.error),
+                                valida = sqrt(house_boosting$valid.error),
+                                n_arbol = 1:length(house_boosting$train.error)) %>%
+                      gather(tipo, valor, -n_arbol)
+print(house_boosting)
+ggplot(dat_entrenamiento, aes(x=n_arbol, y=valor, colour=tipo, group=tipo)) +
+  geom_line()
+```
+
+Que se puede graficar también así:
+```{r}
+gbm.perf(house_boosting)
+```
+Como vemos, tenemos que afinar los parámetros del algoritmo. 
+
+
+
+## Modificaciones de Gradient Boosting
+
+Hay algunas adiciones al algoritmo de gradient boosting que podemos
+usar para mejorar el desempeño:
+
+
+
+
+### Tasa de aprendizaje (shrinkage)
+Funciona bien modificar el algoritmo usando una tasa de aprendizae
+$0<\nu<1$:
+$$f_m(x) = f_{m-1}(x) + \nu \sum_j \gamma_{j,m} I(x\in R_{j,m})$$
+
+Este parámetro sirve como una manera de evitar sobreajuste rápido cuando
+construimos los predictores. Si este número es muy alto, podemos sobreajustar
+rápidamente con pocos árboles, y terminar con predictor de varianza alta. Si este
+número es muy bajo, puede ser que necesitemos demasiadas iteraciones para llegar
+a buen desempeño.
+
+Igualmente se prueba con varios valores de $0<nu<1$ (típicamente $\nu<0.1$)
+para mejorar el desempeño en validación. **Nota**: cuando hacemos $\nu$ más chica, es necesario hacer $M$ más grande (correr más árboles) para obtener desempeño 
+óptimo.
+
+Veamos que efecto tiene en nuestro ejemplo:
+
+```{r, include = FALSE}
+ajustar_boost <- function(entrena){
+  out_fun <- function(shrinkage = 0.5, bag.fraction = 1, depth = 3, ...){
+    mod_boosting <- gbm(log(vSalePrice) ~.,  data = entrena,
+                distribution = 'gaussian',
+                n.trees = 500, 
+                interaction.depth = depth,
+                shrinkage = shrinkage, # tasa de aprendizaje
+                bag.fraction = bag.fraction,
+                train.fraction = 0.75)
+    mod_boosting
+  }
+  out_fun
+}
+eval_modelo <- function(modelo){
+   dat_eval <- data_frame(entrena = sqrt(modelo$train.error),
+                                valida = sqrt(modelo$valid.error),
+                                n_arbol = 1:length(modelo$train.error)) %>%
+                      gather(tipo, valor, -n_arbol)
+   dat_eval
+}
+boost <- ajustar_boost(entrena)
 
 ```
 
+```{r}
+modelos_dat <- data_frame(n_modelo = 1:4, shrinkage = c(0.05, 0.1, 0.5, 1))
+modelos_dat <- modelos_dat %>% 
+  mutate(modelo = map(shrinkage, boost)) %>%
+  mutate(eval = map(modelo, eval_modelo))
+modelos_dat
+graf_eval <- modelos_dat %>% select(shrinkage, eval) %>% unnest
+graf_eval
+ggplot(filter(graf_eval, tipo=='valida'), aes(x = n_arbol, y= valor, colour=factor(shrinkage), group =
+                        shrinkage)) + geom_line() +
+  facet_wrap(~tipo)
+```
+
+Obsérvese que podemos obtener un mejor resultado de validación afinando
+la tasa de aprendizaje. Cuando es muy grande, el modelo rápidamente sobreajusta
+cuando agregamos árboles. Si la tasa es demasiado chica, podos tardar
+mucho en llegar a un predictor de buen desempeño.
+
+¿Cómo crees que se ven las gráfica de error de entrenamiento?
+
+### Submuestreo (bag.fraction)
+Funciona bien construir cada uno de los árboles con submuestras de la muestra
+de entrenamiento, como una manera adicional de reducir varianza al construir
+nuestro predictor (esta idea es parecida a la de los bosques aleatorios, 
+aquí igualmente perturbamos la muestra de entrenamiento en cada paso para evitar
+sobreajuste). Adicionalmente, este proceso acelera considerablemente las
+iteraciones de boosting, y en algunos casos sin penalización en desempeño.
+
+En boosting generalmente se toman submuestras (una
+fracción de alrededor de 0.5 de la muestra de entrenamiento, pero puede
+ser más chica para conjuntos grandes de entrenamiento) sin reemplazo.
+
+Este parámetro también puede ser afinado con muestra
+de validación o validación cruzada. 
+
+```{r}
+boost <- ajustar_boost(entrena)
+modelos_dat <- data_frame(n_modelo = 1:3, 
+                          bag.fraction = c(0.25, 0.5, 1),
+                          shrinkage = 0.25)
+modelos_dat <- modelos_dat %>% 
+  mutate(modelo = pmap(., boost)) %>%
+  mutate(eval = map(modelo, eval_modelo))
+head(modelos_dat)
+graf_eval <- modelos_dat %>% select(bag.fraction, eval) %>% unnest
+graf_eval
+ggplot((graf_eval), aes(x = n_arbol, y= valor, colour=factor(bag.fraction), group =
+                        bag.fraction)) + geom_line() +
+  facet_wrap(~tipo)
+```
+
+En este ejemplo, podemos reducir el tiempo de ajuste usando una 
+fracción de submuestro de 0.5, sin diferencias grandes en desempeño.
 
 
-## Aplicación de Gradient Boosting
+Ahora veamos los dos parámetros actuando en conjunto:
 
-Para ajustar modelos con gradient boosting, tenemos que considerar:
+```{r}
+modelos_dat <- list(bag.fraction = c(0.1, 0.25, 0.5, 1),
+                          shrinkage = c(0.01, 0.1, 0.25, 0.5)) %>% expand.grid
+modelos_dat <- modelos_dat %>% 
+  mutate(modelo = pmap(., boost)) %>%
+  mutate(eval = map(modelo, eval_modelo))
+head(modelos_dat)
+graf_eval <- modelos_dat %>% select(shrinkage, bag.fraction, eval) %>% unnest
+head(graf_eval)
+ggplot(filter(graf_eval, tipo =='valida'), aes(x = n_arbol, y= valor, colour=factor(bag.fraction), group =
+                        bag.fraction)) + geom_line() +
+  facet_wrap(~shrinkage)
+```
+
+Bag fraction demasiado chico no funciona bien, especialmente si la tasa
+de aprendizaje es alta (¿Por qué?). Filtremos para ver con detalle el resto
+de los datos:
+
+```{r}
+ggplot(filter(graf_eval, tipo =='valida', bag.fraction>0.1), aes(x = n_arbol, y= valor, colour=factor(bag.fraction), group =
+                        bag.fraction)) + geom_line() +
+  facet_wrap(~shrinkage) + scale_y_log10()
+```
+
+
+Y parece ser que para este número de iteraciones, una tasa de aprendizaje
+de 0.1 junto con un bag fraction de 0.5 funciona bien:
+
+```{r}
+graf_eval %>% filter(tipo=='valida') %>%
+  group_by(shrinkage, bag.fraction) %>%
+  summarise(valor = min(valor)) %>%
+   arrange(valor)
+```
+
+
 
 ### Número de árboles M
 
 Se monitorea el error sobre una muestra de validación cuando agregamos
 cada árboles. Escogemos el número de árboles de manera que minimize el
-error de validación. Demasiados árboles pueden producir sobreajuste.
+error de validación. Demasiados árboles pueden producir sobreajuste. Ver el ejemplo
+de arriba.
+
 
 ### Tamaño de árboles
 
@@ -372,18 +546,28 @@ elegir. $J$ más grande permite interacciones de orden más alto entre
 las variables de entrada. Se intenta con varias $J$ y $M$ para minimizar
 el error de vaidación.
 
-### Tasa de aprendizaje
-Funciona bien modificar el algoritmo usando una tasa de aprendizae
-$0<\nu<1$:
-$$f_m(x) = f_{m-1}(x) + \nu \sum_j \gamma_{j,m} I(x\in R_{j,m})$$
-Igualmente se prueba con varios valores de $0<nu<1$ (típicamente $\nu<0.1$)
-para mejorar el desempeño en validación. **Nota**: cuando hacemos $\nu$ más chica, es necesario hacer $M$ más grande (correr más árboles) para obtener desempeño 
-óptimo.
+### Controlar número de casos decidir si hacemos cortes
 
-## Ejemplo {-}
+Igual que en bosques aleatorios, podemos establecer mínimos de muestra en nodos
+terminales, o mínimo de casos necesarios para hacer un corte.
+
+### Ejemplo {-}
 
 
-
+```{r}
+modelos_dat <- list(bag.fraction = c( 0.25, 0.5, 1),
+                          shrinkage = c(0.01, 0.1, 0.25, 0.5),
+                    depth = c(1,5,10,15)) %>% expand.grid
+modelos_dat <- modelos_dat %>% 
+  mutate(modelo = pmap(., boost)) %>%
+  mutate(eval = map(modelo, eval_modelo))
+modelos_dat
+graf_eval <- modelos_dat %>% select(shrinkage, bag.fraction, depth, eval) %>% unnest
+head(graf_eval)
+ggplot(filter(graf_eval, tipo =='valida'), aes(x = n_arbol, y= valor, colour=factor(bag.fraction), group =
+                        bag.fraction)) + geom_line() +
+  facet_grid(depth~shrinkage) + scale_y_log10()
+```
 
 
 
