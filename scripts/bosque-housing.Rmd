@@ -118,7 +118,11 @@ prueba_larga <- prueba %>% gather(variable, valor, -Id)
 
 
 ## Distribuciones de variable respuesta y otras
-Consideramos algunas variables que sabemos deben ser importantes y algunas gráficas:
+Consideramos algunas variables que sabemos deben ser importantes y algunas gráficas.
+Vamos a predecir el logaritmo, pues la variable respuesta varía al menos
+en un orden de magnitud y la estructura multiplicativa del modelo con logaritmo
+puede ser más apropiada para esta problema (también ayuda comprimiendo valores
+altos de la variable respuesta).
 
 ```{r}
 table(is.na(entrena$SalePrice))
@@ -179,7 +183,7 @@ Cuando no tienen masonry veneer:
 Y hay un faltante en la variable *Electrical*. Hay varias opciones para tratar
 con datos faltantes (por ejemplo, existe la función *rfImpute*). Sin embargo,
 estos son faltantes son estructurales (la medición de calidad de alberca no existe
-si no hay alberca - no son datos censurados por algún proceso.
+si no hay alberca - no son datos censurados por algún proceso).
 
 
 ```{r}
@@ -195,8 +199,9 @@ niveles_faltantes %>% filter(n_distintos < 50)
 
 
 Por lo pronto, recordamos que tenemos
-que correr un modelo lo más pronto posible. Intentemos entonces regresión logística,
-haciendo imputación con una categoría adicional o la media (para variables numéricas).
+que correr un modelo lo más pronto posible. Usamos el siguiente script 
+para limpiar faltantes, que asigna a la categoría más popular los faltantes
+categóricos y la media a los faltantes numéricos.
 
 
 ```{r}
@@ -285,6 +290,7 @@ names(prueba_na) <- paste('v', names(prueba_na), sep='') #evitar nombres no vál
 Corremos el bosque:
 
 ```{r}
+set.seed(2912)
 bosque_precios <- randomForest(log(vSalePrice) ~., data = entrena_na, 
                                mtry = 10, ntree=1500, importance=TRUE)
 bosque_precios
@@ -297,7 +303,8 @@ plot(bosque_precios)
 sqrt(last(bosque_precios$mse))
 ```
 
-Y podemos ver las importancias, que dan resultados interesantes:
+Y podemos ver las importancias, que dan resultados interesantes (nótese que
+hay varias variables de superficies en pies cuadrados) :
 
 ```{r}
 imp <-  importance(bosque_precios)[,1]
@@ -364,6 +371,14 @@ limpiar_faltantes_2 <- function(datos, datos_p = NULL, min_cat = 10,
   if(is.null(datos_p)){
     datos_p <- datos
   }
+  #abajo vamos a inferir el tipo de variable, pero podemos tener error si hay
+  #variables categóricas codificadas con números. Viendo data_description.txt, solo hay
+  #una, que arreglamos así:
+  datos <- datos %>% group_by(variable) %>% 
+    mutate(valor =ifelse(variable!='MSSubClass', valor, paste0('nivel_',valor)))
+  datos_p <- datos_p %>% group_by(variable) %>% 
+    mutate(valor = ifelse(variable!='MSSubClass', valor,paste0('nivel_',valor)))    
+  
   # inferir el tipo de variable (categórica o numérica)
   tipo_vars <- datos %>% group_by(variable) %>% 
     summarise(categorica = all(is.na(as.numeric(valor))))
@@ -415,11 +430,11 @@ limpiar_faltantes_2 <- function(datos, datos_p = NULL, min_cat = 10,
 
 
 ```{r, warning=FALSE, message=FALSE}
-library(randomForest)
 entrena_na <- limpiar_faltantes_2(entrena_larga, to_factor = TRUE) %>% 
   select(-Id, -Utilities) %>% as.data.frame
 prueba_na <- limpiar_faltantes_2(entrena_larga, prueba_larga, to_factor = TRUE) %>% 
   select(-Id, -Utilities) %>% as.data.frame
+write_rds(entrena_na, 'datos/ameshousing-entrena-procesado.rds')
 names(entrena_na) <- paste('v', names(entrena_na), sep='')
 names(prueba_na) <- paste('v', names(prueba_na), sep='')
 
