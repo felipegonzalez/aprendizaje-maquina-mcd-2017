@@ -948,18 +948,20 @@ variable pueden hacer su trabajo, y el modelo no se degrada mucho (piensa
 en regresión, en donde incluso esta variable eliminada puede tener un coeficiente grande e influir
 mucho en la predicción). También requiere ajustar modelos adicionales.
 - *Si las predicciones cambian mucho cuando una variable cambia, entonces la variable es importante*. 
-Este concepto funciona mejor, al menos desde el punto de vista predictivo. Su defecto es 
-que movimientos de una variable sola (marginales) no reflejan la estructura de los datos - es posible
-que los cambios que observemos al mover una variable no tengan tanta relevancia en nuestro problema (cuando movemos una variable, las distribuciones de otras variables
-cambian también en los datos).
+Este concepto funciona mejor, al menos desde el punto de vista predictivo. Su defecto es que debemos decidir qué cambios queremos medir. Si el modelo es simple
+(por ejemplo, lineal), entonces es relativamente fácil usar cambios marginales.
+Pero en modelos no lineales cambios marginales no necesariamente evalúan 
+correctamente el efecto de la variable sobre las predicciones. La situación
+se complica adicionalmente si hay interacciones con otras variables, lo que
+típicamente sucede en métodos basados en árbles.
 
-La idea de Breiman es como sigue:
+La idea de Breiman, que intenta atender estas observaciones, es como sigue:
 
 Consideramos un árbol $T^*_j$ del bosque, con muestra bootstrap ${\mathcal L}^*_i$. Calculamos
 un tipo de error out-of-bag para el árbol, promediando sobre todos los elementos de ${\mathcal L}$ que no están en ${\mathcal L}^*_i$
 
 $$\widehat{Err}_{oob}(T^*_j) = \frac{1}{A_j}\sum_{(x^{(i)}, y^{(i)}) \in {\mathcal L} -{\mathcal L}^*_i} L(y^{(i)}, T^*_j(x^{(i)}))$$
-donde $A_j$ es el tamaño de ${\mathcal L} -{\mathcal L}^*_i}$.
+donde $A_j$ es el tamaño de ${\mathcal L} -{\mathcal L}^*_i$.
 
 Ahora *permutamos* al azar la variable $X_k$ en la muestra OOB ${\mathcal L} -{\mathcal L}^*_i$.
 Describimos esta operación como $x^{(i)} \to x^{(i)}_k$.
@@ -986,8 +988,7 @@ probabilidad de usarla).
 rompiendo la relación que
 hay entre $X_k$ y la variable respuesta.
 - Aunque podríamos usar esta medida para árboles, no es muy buena idea por el problema
-de "enmascaramiento". Este problema se aminora en los bosques aleatorios pues todas las 
-variables tienen oportunidad de aportar cortes en ausencia de otras variables.
+de "enmascaramiento". Este problema se aminora en los bosques aleatorios pues todas las  variables tienen oportunidad de aportar cortes en ausencia de otras variables.
 
 #### Ejemplo{-}
 En nuestro ejemplo de spam
@@ -1005,7 +1006,7 @@ ggplot(importancia_df , aes(x=variable, y= MeanDecreaseAccuracy)) + geom_point()
 
 ### Ajustando árboles aleatorios.
 
-- El parámetro más importante de afinar es $m$, el número de variables que se escogen
+- El parámetro más importante de afinar es usualmente $m$, el número de variables que se escogen
 al azar en cada nodo.
 - A veces podemos obtener algunas ventajas de afinar el número mínimo de observaciones por
 nodo terminal y/o el número mínimo de observaciones por nodo para considerar hacer cortes adicionales
@@ -1036,7 +1037,7 @@ Desventajas:
 - Pueden ser lentos en la predicción, pues muchas veces 
 requieren evaluar grandes cantidades
 de árboles.
-- No es tan simple adaptarlos a distiintos tipos de problemas (por ejemplo, como
+- No es tan simple adaptarlos a distintos tipos de problemas (por ejemplo, como
 redes neuronales, que combinando capas podemos construir modelos ad-hoc a problemas
 particulares).
 - La falta de extrapolación puede ser también un defecto (por ejemplo, cuando hay
