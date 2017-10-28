@@ -82,7 +82,7 @@ model %>% layer_conv_2d(filters = 2, kernel_size = c(3,3),
   layer_dense(2) %>%
   layer_dense(1)
 get_weights(model)        
-
+#nota: si no usas layer_flatten, usa un peso para toda la imagen filtrada
 ```
 Que son un total de parámetros igual a
 
