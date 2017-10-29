@@ -488,7 +488,7 @@ ggplot((graf_eval), aes(x = n_arbol, y= valor, colour=factor(bag.fraction), grou
 ```
 
 En este ejemplo, podemos reducir el tiempo de ajuste usando una 
-fracción de submuestro de 0.5, sin diferencias grandes en desempeño.
+fracción de submuestro de 0.5, con quizá algunas mejoras en desempeño.
 
 
 Ahora veamos los dos parámetros actuando en conjunto:
@@ -568,8 +568,16 @@ ggplot(filter(graf_eval, tipo =='valida'), aes(x = n_arbol, y= valor, colour=fac
 ```
 
 
+Podemos ver con más detalle donde ocurre el mejor desempeño:
 
+```{r}
+ggplot(filter(graf_eval, tipo =='valida', shrinkage == 0.1, n_arbol>100), aes(x = n_arbol, y= valor, colour=factor(bag.fraction), group =
+                        bag.fraction)) + geom_line() +
+  facet_grid(depth~shrinkage) 
+```
 
+```{r}
+head(arrange(filter(graf_eval,tipo=='valida'), valor))
+```
 
-
-
+### Evaluación con validación cruzada.
