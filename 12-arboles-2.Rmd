@@ -525,7 +525,7 @@ de 0.1 junto con un bag fraction de 0.5 funciona bien:
 graf_eval %>% filter(tipo=='valida') %>%
   group_by(shrinkage, bag.fraction) %>%
   summarise(valor = min(valor)) %>%
-   arrange(valor)
+   arrange(valor) %>% head(10)
 ```
 
 
@@ -586,8 +586,9 @@ Para datos no muy grandes, conviene escoger modelos usando validación cruzada.
 
 Por ejemplo,
 
-```{r,eval=FALSE}
+```{r}
 set.seed(9983)
+rm('modelos_dat')
 mod_boosting <- gbm(log(vSalePrice) ~.,  data = entrena,
                 distribution = 'gaussian',
                 n.trees = 200, 
