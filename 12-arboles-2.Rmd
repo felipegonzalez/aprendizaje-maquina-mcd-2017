@@ -586,7 +586,7 @@ Para datos no muy grandes, conviene escoger modelos usando validación cruzada.
 
 Por ejemplo,
 
-```{r}
+```{r,eval=FALSE}
 set.seed(9983)
 mod_boosting <- gbm(log(vSalePrice) ~.,  data = entrena,
                 distribution = 'gaussian',
