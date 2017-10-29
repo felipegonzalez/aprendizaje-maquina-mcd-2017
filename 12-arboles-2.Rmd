@@ -21,13 +21,13 @@ Igual que bosques aleatorios, boosting es también un método que generalmente
 tiene  alto poder predictivo.
 
 
-## Algoritmo FSAM (forward stagewise additive modeling)
+## Forward stagewise additive modeling (FSAM)
 
 Aunque existen versiones de boosting (Adaboost) desde los 90s, una buena
 manera de entender los algoritmos es mediante un proceso general
 de modelado por estapas (FSAM).
 
-### Discusión
+##  Discusión
 Consideramos primero un problema de *regresión*, que queremos atacar
 con un predictor de la forma
 $$f(x) = \sum_{k=1}^m \beta_k b_k(x),$$
@@ -82,7 +82,7 @@ La primera idea central de boosting es concentrarnos, en el siguiente paso, en l
 adicional al modelo. 
 ```
 
-### Algoritmo FSAM
+## Algoritmo FSAM
 
 Esta idea es la base del siguiente algoritmo:
 
@@ -199,7 +199,7 @@ arboles_fsam <- agregar_arbol(arboles_fsam, dat)
 ```
 
 
-### FSAM para clasificación binaria.
+## FSAM para clasificación binaria.
 
 Para problemas de clasificación, no tiene mucho sentido trabajar con un modelo
 aditivo sobre las probabilidades:
@@ -273,7 +273,7 @@ Para tener esta aproximación, podemos poner
 $$g_{i,m} = -\frac{\partial L}{\partial z}(y^{(i)}, f_{m-1}(x^{(i)}))$$
 e intentar resolver
 \begin{equation}
-\min_T (g_{i,m} - T(x^{(i)}))^2,
+\min_T \sum_{i=1}^n (g_{i,m} - T(x^{(i)}))^2,
 (\#eq:min-cuad-boost)
 \end{equation}
 
@@ -283,7 +283,7 @@ $$f_m(x) = f_{m-1}(x)+\nu T(x).$$
 
 Podemos hacer un refinamiento adicional que consiste en encontrar los cortes del árbol $T$ según \@ref(eq:min-cuad-boost), pero optimizando por separado los valores que T(x) toma en cada una de las regiones encontradas.
 
-### Algoritmo
+## Algoritmo de gradient boosting
 
 ```{block2, type='comentario'}
 **Gradient boosting** (versión simple)
@@ -300,12 +300,12 @@ Podemos hacer un refinamiento adicional que consiste en encontrar los cortes del
   - Resolvemos (optimizamos directamente el valor que toma el árbol en cada región - este es un problema univariado, más fácil de resolver)
   $$\gamma_{j,m} = argmin_\gamma \sum_{x^{(i)}\in R_{j,m}} L(y^{(i)},f_{m-1}(x^{i})+\gamma )$$
     para cada región $R_{j,m}$ del árbol del inciso anterior.
-  - Actualizamos $$f_m (x) = f_{m-1}(x) \sum_j \gamma_{j,m} I(x\in R_{j,m})$$
+  - Actualizamos $$f_m (x) = f_{m-1}(x) + \sum_j \gamma_{j,m} I(x\in R_{j,m})$$
   3. El predictor final es $f_M(x)$.
 ```
 
 
-### Funciones de pérdida
+## Funciones de pérdida
 
 Para aplicar gradient boosting, tenemos primero que poder calcular
 el gradiente de la función de pérdida. Algunos ejemplos populares son:
@@ -352,7 +352,7 @@ caso de precios de casas de la sección anterior (un problema de regresión).
 Fijaremos el número de árboles en 50, de profundidad 3, usando
 75\% de la muestra para entrenar y el restante para validación:
 
-```{r}
+```{r, warning=FALSE, message=FALSE}
 library(gbm)
 entrena <- read_rds('datos/ameshousing-entrena-procesado.rds')
 set.seed(23411)
@@ -405,7 +405,7 @@ rápidamente con pocos árboles, y terminar con predictor de varianza alta. Si e
 número es muy bajo, puede ser que necesitemos demasiadas iteraciones para llegar
 a buen desempeño.
 
-Igualmente se prueba con varios valores de $0<nu<1$ (típicamente $\nu<0.1$)
+Igualmente se prueba con varios valores de $0<\nu<1$ (típicamente $\nu<0.1$)
 para mejorar el desempeño en validación. **Nota**: cuando hacemos $\nu$ más chica, es necesario hacer $M$ más grande (correr más árboles) para obtener desempeño 
 óptimo.
 
@@ -499,7 +499,6 @@ modelos_dat <- list(bag.fraction = c(0.1, 0.25, 0.5, 1),
 modelos_dat <- modelos_dat %>% 
   mutate(modelo = pmap(., boost)) %>%
   mutate(eval = map(modelo, eval_modelo))
-head(modelos_dat)
 graf_eval <- modelos_dat %>% select(shrinkage, bag.fraction, eval) %>% unnest
 head(graf_eval)
 ggplot(filter(graf_eval, tipo =='valida'), aes(x = n_arbol, y= valor, colour=factor(bag.fraction), group =
@@ -546,7 +545,7 @@ elegir. $J$ más grande permite interacciones de orden más alto entre
 las variables de entrada. Se intenta con varias $J$ y $M$ para minimizar
 el error de vaidación.
 
-### Controlar número de casos decidir si hacemos cortes
+### Controlar número de casos para cortes
 
 Igual que en bosques aleatorios, podemos establecer mínimos de muestra en nodos
 terminales, o mínimo de casos necesarios para hacer un corte.
@@ -586,7 +585,7 @@ Para datos no muy grandes, conviene escoger modelos usando validación cruzada.
 
 Por ejemplo,
 
-```{r}
+```{r cv1, eval=FALSE}
 set.seed(9983)
 rm('modelos_dat')
 mod_boosting <- gbm(log(vSalePrice) ~.,  data = entrena,
@@ -598,11 +597,13 @@ mod_boosting <- gbm(log(vSalePrice) ~.,  data = entrena,
                 cv.folds = 10)
 gbm.perf(mod_boosting)
 ```
-```{r}
+
+
+```{r cveval, eval=FALSE}
 eval_modelo_2 <- function(modelo){
    dat_eval <- data_frame(entrena = sqrt(modelo$train.error),
-                                valida = sqrt(modelo$cv.error),
-                                n_arbol = 1:length(modelo$train.error)) %>%
+                          valida = sqrt(modelo$cv.error),
+                          n_arbol = 1:length(modelo$train.error)) %>%
                       gather(tipo, valor, -n_arbol)
    dat_eval
 }
