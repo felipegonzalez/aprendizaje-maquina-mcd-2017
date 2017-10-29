@@ -479,7 +479,7 @@ modelos_dat <- data_frame(n_modelo = 1:3,
 modelos_dat <- modelos_dat %>% 
   mutate(modelo = pmap(., boost)) %>%
   mutate(eval = map(modelo, eval_modelo))
-head(modelos_dat)
+modelos_dat
 graf_eval <- modelos_dat %>% select(bag.fraction, eval) %>% unnest
 graf_eval
 ggplot((graf_eval), aes(x = n_arbol, y= valor, colour=factor(bag.fraction), group =
@@ -557,13 +557,11 @@ terminales, o mínimo de casos necesarios para hacer un corte.
 ```{r}
 modelos_dat <- list(bag.fraction = c( 0.25, 0.5, 1),
                           shrinkage = c(0.01, 0.1, 0.25, 0.5),
-                    depth = c(1,5,10,15)) %>% expand.grid
+                    depth = c(1,5,10,12)) %>% expand.grid
 modelos_dat <- modelos_dat %>% 
   mutate(modelo = pmap(., boost)) %>%
   mutate(eval = map(modelo, eval_modelo))
-modelos_dat
 graf_eval <- modelos_dat %>% select(shrinkage, bag.fraction, depth, eval) %>% unnest
-head(graf_eval)
 ggplot(filter(graf_eval, tipo =='valida'), aes(x = n_arbol, y= valor, colour=factor(bag.fraction), group =
                         bag.fraction)) + geom_line() +
   facet_grid(depth~shrinkage) + scale_y_log10()
