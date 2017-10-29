@@ -581,3 +581,38 @@ head(arrange(filter(graf_eval,tipo=='valida'), valor))
 ```
 
 ### Evaluación con validación cruzada.
+
+Para datos no muy grandes, conviene escoger modelos usando validación cruzada.
+
+Por ejemplo,
+
+```{r}
+mod_boosting <- gbm(log(vSalePrice) ~.,  data = entrena,
+                distribution = 'gaussian',
+                n.trees = 300, 
+                interaction.depth = 10,
+                shrinkage = 0.1, # tasa de aprendizaje
+                bag.fraction = 0.5,
+                cv.folds = 10)
+gbm.perf(mod_boosting)
+
+
+graf_eval <- modelos_dat %>% select(shrinkage, bag.fraction, depth, eval) %>% unnest
+ggplot(filter(graf_eval, tipo =='valida'), aes(x = n_arbol, y= valor, colour=factor(bag.fraction), group =
+                        bag.fraction)) + geom_line() +
+  facet_grid(depth~shrinkage) + scale_y_log10()
+```
+```{r}
+eval_modelo_2 <- function(modelo){
+   dat_eval <- data_frame(entrena = sqrt(modelo$train.error),
+                                valida = sqrt(modelo$cv.error),
+                                n_arbol = 1:length(modelo$train.error)) %>%
+                      gather(tipo, valor, -n_arbol)
+   dat_eval
+}
+dat <- eval_modelo_2(mod_boosting)
+sqrt(min(mod_boosting$cv.error))
+ggplot(dat, aes(x = n_arbol, y=valor, colour=tipo, group=tipo)) + geom_line()
+```
+
+## Gráficas de dependencia parcial
