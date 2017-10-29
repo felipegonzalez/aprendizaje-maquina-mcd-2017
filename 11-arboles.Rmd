@@ -973,9 +973,10 @@ $$ D_k(T_j^*) = \widehat{Err}_{k}(T^*_j) - \widehat{Err}_{oob}(T^*_j) $$
 
 Y promediamos sobre el bosque entero
 $$I_k =\frac{1}{B} \sum_{j=1}^B D_k(T^*_j)$$
-y a esta cantidad le llamamos la **importancia** de la variable $k$ en el bosque
+y a esta cantidad le llamamos la **importancia** (basada en permutaciones) de la variable $k$ en el bosque
 aleatorio. Es el decremento promedio de capacidad predictiva cuando "quitamos" la variable
 $X_k$.
+
 
 Nótese que:
 
@@ -990,6 +991,27 @@ hay entre $X_k$ y la variable respuesta.
 - Aunque podríamos usar esta medida para árboles, no es muy buena idea por el problema
 de "enmascaramiento". Este problema se aminora en los bosques aleatorios pues todas las  variables tienen oportunidad de aportar cortes en ausencia de otras variables.
 
+
+Otra manera de medir importancia para árboles de regresión y clasificación es mediante el decremento de impureza promedio
+sobre el bosque, para cada variable.
+
+- Cada vez que una variable aporta un corte en un árbol, la impureza del árbol
+disminuye.
+- Sumamos, en cada árbol, todos estos decrementos de impureza (cada vez que aparece
+la variable en un corte)
+- Finalmente, promediamos esta medida de importancia dentro de cada árbol sobre
+el bosque completo.
+- Repetimos para cada variable.
+
+Para árboles de clasificación, usualmente se toma la importancia de Gini, que está basada in la impureza de Gini
+en lugar de la entropía. La impureza de Gini está dada por
+$$I_G(p_1, \ldots, p_K) = \sum_{k=1}^K p_k(1-p_k),$$
+que es similar a la impureza de entropía que discutimos en la construcción 
+de árboles:
+$$I_G(p_1, \ldots, p_K) = \sum__{k=1}^K -p_k\log (p_k),$$
+Nótese por ejemplo que ambas toman su valor máximo en $p_k=1/K$ (distribución más
+uniforme posible sobre las clases), y que son iguales a cero cuando $p_k=1$ para
+alguna $k$. 
 #### Ejemplo{-}
 En nuestro ejemplo de spam
 ```{r, fig.asp=1.5}
@@ -1001,6 +1023,18 @@ importancia_df <- importancia_df %>% mutate(variable = reorder(variable, MeanDec
 ggplot(importancia_df , aes(x=variable, y= MeanDecreaseAccuracy)) + geom_point() +
   coord_flip()
 ```
+
+**Observación**: en el paquete *randomForest*, las importancias están escaladas
+por su la desviación estándar sobre los árboles - la idea es que puedan ser
+interpretados como valores-$z$ (estandarizados). En este caso, nos podríamos
+fijar en importancias que están por arriba de $2$, por ejemplo. Para obtener
+los valores no estandarizados (y ver la degradación en desempeño directamente)
+podemos calcular
+
+```{r}
+importance(bosque_spam, type = 1, scale = FALSE)
+```
+
 
 ---
 
