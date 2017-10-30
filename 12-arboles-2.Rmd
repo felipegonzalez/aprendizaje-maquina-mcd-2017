@@ -1,5 +1,9 @@
 # Métodos basados en árboles: boosting
 
+```{r, echo=FALSE, message=FALSE}
+knitr::opts_chunk$set(fig.width=5, fig.asp=0.7) 
+```
+
 Boosting también utiliza la idea de un "ensamble" de árboles. La diferencia
 grande con
  bagging y bosques aleatorios en que la sucesión de árboles de boosting se 
@@ -349,10 +353,10 @@ Podemos usar el paquete de R *gbm* para hacer gradient boosting. Para el
 caso de precios de casas de la sección anterior (un problema de regresión).
 
 
-Fijaremos el número de árboles en 50, de profundidad 3, usando
+Fijaremos el número de árboles en 200, de profundidad 3, usando
 75\% de la muestra para entrenar y el restante para validación:
 
-```{r, warning=FALSE, message=FALSE}
+```{r, warning=FALSE, message=FALSE, fig.asp = 0.5}
 library(gbm)
 entrena <- read_rds('datos/ameshousing-entrena-procesado.rds')
 set.seed(23411)
@@ -417,7 +421,7 @@ para mejorar el desempeño en validación. **Nota**: cuando hacemos $\nu$ más c
 
 Veamos que efecto tiene en nuestro ejemplo:
 
-```{r, include = FALSE}
+```{r, include = FALSE, fig.asp=0.5}
 ajustar_boost <- function(entrena){
   out_fun <- function(shrinkage = 0.5, bag.fraction = 1, depth = 3, ...){
     mod_boosting <- gbm(log(vSalePrice) ~.,  data = entrena,
@@ -490,7 +494,7 @@ graf_eval <- modelos_dat %>% select(bag.fraction, eval) %>% unnest
 graf_eval
 ggplot((graf_eval), aes(x = n_arbol, y= valor, colour=factor(bag.fraction), group =
                         bag.fraction)) + geom_line() +
-  facet_wrap(~tipo)
+  facet_wrap(~tipo, ncol = 1)
 ```
 
 En este ejemplo, podemos reducir el tiempo de ajuste usando una 
