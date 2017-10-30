@@ -1,5 +1,7 @@
 # Métodos basados en árboles: boosting
 
+
+
 Boosting también utiliza la idea de un "ensamble" de árboles. La diferencia
 grande con
  bagging y bosques aleatorios en que la sucesión de árboles de boosting se 
@@ -179,16 +181,9 @@ arboles_fsam <- agregar_arbol(arboles_fsam, dat)
 ## Warning: Removed 8 rows containing missing values (geom_point).
 ```
 
-<img src="12-arboles-2_files/figure-html/unnamed-chunk-6-1.png" width="384" /><img src="12-arboles-2_files/figure-html/unnamed-chunk-6-2.png" width="384" />
+<img src="12-arboles-2_files/figure-html/unnamed-chunk-7-1.png" width="384" /><img src="12-arboles-2_files/figure-html/unnamed-chunk-7-2.png" width="384" />
 
 Ajustamos un árbol de regresión a los residuales:
-
-
-```r
-arboles_fsam <- agregar_arbol(arboles_fsam, dat)
-```
-
-<img src="12-arboles-2_files/figure-html/unnamed-chunk-7-1.png" width="384" /><img src="12-arboles-2_files/figure-html/unnamed-chunk-7-2.png" width="384" />
 
 
 ```r
@@ -218,6 +213,13 @@ arboles_fsam <- agregar_arbol(arboles_fsam, dat)
 
 <img src="12-arboles-2_files/figure-html/unnamed-chunk-11-1.png" width="384" /><img src="12-arboles-2_files/figure-html/unnamed-chunk-11-2.png" width="384" />
 
+
+```r
+arboles_fsam <- agregar_arbol(arboles_fsam, dat)
+```
+
+<img src="12-arboles-2_files/figure-html/unnamed-chunk-12-1.png" width="384" /><img src="12-arboles-2_files/figure-html/unnamed-chunk-12-2.png" width="384" />
+
 Después de 20 iteraciones obtenemos:
 
 
@@ -228,7 +230,7 @@ arboles_fsam <- agregar_arbol(arboles_fsam, dat, plot = FALSE)
 arboles_fsam <- agregar_arbol(arboles_fsam, dat)
 ```
 
-<img src="12-arboles-2_files/figure-html/unnamed-chunk-12-1.png" width="384" /><img src="12-arboles-2_files/figure-html/unnamed-chunk-12-2.png" width="384" />
+<img src="12-arboles-2_files/figure-html/unnamed-chunk-13-1.png" width="384" /><img src="12-arboles-2_files/figure-html/unnamed-chunk-13-2.png" width="384" />
 
 
 ## FSAM para clasificación binaria.
@@ -379,7 +381,7 @@ Podemos usar el paquete de R *gbm* para hacer gradient boosting. Para el
 caso de precios de casas de la sección anterior (un problema de regresión).
 
 
-Fijaremos el número de árboles en 50, de profundidad 3, usando
+Fijaremos el número de árboles en 200, de profundidad 3, usando
 75\% de la muestra para entrenar y el restante para validación:
 
 
@@ -422,7 +424,7 @@ ggplot(dat_entrenamiento, aes(x=n_arbol, y=valor, colour=tipo, group=tipo)) +
   geom_line()
 ```
 
-<img src="12-arboles-2_files/figure-html/unnamed-chunk-14-1.png" width="672" />
+<img src="12-arboles-2_files/figure-html/unnamed-chunk-15-1.png" width="480" />
 
 Que se puede graficar también así:
 
@@ -434,7 +436,7 @@ gbm.perf(house_boosting)
 ## Using test method...
 ```
 
-<img src="12-arboles-2_files/figure-html/unnamed-chunk-15-1.png" width="672" />
+<img src="12-arboles-2_files/figure-html/unnamed-chunk-16-1.png" width="480" />
 
 ```
 ## [1] 20
@@ -523,7 +525,7 @@ ggplot(filter(graf_eval, tipo=='valida'), aes(x = n_arbol, y= valor, colour=fact
   facet_wrap(~tipo)
 ```
 
-<img src="12-arboles-2_files/figure-html/unnamed-chunk-17-1.png" width="672" />
+<img src="12-arboles-2_files/figure-html/unnamed-chunk-18-1.png" width="480" />
 
 Obsérvese que podemos obtener un mejor resultado de validación afinando
 la tasa de aprendizaje. Cuando es muy grande, el modelo rápidamente sobreajusta
@@ -593,10 +595,10 @@ graf_eval
 ```r
 ggplot((graf_eval), aes(x = n_arbol, y= valor, colour=factor(bag.fraction), group =
                         bag.fraction)) + geom_line() +
-  facet_wrap(~tipo)
+  facet_wrap(~tipo, ncol = 1)
 ```
 
-<img src="12-arboles-2_files/figure-html/unnamed-chunk-18-1.png" width="672" />
+<img src="12-arboles-2_files/figure-html/unnamed-chunk-19-1.png" width="480" />
 
 En este ejemplo, podemos reducir el tiempo de ajuste usando una 
 fracción de submuestro de 0.5, con quizá algunas mejoras en desempeño.
@@ -631,7 +633,7 @@ ggplot(filter(graf_eval, tipo =='valida'), aes(x = n_arbol, y= valor, colour=fac
   facet_wrap(~shrinkage)
 ```
 
-<img src="12-arboles-2_files/figure-html/unnamed-chunk-19-1.png" width="672" />
+<img src="12-arboles-2_files/figure-html/unnamed-chunk-20-1.png" width="480" />
 
 Bag fraction demasiado chico no funciona bien, especialmente si la tasa
 de aprendizaje es alta (¿Por qué?). Filtremos para ver con detalle el resto
@@ -644,7 +646,7 @@ ggplot(filter(graf_eval, tipo =='valida', bag.fraction>0.1), aes(x = n_arbol, y=
   facet_wrap(~shrinkage) + scale_y_log10()
 ```
 
-<img src="12-arboles-2_files/figure-html/unnamed-chunk-20-1.png" width="672" />
+<img src="12-arboles-2_files/figure-html/unnamed-chunk-21-1.png" width="480" />
 
 
 Y parece ser que para este número de iteraciones, una tasa de aprendizaje
@@ -715,7 +717,7 @@ ggplot(filter(graf_eval, tipo =='valida'), aes(x = n_arbol, y= valor, colour=fac
   facet_grid(depth~shrinkage) + scale_y_log10()
 ```
 
-<img src="12-arboles-2_files/figure-html/unnamed-chunk-22-1.png" width="672" />
+<img src="12-arboles-2_files/figure-html/unnamed-chunk-23-1.png" width="480" />
 
 
 Podemos ver con más detalle donde ocurre el mejor desempeño:
@@ -727,7 +729,7 @@ ggplot(filter(graf_eval, tipo =='valida', shrinkage == 0.1, n_arbol>100), aes(x 
   facet_grid(depth~shrinkage) 
 ```
 
-<img src="12-arboles-2_files/figure-html/unnamed-chunk-23-1.png" width="672" />
+<img src="12-arboles-2_files/figure-html/unnamed-chunk-24-1.png" width="480" />
 
 
 ```r
@@ -823,7 +825,7 @@ gbm.perf(mod_2)
 ## Using test method...
 ```
 
-<img src="12-arboles-2_files/figure-html/unnamed-chunk-25-1.png" width="672" />
+<img src="12-arboles-2_files/figure-html/unnamed-chunk-26-1.png" width="480" />
 
 ```
 ## [1] 87
@@ -913,7 +915,7 @@ ggplot(dep_parcial, aes(x=vGrLivArea, y= f_1)) +
   geom_line() + geom_line() + geom_rug(sides='b')
 ```
 
-<img src="12-arboles-2_files/figure-html/unnamed-chunk-30-1.png" width="672" />
+<img src="12-arboles-2_files/figure-html/unnamed-chunk-31-1.png" width="480" />
 Y transformando a las unidades originales
 
 
@@ -922,7 +924,7 @@ ggplot(dep_parcial, aes(x=vGrLivArea, y= exp(f_1))) +
   geom_line() + geom_line() + geom_rug(sides='b')
 ```
 
-<img src="12-arboles-2_files/figure-html/unnamed-chunk-31-1.png" width="672" />
+<img src="12-arboles-2_files/figure-html/unnamed-chunk-32-1.png" width="480" />
 Y vemos que cuando aumenta el area de habitación, aumenta el precio. Podemos hacer esta gráfica más simple haciendo
 
 
@@ -930,7 +932,7 @@ Y vemos que cuando aumenta el area de habitación, aumenta el precio. Podemos ha
 plot(mod_2, 1) # 1 pues es vGrLivArea la primer variable 
 ```
 
-<img src="12-arboles-2_files/figure-html/unnamed-chunk-32-1.png" width="672" />
+<img src="12-arboles-2_files/figure-html/unnamed-chunk-33-1.png" width="480" />
 
 Y para una variable categórica se ve como sigue:
 
@@ -971,7 +973,7 @@ plot(mod_2, 2, return.grid = TRUE) %>% arrange(y)
 plot(mod_2, 2, return.grid = FALSE)
 ```
 
-<img src="12-arboles-2_files/figure-html/unnamed-chunk-33-1.png" width="672" />
+<img src="12-arboles-2_files/figure-html/unnamed-chunk-34-1.png" width="480" />
 
 ---
 
@@ -994,7 +996,7 @@ si fijamos un subconjunto de variables y promediamos sobre el resto.
 plot(mod_2, c(1,3))
 ```
 
-<img src="12-arboles-2_files/figure-html/unnamed-chunk-34-1.png" width="672" />
+<img src="12-arboles-2_files/figure-html/unnamed-chunk-35-1.png" width="480" />
 
 ### Discusión
 

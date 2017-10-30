@@ -447,10 +447,8 @@ agregar_arbol &lt;-<span class="st"> </span><span class="cf">function</span>(arb
 <p>Ahora construiremos el primer árbol. Usaremos ‘troncos’ (stumps), árboles con un solo corte: Los primeros residuales son simplemente las <span class="math inline">\(y\)</span>’s observadas</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">arboles_fsam &lt;-<span class="st"> </span><span class="kw">agregar_arbol</span>(arboles_fsam, dat)</code></pre></div>
 <pre><code>## Warning: Removed 8 rows containing missing values (geom_point).</code></pre>
-<p><img src="12-arboles-2_files/figure-html/unnamed-chunk-6-1.png" width="384" /><img src="12-arboles-2_files/figure-html/unnamed-chunk-6-2.png" width="384" /></p>
-<p>Ajustamos un árbol de regresión a los residuales:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">arboles_fsam &lt;-<span class="st"> </span><span class="kw">agregar_arbol</span>(arboles_fsam, dat)</code></pre></div>
 <p><img src="12-arboles-2_files/figure-html/unnamed-chunk-7-1.png" width="384" /><img src="12-arboles-2_files/figure-html/unnamed-chunk-7-2.png" width="384" /></p>
+<p>Ajustamos un árbol de regresión a los residuales:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">arboles_fsam &lt;-<span class="st"> </span><span class="kw">agregar_arbol</span>(arboles_fsam, dat)</code></pre></div>
 <p><img src="12-arboles-2_files/figure-html/unnamed-chunk-8-1.png" width="384" /><img src="12-arboles-2_files/figure-html/unnamed-chunk-8-2.png" width="384" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">arboles_fsam &lt;-<span class="st"> </span><span class="kw">agregar_arbol</span>(arboles_fsam, dat)</code></pre></div>
@@ -459,12 +457,14 @@ agregar_arbol &lt;-<span class="st"> </span><span class="cf">function</span>(arb
 <p><img src="12-arboles-2_files/figure-html/unnamed-chunk-10-1.png" width="384" /><img src="12-arboles-2_files/figure-html/unnamed-chunk-10-2.png" width="384" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">arboles_fsam &lt;-<span class="st"> </span><span class="kw">agregar_arbol</span>(arboles_fsam, dat)</code></pre></div>
 <p><img src="12-arboles-2_files/figure-html/unnamed-chunk-11-1.png" width="384" /><img src="12-arboles-2_files/figure-html/unnamed-chunk-11-2.png" width="384" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">arboles_fsam &lt;-<span class="st"> </span><span class="kw">agregar_arbol</span>(arboles_fsam, dat)</code></pre></div>
+<p><img src="12-arboles-2_files/figure-html/unnamed-chunk-12-1.png" width="384" /><img src="12-arboles-2_files/figure-html/unnamed-chunk-12-2.png" width="384" /></p>
 <p>Después de 20 iteraciones obtenemos:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="cf">for</span>(j <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="dv">19</span>){
 arboles_fsam &lt;-<span class="st"> </span><span class="kw">agregar_arbol</span>(arboles_fsam, dat, <span class="dt">plot =</span> <span class="ot">FALSE</span>)
 }
 arboles_fsam &lt;-<span class="st"> </span><span class="kw">agregar_arbol</span>(arboles_fsam, dat)</code></pre></div>
-<p><img src="12-arboles-2_files/figure-html/unnamed-chunk-12-1.png" width="384" /><img src="12-arboles-2_files/figure-html/unnamed-chunk-12-2.png" width="384" /></p>
+<p><img src="12-arboles-2_files/figure-html/unnamed-chunk-13-1.png" width="384" /><img src="12-arboles-2_files/figure-html/unnamed-chunk-13-2.png" width="384" /></p>
 </div>
 </div>
 <div id="fsam-para-clasificacion-binaria." class="section level2">
@@ -544,7 +544,7 @@ Sin embargo, necesitamos que las <span class="math inline">\(z_i\)</span> estén
 <div id="ejemplo-46" class="section level3 unnumbered">
 <h3>Ejemplo</h3>
 <p>Podemos usar el paquete de R <em>gbm</em> para hacer gradient boosting. Para el caso de precios de casas de la sección anterior (un problema de regresión).</p>
-<p>Fijaremos el número de árboles en 50, de profundidad 3, usando 75% de la muestra para entrenar y el restante para validación:</p>
+<p>Fijaremos el número de árboles en 200, de profundidad 3, usando 75% de la muestra para entrenar y el restante para validación:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(gbm)
 entrena &lt;-<span class="st"> </span><span class="kw">read_rds</span>(<span class="st">&#39;datos/ameshousing-entrena-procesado.rds&#39;</span>)
 <span class="kw">set.seed</span>(<span class="dv">23411</span>)
@@ -575,11 +575,11 @@ dat_entrenamiento &lt;-<span class="st"> </span><span class="kw">data_frame</spa
 ## There were 79 predictors of which 28 had non-zero influence.</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(dat_entrenamiento, <span class="kw">aes</span>(<span class="dt">x=</span>n_arbol, <span class="dt">y=</span>valor, <span class="dt">colour=</span>tipo, <span class="dt">group=</span>tipo)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_line</span>()</code></pre></div>
-<p><img src="12-arboles-2_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
+<p><img src="12-arboles-2_files/figure-html/unnamed-chunk-15-1.png" width="480" /></p>
 <p>Que se puede graficar también así:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">gbm.perf</span>(house_boosting)</code></pre></div>
 <pre><code>## Using test method...</code></pre>
-<p><img src="12-arboles-2_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
+<p><img src="12-arboles-2_files/figure-html/unnamed-chunk-16-1.png" width="480" /></p>
 <pre><code>## [1] 20</code></pre>
 <p>Como vemos, tenemos que afinar los parámetros del algoritmo.</p>
 </div>
@@ -625,7 +625,7 @@ graf_eval</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(<span class="kw">filter</span>(graf_eval, tipo<span class="op">==</span><span class="st">&#39;valida&#39;</span>), <span class="kw">aes</span>(<span class="dt">x =</span> n_arbol, <span class="dt">y=</span> valor, <span class="dt">colour=</span><span class="kw">factor</span>(shrinkage), <span class="dt">group =</span>
                         shrinkage)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_line</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>tipo)</code></pre></div>
-<p><img src="12-arboles-2_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
+<p><img src="12-arboles-2_files/figure-html/unnamed-chunk-18-1.png" width="480" /></p>
 <p>Obsérvese que podemos obtener un mejor resultado de validación afinando la tasa de aprendizaje. Cuando es muy grande, el modelo rápidamente sobreajusta cuando agregamos árboles. Si la tasa es demasiado chica, podos tardar mucho en llegar a un predictor de buen desempeño.</p>
 <p>¿Cómo crees que se ven las gráfica de error de entrenamiento?</p>
 </div>
@@ -666,8 +666,8 @@ graf_eval</code></pre></div>
 ## # ... with 2,990 more rows</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>((graf_eval), <span class="kw">aes</span>(<span class="dt">x =</span> n_arbol, <span class="dt">y=</span> valor, <span class="dt">colour=</span><span class="kw">factor</span>(bag.fraction), <span class="dt">group =</span>
                         bag.fraction)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_line</span>() <span class="op">+</span>
-<span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>tipo)</code></pre></div>
-<p><img src="12-arboles-2_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
+<span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>tipo, <span class="dt">ncol =</span> <span class="dv">1</span>)</code></pre></div>
+<p><img src="12-arboles-2_files/figure-html/unnamed-chunk-19-1.png" width="480" /></p>
 <p>En este ejemplo, podemos reducir el tiempo de ajuste usando una fracción de submuestro de 0.5, con quizá algunas mejoras en desempeño.</p>
 <p>Ahora veamos los dos parámetros actuando en conjunto:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">modelos_dat &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">bag.fraction =</span> <span class="kw">c</span>(<span class="fl">0.1</span>, <span class="fl">0.25</span>, <span class="fl">0.5</span>, <span class="dv">1</span>),
@@ -687,12 +687,12 @@ graf_eval &lt;-<span class="st"> </span>modelos_dat <span class="op">%&gt;%</spa
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(<span class="kw">filter</span>(graf_eval, tipo <span class="op">==</span><span class="st">&#39;valida&#39;</span>), <span class="kw">aes</span>(<span class="dt">x =</span> n_arbol, <span class="dt">y=</span> valor, <span class="dt">colour=</span><span class="kw">factor</span>(bag.fraction), <span class="dt">group =</span>
                         bag.fraction)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_line</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>shrinkage)</code></pre></div>
-<p><img src="12-arboles-2_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
+<p><img src="12-arboles-2_files/figure-html/unnamed-chunk-20-1.png" width="480" /></p>
 <p>Bag fraction demasiado chico no funciona bien, especialmente si la tasa de aprendizaje es alta (¿Por qué?). Filtremos para ver con detalle el resto de los datos:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(<span class="kw">filter</span>(graf_eval, tipo <span class="op">==</span><span class="st">&#39;valida&#39;</span>, bag.fraction<span class="op">&gt;</span><span class="fl">0.1</span>), <span class="kw">aes</span>(<span class="dt">x =</span> n_arbol, <span class="dt">y=</span> valor, <span class="dt">colour=</span><span class="kw">factor</span>(bag.fraction), <span class="dt">group =</span>
                         bag.fraction)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_line</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>shrinkage) <span class="op">+</span><span class="st"> </span><span class="kw">scale_y_log10</span>()</code></pre></div>
-<p><img src="12-arboles-2_files/figure-html/unnamed-chunk-20-1.png" width="672" /></p>
+<p><img src="12-arboles-2_files/figure-html/unnamed-chunk-21-1.png" width="480" /></p>
 <p>Y parece ser que para este número de iteraciones, una tasa de aprendizaje de 0.1 junto con un bag fraction de 0.5 funciona bien:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">graf_eval <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(tipo<span class="op">==</span><span class="st">&#39;valida&#39;</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">group_by</span>(shrinkage, bag.fraction) <span class="op">%&gt;%</span>
@@ -737,12 +737,12 @@ graf_eval &lt;-<span class="st"> </span>modelos_dat <span class="op">%&gt;%</spa
 <span class="kw">ggplot</span>(<span class="kw">filter</span>(graf_eval, tipo <span class="op">==</span><span class="st">&#39;valida&#39;</span>), <span class="kw">aes</span>(<span class="dt">x =</span> n_arbol, <span class="dt">y=</span> valor, <span class="dt">colour=</span><span class="kw">factor</span>(bag.fraction), <span class="dt">group =</span>
                         bag.fraction)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_line</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">facet_grid</span>(depth<span class="op">~</span>shrinkage) <span class="op">+</span><span class="st"> </span><span class="kw">scale_y_log10</span>()</code></pre></div>
-<p><img src="12-arboles-2_files/figure-html/unnamed-chunk-22-1.png" width="672" /></p>
+<p><img src="12-arboles-2_files/figure-html/unnamed-chunk-23-1.png" width="480" /></p>
 <p>Podemos ver con más detalle donde ocurre el mejor desempeño:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(<span class="kw">filter</span>(graf_eval, tipo <span class="op">==</span><span class="st">&#39;valida&#39;</span>, shrinkage <span class="op">==</span><span class="st"> </span><span class="fl">0.1</span>, n_arbol<span class="op">&gt;</span><span class="dv">100</span>), <span class="kw">aes</span>(<span class="dt">x =</span> n_arbol, <span class="dt">y=</span> valor, <span class="dt">colour=</span><span class="kw">factor</span>(bag.fraction), <span class="dt">group =</span>
                         bag.fraction)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_line</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">facet_grid</span>(depth<span class="op">~</span>shrinkage) </code></pre></div>
-<p><img src="12-arboles-2_files/figure-html/unnamed-chunk-23-1.png" width="672" /></p>
+<p><img src="12-arboles-2_files/figure-html/unnamed-chunk-24-1.png" width="480" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(<span class="kw">arrange</span>(<span class="kw">filter</span>(graf_eval,tipo<span class="op">==</span><span class="st">&#39;valida&#39;</span>), valor))</code></pre></div>
 <pre><code>##   shrinkage bag.fraction depth n_arbol   tipo     valor
 ## 1       0.1          0.5    10      98 valida 0.1218075
@@ -799,7 +799,7 @@ dat &lt;-<span class="st"> </span><span class="kw">eval_modelo_2</span>(mod_boos
                 <span class="dt">train.fraction =</span> <span class="fl">0.75</span>)
 <span class="kw">gbm.perf</span>(mod_<span class="dv">2</span>)</code></pre></div>
 <pre><code>## Using test method...</code></pre>
-<p><img src="12-arboles-2_files/figure-html/unnamed-chunk-25-1.png" width="672" /></p>
+<p><img src="12-arboles-2_files/figure-html/unnamed-chunk-26-1.png" width="480" /></p>
 <pre><code>## [1] 87</code></pre>
 <p>Podemos calcular a mano la gráfica de dependencia parcial para el tamaño de la “General Living Area”.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dat_dp &lt;-<span class="st"> </span>entrena <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(vGrLivArea, vNeighborhood, vOverallQual) </code></pre></div>
@@ -842,12 +842,12 @@ dep_parcial &lt;-<span class="st"> </span><span class="kw">map_dfr</span>(cuanti
                        <span class="op">~</span><span class="kw">prom_parcial</span>(.x, vGrLivArea, entrena, mod_<span class="dv">2</span>))
 <span class="kw">ggplot</span>(dep_parcial, <span class="kw">aes</span>(<span class="dt">x=</span>vGrLivArea, <span class="dt">y=</span> f_<span class="dv">1</span>)) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span><span class="kw">geom_rug</span>(<span class="dt">sides=</span><span class="st">&#39;b&#39;</span>)</code></pre></div>
-<p><img src="12-arboles-2_files/figure-html/unnamed-chunk-30-1.png" width="672" /> Y transformando a las unidades originales</p>
+<p><img src="12-arboles-2_files/figure-html/unnamed-chunk-31-1.png" width="480" /> Y transformando a las unidades originales</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(dep_parcial, <span class="kw">aes</span>(<span class="dt">x=</span>vGrLivArea, <span class="dt">y=</span> <span class="kw">exp</span>(f_<span class="dv">1</span>))) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span><span class="kw">geom_rug</span>(<span class="dt">sides=</span><span class="st">&#39;b&#39;</span>)</code></pre></div>
-<p><img src="12-arboles-2_files/figure-html/unnamed-chunk-31-1.png" width="672" /> Y vemos que cuando aumenta el area de habitación, aumenta el precio. Podemos hacer esta gráfica más simple haciendo</p>
+<p><img src="12-arboles-2_files/figure-html/unnamed-chunk-32-1.png" width="480" /> Y vemos que cuando aumenta el area de habitación, aumenta el precio. Podemos hacer esta gráfica más simple haciendo</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(mod_<span class="dv">2</span>, <span class="dv">1</span>) <span class="co"># 1 pues es vGrLivArea la primer variable </span></code></pre></div>
-<p><img src="12-arboles-2_files/figure-html/unnamed-chunk-32-1.png" width="672" /></p>
+<p><img src="12-arboles-2_files/figure-html/unnamed-chunk-33-1.png" width="480" /></p>
 <p>Y para una variable categórica se ve como sigue:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(mod_<span class="dv">2</span>, <span class="dv">2</span>, <span class="dt">return.grid =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">arrange</span>(y)</code></pre></div>
 <pre><code>##    vNeighborhood        y
@@ -876,13 +876,13 @@ dep_parcial &lt;-<span class="st"> </span><span class="kw">map_dfr</span>(cuanti
 ## 23       NridgHt 12.24190
 ## 24       Veenker 12.25304</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(mod_<span class="dv">2</span>, <span class="dv">2</span>, <span class="dt">return.grid =</span> <span class="ot">FALSE</span>)</code></pre></div>
-<p><img src="12-arboles-2_files/figure-html/unnamed-chunk-33-1.png" width="672" /></p>
+<p><img src="12-arboles-2_files/figure-html/unnamed-chunk-34-1.png" width="480" /></p>
 <hr />
 <p>En general, si nuestro predictor depende de más variables <span class="math inline">\(f(x_1,x_2, \ldots, x_p)\)</span> entrada. Podemos considerar las funciones <span class="math display">\[{f}_{j}(x_j) = E_{(x_1,x_2, \ldots x_p) - x_j}[f(x_1,x_2, \ldots, x_p)],\]</span> que es el valor esperado de <span class="math inline">\(f(x)\)</span> fijando <span class="math inline">\(x_j\)</span>, y promediando sobre el resto de las variables. Si tenemos una muestra de entrenamiento, podríamos estimarla promediando sobre la muestra de entrenamiento</p>
 <p><span class="math display">\[\bar{f}_j(x_j) = \frac{1}{n}\sum_{i=1}^n f(x_1^{(i)}, x_2^{(i)}, \ldots, x_{j-1}^{(i)},x_{j+1}^{(i)},\ldots, x_p^{(i)}).\]</span></p>
 <p>Podemos hacer también gráficas de dependencia parcial para más de una variable, si fijamos un subconjunto de variables y promediamos sobre el resto.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(mod_<span class="dv">2</span>, <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">3</span>))</code></pre></div>
-<p><img src="12-arboles-2_files/figure-html/unnamed-chunk-34-1.png" width="672" /></p>
+<p><img src="12-arboles-2_files/figure-html/unnamed-chunk-35-1.png" width="480" /></p>
 </div>
 <div id="discusion-2" class="section level3">
 <h3><span class="header-section-number">12.9.2</span> Discusión</h3>
