@@ -389,7 +389,13 @@ Como vemos, tenemos que afinar los parámetros del algoritmo.
 ## Modificaciones de Gradient Boosting
 
 Hay algunas adiciones al algoritmo de gradient boosting que podemos
-usar para mejorar el desempeño:
+usar para mejorar el desempeño. Los dos métodos que comunmente se
+usan son encogimiento (*shrinkage*), que es una especie de tasa de 
+aprendizaje, y submuestreo, donde construimos cada árbol adicional 
+usando una submuestra de la muestra de entrenamiento.
+
+Ambas podemos verlas como técnicas de regularización, que limitan
+sobreajuste producido por el algoritmo agresivo de boosting.
 
 
 
@@ -613,3 +619,4 @@ ggplot(dat, aes(x = n_arbol, y=valor, colour=tipo, group=tipo)) + geom_line()
 ```
 
 ## Gráficas de dependencia parcial
+
