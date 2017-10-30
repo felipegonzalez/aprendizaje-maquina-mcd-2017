@@ -620,3 +620,167 @@ ggplot(dat, aes(x = n_arbol, y=valor, colour=tipo, group=tipo)) + geom_line()
 
 ## Gráficas de dependencia parcial
 
+La idea de dependencia parcial que veremos a continuación se puede aplicar a cualquier método de aprendizaje,
+y en boosting ayuda a entender el funcionamiento del predictor complejo que resulta
+del algoritmo. Aunque podemos evaluar el predictor en distintos valores y observar
+cómo se comporta, cuando tenemos varias variables de entrada este proceso no
+siempre tiene resultados muy claros o completos. Dependencia parcial es un intento
+por entender de manera más sistemática parte del funcionamiento de 
+un modelo complejo.
+
+
+### Dependencia parcial
+Supongamos que tenemos un predictor $f(x_1,x_2)$ que depende de dos variables de
+entrada. Podemos considerar la función
+$${f}_{1}(x_1) = E_{x_2}[f(x_1,x_2)],$$
+que es el promedio de $f(x)$ fijando $x_1$ sobre la marginal de $x_2$. Si tenemos
+una muestra de entrenamiento, podríamos estimarla promediando sobre la muestra 
+de entrenamiento
+
+$$\bar{f}_1(x_1) = \frac{1}{n}\sum_{i=1}^n f(x_1, x_2^{(i)}),$$
+que consiste en fijar el valor de $x_1$ y promediar sobre todos los valores
+de la muestra de entrenamiento para $x_2$.
+
+### Ejemplo {-}
+
+Construimos un modelo con solamente tres variables para nuestro ejemplo anterior
+
+```{r}
+mod_2 <- gbm(log(vSalePrice) ~ vGrLivArea +vNeighborhood  +vOverallQual,  
+                data = entrena,
+                distribution = 'gaussian',
+                n.trees = 100, 
+                interaction.depth = 3,
+                shrinkage = 0.1, 
+                bag.fraction = 0.5,
+                train.fraction = 0.75)
+gbm.perf(mod_2)
+```
+
+Podemos calcular a mano la gráfica de dependencia parcial para 
+el tamaño de la "General Living Area". 
+```{r}
+dat_dp <- entrena %>% select(vGrLivArea, vNeighborhood, vOverallQual) 
+```
+Consideramos el rango de la variable:
+```{r}
+cuantiles <- quantile(entrena$vGrLivArea, probs= seq(0, 1, 0.1))
+cuantiles
+```
+
+Por ejemplo, vamos evaluar el efecto parcial cuando vGrLivArea = 912. Hacemos
+
+```{r}
+dat_dp_1 <- dat_dp %>% mutate(vGrLivArea = 912) %>%
+            mutate(pred = predict(mod_2, .)) %>%
+            summarise(mean_pred = mean(pred))
+dat_dp_1
+```
+
+Evaluamos en vGrLivArea = 912
+```{r}
+dat_dp_1 <- dat_dp %>% mutate(vGrLivArea = 1208) %>%
+            mutate(pred = predict(mod_2, .)) %>%
+            summarise(mean_pred = mean(pred))
+dat_dp_1
+```
+(un incremento de alrededor del 10\% en el precio de venta).
+Hacemos todos los cuantiles como sigue:
+
+```{r}
+cuantiles <- quantile(entrena$vGrLivArea, probs= seq(0, 1, 0.01))
+
+prom_parcial <- function(x, variable, df, mod){
+  variable <- enquo(variable)
+  variable_nom <- quo_name(variable)
+  salida <- df %>% mutate(!!variable_nom := x) %>% 
+    mutate(pred = predict(mod, ., n.trees=100)) %>%
+    group_by(!!variable) %>%
+    summarise(f_1 = mean(pred)) 
+  salida
+}
+dep_parcial <- map_dfr(cuantiles, 
+                       ~prom_parcial(.x, vGrLivArea, entrena, mod_2))
+ggplot(dep_parcial, aes(x=vGrLivArea, y= f_1)) + 
+  geom_line() + geom_line() + geom_rug(sides='b')
+
+```
+Y transformando a las unidades originales
+
+```{r}
+ggplot(dep_parcial, aes(x=vGrLivArea, y= exp(f_1))) + 
+  geom_line() + geom_line() + geom_rug(sides='b')
+
+```
+Y vemos que cuando aumenta el area de habitación, aumenta el precio. Podemos hacer esta gráfica más simple haciendo
+
+```{r}
+plot(mod_2, 1) # 1 pues es vGrLivArea la primer variable 
+```
+
+Y para una variable categórica se ve como sigue:
+
+```{r}
+plot(mod_2, 2, return.grid = TRUE) %>% arrange(y)
+plot(mod_2, 2, return.grid = FALSE)
+```
+
+---
+
+En general, si nuestro predictor depende de más variables 
+$f(x_1,x_2, \ldots, x_p)$ 
+entrada. Podemos considerar las funciones
+$${f}_{j}(x_j) = E_{(x_1,x_2, \ldots x_p) - x_j}[f(x_1,x_2, \ldots, x_p)],$$
+que es el valor esperado de $f(x)$ fijando $x_j$, y promediando sobre el resto
+de las variables. Si tenemos
+una muestra de entrenamiento, podríamos estimarla promediando sobre la muestra 
+de entrenamiento
+
+$$\bar{f}_j(x_j) = \frac{1}{n}\sum_{i=1}^n f(x_1^{(i)}, x_2^{(i)}, \ldots, x_{j-1}^{(i)},x_{j+1}^{(i)},\ldots, x_p^{(i)}).$$
+
+Podemos hacer también  gráficas de dependencia parcial para más de una variable,
+si fijamos un subconjunto de variables y promediamos sobre el resto.
+
+```{r}
+plot(mod_2, c(1,3))
+```
+
+### Discusión
+
+En primer lugar, veamos qué obtenemos de la dependencia parcial
+cuando aplicamos al modelo lineal sin interacciones. En el caso de dos variables,
+
+$$f_1(x_1) = E_{x_2}[f(x_1,x_2)] =E_{x_2}[a + bx_1 + cx_2)] = \mu + bx_1,$$
+que es equivalente al análisis marginal que hacemos en regresión lineal (
+incrementos en la variable $x_1$ con todo lo demás fijo, donde el incremento
+marginal de la respuesta es el coeficiente $b$). 
+
+Desde este punto de vista, dependencia parcial da una interpretación similar
+a la del análisis usual de coeficientes en regresión lineal, donde pensamos
+en "todo lo demás constante".
+
+Nótese también que cuando hay **interacciones** fuertes entre las variables, ningún
+análisis marginal (dependencia parcial o examen de coeficientes) da un resultado
+fácilmente interpretable - la única solución es considerar el efecto conjunto de las
+variables que interactúan. De modo que este tipo de análisis funciona mejor
+cuando no hay interacciones grandes entre las variables (es cercano a un modelo
+aditivo con efectos no lineales).
+
+#### Ejemplo {-}
+Considera qué pasa con las gráficas de dependencia parcial cuando
+$f(x_1,x_2) = -10 x_1x_2$, y $x_1$ y $x_2$ tienen media cero. Explica por qué
+en este caso es mejor ver el efecto conjunto de las dos variables.
+
+---
+
+Es importante también evitar la interpretación incorrecta de que la función
+de dependencia parcial da el valor esperado del predictor condicionado a valores
+de la variable cuya dependencia examinamos. Es decir, 
+$$f_1(x_1) = E_{x_2}(f(x_1,x_2)) \neq E(f(x_1,x_2)|x_1).$$
+La última cantidad es un valor esperado diferente (calculado sobre la
+condicional de $x_2$ dada $x_1$), de manera que utiliza información acerca
+de la relación que hay entre $x_1$ y $x_2$. La función de dependencia parcial
+da el efecto de $x_1$ tomando en cuenta los efectos promedio de las otras variables.
+
+
+
