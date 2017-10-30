@@ -1328,9 +1328,10 @@ $$ D_k(T_j^*) = \widehat{Err}_{k}(T^*_j) - \widehat{Err}_{oob}(T^*_j) $$
 
 Y promediamos sobre el bosque entero
 $$I_k =\frac{1}{B} \sum_{j=1}^B D_k(T^*_j)$$
-y a esta cantidad le llamamos la **importancia** de la variable $k$ en el bosque
+y a esta cantidad le llamamos la **importancia** (basada en permutaciones) de la variable $k$ en el bosque
 aleatorio. Es el decremento promedio de capacidad predictiva cuando "quitamos" la variable
 $X_k$.
+
 
 Nótese que:
 
@@ -1345,6 +1346,27 @@ hay entre $X_k$ y la variable respuesta.
 - Aunque podríamos usar esta medida para árboles, no es muy buena idea por el problema
 de "enmascaramiento". Este problema se aminora en los bosques aleatorios pues todas las  variables tienen oportunidad de aportar cortes en ausencia de otras variables.
 
+
+Otra manera de medir importancia para árboles de regresión y clasificación es mediante el decremento de impureza promedio
+sobre el bosque, para cada variable.
+
+- Cada vez que una variable aporta un corte en un árbol, la impureza del árbol
+disminuye.
+- Sumamos, en cada árbol, todos estos decrementos de impureza (cada vez que aparece
+la variable en un corte)
+- Finalmente, promediamos esta medida de importancia dentro de cada árbol sobre
+el bosque completo.
+- Repetimos para cada variable.
+
+Para árboles de clasificación, usualmente se toma la importancia de Gini, que está basada in la impureza de Gini
+en lugar de la entropía. La impureza de Gini está dada por
+$$I_G(p_1, \ldots, p_K) = \sum_{k=1}^K p_k(1-p_k),$$
+que es similar a la impureza de entropía que discutimos en la construcción 
+de árboles:
+$$I_G(p_1, \ldots, p_K) = \sum__{k=1}^K -p_k\log (p_k),$$
+Nótese por ejemplo que ambas toman su valor máximo en $p_k=1/K$ (distribución más
+uniforme posible sobre las clases), y que son iguales a cero cuando $p_k=1$ para
+alguna $k$. 
 #### Ejemplo{-}
 En nuestro ejemplo de spam
 
@@ -1379,6 +1401,81 @@ ggplot(importancia_df , aes(x=variable, y= MeanDecreaseAccuracy)) + geom_point()
 ```
 
 <img src="11-arboles_files/figure-html/unnamed-chunk-52-1.png" width="672" />
+
+**Observación**: en el paquete *randomForest*, las importancias están escaladas
+por su la desviación estándar sobre los árboles - la idea es que puedan ser
+interpretados como valores-$z$ (estandarizados). En este caso, nos podríamos
+fijar en importancias que están por arriba de $2$, por ejemplo. Para obtener
+los valores no estandarizados (y ver la degradación en desempeño directamente)
+podemos calcular
+
+
+```r
+importance(bosque_spam, type = 1, scale = FALSE)
+```
+
+```
+##              MeanDecreaseAccuracy
+## X                   -3.167359e-04
+## wfmake               9.469937e-04
+## wfaddress            1.692136e-03
+## wfall                3.893455e-03
+## wf3d                 4.707905e-05
+## wfour                1.397900e-02
+## wfover               2.561807e-03
+## wfremove             3.473959e-02
+## wfinternet           5.428969e-03
+## wforder              1.111770e-03
+## wfmail               2.329121e-03
+## wfreceive            4.035962e-03
+## wfwill               3.829818e-03
+## wfpeople             6.090923e-04
+## wfreport             6.590103e-04
+## wfaddresses          9.724666e-04
+## wffree               2.341364e-02
+## wfbusiness           5.478105e-03
+## wfemail              2.386219e-03
+## wfyou                1.142595e-02
+## wfcredit             2.960069e-03
+## wfyour               1.920687e-02
+## wffont               1.875817e-03
+## wf000                1.273778e-02
+## wfmoney              1.213523e-02
+## wfhp                 3.248315e-02
+## wfhpl                1.356723e-02
+## wfgeorge             1.669735e-02
+## wf650                3.470366e-03
+## wflab                1.140603e-03
+## wflabs               2.544115e-03
+## wftelnet             1.207992e-03
+## wf857                4.267066e-04
+## wfdata               8.081002e-04
+## wf415                4.643810e-04
+## wf85                 2.296557e-03
+## wftechnology         1.431399e-03
+## wf1999               6.884388e-03
+## wfparts              8.941783e-05
+## wfpm                 1.164572e-03
+## wfdirect             7.717049e-04
+## wfcs                 4.878773e-04
+## wfmeeting            2.966489e-03
+## wforiginal           8.513556e-04
+## wfproject            6.897514e-04
+## wfre                 4.053317e-03
+## wfedu                1.000909e-02
+## wftable              2.073989e-05
+## wfconference         4.692198e-04
+## cfsc                 1.556489e-03
+## cfpar                4.222729e-03
+## cfbrack              1.060870e-03
+## cfexc                3.910984e-02
+## cfdollar             3.312698e-02
+## cfpound              9.925973e-04
+## crlaverage           2.800918e-02
+## crllongest           3.531938e-02
+## crltotal             3.173977e-02
+```
+
 
 ---
 

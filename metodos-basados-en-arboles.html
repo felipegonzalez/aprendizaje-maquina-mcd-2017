@@ -25,7 +25,7 @@
 <meta name="author" content="Felipe González">
 
 
-<meta name="date" content="2017-10-29">
+<meta name="date" content="2017-10-30">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -299,7 +299,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="12.6" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#algoritmo-de-gradient-boosting"><i class="fa fa-check"></i><b>12.6</b> Algoritmo de gradient boosting</a></li>
 <li class="chapter" data-level="12.7" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#funciones-de-perdida"><i class="fa fa-check"></i><b>12.7</b> Funciones de pérdida</a><ul>
 <li class="chapter" data-level="12.7.1" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#discusion-adaboost-opcional"><i class="fa fa-check"></i><b>12.7.1</b> Discusión: adaboost (opcional)</a></li>
-<li class="chapter" data-level="" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#ejemplo-47"><i class="fa fa-check"></i>Ejemplo</a></li>
+<li class="chapter" data-level="" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#ejemplo-46"><i class="fa fa-check"></i>Ejemplo</a></li>
 </ul></li>
 <li class="chapter" data-level="12.8" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#modificaciones-de-gradient-boosting"><i class="fa fa-check"></i><b>12.8</b> Modificaciones de Gradient Boosting</a><ul>
 <li class="chapter" data-level="12.8.1" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#tasa-de-aprendizaje-shrinkage"><i class="fa fa-check"></i><b>12.8.1</b> Tasa de aprendizaje (shrinkage)</a></li>
@@ -307,10 +307,14 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="12.8.3" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#numero-de-arboles-m"><i class="fa fa-check"></i><b>12.8.3</b> Número de árboles M</a></li>
 <li class="chapter" data-level="12.8.4" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#tamano-de-arboles"><i class="fa fa-check"></i><b>12.8.4</b> Tamaño de árboles</a></li>
 <li class="chapter" data-level="12.8.5" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#controlar-numero-de-casos-para-cortes"><i class="fa fa-check"></i><b>12.8.5</b> Controlar número de casos para cortes</a></li>
-<li class="chapter" data-level="" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#ejemplo-48"><i class="fa fa-check"></i>Ejemplo</a></li>
+<li class="chapter" data-level="" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#ejemplo-47"><i class="fa fa-check"></i>Ejemplo</a></li>
 <li class="chapter" data-level="12.8.6" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#evaluacion-con-validacion-cruzada."><i class="fa fa-check"></i><b>12.8.6</b> Evaluación con validación cruzada.</a></li>
 </ul></li>
-<li class="chapter" data-level="12.9" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#graficas-de-dependencia-parcial"><i class="fa fa-check"></i><b>12.9</b> Gráficas de dependencia parcial</a></li>
+<li class="chapter" data-level="12.9" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#graficas-de-dependencia-parcial"><i class="fa fa-check"></i><b>12.9</b> Gráficas de dependencia parcial</a><ul>
+<li class="chapter" data-level="12.9.1" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#dependencia-parcial"><i class="fa fa-check"></i><b>12.9.1</b> Dependencia parcial</a></li>
+<li class="chapter" data-level="" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#ejemplo-48"><i class="fa fa-check"></i>Ejemplo</a></li>
+<li class="chapter" data-level="12.9.2" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#discusion-2"><i class="fa fa-check"></i><b>12.9.2</b> Discusión</a></li>
+</ul></li>
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Publicado con bookdown</a></li>
@@ -1072,7 +1076,7 @@ prop_bosque &lt;-<span class="st"> </span>probas[,<span class="dv">2</span>]
 <p><span class="math display">\[\widehat{Err}_{oob}(T^*_j) = \frac{1}{A_j}\sum_{(x^{(i)}, y^{(i)}) \in {\mathcal L} -{\mathcal L}^*_i} L(y^{(i)}, T^*_j(x^{(i)}))\]</span> donde <span class="math inline">\(A_j\)</span> es el tamaño de <span class="math inline">\({\mathcal L} -{\mathcal L}^*_i\)</span>.</p>
 <p>Ahora <em>permutamos</em> al azar la variable <span class="math inline">\(X_k\)</span> en la muestra OOB <span class="math inline">\({\mathcal L} -{\mathcal L}^*_i\)</span>. Describimos esta operación como <span class="math inline">\(x^{(i)} \to x^{(i)}_k\)</span>. Calculamos el error nuevamente:</p>
 <p><span class="math display">\[\widehat{Err}_{k}(T^*_j) = \frac{1}{A_j}\sum_{(x^{(i)}, y^{(i)}) \in {\mathcal L} -{\mathcal L}^*_i} L(y^{(i)}, T^*_j(x_k^{(i)}))\]</span> Ahora calculamos la degradación del error out-of-bag debido a la permutación: <span class="math display">\[ D_k(T_j^*) = \widehat{Err}_{k}(T^*_j) - \widehat{Err}_{oob}(T^*_j) \]</span></p>
-<p>Y promediamos sobre el bosque entero <span class="math display">\[I_k =\frac{1}{B} \sum_{j=1}^B D_k(T^*_j)\]</span> y a esta cantidad le llamamos la <strong>importancia</strong> de la variable <span class="math inline">\(k\)</span> en el bosque aleatorio. Es el decremento promedio de capacidad predictiva cuando “quitamos” la variable <span class="math inline">\(X_k\)</span>.</p>
+<p>Y promediamos sobre el bosque entero <span class="math display">\[I_k =\frac{1}{B} \sum_{j=1}^B D_k(T^*_j)\]</span> y a esta cantidad le llamamos la <strong>importancia</strong> (basada en permutaciones) de la variable <span class="math inline">\(k\)</span> en el bosque aleatorio. Es el decremento promedio de capacidad predictiva cuando “quitamos” la variable <span class="math inline">\(X_k\)</span>.</p>
 <p>Nótese que:</p>
 <ul>
 <li>No podemos “quitar” la variable durante el entrenamiento de los árboles, pues entonces otras variables pueden hacer su trabajo, subestimando su importancia.</li>
@@ -1080,9 +1084,14 @@ prop_bosque &lt;-<span class="st"> </span>probas[,<span class="dv">2</span>]
 <li>Pero podemos permutar a la hora calcular el error OOB (y no durante el entrenamiento), rompiendo la relación que hay entre <span class="math inline">\(X_k\)</span> y la variable respuesta.</li>
 <li>Aunque podríamos usar esta medida para árboles, no es muy buena idea por el problema de “enmascaramiento”. Este problema se aminora en los bosques aleatorios pues todas las variables tienen oportunidad de aportar cortes en ausencia de otras variables.</li>
 </ul>
-<div id="ejemplo-45" class="section level4 unnumbered">
-<h4>Ejemplo</h4>
-<p>En nuestro ejemplo de spam</p>
+<p>Otra manera de medir importancia para árboles de regresión y clasificación es mediante el decremento de impureza promedio sobre el bosque, para cada variable.</p>
+<ul>
+<li>Cada vez que una variable aporta un corte en un árbol, la impureza del árbol disminuye.</li>
+<li>Sumamos, en cada árbol, todos estos decrementos de impureza (cada vez que aparece la variable en un corte)</li>
+<li>Finalmente, promediamos esta medida de importancia dentro de cada árbol sobre el bosque completo.</li>
+<li>Repetimos para cada variable.</li>
+</ul>
+<p>Para árboles de clasificación, usualmente se toma la importancia de Gini, que está basada in la impureza de Gini en lugar de la entropía. La impureza de Gini está dada por <span class="math display">\[I_G(p_1, \ldots, p_K) = \sum_{k=1}^K p_k(1-p_k),\]</span> que es similar a la impureza de entropía que discutimos en la construcción de árboles: <span class="math display">\[I_G(p_1, \ldots, p_K) = \sum__{k=1}^K -p_k\log (p_k),\]</span> Nótese por ejemplo que ambas toman su valor máximo en <span class="math inline">\(p_k=1/K\)</span> (distribución más uniforme posible sobre las clases), y que son iguales a cero cuando <span class="math inline">\(p_k=1\)</span> para alguna <span class="math inline">\(k\)</span>. #### Ejemplo{-} En nuestro ejemplo de spam</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">imp &lt;-<span class="st"> </span><span class="kw">importance</span>(bosque_spam, <span class="dt">type=</span><span class="dv">1</span>)
 importancia_df &lt;-<span class="st"> </span><span class="kw">data_frame</span>(<span class="dt">variable =</span> <span class="kw">rownames</span>(imp), <span class="dt">MeanDecreaseAccuracy =</span> imp[,<span class="dv">1</span>]) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">arrange</span>(<span class="kw">desc</span>(MeanDecreaseAccuracy))
@@ -1105,8 +1114,68 @@ importancia_df</code></pre></div>
 <span class="kw">ggplot</span>(importancia_df , <span class="kw">aes</span>(<span class="dt">x=</span>variable, <span class="dt">y=</span> MeanDecreaseAccuracy)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">coord_flip</span>()</code></pre></div>
 <p><img src="11-arboles_files/figure-html/unnamed-chunk-52-1.png" width="672" /></p>
+<p><strong>Observación</strong>: en el paquete <em>randomForest</em>, las importancias están escaladas por su la desviación estándar sobre los árboles - la idea es que puedan ser interpretados como valores-<span class="math inline">\(z\)</span> (estandarizados). En este caso, nos podríamos fijar en importancias que están por arriba de <span class="math inline">\(2\)</span>, por ejemplo. Para obtener los valores no estandarizados (y ver la degradación en desempeño directamente) podemos calcular</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">importance</span>(bosque_spam, <span class="dt">type =</span> <span class="dv">1</span>, <span class="dt">scale =</span> <span class="ot">FALSE</span>)</code></pre></div>
+<pre><code>##              MeanDecreaseAccuracy
+## X                   -3.167359e-04
+## wfmake               9.469937e-04
+## wfaddress            1.692136e-03
+## wfall                3.893455e-03
+## wf3d                 4.707905e-05
+## wfour                1.397900e-02
+## wfover               2.561807e-03
+## wfremove             3.473959e-02
+## wfinternet           5.428969e-03
+## wforder              1.111770e-03
+## wfmail               2.329121e-03
+## wfreceive            4.035962e-03
+## wfwill               3.829818e-03
+## wfpeople             6.090923e-04
+## wfreport             6.590103e-04
+## wfaddresses          9.724666e-04
+## wffree               2.341364e-02
+## wfbusiness           5.478105e-03
+## wfemail              2.386219e-03
+## wfyou                1.142595e-02
+## wfcredit             2.960069e-03
+## wfyour               1.920687e-02
+## wffont               1.875817e-03
+## wf000                1.273778e-02
+## wfmoney              1.213523e-02
+## wfhp                 3.248315e-02
+## wfhpl                1.356723e-02
+## wfgeorge             1.669735e-02
+## wf650                3.470366e-03
+## wflab                1.140603e-03
+## wflabs               2.544115e-03
+## wftelnet             1.207992e-03
+## wf857                4.267066e-04
+## wfdata               8.081002e-04
+## wf415                4.643810e-04
+## wf85                 2.296557e-03
+## wftechnology         1.431399e-03
+## wf1999               6.884388e-03
+## wfparts              8.941783e-05
+## wfpm                 1.164572e-03
+## wfdirect             7.717049e-04
+## wfcs                 4.878773e-04
+## wfmeeting            2.966489e-03
+## wforiginal           8.513556e-04
+## wfproject            6.897514e-04
+## wfre                 4.053317e-03
+## wfedu                1.000909e-02
+## wftable              2.073989e-05
+## wfconference         4.692198e-04
+## cfsc                 1.556489e-03
+## cfpar                4.222729e-03
+## cfbrack              1.060870e-03
+## cfexc                3.910984e-02
+## cfdollar             3.312698e-02
+## cfpound              9.925973e-04
+## crlaverage           2.800918e-02
+## crllongest           3.531938e-02
+## crltotal             3.173977e-02</code></pre>
 <hr />
-</div>
 </div>
 <div id="ajustando-arboles-aleatorios." class="section level3">
 <h3><span class="header-section-number">11.3.5</span> Ajustando árboles aleatorios.</h3>
@@ -1115,7 +1184,7 @@ importancia_df</code></pre></div>
 <li>A veces podemos obtener algunas ventajas de afinar el número mínimo de observaciones por nodo terminal y/o el número mínimo de observaciones por nodo para considerar hacer cortes adicionales</li>
 <li>Usualmente corremos tantos árboles como podamos (cientos, miles), o hasta que se estabiliza el error. Aumentar más arboles rara vez producen sobreajuste adicional (aunque esto no quiere decir que los bosques aleatorios no puedan sobreajustar!)</li>
 </ul>
-<div id="ejemplo-46" class="section level4 unnumbered">
+<div id="ejemplo-45" class="section level4 unnumbered">
 <h4>Ejemplo</h4>
 <p>Consideremos datos de (casas en venta en Ames, Iowa)[<a href="https://ww2.amstat.org/publications/jse/v19n3/decock.pdf" class="uri">https://ww2.amstat.org/publications/jse/v19n3/decock.pdf</a>]. Queremos predecir el precio listado de una casa en función de las características de las casa.</p>
 <p>El análisis completo (desde limpieza y exploración) está en scripts/bosque-housing.Rmd</p>

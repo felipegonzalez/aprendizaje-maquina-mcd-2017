@@ -25,7 +25,7 @@
 <meta name="author" content="Felipe González">
 
 
-<meta name="date" content="2017-10-29">
+<meta name="date" content="2017-10-30">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -299,7 +299,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="12.6" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#algoritmo-de-gradient-boosting"><i class="fa fa-check"></i><b>12.6</b> Algoritmo de gradient boosting</a></li>
 <li class="chapter" data-level="12.7" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#funciones-de-perdida"><i class="fa fa-check"></i><b>12.7</b> Funciones de pérdida</a><ul>
 <li class="chapter" data-level="12.7.1" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#discusion-adaboost-opcional"><i class="fa fa-check"></i><b>12.7.1</b> Discusión: adaboost (opcional)</a></li>
-<li class="chapter" data-level="" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#ejemplo-47"><i class="fa fa-check"></i>Ejemplo</a></li>
+<li class="chapter" data-level="" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#ejemplo-46"><i class="fa fa-check"></i>Ejemplo</a></li>
 </ul></li>
 <li class="chapter" data-level="12.8" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#modificaciones-de-gradient-boosting"><i class="fa fa-check"></i><b>12.8</b> Modificaciones de Gradient Boosting</a><ul>
 <li class="chapter" data-level="12.8.1" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#tasa-de-aprendizaje-shrinkage"><i class="fa fa-check"></i><b>12.8.1</b> Tasa de aprendizaje (shrinkage)</a></li>
@@ -307,10 +307,14 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="12.8.3" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#numero-de-arboles-m"><i class="fa fa-check"></i><b>12.8.3</b> Número de árboles M</a></li>
 <li class="chapter" data-level="12.8.4" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#tamano-de-arboles"><i class="fa fa-check"></i><b>12.8.4</b> Tamaño de árboles</a></li>
 <li class="chapter" data-level="12.8.5" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#controlar-numero-de-casos-para-cortes"><i class="fa fa-check"></i><b>12.8.5</b> Controlar número de casos para cortes</a></li>
-<li class="chapter" data-level="" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#ejemplo-48"><i class="fa fa-check"></i>Ejemplo</a></li>
+<li class="chapter" data-level="" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#ejemplo-47"><i class="fa fa-check"></i>Ejemplo</a></li>
 <li class="chapter" data-level="12.8.6" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#evaluacion-con-validacion-cruzada."><i class="fa fa-check"></i><b>12.8.6</b> Evaluación con validación cruzada.</a></li>
 </ul></li>
-<li class="chapter" data-level="12.9" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#graficas-de-dependencia-parcial"><i class="fa fa-check"></i><b>12.9</b> Gráficas de dependencia parcial</a></li>
+<li class="chapter" data-level="12.9" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#graficas-de-dependencia-parcial"><i class="fa fa-check"></i><b>12.9</b> Gráficas de dependencia parcial</a><ul>
+<li class="chapter" data-level="12.9.1" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#dependencia-parcial"><i class="fa fa-check"></i><b>12.9.1</b> Dependencia parcial</a></li>
+<li class="chapter" data-level="" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#ejemplo-48"><i class="fa fa-check"></i>Ejemplo</a></li>
+<li class="chapter" data-level="12.9.2" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#discusion-2"><i class="fa fa-check"></i><b>12.9.2</b> Discusión</a></li>
+</ul></li>
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Publicado con bookdown</a></li>
@@ -537,7 +541,7 @@ Sin embargo, necesitamos que las <span class="math inline">\(z_i\)</span> estén
 \]</span> De modo que la función objetivo toma dos valores: Si <span class="math inline">\(T(x^{i})\)</span> clasifica correctamente, entonces <span class="math inline">\(e^{-y^{(i)}T(x^{(i)})}=e^{-1}\)</span>, y si clasifica incorrectamente <span class="math inline">\(e^{-y^{(i)}T(x^{(i)})}=e^{1}\)</span>. Podemos entonces encontrar el árbol <span class="math inline">\(T\)</span> construyendo un árbol usual pero con datos ponderados por <span class="math inline">\(d_{m,i}\)</span>, donde buscamos maximizar la tasa de clasificación correcta (puedes ver más en nuestro libro de texto, o en <span class="citation">(Hastie, Tibshirani, and Friedman <a href="#ref-ESL">2017</a>)</span>.</p>
 <p>¿Cuáles son las consecuencias de usar la pérdida exponencial? Una es que perdemos la conexión con los modelos logísticos e interpretación de probabilidad que tenemos cuando usamos la devianza. Sin embargo, son similares: compara cómo se ve la devianza (como la formulamos arriba, con <span class="math inline">\(y\in\{-1,1\}\)</span>) con la pérdida exponencial.</p>
 </div>
-<div id="ejemplo-47" class="section level3 unnumbered">
+<div id="ejemplo-46" class="section level3 unnumbered">
 <h3>Ejemplo</h3>
 <p>Podemos usar el paquete de R <em>gbm</em> para hacer gradient boosting. Para el caso de precios de casas de la sección anterior (un problema de regresión).</p>
 <p>Fijaremos el número de árboles en 50, de profundidad 3, usando 75% de la muestra para entrenar y el restante para validación:</p>
@@ -582,7 +586,8 @@ dat_entrenamiento &lt;-<span class="st"> </span><span class="kw">data_frame</spa
 </div>
 <div id="modificaciones-de-gradient-boosting" class="section level2">
 <h2><span class="header-section-number">12.8</span> Modificaciones de Gradient Boosting</h2>
-<p>Hay algunas adiciones al algoritmo de gradient boosting que podemos usar para mejorar el desempeño:</p>
+<p>Hay algunas adiciones al algoritmo de gradient boosting que podemos usar para mejorar el desempeño. Los dos métodos que comunmente se usan son encogimiento (<em>shrinkage</em>), que es una especie de tasa de aprendizaje, y submuestreo, donde construimos cada árbol adicional usando una submuestra de la muestra de entrenamiento.</p>
+<p>Ambas podemos verlas como técnicas de regularización, que limitan sobreajuste producido por el algoritmo agresivo de boosting.</p>
 <div id="tasa-de-aprendizaje-shrinkage" class="section level3">
 <h3><span class="header-section-number">12.8.1</span> Tasa de aprendizaje (shrinkage)</h3>
 <p>Funciona bien modificar el algoritmo usando una tasa de aprendizae <span class="math inline">\(0&lt;\nu&lt;1\)</span>: <span class="math display">\[f_m(x) = f_{m-1}(x) + \nu \sum_j \gamma_{j,m} I(x\in R_{j,m})\]</span></p>
@@ -720,7 +725,7 @@ graf_eval &lt;-<span class="st"> </span>modelos_dat <span class="op">%&gt;%</spa
 <h3><span class="header-section-number">12.8.5</span> Controlar número de casos para cortes</h3>
 <p>Igual que en bosques aleatorios, podemos establecer mínimos de muestra en nodos terminales, o mínimo de casos necesarios para hacer un corte.</p>
 </div>
-<div id="ejemplo-48" class="section level3 unnumbered">
+<div id="ejemplo-47" class="section level3 unnumbered">
 <h3>Ejemplo</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">modelos_dat &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">bag.fraction =</span> <span class="kw">c</span>( <span class="fl">0.25</span>, <span class="fl">0.5</span>, <span class="dv">1</span>),
                           <span class="dt">shrinkage =</span> <span class="kw">c</span>(<span class="fl">0.01</span>, <span class="fl">0.1</span>, <span class="fl">0.25</span>, <span class="fl">0.5</span>),
@@ -775,6 +780,121 @@ dat &lt;-<span class="st"> </span><span class="kw">eval_modelo_2</span>(mod_boos
 </div>
 <div id="graficas-de-dependencia-parcial" class="section level2">
 <h2><span class="header-section-number">12.9</span> Gráficas de dependencia parcial</h2>
+<p>La idea de dependencia parcial que veremos a continuación se puede aplicar a cualquier método de aprendizaje, y en boosting ayuda a entender el funcionamiento del predictor complejo que resulta del algoritmo. Aunque podemos evaluar el predictor en distintos valores y observar cómo se comporta, cuando tenemos varias variables de entrada este proceso no siempre tiene resultados muy claros o completos. Dependencia parcial es un intento por entender de manera más sistemática parte del funcionamiento de un modelo complejo.</p>
+<div id="dependencia-parcial" class="section level3">
+<h3><span class="header-section-number">12.9.1</span> Dependencia parcial</h3>
+<p>Supongamos que tenemos un predictor <span class="math inline">\(f(x_1,x_2)\)</span> que depende de dos variables de entrada. Podemos considerar la función <span class="math display">\[{f}_{1}(x_1) = E_{x_2}[f(x_1,x_2)],\]</span> que es el promedio de <span class="math inline">\(f(x)\)</span> fijando <span class="math inline">\(x_1\)</span> sobre la marginal de <span class="math inline">\(x_2\)</span>. Si tenemos una muestra de entrenamiento, podríamos estimarla promediando sobre la muestra de entrenamiento</p>
+<p><span class="math display">\[\bar{f}_1(x_1) = \frac{1}{n}\sum_{i=1}^n f(x_1, x_2^{(i)}),\]</span> que consiste en fijar el valor de <span class="math inline">\(x_1\)</span> y promediar sobre todos los valores de la muestra de entrenamiento para <span class="math inline">\(x_2\)</span>.</p>
+</div>
+<div id="ejemplo-48" class="section level3 unnumbered">
+<h3>Ejemplo</h3>
+<p>Construimos un modelo con solamente tres variables para nuestro ejemplo anterior</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mod_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">gbm</span>(<span class="kw">log</span>(vSalePrice) <span class="op">~</span><span class="st"> </span>vGrLivArea <span class="op">+</span>vNeighborhood  <span class="op">+</span>vOverallQual,  
+                <span class="dt">data =</span> entrena,
+                <span class="dt">distribution =</span> <span class="st">&#39;gaussian&#39;</span>,
+                <span class="dt">n.trees =</span> <span class="dv">100</span>, 
+                <span class="dt">interaction.depth =</span> <span class="dv">3</span>,
+                <span class="dt">shrinkage =</span> <span class="fl">0.1</span>, 
+                <span class="dt">bag.fraction =</span> <span class="fl">0.5</span>,
+                <span class="dt">train.fraction =</span> <span class="fl">0.75</span>)
+<span class="kw">gbm.perf</span>(mod_<span class="dv">2</span>)</code></pre></div>
+<pre><code>## Using test method...</code></pre>
+<p><img src="12-arboles-2_files/figure-html/unnamed-chunk-25-1.png" width="672" /></p>
+<pre><code>## [1] 87</code></pre>
+<p>Podemos calcular a mano la gráfica de dependencia parcial para el tamaño de la “General Living Area”.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dat_dp &lt;-<span class="st"> </span>entrena <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(vGrLivArea, vNeighborhood, vOverallQual) </code></pre></div>
+<p>Consideramos el rango de la variable:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cuantiles &lt;-<span class="st"> </span><span class="kw">quantile</span>(entrena<span class="op">$</span>vGrLivArea, <span class="dt">probs=</span> <span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="fl">0.1</span>))
+cuantiles</code></pre></div>
+<pre><code>##     0%    10%    20%    30%    40%    50%    60%    70%    80%    90% 
+##  334.0  912.0 1066.6 1208.0 1339.0 1464.0 1578.0 1709.3 1869.0 2158.3 
+##   100% 
+## 5642.0</code></pre>
+<p>Por ejemplo, vamos evaluar el efecto parcial cuando vGrLivArea = 912. Hacemos</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dat_dp_<span class="dv">1</span> &lt;-<span class="st"> </span>dat_dp <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">vGrLivArea =</span> <span class="dv">912</span>) <span class="op">%&gt;%</span>
+<span class="st">            </span><span class="kw">mutate</span>(<span class="dt">pred =</span> <span class="kw">predict</span>(mod_<span class="dv">2</span>, .)) <span class="op">%&gt;%</span>
+<span class="st">            </span><span class="kw">summarise</span>(<span class="dt">mean_pred =</span> <span class="kw">mean</span>(pred))</code></pre></div>
+<pre><code>## Using 87 trees...</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dat_dp_<span class="dv">1</span></code></pre></div>
+<pre><code>##   mean_pred
+## 1  11.84206</code></pre>
+<p>Evaluamos en vGrLivArea = 912</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dat_dp_<span class="dv">1</span> &lt;-<span class="st"> </span>dat_dp <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">vGrLivArea =</span> <span class="dv">1208</span>) <span class="op">%&gt;%</span>
+<span class="st">            </span><span class="kw">mutate</span>(<span class="dt">pred =</span> <span class="kw">predict</span>(mod_<span class="dv">2</span>, .)) <span class="op">%&gt;%</span>
+<span class="st">            </span><span class="kw">summarise</span>(<span class="dt">mean_pred =</span> <span class="kw">mean</span>(pred))</code></pre></div>
+<pre><code>## Using 87 trees...</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dat_dp_<span class="dv">1</span></code></pre></div>
+<pre><code>##   mean_pred
+## 1  11.96576</code></pre>
+<p>(un incremento de alrededor del 10% en el precio de venta). Hacemos todos los cuantiles como sigue:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cuantiles &lt;-<span class="st"> </span><span class="kw">quantile</span>(entrena<span class="op">$</span>vGrLivArea, <span class="dt">probs=</span> <span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="fl">0.01</span>))
+
+prom_parcial &lt;-<span class="st"> </span><span class="cf">function</span>(x, variable, df, mod){
+  variable &lt;-<span class="st"> </span><span class="kw">enquo</span>(variable)
+  variable_nom &lt;-<span class="st"> </span><span class="kw">quo_name</span>(variable)
+  salida &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="op">!!</span>variable_nom <span class="op">:</span><span class="er">=</span><span class="st"> </span>x) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">mutate</span>(<span class="dt">pred =</span> <span class="kw">predict</span>(mod, ., <span class="dt">n.trees=</span><span class="dv">100</span>)) <span class="op">%&gt;%</span>
+<span class="st">    </span><span class="kw">group_by</span>(<span class="op">!!</span>variable) <span class="op">%&gt;%</span>
+<span class="st">    </span><span class="kw">summarise</span>(<span class="dt">f_1 =</span> <span class="kw">mean</span>(pred)) 
+  salida
+}
+dep_parcial &lt;-<span class="st"> </span><span class="kw">map_dfr</span>(cuantiles, 
+                       <span class="op">~</span><span class="kw">prom_parcial</span>(.x, vGrLivArea, entrena, mod_<span class="dv">2</span>))
+<span class="kw">ggplot</span>(dep_parcial, <span class="kw">aes</span>(<span class="dt">x=</span>vGrLivArea, <span class="dt">y=</span> f_<span class="dv">1</span>)) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span><span class="kw">geom_rug</span>(<span class="dt">sides=</span><span class="st">&#39;b&#39;</span>)</code></pre></div>
+<p><img src="12-arboles-2_files/figure-html/unnamed-chunk-30-1.png" width="672" /> Y transformando a las unidades originales</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(dep_parcial, <span class="kw">aes</span>(<span class="dt">x=</span>vGrLivArea, <span class="dt">y=</span> <span class="kw">exp</span>(f_<span class="dv">1</span>))) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span><span class="kw">geom_rug</span>(<span class="dt">sides=</span><span class="st">&#39;b&#39;</span>)</code></pre></div>
+<p><img src="12-arboles-2_files/figure-html/unnamed-chunk-31-1.png" width="672" /> Y vemos que cuando aumenta el area de habitación, aumenta el precio. Podemos hacer esta gráfica más simple haciendo</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(mod_<span class="dv">2</span>, <span class="dv">1</span>) <span class="co"># 1 pues es vGrLivArea la primer variable </span></code></pre></div>
+<p><img src="12-arboles-2_files/figure-html/unnamed-chunk-32-1.png" width="672" /></p>
+<p>Y para una variable categórica se ve como sigue:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(mod_<span class="dv">2</span>, <span class="dv">2</span>, <span class="dt">return.grid =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">arrange</span>(y)</code></pre></div>
+<pre><code>##    vNeighborhood        y
+## 1         IDOTRR 11.74437
+## 2         BrDale 11.79033
+## 3        OldTown 11.81014
+## 4          SWISU 11.85419
+## 5        MeadowV 11.85748
+## 6        Edwards 11.86859
+## 7        BrkSide 11.91787
+## 8          Otros 11.95479
+## 9          NAmes 11.98455
+## 10        Sawyer 12.00362
+## 11       SawyerW 12.03340
+## 12       Mitchel 12.06104
+## 13        NWAmes 12.08210
+## 14       Crawfor 12.08735
+## 15       Gilbert 12.09874
+## 16       Blmngtn 12.11353
+## 17       CollgCr 12.12275
+## 18       Somerst 12.15674
+## 19        Timber 12.17366
+## 20       ClearCr 12.18768
+## 21       NoRidge 12.20368
+## 22       StoneBr 12.22289
+## 23       NridgHt 12.24190
+## 24       Veenker 12.25304</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(mod_<span class="dv">2</span>, <span class="dv">2</span>, <span class="dt">return.grid =</span> <span class="ot">FALSE</span>)</code></pre></div>
+<p><img src="12-arboles-2_files/figure-html/unnamed-chunk-33-1.png" width="672" /></p>
+<hr />
+<p>En general, si nuestro predictor depende de más variables <span class="math inline">\(f(x_1,x_2, \ldots, x_p)\)</span> entrada. Podemos considerar las funciones <span class="math display">\[{f}_{j}(x_j) = E_{(x_1,x_2, \ldots x_p) - x_j}[f(x_1,x_2, \ldots, x_p)],\]</span> que es el valor esperado de <span class="math inline">\(f(x)\)</span> fijando <span class="math inline">\(x_j\)</span>, y promediando sobre el resto de las variables. Si tenemos una muestra de entrenamiento, podríamos estimarla promediando sobre la muestra de entrenamiento</p>
+<p><span class="math display">\[\bar{f}_j(x_j) = \frac{1}{n}\sum_{i=1}^n f(x_1^{(i)}, x_2^{(i)}, \ldots, x_{j-1}^{(i)},x_{j+1}^{(i)},\ldots, x_p^{(i)}).\]</span></p>
+<p>Podemos hacer también gráficas de dependencia parcial para más de una variable, si fijamos un subconjunto de variables y promediamos sobre el resto.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(mod_<span class="dv">2</span>, <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">3</span>))</code></pre></div>
+<p><img src="12-arboles-2_files/figure-html/unnamed-chunk-34-1.png" width="672" /></p>
+</div>
+<div id="discusion-2" class="section level3">
+<h3><span class="header-section-number">12.9.2</span> Discusión</h3>
+<p>En primer lugar, veamos qué obtenemos de la dependencia parcial cuando aplicamos al modelo lineal sin interacciones. En el caso de dos variables,</p>
+<p><span class="math display">\[f_1(x_1) = E_{x_2}[f(x_1,x_2)] =E_{x_2}[a + bx_1 + cx_2)] = \mu + bx_1,\]</span> que es equivalente al análisis marginal que hacemos en regresión lineal ( incrementos en la variable <span class="math inline">\(x_1\)</span> con todo lo demás fijo, donde el incremento marginal de la respuesta es el coeficiente <span class="math inline">\(b\)</span>).</p>
+<p>Desde este punto de vista, dependencia parcial da una interpretación similar a la del análisis usual de coeficientes en regresión lineal, donde pensamos en “todo lo demás constante”.</p>
+<p>Nótese también que cuando hay <strong>interacciones</strong> fuertes entre las variables, ningún análisis marginal (dependencia parcial o examen de coeficientes) da un resultado fácilmente interpretable - la única solución es considerar el efecto conjunto de las variables que interactúan. De modo que este tipo de análisis funciona mejor cuando no hay interacciones grandes entre las variables (es cercano a un modelo aditivo con efectos no lineales).</p>
+<div id="ejemplo-49" class="section level4 unnumbered">
+<h4>Ejemplo</h4>
+<p>Considera qué pasa con las gráficas de dependencia parcial cuando <span class="math inline">\(f(x_1,x_2) = -10 x_1x_2\)</span>, y <span class="math inline">\(x_1\)</span> y <span class="math inline">\(x_2\)</span> tienen media cero. Explica por qué en este caso es mejor ver el efecto conjunto de las dos variables.</p>
+<hr />
+<p>Es importante también evitar la interpretación incorrecta de que la función de dependencia parcial da el valor esperado del predictor condicionado a valores de la variable cuya dependencia examinamos. Es decir, <span class="math display">\[f_1(x_1) = E_{x_2}(f(x_1,x_2)) \neq E(f(x_1,x_2)|x_1).\]</span> La última cantidad es un valor esperado diferente (calculado sobre la condicional de <span class="math inline">\(x_2\)</span> dada <span class="math inline">\(x_1\)</span>), de manera que utiliza información acerca de la relación que hay entre <span class="math inline">\(x_1\)</span> y <span class="math inline">\(x_2\)</span>. La función de dependencia parcial da el efecto de <span class="math inline">\(x_1\)</span> tomando en cuenta los efectos promedio de las otras variables.</p>
 
 <div id="refs" class="references">
 <div>
@@ -794,6 +914,8 @@ dat &lt;-<span class="st"> </span><span class="kw">eval_modelo_2</span>(mod_boos
 </div>
 <div>
 <p>Srivastava, Nitish, Geoffrey Hinton, Alex Krizhevsky, Ilya Sutskever, and Ruslan Salakhutdinov. 2014. “Dropout: A Simple Way to Prevent Neural Networks from Overfitting.” <em>J. Mach. Learn. Res.</em> 15 (1). JMLR.org: 1929–58. <a href="http://dl.acm.org/citation.cfm?id=2627435.2670313" class="uri">http://dl.acm.org/citation.cfm?id=2627435.2670313</a>.</p>
+</div>
+</div>
 </div>
 </div>
 </div>
