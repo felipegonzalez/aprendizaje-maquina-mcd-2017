@@ -25,7 +25,7 @@
 <meta name="author" content="Felipe González">
 
 
-<meta name="date" content="2017-10-30">
+<meta name="date" content="2017-10-31">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -980,13 +980,13 @@ modelo_tc <span class="op">%&gt;%</span><span class="st"> </span>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">score &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">evaluate</span>(x_valid_s, y_valid)
 score</code></pre></div>
 <pre><code>## $loss
-## [1] 0.4365902
+## [1] 0.4366999
 ## 
 ## $acc
 ## [1] 0.7921687
 ## 
 ## $binary_crossentropy
-## [1] 0.4323525</code></pre>
+## [1] 0.4325137</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tab_confusion &lt;-<span class="st"> </span><span class="kw">table</span>(modelo_tc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">predict_classes</span>(x_valid_s),y_valid) 
 tab_confusion</code></pre></div>
 <pre><code>##    y_valid
