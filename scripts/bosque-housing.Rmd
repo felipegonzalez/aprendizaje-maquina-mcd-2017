@@ -361,13 +361,12 @@ sqrt(min(df_res$mse_oob))
 ## Otras opciones para datos faltantes
 
 Ahora podemos refinar nuestro script de faltantes. Todas estas opciones pueden
-ayudar o no en la predicción! Podemos:
+ayudar o no en la predicción. Podemos:
 
 - Usar una categoría adicional "No disponible" para faltantes estructurales (por ejemplo,
 condiciones del garage si no hay garage)
 - Para variables numéricas, imputar 0 cuando sea más apropiado (por ejemplo,
 tamaño de "Frontage" si no conecta con la calle)
-- Agrupar variables categóricas con muchos niveles (aquellos niveles chicos) 
 
 
 ```{r}
@@ -400,10 +399,10 @@ limpiar_faltantes_2 <- function(datos, datos_p = NULL, min_cat = 10,
 
   # Reasignación para categóricas
   reasignar <- datos %>% filter(categorica) %>%
-                         mutate(valor = ifelse(is.na(valor), 'no-disponible', valor)) %>%
-                         group_by(variable, valor) %>%
-                         summarise(n = n()) %>%
-                         mutate(valor_nuevo = ifelse(n <= min_cat, 'Otros' , valor))
+                         mutate(valor_nuevo = ifelse(is.na(valor), 'no-disponible', valor)) #%>%
+                         #group_by(variable, valor) %>%
+                         #summarise(n = n()) #%>%
+                         #mutate(valor_nuevo = ifelse(n <= min_cat, 'Otros' , valor))
 
   #imputación
   datos_cat <- datos_p %>% filter(categorica)
@@ -413,9 +412,7 @@ limpiar_faltantes_2 <- function(datos, datos_p = NULL, min_cat = 10,
   #procesar categóricas
   #primero agregamos categoría no disponible
   datos_cat <- datos_cat %>% mutate(valor = ifelse(is.na(valor), 'no-disponible' ,valor))
-  #reasignaos
-  datos_cat  <- datos_cat %>% left_join(reasignar) %>%
-                      mutate(valor = valor_nuevo) %>% select(Id, variable, valor)
+
   # aquí falta limpiar cateogrías nuevas en muestra de prueba
   datos_1 <- datos_cat %>% select(Id, variable, valor) %>% 
                            spread(variable, valor, convert=TRUE)
@@ -440,7 +437,7 @@ entrena_na <- limpiar_faltantes_2(entrena_larga, to_factor = TRUE) %>%
   select(-Id, -Utilities) %>% as.data.frame
 prueba_na <- limpiar_faltantes_2(entrena_larga, prueba_larga, to_factor = TRUE) %>% 
   select(-Id, -Utilities) %>% as.data.frame
-write_rds(entrena_na, 'datos/ameshousing-entrena-procesado.rds')
+#write_rds(entrena_na, 'datos/ameshousing-entrena-procesado.rds')
 names(entrena_na) <- paste('v', names(entrena_na), sep='')
 names(prueba_na) <- paste('v', names(prueba_na), sep='')
 
