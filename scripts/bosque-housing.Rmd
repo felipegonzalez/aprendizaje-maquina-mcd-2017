@@ -203,6 +203,12 @@ que correr un modelo lo más pronto posible. Usamos el siguiente script
 para limpiar faltantes, que asigna a la categoría más popular los faltantes
 categóricos y la media a los faltantes numéricos.
 
+**Discusión**: aunque en esta parte vamos a usar error OOB para seleccionar modelos,
+no es una idea tan buena (pues utilizamos todos los datos para imputar medias y
+categoría modal, y OOB utiliza esta información). Esto puede hacer optimista la estimación
+OOB como estimación del error de predicción. Más adelante usamos otra estrategia
+que no tiene este problema (ve la función limpiar_faltantes_2 más adelante).
+
 
 ```{r}
 limpiar_faltantes <- function(datos, datos_p = NULL, to_factor = FALSE){
