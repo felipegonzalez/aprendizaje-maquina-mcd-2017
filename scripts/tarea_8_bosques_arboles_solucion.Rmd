@@ -1,0 +1,117 @@
+---
+title: "Ingreso de los hogares"
+output: html_notebook
+---
+
+Este es el código para preparar los datos, donde tomamos unas cuantas
+variables de la encuesta [Enigh 2016](http://www.beta.inegi.org.mx/proyectos/enchogares/regulares/enigh/nc/2016/default.html).
+**En este caso ignoraremos el hecho de que estos datos resultan de un diseño
+complejo de muestra**. En este caso, convendría diseñar un esquema de validación 
+apropiado (extrayendo unidades primarias de muestreo completas, por ejemplo), y
+usar los factores de expansión de la muestra.
+
+```{r, eval=FALSE}
+library(readr)
+library(dplyr)
+concentrado <- read_csv('../datos/enigh_2016/concentradohogar.csv')
+hogares <- read_csv('../datos/enigh_2016/hogares.csv')
+problems(concentrado)
+head(concentrado)
+names(concentrado)
+concen_2 <- left_join(concentrado, hogares)
+names(concen_2)[1] <- "folioviv"
+datos <- concen_2 %>% select(folioviv, foliohog, tam_loc, educa_jefe, 
+                             celular, tv_paga, conex_inte, num_auto, num_tosta, num_lavad, num_compu, ing_cor, factor, num_trab_d, tarjeta) %>%
+                      mutate(tam_loc = recode(tam_loc, `1`='100 mil+',`2`='15mil-100mil',
+                                              `3`='2.5mil-15mil',`4`='Menos de 2.5 mil')) %>%
+                      mutate(celular = recode(celular, `1`='Si', `2`='No')) %>%
+                      mutate(tv_paga = recode(tv_paga, `1`='Si', `2`='No')) %>%
+                      mutate(celular = recode(celular, `1`='Si', `2`='No')) %>%
+                      mutate(conex_inte = recode(conex_inte, `1`='Si', `2`='No')) %>%
+                      mutate(tarjeta = recode(tarjeta, `1`='Si', `2`='No'))
+
+write_csv(datos, path ='../datos/vars_enigh_2016.csv')            
+```
+
+### Datos
+
+Buscamos predecir el ingreso corriente trimestral 
+de los hogares a partir de algunas de sus
+características, el tamaño de la localidad, y la educación del jefe(a) del hogar.
+Para este ejemplo usamos una muestra:
+
+```{r}
+set.seed(293)
+datos <- read_csv(file = '../datos/vars_enigh_2016.csv')
+datos <- sample_n(datos, 10000)
+```
+
+Vamos a predecir el log del ingreso:
+
+```{r}
+datos$ingreso_log <- log(1 + datos$ing_cor)
+#escala log
+quantile(datos$ingreso_log, probs = seq(0,1,0.1))
+#escala original
+exp(quantile(datos$ingreso_log, probs = seq(0,1,0.1)))
+```
+
+### Árboles
+
+Corre el siguiente código
+
+```{r}
+library(rpart)
+library(rpart.plot)
+
+arbol_grande <- rpart(ingreso_log ~ tam_loc + educa_jefe + 
+      celular+ conex_inte + num_auto+ num_tosta+ num_lavad+ num_compu + factor, 
+      data= datos, cp=0)
+prp(prune(arbol_grande, cp=0.004), type=4, extra=1, digits=3)
+```
+
+1. ¿Qué significa la información que hay en cada nodo? Nota: puedes interpretar diferencias
+de log ingreso rápidamente si tomas en cuenta que una diferencia en la escala logarítmica
+(para diferencias más chicas) es aproximadamente cambio porcentual en ingreso. Por ejemplo
+la diferencia de ingreso en escala log de 4.7 a 4.9 es aproximadamente un incremento
+de 20\%. 
+
+2. Poda el árbol para mostrar solamente un árbol con 5 nodos terminales. Evalúa el 
+error de entrenamiento para este árbol. 
+
+```{r}
+prp(prune(arbol_grande, cp=0.02), type=4, extra=1, digits=3)
+```
+
+### Bosques aleatorios
+
+1. Usa un bosque aleatorio para predecir el log ingreso. Prueba algunos valores
+de $m$ (mtry) y escoge un modelo final usando el error out-of-bag. Grafica
+cómo evoluciona la estimación OOB del error conforme aumenta el número de árboles.
+
+```{r}
+#utiliza estos datos, que tienen las variables categóricas convertidas a factores.
+datos_df <- data.frame(unclass(datos))
+library(randomForest)
+bosque <- randomForest(ingreso_log ~ tam_loc + educa_jefe + 
+      celular+ conex_inte + num_auto+ num_tosta+ num_lavad+ num_compu, 
+      data= datos_df, mtry=3, importance = TRUE)
+plot(bosque)
+```
+
+2. Examina las importancias de las variables. ¿Cuáles son las 3 variables más importantes? 
+
+```{r}
+importance(bosque, type=1)
+```
+3. Incluye una o dos variables adicionales que crees que puedan tener importancia alta. ¿En qué 
+lugar aparecen?
+
+```{r}
+bosque <- randomForest(ingreso_log ~ tam_loc + educa_jefe + 
+      celular+ conex_inte + num_auto+ num_tosta+ num_lavad+ num_compu +
+        num_trab_d + tarjeta, 
+      data= datos_df, mtry=3, importance = TRUE)
+importance(bosque, type=1)
+
+```
