@@ -786,5 +786,32 @@ condicional de $x_2$ dada $x_1$), de manera que utiliza información acerca
 de la relación que hay entre $x_1$ y $x_2$. La función de dependencia parcial
 da el efecto de $x_1$ tomando en cuenta los efectos promedio de las otras variables.
 
+## Tarea {-}
+
+
+1. Revisa el script que vimos en clase de aplicación de bosques para
+predecir precios de casa (bosque-housing.Rmd). Argumenta por qué es mejor
+el segundo método para limpiar faltantes que el primero. Considera
+ - Cómo respeta cada método la división entrenamiento y validación
+ - El desempeño de cada método
+ 
+2. Considera las importancia de variables de bosque-housing.Rmd. Muestra
+las importancias basadas en permutaciones escaladas y no escaladas. ¿Con
+qué valores en el objeto randomForest se escalan las importancias?
+
+3. Grafica importancias de Gini (MeanDecreaseGini) y de permutaciones. 
+¿Los resultados son similiares? Explica qué significa MeanDecreaseGini en el
+contexto de un problema de regresión.
+
+4. Considera nuestra primera corrida de gradient boosting
+en las notas para el ejemplo de los precios de las casas. Corre este ejemplo
+usando pérdida absoluta ($|y-f(x)|$) en lugar de pérdida cuadrática
+($(y-f(x))^2$)
+
+- Grafica las curvas de entrenamiento y validación conforme se agregan árboles
+- Explica teóricamente cuál es la diferencia del algoritmo cuando utilizas estas
+dos pérdidas.
+- Da razones por las que pérdida absoluta puede ser una mejor selección para
+algunos problemas de regresión.
 
 
