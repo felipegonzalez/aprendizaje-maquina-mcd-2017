@@ -25,7 +25,7 @@
 <meta name="author" content="Felipe González">
 
 
-<meta name="date" content="2017-10-31">
+<meta name="date" content="2017-11-01">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -315,6 +315,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#ejemplo-48"><i class="fa fa-check"></i>Ejemplo</a></li>
 <li class="chapter" data-level="12.9.2" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#discusion-2"><i class="fa fa-check"></i><b>12.9.2</b> Discusión</a></li>
 </ul></li>
+<li class="chapter" data-level="" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#tarea-5"><i class="fa fa-check"></i>Tarea</a></li>
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Publicado con bookdown</a></li>
@@ -895,6 +896,28 @@ dep_parcial &lt;-<span class="st"> </span><span class="kw">map_dfr</span>(cuanti
 <p>Considera qué pasa con las gráficas de dependencia parcial cuando <span class="math inline">\(f(x_1,x_2) = -10 x_1x_2\)</span>, y <span class="math inline">\(x_1\)</span> y <span class="math inline">\(x_2\)</span> tienen media cero. Explica por qué en este caso es mejor ver el efecto conjunto de las dos variables.</p>
 <hr />
 <p>Es importante también evitar la interpretación incorrecta de que la función de dependencia parcial da el valor esperado del predictor condicionado a valores de la variable cuya dependencia examinamos. Es decir, <span class="math display">\[f_1(x_1) = E_{x_2}(f(x_1,x_2)) \neq E(f(x_1,x_2)|x_1).\]</span> La última cantidad es un valor esperado diferente (calculado sobre la condicional de <span class="math inline">\(x_2\)</span> dada <span class="math inline">\(x_1\)</span>), de manera que utiliza información acerca de la relación que hay entre <span class="math inline">\(x_1\)</span> y <span class="math inline">\(x_2\)</span>. La función de dependencia parcial da el efecto de <span class="math inline">\(x_1\)</span> tomando en cuenta los efectos promedio de las otras variables.</p>
+</div>
+</div>
+</div>
+<div id="tarea-5" class="section level2 unnumbered">
+<h2>Tarea</h2>
+<ol style="list-style-type: decimal">
+<li>Revisa el script que vimos en clase de aplicación de bosques para predecir precios de casa (bosque-housing.Rmd). Argumenta por qué es mejor el segundo método para limpiar faltantes que el primero. Considera</li>
+</ol>
+<ul>
+<li>Cómo respeta cada método la división entrenamiento y validación</li>
+<li>El desempeño de cada método</li>
+</ul>
+<ol start="2" style="list-style-type: decimal">
+<li><p>Considera las importancia de variables de bosque-housing.Rmd. Muestra las importancias basadas en permutaciones escaladas y no escaladas. ¿Con qué valores en el objeto randomForest se escalan las importancias?</p></li>
+<li><p>Grafica importancias de Gini (MeanDecreaseGini) y de permutaciones. ¿Los resultados son similiares? Explica qué significa MeanDecreaseGini en el contexto de un problema de regresión.</p></li>
+<li><p>Considera nuestra primera corrida de gradient boosting en las notas para el ejemplo de los precios de las casas. Corre este ejemplo usando pérdida absoluta (<span class="math inline">\(|y-f(x)|\)</span>) en lugar de pérdida cuadrática (<span class="math inline">\((y-f(x))^2\)</span>)</p></li>
+</ol>
+<ul>
+<li>Grafica las curvas de entrenamiento y validación conforme se agregan árboles</li>
+<li>Explica teóricamente cuál es la diferencia del algoritmo cuando utilizas estas dos pérdidas.</li>
+<li>Da razones por las que pérdida absoluta puede ser una mejor selección para algunos problemas de regresión.</li>
+</ul>
 
 <div id="refs" class="references">
 <div>
@@ -914,8 +937,6 @@ dep_parcial &lt;-<span class="st"> </span><span class="kw">map_dfr</span>(cuanti
 </div>
 <div>
 <p>Srivastava, Nitish, Geoffrey Hinton, Alex Krizhevsky, Ilya Sutskever, and Ruslan Salakhutdinov. 2014. “Dropout: A Simple Way to Prevent Neural Networks from Overfitting.” <em>J. Mach. Learn. Res.</em> 15 (1). JMLR.org: 1929–58. <a href="http://dl.acm.org/citation.cfm?id=2627435.2670313" class="uri">http://dl.acm.org/citation.cfm?id=2627435.2670313</a>.</p>
-</div>
-</div>
 </div>
 </div>
 </div>
