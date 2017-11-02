@@ -1,0 +1,524 @@
+# Validación y filtración de datos
+
+En aprendizaje de máquina, el ajuste y afinación de parámetros es tan importante
+como la evaluación de desempeño o validación de los modelos resultantes. Ninguna funciona
+bien sin que la otra sea correctamente ejecutada. Hemos visto que ambas partes tienen 
+dificultades muchas veces sutiles 
+(tanto el ajuste y optimización como la evaluación de las predicciones) que pueden 
+hacer fracasar nuestro ejercicio de modelación. 
+
+En esta parte hablaremos de la evaluación
+correcta de modelos. En aprendizaje máqina, considerando que utilizamos 
+relativamente pocos supuestos
+teóricos, dependemos de esa evaluación para asegurarnos que estamos capturando patrones
+reales y útiles en los datos.
+
+Todo lo que veremos aplica tanto a separación de muestras de validación como
+a uso de algún tipo de validación cruzada (validación cruzada, estimación OOB en árboles,
+validación bootstrap, etc.)
+
+## Introducción a filtración de datos
+
+```{block2, type='comentario'}
+- La *filtración de datos* ocurre cuando nuestra proceso de validación está contaminado
+por información que en nuestra tarea real de predicción no tendremos disponible. 
+En consecuencia, nuestras estimaciones de desempeño del modelo (validación) son optimistas en relación al desempeño
+verdadero.
+- También podemos pensar en *filtraciones* tanto al conjunto de entrenamiento y validación, cuando
+ambos están contaminados con información que no estará disponible al momento de hacer las
+predicciones. Esto produce modelos que no es posible poner en producción.
+```
+
+El primer tipo de filtraciones es más difícil de detectar antes de la puesta en
+producción de los modelos. El segundo tipo puede descubrirse cuando nos damos
+cuenta de que no es posible implementar en producción nuestro modelo porque no
+hay información disponible que usamos para construirlo (o peor, cuando cometemos
+un error en la implementación y del modelo se desempeña mal posterioremente).
+
+Veamos el primer caso: filtración de conjuntos de validación al conjunto de
+entrenamiento.
+
+La filtración de datos puede ocurrir de muchas maneras, muchas veces inesperadas.
+Quizá uno de los ejemplos más típicos es el validación de modelos de series de tiempo.
+
+## Ejemplo: series de tiempo 
+Comenzamos con un ejemplo simulado. Haremos varias simulaciones para incorporar
+la variación producida en los modelos por la muestra de entrenamineto
+
+```{r, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(randomForest)
+
+simular_datos <- function(n = 500,...){
+  datos <- data_frame(t=1:n, x = rnorm(n,0,1)) 
+  y <- numeric(n)
+  #nivel <- numeric(n)
+  #nivel[1] <- 10
+  y[1] <- datos$x[1] #+ nivel[1]
+  for(i in 2:n){
+    #nivel[i] <-  nivel[i-1] + rnorm(1, 0, 0.1)
+    #y[i] <- 0.01*i + datos$x[i] + nivel[i] + rnorm(1,0,0.05)
+    y[i] <- 0.01*i + datos$x[i] + 0.9*y[i-1] + rnorm(1,0,0.05)
+  }
+  datos$y <- y
+  datos
+}
+separar <- function(df, prop){
+  df <- df %>% rowwise %>% mutate(tipo = ifelse(t > floor(nrow(df)*(prop[1]+prop[2])), 'prueba', 
+                             sample(c('entrena','valida'),1)))
+  
+  split(df, df$tipo)
+}
+
+ajustar_evaluar <- function(df_split){
+  mod_1 <- randomForest(y ~ x + t, data = df_split[['entrena']])
+  error_valida <- sd(predict(mod_1, df_split[['valida']])-df_split[['valida']]$y)
+  error_prueba <- sd(predict(mod_1, df_split[['prueba']])-df_split[['prueba']]$y)
+  c(error_valida  = error_valida, error_prueba = error_prueba)
+}
+```
+
+
+Por ejemplo:
+
+```{r}
+ggplot(simular_datos(), aes(x=t, y=y)) + geom_line()
+```
+
+Separamos ingenuamente entrenamiento y prueba y ajustamos un modelo de regresión:
+
+```{r}
+errores <- simular_datos(500) %>% separar(prop= c(0.4,0.4,0.2)) %>% ajustar_evaluar
+errores
+```
+```{r}
+reps_1 <- map(1:50, simular_datos, n = 500) %>% 
+        map(separar, prop= c(0.6,0.2,0.2)) %>% 
+        map(ajustar_evaluar) %>%
+        transpose %>% map(unlist) %>% as_data_frame
+gr_reps_1 <- reps_1 %>% mutate(rep = row_number()) %>%
+  gather(tipo, valor, -rep)
+ggplot(reps_1, aes(x=error_valida, y=error_prueba)) + geom_point() + geom_abline()+
+  xlim(c(0,10)) + ylim(c(0,10))
+```
+
+Y vemos que los errores de validación son consistentemente menores, y por
+margen alto (más de 4 veces más grande), que los errores de prueba. 
+Podemos ver que hay un desacuerdo
+entre el proceso de validación y de prueba:
+
+- Los valores de validación y de entrenamiento están intercalados, pues
+fueron seleccionados al azar.
+- El error de predicción, que ocurre en el futuro, no tienen traslape en tiempo
+con la muestra de entrenamiento.
+
+De esta manera, podríamos decir que cuando hacemos predicciones para el conjunto
+de validación, se nos **filtran** valores del futuro cercano (y también el pasado cercano),
+lo cual no tenemos disponible a la hora de probar el modelo.
+
+
+Podríamos cambiar nuestra manera de probar el modelo, escogendo la muestra
+de validación al final del periodo.
+
+
+```{r}
+separar_valid_futura <- function(df, prop){
+  df <- df %>% rowwise %>% mutate(tipo = ifelse(t < nrow(df)*prop[1], 'entrena',
+                                         ifelse(t<nrow(df)*(prop[1]+prop[2]),'valida','prueba')))
+  split(df, df$tipo)
+}
+```
+
+
+```{r}
+reps_2 <- map(1:50, simular_datos, n = 500) %>% 
+        map(separar_valid_futura, prop= c(0.6,0.2,0.2)) %>% 
+        map(ajustar_evaluar) %>%
+        transpose %>% map(unlist) %>% as_data_frame
+gr_reps_2 <- reps_2 %>% mutate(rep = row_number()) %>%
+  gather(tipo, valor, -rep)
+ggplot(gr_reps_2, aes(x=valor, group=tipo, fill=tipo)) + geom_histogram()
+ggplot(reps_2, aes(x=error_valida, y=error_prueba)) + geom_point() + geom_abline() +
+  xlim(c(0,10)) + ylim(c(0,10))
+```
+
+*Observaciónes*: 
+
+- Nótese que la fuente más grande de error no proviene de el hecho de
+que el sistema que queremos predecir es dinámico (el primer modelo, por ejemplo, usa
+valores más cercanos a los del futuro que queremos predecir). El problema es la filtración
+de datos de pasado y futuro desde el conjunto de validación al de prueba.
+- Este era parte del problema en hacer validación aleatoria simple en el concurso de las fotos. 
+También es la razón por la que modelos de series de tiempo mal evaluados pueden desempeñarse
+muy mal una vez que hacemos pronósticos del futuro.
+
+
+
+### Ejemplo: filtración en el preprocesamiento
+
+Cuando preprocesamos datos para incluir en el modelo, es importante asegurarnos de no filtrar
+información de los datos de validación hacia los datos de enrenamiento. Nos aseguramos
+de esto si nuestro procesamiento, por ejemplo, es caso por caso con parámetros preestablecidos
+(no calculamos agregados de todos los datos, por ejemplo), o para más seguridad, haciendo
+por separado el preprocesamiento de entrenamiento y validación y considerando qué valores
+pasamos de un conjunto de datos al otro.
+
+Un ejemplo clásico es el de selección de variables, como vimos en el examen. Repetiremos
+varias veces para confirmar más sólidamente la idea
+
+```{r}
+seleccion_ajuste <- function(...){
+  y <- rbinom(50, 1, 0.5)
+  x <- matrix(rnorm(50*500,0,1), 50, 500)
+  correlaciones <- cor(x, y)
+  vars_selec <- order(correlaciones, decreasing=TRUE)[1:50]
+  
+  est_val_cruzada <- sapply(1:10, function(i){
+    x_vc <- x[-((5*i -4):(5*i)),]
+    y_vc <- y[-((5*i -4):(5*i))]
+    mod <- glmnet(y=y_vc, x= x_vc[,vars_selec], alpha=0, family='binomial',
+                      lambda = 0.5)
+    preds_p <- predict(mod, newx = x[((5*i -4):(5*i)),vars_selec])
+    mean((preds_p > 0) == y[((5*i -4):(5*i))])
+  })
+  modelo <- cv.glmnet(y=y, x= x[,vars_selec], alpha=0, family='binomial',
+                    lambda = c(0.5,10), type.measure = 'class')
+  error_validacion <- modelo$cvm[which.min(modelo$cvm)]
+  y_p <- rbinom(1000, 1, 0.5)
+  x_p <- matrix(rnorm(1000*500,0,1), 1000, 500)
+  preds_p <- predict.cv.glmnet(modelo, newx = x_p[, vars_selec], s='lambda.min')
+  error_prueba <- mean((preds_p > 0) == y_p)
+  c('error_valida'=error_validacion, 'error_prueba'=error_prueba)
+}
+seleccion_ajuste()
+```
+
+El resultado es catastrófico otra vez:
+
+```{r}
+errores_selec <- map(1:30, seleccion_ajuste) %>% transpose %>% map(unlist) %>% as.data.frame
+ggplot(errores_selec, aes(x=error_prueba, y=error_valida)) + geom_point() + geom_abline(colour='red') +
+  xlim(c(0,1)) + ylim(c(0,1))
+```
+
+Esto lo podemos arreglar haciendo la selección de variables dentro de cada
+corte de validación cruzada, y así no permitimos que los datos de validación se filtren
+al conjunto de entrenamiento
+
+```{r}
+seleccion_ajuste_correcto <- function(...){
+  y <- rbinom(50, 1, 0.5)
+  x <- matrix(rnorm(50*500,0,1), 50, 500)
+  
+  est_val_cruzada <- sapply(1:10, function(i){
+    x_vc <- x[-((5*i -4):(5*i)),]
+    y_vc <- y[-((5*i -4):(5*i))]
+    correlaciones_vc <- cor(x_vc, y_vc)
+    vars_selec <- order(correlaciones_vc, decreasing=TRUE)[1:50]
+    mod <- glmnet(y=y_vc, x= x_vc[,vars_selec], alpha=0, family='binomial',
+                      lambda = 0.5)
+    preds_p <- predict(mod, newx = x[((5*i -4):(5*i)),vars_selec])
+    mean((preds_p > 0) == y[((5*i -4):(5*i))])
+  })
+  error_validacion <- mean(est_val_cruzada)
+  y_p <- rbinom(1000, 1, 0.5)
+  x_p <- matrix(rnorm(1000*500,0,1), 1000, 500)
+  correlaciones <- cor(x, y)
+  vars_selec <- order(correlaciones, decreasing=TRUE)[1:50]
+  modelo <- glmnet(y=y, x= x[,vars_selec], alpha=0, family='binomial',
+                    lambda = 0.5)
+  preds_p <- predict(modelo, newx = x_p[, vars_selec], s='lambda.min')
+  error_prueba <- mean((preds_p > 0) == y_p)
+  c('error_valida'=error_validacion, 'error_prueba'=error_prueba)
+}
+
+```
+
+```{r}
+errores_selec <- map(1:30, seleccion_ajuste_correcto) %>% transpose %>% map(unlist) %>% as.data.frame
+ggplot(errores_selec, aes(x=error_prueba, y=error_valida)) + geom_point() + geom_abline(colour='red') +
+  xlim(c(0,1)) + ylim(c(0,1))
+```
+
+## Ejemplo: imputación de datos
+
+Si usamos imputación de datos antes de correr de nuestros modelos, es importante
+no filtrar los conjuntos de validación y prueba al conjunto de entrenamiento
+
+Por ejemplo, consideremos un ejemplo simple donde tenemos datos faltantes al
+azar (el caso más simple), y adicionalmente, que tenemos covariables con las que podemos
+predecir el dato faltante
+
+```{r}
+generar_datos <- function(n = 100){
+  x_1 <- rnorm(n,0,1)
+  x_2 <- x_1 + rnorm(n,0,0.5)
+  x_2_f <- x_2
+  x_2_f[1:floor(n/2)] <- NA
+  y <- x_1 + x_2 + rnorm(n,0,1)
+  datos_obs <- data_frame(x_1=x_1, x_2 = x_2_f, y=y)
+  datos <- data_frame(x_1=x_1, x_2 = x_2, y=y)
+  list(datos_obs=datos_obs, datos_completos = datos)
+}
+entrena <- generar_datos(50)
+valida <- generar_datos(1000)
+prueba <- generar_datos(1000)
+```
+
+Una decisión en este caso es eliminar faltantes (pues son faltantes al azar - nótese
+que esto es rara vez cierto!)
+
+```{r}
+mod_quitar <- lm(y~x_1+x_2, data = entrena$datos_obs)
+```
+
+Validamos con los observados (suponemos que no hacemos predicciones para los que
+no tienen datos completos)
+```{r}
+pred_val <- predict(mod_quitar, newdata=valida$datos_obs)
+sd(pred_val-valida$datos_obs$y, na.rm=T)
+```
+Sin embargo, podríamos notar que x_1 y x_2 están relacionadas, y que quizá imputando
+x_2 podríamos obtener un mejor resultado
+
+```{r}
+mod_x_2 <- lm(x_2~x_1, data=entrena$datos_obs)
+x_2_imp <- predict(mod_x_2, newdata=entrena$datos_obs)
+
+```
+
+
+
+
+## Ejemplo: agregación de variables fuera de rango
+
+Otra razón por la que nuestro proceso de validación puede estar contaminado es porque
+usamos agregados que no están disponibles en la predicción, y están relacionados
+con la variable que queremos predecir
+
+Imaginemos que queremos predecir los clientes que se van a quedar y los que se van 
+a ir en función de las visitas que hacen a un sitio. 
+
+- Vamos a simular el tiempo que se queda cada cliente independiente de otras variables,
+y construimos una variable de entrada, el número de visitas, que depende del tiempo
+que un cliente permanece. Por simplicidad, suponemos que todos los clientes empiezan
+en el tiempo 0.
+
+- Vamos a suponer durante el tiempo 0.5 y 1.5, hubo una campaña de ventas para
+intentar recuperar a clientes abandonadores. Una fracción los clientes que abandonaron entre el tiempo 0.5 y 1.5 recibieron una llamada de servicio a cliente. Esto está registrado en la base de datos.
+
+
+```{r}
+simular_cliente <- function(id_cliente,...){
+    tiempo_cliente <- rexp(1, 0.25)
+    llamada <- ifelse(tiempo_cliente > 0.5 & tiempo_cliente < 1.5,
+                      rbinom(1,1,0.9), 0)
+    #cuántas visitas, dependen del tiempo (proceso de poisson)
+    num_visitas <- 1 + rpois(1, 5*tiempo_cliente)
+    #calculamos los tiempos cuando ocurrieron esos eventos
+    tiempos <- runif(num_visitas-1, 0, tiempo_cliente) 
+    df <- data_frame(id_cliente=id_cliente,
+                    visita = 1:num_visitas, 
+                     visitas = c(0,tiempos), 
+                     tiempo_cliente = tiempo_cliente,
+                      llamada = llamada) %>%
+          arrange(visitas)
+    df
+}
+set.seed(234)
+simular_cliente(1)
+```
+
+```{r}
+clientes_futura <- map(1:10000, simular_cliente) %>% bind_rows
+```
+
+
+
+Ahora supongamos que hoy estamos en el tiempo t=2, así que los datos que tenemos son:
+
+```{r}
+clientes_hoy <- filter(clientes_futura, visitas < 2)
+num_visitas_hoy <- clientes_hoy %>% group_by(id_cliente) %>% 
+                                    summarise(num_visitas=n())
+```
+
+Queremos calificar a nuestros clientes actuales con probabilidad de que se vaya,
+y queremos también evaluar esta predicción. Para hacer esto, usamos los datos con
+tiempo < 1. ¿Quienes no se han ido? Filtramos clientes activos al tiempo t=1
+y vemos quiénes abandonaron al mes t=2 (próximo mes):
+
+```{r}
+clientes_1 <- filter(clientes_hoy, tiempo_cliente > 1) %>%
+              mutate(abandona = tiempo_cliente < 2)
+```
+
+
+Para hacer nuestro modelo, ahora usamos el número de visitas de hoy:
+
+```{r}
+datos_mod <- clientes_1 %>% left_join(num_visitas_hoy)
+```
+
+Y ahora dividimos entre entrenamiento y prueba:
+```{r}
+set.seed(72427)
+datos_mod <- datos_mod %>% group_by(id_cliente) %>%
+   summarise(u = runif(1,0,1), abandona = first(abandona), num_visitas=first(num_visitas),
+             llamada = first(llamada))
+entrena <- filter(datos_mod, u < 0.5)
+valida <- filter(datos_mod, u >= 0.5)
+```
+
+Ajustamos nuestro modelo
+
+```{r}
+mod_1 <- glm(abandona ~ num_visitas + llamada, entrena, family = 'binomial')
+summary(mod_1)
+```
+
+Esto parece tener sentido: cuantas más visitas, menor proabilidad de abandonar.
+Probamos (con devianza)
+
+```{r}
+preds <- predict(mod_1, valida, type = 'response')
+-2*mean(valida$abandona*log(preds) + (1-valida$abandona)*log(1-preds))
+```
+
+
+
+Así que parece ser que nuestro modelo está haciendo una predicción razonablemente
+buena.
+
+Ahora calificamos a los clientes corrientes del día de hoy (t=2)
+```{r}
+prueba <- clientes_hoy %>% filter(tiempo_cliente>=2) %>% 
+                group_by(id_cliente) %>% summarise(num_visitas = length(visitas), 
+                                                   tiempo_cliente = first(tiempo_cliente), 
+                                                   llamada = first(llamada))
+prueba$abandona <- prueba$tiempo_cliente < 3
+preds <- predict(mod_1, prueba, type = 'response')
+-2*mean(prueba$abandona*log(preds) + (1-prueba$abandona)*log(1-preds))
+```
+Y nuestro modelo se degrada considerablemente - no supimos predecir
+los abandonadores en el próximo mes. ¿Qué está mal?
+
+En primer lugar, tenemos filtración de datos porque la variable llamada
+contiene información futura del abandono de los clientes - aquellos clientes
+que abandonaron entre t=1 y t=1.5 usaron una llamada, y esto contamina
+nuestra muestra de entrenamiento con una variable que indica directamente abandono
+entre t=1 y t=2. *No podemos usar esta variable*, porque cuando queramos hacer predicciones
+no vamos a saber que ventas llamó en el futuro a una persona porque había abandonado.
+
+
+Ajustamos nuestro modelo sin *llamada*:
+
+```{r}
+mod_1 <- glm(abandona ~ num_visitas , entrena, family = 'binomial')
+summary(mod_1)
+```
+
+
+y probamos
+
+
+```{r}
+preds <- predict(mod_1, valida, type = 'response')
+-2*mean(valida$abandona*log(preds) + (1-valida$abandona)*log(1-preds))
+```
+
+Y como esperábamos, el error es más subió. 
+
+Ahora calificamos a los clientes corrientes del día de hoy (t=2)
+```{r}
+prueba <- clientes_hoy %>% filter(tiempo_cliente>=2) %>% 
+                group_by(id_cliente) %>% summarise(num_visitas = length(visitas), 
+                                                   tiempo_cliente = first(tiempo_cliente), 
+                                                   llamada = first(llamada))
+prueba$abandona <- prueba$tiempo_cliente < 3
+preds <- predict(mod_1, prueba, type = 'response')
+-2*mean(prueba$abandona*log(preds) + (1-prueba$abandona)*log(1-preds))
+```
+
+y vemos que todavía tenemos problemas, aunque menos graves. ¿Qué está pasando?
+
+Tenemos filtración adicional de datos porque usamos *las visitas totales hasta hoy*. Cuando este número
+es grande, quiere decir que un cliente no abandona en el futuro. Así en el modelo usamos
+el hecho de que no había abandonado para predecir que no abandonó (!!)
+
+Podemos corregir nuestro modelo haciendo:
+
+```{r}
+num_visitas_1 <- clientes_hoy %>% filter(visitas < 1) %>%
+  group_by(id_cliente) %>% summarise(num_visitas=n())
+datos_mod_2 <- clientes_1 %>% left_join(num_visitas_1)
+```
+
+Y ahora dividimos entre entrenamiento y prueba:
+```{r}
+set.seed(72427)
+datos_mod_2 <- datos_mod_2 %>% group_by(id_cliente) %>%
+   summarise(u = runif(1,0,1), abandona = first(abandona), num_visitas=first(num_visitas),
+             llamada=first(llamada))
+entrena_2 <- filter(datos_mod_2, u < 0.5)
+valida_2 <- filter(datos_mod_2, u >= 0.5)
+```
+
+Ajustamos nuestro modelo
+
+```{r}
+mod_2 <- glm(abandona ~num_visitas, entrena_2, family = 'binomial')
+summary(mod_2)
+```
+
+Nótese que el coeficiente de *num_visitas* es mucho más chico esta vez.
+
+Esto tiene sentido: cuantas más visitas, menor proabilidad de abandonar.
+Probamos (tasa de correctos)
+
+Validamos:
+```{r}
+preds <- predict(mod_2, valida, type = 'response')
+-2*mean(valida$abandona*log(preds) + (1-valida$abandona)*log(1-preds))
+```
+
+Ahora calificamos a los clientes corrientes del día de hoy (t=2) y vemos qué pasa:
+```{r}
+prueba <- clientes_hoy %>% filter(tiempo_cliente>=2) %>% 
+                group_by(id_cliente) %>% summarise(num_visitas = length(visitas), 
+                                                   tiempo_cliente = first(tiempo_cliente),
+                                                   llamada = first(llamada))
+prueba$abandona <- prueba$tiempo_cliente < 3
+preds <- predict(mod_2, prueba, type = 'response')
+-2*mean(prueba$abandona*log(preds) + (1-prueba$abandona)*log(1-preds))
+```
+
+Y vemos que nuestra validación y desempeño real coinciden, pues
+nuestro ejercicio de validación ya coincide con la tarea de predicción que nos
+interesa. En este caso,
+incluso nuestro proceso de entrenamiento está contaminado con datos que
+no tendremos cuando hacemos predicciones. 
+
+
+## Ejemplo: muestreo complejo
+
+En muestras complejas, con el fin de reducir costos, muchas veces se muestrean
+casos dentro de lo que se llama comunmente *unidades primarias de muestreo*. Por ejemplo,
+las unidades primarias de muestreo pueden ser manzanas, y se muestrean varios hogares
+dentro de cada manzana. Es más simple técnicamente y mejor desde punto de vista del
+error tomar hogares al azar (no agrupados), pero los costos generalmente aumentan mucho si
+no usamos alguna agrupación - en este ejemplo, el encuestador tendría que transportarse
+continuamente para levantar encuestas que fueran seleccionadas sin agrupaciones.
+
+Como casos dentro de unidades primarias de muestreo son similares, y la mayor
+parte de las unidades primarias de muestreo no son muestreadas, tenemos un riesgo
+en nuestra validación: si hacemos conjuntos de validación al azar, podemos incluir casos
+de las mismas unidades primarias dentro de entremiento y validación. La homogeneidad
+de casos dentro de unidades primarias hace fácil predecir casos de validación, o 
+dicho de otra manera: se nos está filtrando información desde el conjunto de validación
+al de entrenamiento (a través del comportamiento común dentro de unidades primarias
+de muestreo).
+
+En la realidad, observaremos probablemente casos para los que no tenemos ejemplos de
+unidades primarias. Así que tenemos que construir nuestra validación para que refleje
+esta tarea.
