@@ -46,9 +46,13 @@ Comenzamos con un ejemplo simulado. Haremos varias simulaciones para incorporar
 la variación producida en los modelos por la muestra de entrenamineto
 
 ```{r, message=FALSE, warning=FALSE}
-library(tidyverse)
+library(methods)
 library(randomForest)
+library(tidyverse)
+library(glmnet)
+```
 
+```{r}
 simular_datos <- function(n = 500,...){
   datos <- data_frame(t=1:n, x = rnorm(n,0,1)) 
   y <- numeric(n)
@@ -98,7 +102,7 @@ reps_1 <- map(1:50, simular_datos, n = 500) %>%
         transpose %>% map(unlist) %>% as_data_frame
 gr_reps_1 <- reps_1 %>% mutate(rep = row_number()) %>%
   gather(tipo, valor, -rep)
-ggplot(reps_1, aes(x=error_valida, y=error_prueba)) + geom_point() + geom_abline()+
+ggplot(reps_1, aes(x=error_valida, y=error_prueba)) + geom_point() + geom_abline() +
   xlim(c(0,10)) + ylim(c(0,10))
 ```
 
@@ -178,16 +182,16 @@ seleccion_ajuste <- function(...){
     y_vc <- y[-((5*i -4):(5*i))]
     mod <- glmnet(y=y_vc, x= x_vc[,vars_selec], alpha=0, family='binomial',
                       lambda = 0.5)
-    preds_p <- predict(mod, newx = x[((5*i -4):(5*i)),vars_selec])
-    mean((preds_p > 0) == y[((5*i -4):(5*i))])
+    preds_p <- predict(mod, newx = x[((5*i -4):(5*i)),vars_selec])[,1]
+    mean((preds_p > 0) != y[((5*i -4):(5*i))])
   })
-  modelo <- cv.glmnet(y=y, x= x[,vars_selec], alpha=0, family='binomial',
-                    lambda = c(0.5,10), type.measure = 'class')
-  error_validacion <- modelo$cvm[which.min(modelo$cvm)]
+  error_validacion <- mean(est_val_cruzada)
+  modelo <- glmnet(y=y, x= x[,vars_selec], alpha=0, family='binomial',
+                    lambda = 0.5)
   y_p <- rbinom(1000, 1, 0.5)
   x_p <- matrix(rnorm(1000*500,0,1), 1000, 500)
-  preds_p <- predict.cv.glmnet(modelo, newx = x_p[, vars_selec], s='lambda.min')
-  error_prueba <- mean((preds_p > 0) == y_p)
+  preds_p <- predict(modelo, newx = x_p[, vars_selec])[,1]
+  error_prueba <- mean((preds_p > 0) != y_p)
   c('error_valida'=error_validacion, 'error_prueba'=error_prueba)
 }
 seleccion_ajuste()
@@ -217,8 +221,8 @@ seleccion_ajuste_correcto <- function(...){
     vars_selec <- order(correlaciones_vc, decreasing=TRUE)[1:50]
     mod <- glmnet(y=y_vc, x= x_vc[,vars_selec], alpha=0, family='binomial',
                       lambda = 0.5)
-    preds_p <- predict(mod, newx = x[((5*i -4):(5*i)),vars_selec])
-    mean((preds_p > 0) == y[((5*i -4):(5*i))])
+    preds_p <- predict(mod, newx = x[((5*i -4):(5*i)),vars_selec])[,1]
+    mean((preds_p > 0) != y[((5*i -4):(5*i))])
   })
   error_validacion <- mean(est_val_cruzada)
   y_p <- rbinom(1000, 1, 0.5)
@@ -227,8 +231,8 @@ seleccion_ajuste_correcto <- function(...){
   vars_selec <- order(correlaciones, decreasing=TRUE)[1:50]
   modelo <- glmnet(y=y, x= x[,vars_selec], alpha=0, family='binomial',
                     lambda = 0.5)
-  preds_p <- predict(modelo, newx = x_p[, vars_selec], s='lambda.min')
-  error_prueba <- mean((preds_p > 0) == y_p)
+  preds_p <- predict(modelo, newx = x_p[, vars_selec])[,1]
+  error_prueba <- mean((preds_p > 0) != y_p)
   c('error_valida'=error_validacion, 'error_prueba'=error_prueba)
 }
 
