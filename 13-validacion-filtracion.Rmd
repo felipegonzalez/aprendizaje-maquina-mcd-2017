@@ -39,7 +39,7 @@ entrenamiento.
 La filtración de datos puede ocurrir de muchas maneras, muchas veces inesperadas.
 Quizá uno de los ejemplos más típicos es el validación de modelos de series de tiempo.
 
-### Series de tiempo 
+## Series de tiempo 
 Comenzamos con un ejemplo simulado. Haremos varias simulaciones para incorporar
 la variación producida en los modelos por la muestra de entrenamineto
 
@@ -153,7 +153,7 @@ de datos del pasado cercano y futuro desde el conjunto de validación al de prue
 a obtener estimaciones más realistas del desempeño.
 
 
-### Ejemplo: filtración en el preprocesamiento
+## Filtración en el preprocesamiento
 
 Cuando preprocesamos datos para incluir en el modelo, es importante asegurarnos de no filtrar
 información de los datos de validación hacia los datos de enrenamiento. Nos aseguramos
@@ -242,12 +242,14 @@ ggplot(errores_selec, aes(x=error_prueba, y=error_valida)) + geom_point() + geom
 
 
 
-### Uso de variables fuera de rango temporal
+## Uso de variables fuera de rango temporal
 
 Otra razón por la que nuestro proceso de validación puede estar contaminado es porque
 usamos agregados que no están disponibles al momento de
 la predicción, y están relacionados
-con la variable que queremos predecir
+con la variable que queremos predecir. La contaminación puede ser del conjunto
+de validación al de entrenamiento, o puede incluir tanto entrenamiento como validación.
+
 
 Imaginemos que queremos predecir los clientes que se van a quedar y los que se van 
 a ir en función de las visitas que hacen a un sitio. 
@@ -532,13 +534,13 @@ Algunas veces, no todos los datos que quisiéramos tener están disponibles
 para construir nuestros modelos: algunos clientes o casos, por ejemplo, no están
 en nuestros datos (son datos censurados). Sin embargo, al poner los modelos en producción,
 hacemos predicciones para *todos* los datos, y nuestras predicciones malas para
-aquellos datos antes censurados pueden dañar severamente el desempeño de nuestros
+aquellos casos antes censurados pueden dañar severamente el desempeño de nuestros
 modelos.
 
 Este es un ejemplo de datos faltantes, pero más serio: todos las variables de 
 algunos casos están faltantes, y algunas veces ni siquiera sabemos esto.
 
-## Ejemplo: tiendas cerradas
+### Ejemplo: tiendas cerradas
 
 Supongamos que queremos predecir las ventas de tiendas según las características
 del un local potencial después de un año de
@@ -634,7 +636,7 @@ borrados: por ejemplo, quizá la variable respuesta se puede conseguir, y existe
 de las variables explicativas - en este caso podríamos intentar imputación de datos.
 
 
-### Muestras de validación chicas
+## Muestras de validación chicas
 
 Una muestra de validación chica es casi tan malo como una muestra de entrenamiento
 chica. Una muestra de entrenamiento grande nos permite intentar modelos más
