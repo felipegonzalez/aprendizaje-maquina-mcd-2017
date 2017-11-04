@@ -25,7 +25,7 @@
 <meta name="author" content="Felipe González">
 
 
-<meta name="date" content="2017-11-01">
+<meta name="date" content="2017-11-04">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -316,6 +316,22 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="12.9.2" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#discusion-2"><i class="fa fa-check"></i><b>12.9.2</b> Discusión</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#tarea-5"><i class="fa fa-check"></i>Tarea</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="validacion-de-modelos-problemas-comunes.html"><a href="validacion-de-modelos-problemas-comunes.html"><i class="fa fa-check"></i><b>13</b> Validación de modelos: problemas comunes</a><ul>
+<li class="chapter" data-level="13.1" data-path="validacion-de-modelos-problemas-comunes.html"><a href="validacion-de-modelos-problemas-comunes.html#filtracion-de-datos"><i class="fa fa-check"></i><b>13.1</b> Filtración de datos</a><ul>
+<li class="chapter" data-level="13.1.1" data-path="validacion-de-modelos-problemas-comunes.html"><a href="validacion-de-modelos-problemas-comunes.html#series-de-tiempo"><i class="fa fa-check"></i><b>13.1.1</b> Series de tiempo</a></li>
+<li class="chapter" data-level="13.1.2" data-path="validacion-de-modelos-problemas-comunes.html"><a href="validacion-de-modelos-problemas-comunes.html#ejemplo-filtracion-en-el-preprocesamiento"><i class="fa fa-check"></i><b>13.1.2</b> Ejemplo: filtración en el preprocesamiento</a></li>
+<li class="chapter" data-level="13.1.3" data-path="validacion-de-modelos-problemas-comunes.html"><a href="validacion-de-modelos-problemas-comunes.html#uso-de-variables-fuera-de-rango-temporal"><i class="fa fa-check"></i><b>13.1.3</b> Uso de variables fuera de rango temporal</a></li>
+</ul></li>
+<li class="chapter" data-level="13.2" data-path="validacion-de-modelos-problemas-comunes.html"><a href="validacion-de-modelos-problemas-comunes.html#datos-en-conglomerados-y-muestreo-complejo"><i class="fa fa-check"></i><b>13.2</b> Datos en conglomerados y muestreo complejo</a><ul>
+<li class="chapter" data-level="13.2.1" data-path="validacion-de-modelos-problemas-comunes.html"><a href="validacion-de-modelos-problemas-comunes.html#censura-y-evaluacion-incompleta"><i class="fa fa-check"></i><b>13.2.1</b> Censura y evaluación incompleta</a></li>
+</ul></li>
+<li class="chapter" data-level="13.3" data-path="validacion-de-modelos-problemas-comunes.html"><a href="validacion-de-modelos-problemas-comunes.html#ejemplo-tiendas-cerradas"><i class="fa fa-check"></i><b>13.3</b> Ejemplo: tiendas cerradas</a><ul>
+<li class="chapter" data-level="13.3.1" data-path="validacion-de-modelos-problemas-comunes.html"><a href="validacion-de-modelos-problemas-comunes.html#muestras-de-validacion-chicas"><i class="fa fa-check"></i><b>13.3.1</b> Muestras de validación chicas</a></li>
+<li class="chapter" data-level="" data-path="validacion-de-modelos-problemas-comunes.html"><a href="validacion-de-modelos-problemas-comunes.html#ejercicio-8"><i class="fa fa-check"></i>Ejercicio</a></li>
+</ul></li>
+<li class="chapter" data-level="13.4" data-path="validacion-de-modelos-problemas-comunes.html"><a href="validacion-de-modelos-problemas-comunes.html#otros-ejemplos"><i class="fa fa-check"></i><b>13.4</b> Otros ejemplos</a></li>
+<li class="chapter" data-level="13.5" data-path="validacion-de-modelos-problemas-comunes.html"><a href="validacion-de-modelos-problemas-comunes.html#resumen-1"><i class="fa fa-check"></i><b>13.5</b> Resumen</a></li>
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Publicado con bookdown</a></li>
@@ -699,12 +715,12 @@ history &lt;-<span class="st"> </span>modelo <span class="op">%&gt;%</span><span
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">get_weights</span>(modelo)</code></pre></div>
 <pre><code>## [[1]]
 ##            [,1]
-## [1,] -0.6213747
-## [2,]  0.2488529
-## [3,]  0.2918065
+## [1,] -0.6323984
+## [2,]  0.1848781
+## [3,]  0.3492843
 ## 
 ## [[2]]
-## [1] 1.64274</code></pre>
+## [1] 1.636405</code></pre>
 <p>Y verificamos que concuerda con la salida de <em>glm</em>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mod_logistico &lt;-<span class="st"> </span><span class="kw">glm</span>(g <span class="op">~</span><span class="st"> </span>x_<span class="dv">1</span> <span class="op">+</span><span class="st"> </span>x_<span class="dv">2</span><span class="op">+</span><span class="st"> </span>x_<span class="dv">3</span>, <span class="dt">data =</span> dat_ent, <span class="dt">family =</span> <span class="st">&#39;binomial&#39;</span>) 
 <span class="kw">coef</span>(mod_logistico)</code></pre></div>
@@ -769,13 +785,13 @@ history &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><s
 score &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">evaluate</span>(x_test, y_test)
 score</code></pre></div>
 <pre><code>## $loss
-## [1] 0.2867267
+## [1] 0.2829958
 ## 
 ## $acc
-## [1] 0.9307424
+## [1] 0.9337319
 ## 
 ## $categorical_crossentropy
-## [1] 0.2856806</code></pre>
+## [1] 0.2819491</code></pre>
 <p>Podemos también intentar con el ejemplo de spam:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(readr)
 <span class="kw">library</span>(tidyr)
@@ -811,13 +827,13 @@ tab_confusion &lt;-<span class="st"> </span><span class="kw">table</span>(modelo
 tab_confusion</code></pre></div>
 <pre><code>##    y_valid
 ##       0   1
-##   0 904  81
-##   1  23 526</code></pre>
+##   0 876  47
+##   1  51 560</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">prop.table</span>(tab_confusion, <span class="dv">2</span>)</code></pre></div>
 <pre><code>##    y_valid
 ##              0          1
-##   0 0.97518878 0.13344316
-##   1 0.02481122 0.86655684</code></pre>
+##   0 0.94498382 0.07742998
+##   1 0.05501618 0.92257002</code></pre>
 </div>
 </div>
 <div id="activaciones-relu" class="section level2">
@@ -869,13 +885,13 @@ history &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><s
 score &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">evaluate</span>(x_test, y_test)
 score</code></pre></div>
 <pre><code>## $loss
-## [1] 0.2997483
+## [1] 0.2844901
 ## 
 ## $acc
-## [1] 0.9387145
+## [1] 0.9431988
 ## 
 ## $categorical_crossentropy
-## [1] 0.2214538</code></pre>
+## [1] 0.2088461</code></pre>
 </div>
 </div>
 <div id="dropout-para-regularizacion" class="section level2">
@@ -966,36 +982,36 @@ hist_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">as
 <p><img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-46-1.png" width="480" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">get_weights</span>(modelo_dropout)[[<span class="dv">3</span>]]</code></pre></div>
 <pre><code>##             [,1]
-##  [1,]  0.2712362
-##  [2,] -1.3698931
-##  [3,] -1.0031011
-##  [4,] -1.2596053
-##  [5,]  0.9852764
-##  [6,] -1.6329875
-##  [7,]  0.8498522
-##  [8,] -1.2535119
-##  [9,] -1.3841549
-## [10,]  0.1155113
-## [11,]  0.6179469
-## [12,]  1.3355652
-## [13,]  1.1419528
-## [14,]  1.1641513
-## [15,] -1.0472403
-## [16,]  0.1420788
-## [17,] -1.6521723
-## [18,] -1.7860056
-## [19,] -1.3764814
-## [20,] -1.2830685
-## [21,]  1.2572852
-## [22,]  0.9020000
-## [23,]  1.2785527
-## [24,]  1.3117836
-## [25,]  0.3596553
-## [26,] -1.2740507
-## [27,] -1.6573206
-## [28,]  0.6637324
-## [29,] -1.4146074
-## [30,] -1.9281939</code></pre>
+##  [1,]  0.9616466
+##  [2,] -1.3678225
+##  [3,] -1.5971205
+##  [4,]  1.1324210
+##  [5,]  0.7329509
+##  [6,]  1.0701442
+##  [7,] -1.3261269
+##  [8,] -1.2950406
+##  [9,] -1.2324351
+## [10,] -1.8018072
+## [11,] -1.6727704
+## [12,] -1.5373673
+## [13,] -1.5226250
+## [14,] -1.4255451
+## [15,]  0.7839946
+## [16,]  1.1779629
+## [17,]  0.2874923
+## [18,]  1.4721407
+## [19,] -1.0177047
+## [20,] -1.2898756
+## [21,] -0.2029091
+## [22,]  1.0151564
+## [23,]  1.2401515
+## [24,] -1.3043082
+## [25,] -1.3549558
+## [26,]  1.2484833
+## [27,] -1.2922999
+## [28,] -1.7111431
+## [29,] -1.0733912
+## [30,]  0.6526487</code></pre>
 <p>¿Cuáles de estas unidades tienen peso positivo y negativo en la capa final?</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pesos_capa_f &lt;-<span class="st"> </span><span class="kw">get_weights</span>(modelo_dropout)[[<span class="dv">3</span>]]
 <span class="kw">graf_pesos</span>(pesos[, pesos_capa_f <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.5</span>], <span class="dt">mostrar_facets =</span> <span class="ot">TRUE</span>)</code></pre></div>
@@ -1038,13 +1054,13 @@ history &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><s
 score &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">evaluate</span>(x_test, y_test)
 score</code></pre></div>
 <pre><code>## $loss
-## [1] 0.219861
+## [1] 0.2182269
 ## 
 ## $acc
-## [1] 0.9491779
+## [1] 0.9486796
 ## 
 ## $categorical_crossentropy
-## [1] 0.2158624</code></pre>
+## [1] 0.2141302</code></pre>
 
 </div>
 </div>

@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<html >
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Aprendizaje de máquina</title>
+  <meta name="description" content="Notas y material para el curso de aprendizaje de máquina 2017 (ITAM)">
+  <meta name="generator" content="bookdown 0.5.4 and GitBook 2.6.7">
+
+  <meta property="og:title" content="Aprendizaje de máquina" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="Notas y material para el curso de aprendizaje de máquina 2017 (ITAM)" />
+  <meta name="github-repo" content="felipegonzalez/aprendizaje-maquina-2017" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Aprendizaje de máquina" />
+  
+  <meta name="twitter:description" content="Notas y material para el curso de aprendizaje de máquina 2017 (ITAM)" />
+  
+
+<meta name="author" content="Felipe González">
+
+
+<meta name="date" content="2017-11-04">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  
+  
+<link rel="prev" href="metodos-basados-en-arboles-boosting.html">
+
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+<link rel="stylesheet" href="toc.css" type="text/css" />
+<link rel="stylesheet" href="font-awesome.min.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Aprendizaje Máquina</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Temario y referencias</a><ul>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#evaluacion"><i class="fa fa-check"></i>Evaluación</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#software-r-y-rstudio"><i class="fa fa-check"></i>Software: R y Rstudio</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#referencias-principales"><i class="fa fa-check"></i>Referencias principales</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#otras-referencias"><i class="fa fa-check"></i>Otras referencias</a></li>
+</ul></li>
+<li class="chapter" data-level="1" data-path="introduccion.html"><a href="introduccion.html"><i class="fa fa-check"></i><b>1</b> Introducción</a><ul>
+<li class="chapter" data-level="1.1" data-path="introduccion.html"><a href="introduccion.html#que-es-aprendizaje-de-maquina-machine-learning"><i class="fa fa-check"></i><b>1.1</b> ¿Qué es aprendizaje de máquina (machine learning)?</a></li>
+<li class="chapter" data-level="1.2" data-path="introduccion.html"><a href="introduccion.html#aprendizaje-supervisado-1"><i class="fa fa-check"></i><b>1.2</b> Aprendizaje Supervisado</a><ul>
+<li class="chapter" data-level="1.2.1" data-path="introduccion.html"><a href="introduccion.html#proceso-generador-de-datos-modelo-teorico"><i class="fa fa-check"></i><b>1.2.1</b> Proceso generador de datos (modelo teórico)</a></li>
+</ul></li>
+<li class="chapter" data-level="1.3" data-path="introduccion.html"><a href="introduccion.html#predicciones"><i class="fa fa-check"></i><b>1.3</b> Predicciones</a></li>
+<li class="chapter" data-level="1.4" data-path="introduccion.html"><a href="introduccion.html#cuantificacion-de-error-o-precision"><i class="fa fa-check"></i><b>1.4</b> Cuantificación de error o precisión</a></li>
+<li class="chapter" data-level="1.5" data-path="introduccion.html"><a href="introduccion.html#aprendizaje"><i class="fa fa-check"></i><b>1.5</b> Tarea de aprendizaje supervisado</a><ul>
+<li class="chapter" data-level="1.5.1" data-path="introduccion.html"><a href="introduccion.html#observaciones"><i class="fa fa-check"></i><b>1.5.1</b> Observaciones</a></li>
+</ul></li>
+<li class="chapter" data-level="1.6" data-path="introduccion.html"><a href="introduccion.html#por-que-tenemos-errores"><i class="fa fa-check"></i><b>1.6</b> ¿Por qué tenemos errores?</a></li>
+<li class="chapter" data-level="1.7" data-path="introduccion.html"><a href="introduccion.html#como-estimar-f"><i class="fa fa-check"></i><b>1.7</b> ¿Cómo estimar f?</a></li>
+<li class="chapter" data-level="1.8" data-path="introduccion.html"><a href="introduccion.html#resumen"><i class="fa fa-check"></i><b>1.8</b> Resumen</a></li>
+<li class="chapter" data-level="1.9" data-path="introduccion.html"><a href="introduccion.html#tarea"><i class="fa fa-check"></i><b>1.9</b> Tarea</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="regresion.html"><a href="regresion.html"><i class="fa fa-check"></i><b>2</b> Regresión lineal</a><ul>
+<li class="chapter" data-level="2.1" data-path="introduccion.html"><a href="introduccion.html#introduccion"><i class="fa fa-check"></i><b>2.1</b> Introducción</a></li>
+<li class="chapter" data-level="2.2" data-path="regresion.html"><a href="regresion.html#aprendizaje-de-coeficientes-ajuste"><i class="fa fa-check"></i><b>2.2</b> Aprendizaje de coeficientes (ajuste)</a></li>
+<li class="chapter" data-level="2.3" data-path="regresion.html"><a href="regresion.html#descenso-en-gradiente"><i class="fa fa-check"></i><b>2.3</b> Descenso en gradiente</a><ul>
+<li class="chapter" data-level="2.3.1" data-path="regresion.html"><a href="regresion.html#seleccion-de-tamano-de-paso-eta"><i class="fa fa-check"></i><b>2.3.1</b> Selección de tamaño de paso <span class="math inline">\(\eta\)</span></a></li>
+<li class="chapter" data-level="2.3.2" data-path="regresion.html"><a href="regresion.html#funciones-de-varias-variables"><i class="fa fa-check"></i><b>2.3.2</b> Funciones de varias variables</a></li>
+</ul></li>
+<li class="chapter" data-level="2.4" data-path="regresion.html"><a href="regresion.html#descenso-en-gradiente-para-regresion-lineal"><i class="fa fa-check"></i><b>2.4</b> Descenso en gradiente para regresión lineal</a></li>
+<li class="chapter" data-level="2.5" data-path="regresion.html"><a href="regresion.html#normalizacion-de-entradas"><i class="fa fa-check"></i><b>2.5</b> Normalización de entradas</a></li>
+<li class="chapter" data-level="2.6" data-path="regresion.html"><a href="regresion.html#interpretacion-de-modelos-lineales"><i class="fa fa-check"></i><b>2.6</b> Interpretación de modelos lineales</a></li>
+<li class="chapter" data-level="2.7" data-path="regresion.html"><a href="regresion.html#solucion-analitica"><i class="fa fa-check"></i><b>2.7</b> Solución analítica</a></li>
+<li class="chapter" data-level="2.8" data-path="regresion.html"><a href="regresion.html#por-que-el-modelo-lineal-funciona-bien-muchas-veces"><i class="fa fa-check"></i><b>2.8</b> ¿Por qué el modelo lineal funciona bien (muchas veces)?</a><ul>
+<li class="chapter" data-level="2.8.1" data-path="regresion.html"><a href="regresion.html#k-vecinos-mas-cercanos"><i class="fa fa-check"></i><b>2.8.1</b> k vecinos más cercanos</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="regresion.html"><a href="regresion.html#tarea-1"><i class="fa fa-check"></i>Tarea</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="logistica.html"><a href="logistica.html"><i class="fa fa-check"></i><b>3</b> Regresión logística</a><ul>
+<li class="chapter" data-level="3.1" data-path="logistica.html"><a href="logistica.html#el-problema-de-clasificacion"><i class="fa fa-check"></i><b>3.1</b> El problema de clasificación</a><ul>
+<li class="chapter" data-level="" data-path="logistica.html"><a href="logistica.html#que-estimar-en-problemas-de-clasificacion"><i class="fa fa-check"></i>¿Qué estimar en problemas de clasificación?</a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="logistica.html"><a href="logistica.html#estimacion-de-probabilidades-de-clase"><i class="fa fa-check"></i><b>3.2</b> Estimación de probabilidades de clase</a><ul>
+<li class="chapter" data-level="" data-path="logistica.html"><a href="logistica.html#ejemplo-10"><i class="fa fa-check"></i>Ejemplo</a></li>
+<li class="chapter" data-level="3.2.1" data-path="logistica.html"><a href="logistica.html#k-vecinos-mas-cercanos-1"><i class="fa fa-check"></i><b>3.2.1</b> k-vecinos más cercanos</a></li>
+<li class="chapter" data-level="" data-path="logistica.html"><a href="logistica.html#ejemplo-12"><i class="fa fa-check"></i>Ejemplo</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="logistica.html"><a href="logistica.html#error-para-modelos-de-clasificacion"><i class="fa fa-check"></i><b>3.3</b> Error para modelos de clasificación</a><ul>
+<li class="chapter" data-level="3.3.1" data-path="logistica.html"><a href="logistica.html#ejercicio-1"><i class="fa fa-check"></i><b>3.3.1</b> Ejercicio</a></li>
+<li class="chapter" data-level="3.3.2" data-path="logistica.html"><a href="logistica.html#error-de-clasificacion-y-funcion-de-perdida-0-1"><i class="fa fa-check"></i><b>3.3.2</b> Error de clasificación y función de pérdida 0-1</a></li>
+<li class="chapter" data-level="3.3.3" data-path="logistica.html"><a href="logistica.html#discusion-relacion-entre-devianza-y-error-de-clasificacion"><i class="fa fa-check"></i><b>3.3.3</b> Discusión: relación entre devianza y error de clasificación</a></li>
+</ul></li>
+<li class="chapter" data-level="3.4" data-path="logistica.html"><a href="logistica.html#regresion-logistica"><i class="fa fa-check"></i><b>3.4</b> Regresión logística</a><ul>
+<li class="chapter" data-level="3.4.1" data-path="logistica.html"><a href="logistica.html#regresion-logistica-simple"><i class="fa fa-check"></i><b>3.4.1</b> Regresión logística simple</a></li>
+<li class="chapter" data-level="3.4.2" data-path="logistica.html"><a href="logistica.html#funcion-logistica"><i class="fa fa-check"></i><b>3.4.2</b> Función logística</a></li>
+<li class="chapter" data-level="3.4.3" data-path="logistica.html"><a href="logistica.html#regresion-logistica-1"><i class="fa fa-check"></i><b>3.4.3</b> Regresión logística</a></li>
+</ul></li>
+<li class="chapter" data-level="3.5" data-path="logistica.html"><a href="logistica.html#aprendizaje-de-coeficientes-para-regresion-logistica-binomial."><i class="fa fa-check"></i><b>3.5</b> Aprendizaje de coeficientes para regresión logística (binomial).</a></li>
+<li class="chapter" data-level="3.6" data-path="logistica.html"><a href="logistica.html#observaciones-adicionales"><i class="fa fa-check"></i><b>3.6</b> Observaciones adicionales</a></li>
+<li class="chapter" data-level="3.7" data-path="logistica.html"><a href="logistica.html#ejercicio-datos-de-diabetes"><i class="fa fa-check"></i><b>3.7</b> Ejercicio: datos de diabetes</a><ul>
+<li class="chapter" data-level="" data-path="logistica.html"><a href="logistica.html#tarea-2"><i class="fa fa-check"></i>Tarea</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="mas-sobre-problemas-de-clasificacion.html"><a href="mas-sobre-problemas-de-clasificacion.html"><i class="fa fa-check"></i><b>4</b> Más sobre problemas de clasificación</a><ul>
+<li class="chapter" data-level="4.1" data-path="mas-sobre-problemas-de-clasificacion.html"><a href="mas-sobre-problemas-de-clasificacion.html#analisis-de-error-para-clasificadores-binarios"><i class="fa fa-check"></i><b>4.1</b> Análisis de error para clasificadores binarios</a><ul>
+<li class="chapter" data-level="4.1.1" data-path="mas-sobre-problemas-de-clasificacion.html"><a href="mas-sobre-problemas-de-clasificacion.html#punto-de-corte-para-un-clasificador-binario"><i class="fa fa-check"></i><b>4.1.1</b> Punto de corte para un clasificador binario</a></li>
+<li class="chapter" data-level="4.1.2" data-path="mas-sobre-problemas-de-clasificacion.html"><a href="mas-sobre-problemas-de-clasificacion.html#espacio-roc-de-clasificadores"><i class="fa fa-check"></i><b>4.1.2</b> Espacio ROC de clasificadores</a></li>
+</ul></li>
+<li class="chapter" data-level="4.2" data-path="mas-sobre-problemas-de-clasificacion.html"><a href="mas-sobre-problemas-de-clasificacion.html#perfil-de-un-clasificador-binario-y-curvas-roc"><i class="fa fa-check"></i><b>4.2</b> Perfil de un clasificador binario y curvas ROC</a></li>
+<li class="chapter" data-level="4.3" data-path="mas-sobre-problemas-de-clasificacion.html"><a href="mas-sobre-problemas-de-clasificacion.html#regresion-logistica-para-problemas-de-mas-de-2-clases"><i class="fa fa-check"></i><b>4.3</b> Regresión logística para problemas de más de 2 clases</a><ul>
+<li class="chapter" data-level="4.3.1" data-path="mas-sobre-problemas-de-clasificacion.html"><a href="mas-sobre-problemas-de-clasificacion.html#regresion-logistica-multinomial"><i class="fa fa-check"></i><b>4.3.1</b> Regresión logística multinomial</a></li>
+<li class="chapter" data-level="4.3.2" data-path="mas-sobre-problemas-de-clasificacion.html"><a href="mas-sobre-problemas-de-clasificacion.html#interpretacion-de-coeficientes"><i class="fa fa-check"></i><b>4.3.2</b> Interpretación de coeficientes</a></li>
+<li class="chapter" data-level="4.3.3" data-path="mas-sobre-problemas-de-clasificacion.html"><a href="mas-sobre-problemas-de-clasificacion.html#ejemplo-clasificacion-de-digitos-con-regresion-multinomial"><i class="fa fa-check"></i><b>4.3.3</b> Ejemplo: Clasificación de dígitos con regresión multinomial</a></li>
+<li class="chapter" data-level="" data-path="mas-sobre-problemas-de-clasificacion.html"><a href="mas-sobre-problemas-de-clasificacion.html#discusion"><i class="fa fa-check"></i>Discusión</a></li>
+</ul></li>
+<li class="chapter" data-level="4.4" data-path="mas-sobre-problemas-de-clasificacion.html"><a href="mas-sobre-problemas-de-clasificacion.html#descenso-en-gradiente-para-regresion-multinomial-logistica"><i class="fa fa-check"></i><b>4.4</b> Descenso en gradiente para regresión multinomial logística</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="regularizacion.html"><a href="regularizacion.html"><i class="fa fa-check"></i><b>5</b> Regularización</a><ul>
+<li class="chapter" data-level="5.1" data-path="regularizacion.html"><a href="regularizacion.html#sesgo-y-varianza-de-predictores"><i class="fa fa-check"></i><b>5.1</b> Sesgo y varianza de predictores</a><ul>
+<li class="chapter" data-level="5.1.1" data-path="regularizacion.html"><a href="regularizacion.html#sesgo-y-varianza-en-modelos-lineales"><i class="fa fa-check"></i><b>5.1.1</b> Sesgo y varianza en modelos lineales</a></li>
+<li class="chapter" data-level="5.1.2" data-path="regularizacion.html"><a href="regularizacion.html#reduciendo-varianza-de-los-coeficientes"><i class="fa fa-check"></i><b>5.1.2</b> Reduciendo varianza de los coeficientes</a></li>
+</ul></li>
+<li class="chapter" data-level="5.2" data-path="regularizacion.html"><a href="regularizacion.html#regularizacion-ridge"><i class="fa fa-check"></i><b>5.2</b> Regularización ridge</a><ul>
+<li class="chapter" data-level="5.2.1" data-path="regularizacion.html"><a href="regularizacion.html#seleccion-de-coeficiente-de-regularizacion"><i class="fa fa-check"></i><b>5.2.1</b> Selección de coeficiente de regularización</a></li>
+</ul></li>
+<li class="chapter" data-level="5.3" data-path="regularizacion.html"><a href="regularizacion.html#entrenamiento-validacion-y-prueba"><i class="fa fa-check"></i><b>5.3</b> Entrenamiento, Validación y Prueba</a><ul>
+<li class="chapter" data-level="5.3.1" data-path="regularizacion.html"><a href="regularizacion.html#validacion-cruzada"><i class="fa fa-check"></i><b>5.3.1</b> Validación cruzada</a></li>
+<li class="chapter" data-level="" data-path="regularizacion.html"><a href="regularizacion.html#ejercicio-5"><i class="fa fa-check"></i>Ejercicio</a></li>
+</ul></li>
+<li class="chapter" data-level="5.4" data-path="regularizacion.html"><a href="regularizacion.html#regularizacion-lasso"><i class="fa fa-check"></i><b>5.4</b> Regularización lasso</a></li>
+<li class="chapter" data-level="5.5" data-path="regularizacion.html"><a href="regularizacion.html#tarea-3"><i class="fa fa-check"></i><b>5.5</b> Tarea</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="extensiones-para-regresion-lineal-y-logistica.html"><a href="extensiones-para-regresion-lineal-y-logistica.html"><i class="fa fa-check"></i><b>6</b> Extensiones para regresión lineal y logística</a><ul>
+<li class="chapter" data-level="6.1" data-path="extensiones-para-regresion-lineal-y-logistica.html"><a href="extensiones-para-regresion-lineal-y-logistica.html#como-hacer-mas-flexible-el-modelo-lineal"><i class="fa fa-check"></i><b>6.1</b> Cómo hacer más flexible el modelo lineal</a></li>
+<li class="chapter" data-level="6.2" data-path="extensiones-para-regresion-lineal-y-logistica.html"><a href="extensiones-para-regresion-lineal-y-logistica.html#transformacion-de-entradas"><i class="fa fa-check"></i><b>6.2</b> Transformación de entradas</a></li>
+<li class="chapter" data-level="6.3" data-path="extensiones-para-regresion-lineal-y-logistica.html"><a href="extensiones-para-regresion-lineal-y-logistica.html#variables-cualitativas"><i class="fa fa-check"></i><b>6.3</b> Variables cualitativas</a></li>
+<li class="chapter" data-level="6.4" data-path="extensiones-para-regresion-lineal-y-logistica.html"><a href="extensiones-para-regresion-lineal-y-logistica.html#interacciones"><i class="fa fa-check"></i><b>6.4</b> Interacciones</a></li>
+<li class="chapter" data-level="6.5" data-path="extensiones-para-regresion-lineal-y-logistica.html"><a href="extensiones-para-regresion-lineal-y-logistica.html#categorizacion-de-variables"><i class="fa fa-check"></i><b>6.5</b> Categorización de variables</a></li>
+<li class="chapter" data-level="6.6" data-path="extensiones-para-regresion-lineal-y-logistica.html"><a href="extensiones-para-regresion-lineal-y-logistica.html#splines"><i class="fa fa-check"></i><b>6.6</b> Splines</a><ul>
+<li class="chapter" data-level="6.6.1" data-path="extensiones-para-regresion-lineal-y-logistica.html"><a href="extensiones-para-regresion-lineal-y-logistica.html#cuando-usar-estas-tecnicas"><i class="fa fa-check"></i><b>6.6.1</b> ¿Cuándo usar estas técnicas?</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html"><i class="fa fa-check"></i><b>7</b> Redes neuronales (parte 1)</a><ul>
+<li class="chapter" data-level="7.1" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#introduccion-a-redes-neuronales"><i class="fa fa-check"></i><b>7.1</b> Introducción a redes neuronales</a><ul>
+<li class="chapter" data-level="" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#como-construyen-entradas-las-redes-neuronales"><i class="fa fa-check"></i>¿Cómo construyen entradas las redes neuronales?</a></li>
+<li class="chapter" data-level="" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#como-ajustar-los-parametros"><i class="fa fa-check"></i>¿Cómo ajustar los parámetros?</a></li>
+</ul></li>
+<li class="chapter" data-level="7.2" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#interacciones-en-redes-neuronales"><i class="fa fa-check"></i><b>7.2</b> Interacciones en redes neuronales</a></li>
+<li class="chapter" data-level="7.3" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#calculo-en-redes-feed-forward."><i class="fa fa-check"></i><b>7.3</b> Cálculo en redes: feed-forward.</a></li>
+<li class="chapter" data-level="" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#notacion-1"><i class="fa fa-check"></i>Notación</a></li>
+<li class="chapter" data-level="7.4" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#feed-forward"><i class="fa fa-check"></i><b>7.4</b> Feed forward</a></li>
+<li class="chapter" data-level="7.5" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#backpropagation-calculo-del-gradiente"><i class="fa fa-check"></i><b>7.5</b> Backpropagation: cálculo del gradiente</a><ul>
+<li class="chapter" data-level="7.5.1" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#calculo-para-un-caso-de-entrenamiento"><i class="fa fa-check"></i><b>7.5.1</b> Cálculo para un caso de entrenamiento</a></li>
+<li class="chapter" data-level="7.5.2" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#algoritmo-de-backpropagation"><i class="fa fa-check"></i><b>7.5.2</b> Algoritmo de backpropagation</a></li>
+</ul></li>
+<li class="chapter" data-level="7.6" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#ajuste-de-parametros-introduccion"><i class="fa fa-check"></i><b>7.6</b> Ajuste de parámetros (introducción)</a><ul>
+<li class="chapter" data-level="7.6.1" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#ejemplo-31"><i class="fa fa-check"></i><b>7.6.1</b> Ejemplo</a></li>
+<li class="chapter" data-level="7.6.2" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#hiperparametros-busqueda-manual"><i class="fa fa-check"></i><b>7.6.2</b> Hiperparámetros: búsqueda manual</a></li>
+<li class="chapter" data-level="7.6.3" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#hiperparametros-busqueda-en-grid"><i class="fa fa-check"></i><b>7.6.3</b> Hiperparámetros: búsqueda en grid</a></li>
+<li class="chapter" data-level="7.6.4" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#hiperparametros-busqueda-aleatoria"><i class="fa fa-check"></i><b>7.6.4</b> Hiperparámetros: búsqueda aleatoria</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#tarea-para-25-de-septiembre"><i class="fa fa-check"></i>Tarea (para 25 de septiembre)</a></li>
+<li class="chapter" data-level="" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#tarea-2-de-octubre"><i class="fa fa-check"></i>Tarea (2 de octubre)</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="redes-neuronales-parte-2.html"><a href="redes-neuronales-parte-2.html"><i class="fa fa-check"></i><b>8</b> Redes neuronales (parte 2)</a><ul>
+<li class="chapter" data-level="8.1" data-path="redes-neuronales-parte-2.html"><a href="redes-neuronales-parte-2.html#descenso-estocastico"><i class="fa fa-check"></i><b>8.1</b> Descenso estocástico</a></li>
+<li class="chapter" data-level="8.2" data-path="redes-neuronales-parte-2.html"><a href="redes-neuronales-parte-2.html#algoritmo-de-descenso-estocastico"><i class="fa fa-check"></i><b>8.2</b> Algoritmo de descenso estocástico</a></li>
+<li class="chapter" data-level="8.3" data-path="redes-neuronales-parte-2.html"><a href="redes-neuronales-parte-2.html#por-que-usar-descenso-estocastico-por-minilotes"><i class="fa fa-check"></i><b>8.3</b> ¿Por qué usar descenso estocástico por minilotes?</a></li>
+<li class="chapter" data-level="8.4" data-path="redes-neuronales-parte-2.html"><a href="redes-neuronales-parte-2.html#escogiendo-la-tasa-de-aprendizaje"><i class="fa fa-check"></i><b>8.4</b> Escogiendo la tasa de aprendizaje</a></li>
+<li class="chapter" data-level="8.5" data-path="redes-neuronales-parte-2.html"><a href="redes-neuronales-parte-2.html#mejoras-al-algoritmo-de-descenso-estocastico."><i class="fa fa-check"></i><b>8.5</b> Mejoras al algoritmo de descenso estocástico.</a><ul>
+<li class="chapter" data-level="8.5.1" data-path="redes-neuronales-parte-2.html"><a href="redes-neuronales-parte-2.html#decaimiento-de-tasa-de-aprendizaje"><i class="fa fa-check"></i><b>8.5.1</b> Decaimiento de tasa de aprendizaje</a></li>
+<li class="chapter" data-level="8.5.2" data-path="redes-neuronales-parte-2.html"><a href="redes-neuronales-parte-2.html#momento"><i class="fa fa-check"></i><b>8.5.2</b> Momento</a></li>
+<li class="chapter" data-level="8.5.3" data-path="redes-neuronales-parte-2.html"><a href="redes-neuronales-parte-2.html#otras-variaciones"><i class="fa fa-check"></i><b>8.5.3</b> Otras variaciones</a></li>
+</ul></li>
+<li class="chapter" data-level="8.6" data-path="redes-neuronales-parte-2.html"><a href="redes-neuronales-parte-2.html#ajuste-de-redes-con-descenso-estocastico"><i class="fa fa-check"></i><b>8.6</b> Ajuste de redes con descenso estocástico</a></li>
+<li class="chapter" data-level="8.7" data-path="redes-neuronales-parte-2.html"><a href="redes-neuronales-parte-2.html#activaciones-relu"><i class="fa fa-check"></i><b>8.7</b> Activaciones relu</a></li>
+<li class="chapter" data-level="8.8" data-path="redes-neuronales-parte-2.html"><a href="redes-neuronales-parte-2.html#dropout-para-regularizacion"><i class="fa fa-check"></i><b>8.8</b> Dropout para regularización</a><ul>
+<li class="chapter" data-level="" data-path="redes-neuronales-parte-2.html"><a href="redes-neuronales-parte-2.html#ejemplo-35"><i class="fa fa-check"></i>Ejemplo</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="redes-convolucionales.html"><a href="redes-convolucionales.html"><i class="fa fa-check"></i><b>9</b> Redes convolucionales</a><ul>
+<li class="chapter" data-level="9.1" data-path="redes-convolucionales.html"><a href="redes-convolucionales.html#filtros-convolucionales"><i class="fa fa-check"></i><b>9.1</b> Filtros convolucionales</a><ul>
+<li class="chapter" data-level="" data-path="redes-convolucionales.html"><a href="redes-convolucionales.html#filtros-en-una-dimension"><i class="fa fa-check"></i>Filtros en una dimensión</a></li>
+<li class="chapter" data-level="" data-path="redes-convolucionales.html"><a href="redes-convolucionales.html#filtros-convolucionales-en-dos-dimensiones"><i class="fa fa-check"></i>Filtros convolucionales en dos dimensiones</a></li>
+</ul></li>
+<li class="chapter" data-level="9.2" data-path="redes-convolucionales.html"><a href="redes-convolucionales.html#filtros-convolucionales-para-redes-neuronales"><i class="fa fa-check"></i><b>9.2</b> Filtros convolucionales para redes neuronales</a></li>
+<li class="chapter" data-level="9.3" data-path="redes-convolucionales.html"><a href="redes-convolucionales.html#capas-de-agregacion-pooling"><i class="fa fa-check"></i><b>9.3</b> Capas de agregación (pooling)</a></li>
+<li class="chapter" data-level="9.4" data-path="redes-convolucionales.html"><a href="redes-convolucionales.html#ejemplo-arquitectura-lenet"><i class="fa fa-check"></i><b>9.4</b> Ejemplo (arquitectura LeNet):</a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="diagnostico-y-mejora-de-modelos.html"><a href="diagnostico-y-mejora-de-modelos.html"><i class="fa fa-check"></i><b>10</b> Diagnóstico y mejora de modelos</a><ul>
+<li class="chapter" data-level="10.1" data-path="diagnostico-y-mejora-de-modelos.html"><a href="diagnostico-y-mejora-de-modelos.html#aspectos-generales"><i class="fa fa-check"></i><b>10.1</b> Aspectos generales</a></li>
+<li class="chapter" data-level="10.2" data-path="diagnostico-y-mejora-de-modelos.html"><a href="diagnostico-y-mejora-de-modelos.html#que-hacer-cuando-el-desempeno-no-es-satisfactorio"><i class="fa fa-check"></i><b>10.2</b> ¿Qué hacer cuando el desempeño no es satisfactorio?</a></li>
+<li class="chapter" data-level="10.3" data-path="diagnostico-y-mejora-de-modelos.html"><a href="diagnostico-y-mejora-de-modelos.html#pipeline-de-procesamiento"><i class="fa fa-check"></i><b>10.3</b> Pipeline de procesamiento</a></li>
+<li class="chapter" data-level="10.4" data-path="diagnostico-y-mejora-de-modelos.html"><a href="diagnostico-y-mejora-de-modelos.html#diagnosticos-sesgo-y-varianza"><i class="fa fa-check"></i><b>10.4</b> Diagnósticos: sesgo y varianza</a></li>
+<li class="chapter" data-level="10.5" data-path="diagnostico-y-mejora-de-modelos.html"><a href="diagnostico-y-mejora-de-modelos.html#refinando-el-pipeline"><i class="fa fa-check"></i><b>10.5</b> Refinando el pipeline</a></li>
+<li class="chapter" data-level="10.6" data-path="diagnostico-y-mejora-de-modelos.html"><a href="diagnostico-y-mejora-de-modelos.html#consiguiendo-mas-datos"><i class="fa fa-check"></i><b>10.6</b> Consiguiendo más datos</a></li>
+<li class="chapter" data-level="10.7" data-path="diagnostico-y-mejora-de-modelos.html"><a href="diagnostico-y-mejora-de-modelos.html#usar-datos-adicionales"><i class="fa fa-check"></i><b>10.7</b> Usar datos adicionales</a></li>
+<li class="chapter" data-level="10.8" data-path="diagnostico-y-mejora-de-modelos.html"><a href="diagnostico-y-mejora-de-modelos.html#examen-de-modelo-y-analisis-de-errores"><i class="fa fa-check"></i><b>10.8</b> Examen de modelo y Análisis de errores</a></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html"><i class="fa fa-check"></i><b>11</b> Métodos basados en árboles</a><ul>
+<li class="chapter" data-level="11.1" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#arboles-para-regresion-y-clasificacion."><i class="fa fa-check"></i><b>11.1</b> Árboles para regresión y clasificación.</a><ul>
+<li class="chapter" data-level="11.1.1" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#arboles-para-clasificacion"><i class="fa fa-check"></i><b>11.1.1</b> Árboles para clasificación</a></li>
+<li class="chapter" data-level="11.1.2" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#tipos-de-particion"><i class="fa fa-check"></i><b>11.1.2</b> Tipos de partición</a></li>
+<li class="chapter" data-level="11.1.3" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#medidas-de-impureza"><i class="fa fa-check"></i><b>11.1.3</b> Medidas de impureza</a></li>
+<li class="chapter" data-level="11.1.4" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#reglas-de-particion-y-tamano-del-arobl"><i class="fa fa-check"></i><b>11.1.4</b> Reglas de partición y tamaño del árobl</a></li>
+<li class="chapter" data-level="11.1.5" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#costo---complejidad-breiman"><i class="fa fa-check"></i><b>11.1.5</b> Costo - Complejidad (Breiman)</a></li>
+<li class="chapter" data-level="11.1.6" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#opcional-predicciones-con-cart"><i class="fa fa-check"></i><b>11.1.6</b> (Opcional) Predicciones con CART</a></li>
+<li class="chapter" data-level="11.1.7" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#arboles-para-regresion"><i class="fa fa-check"></i><b>11.1.7</b> Árboles para regresión</a></li>
+<li class="chapter" data-level="11.1.8" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#variabilidad-en-el-proceso-de-construccion"><i class="fa fa-check"></i><b>11.1.8</b> Variabilidad en el proceso de construcción</a></li>
+<li class="chapter" data-level="11.1.9" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#relaciones-lineales"><i class="fa fa-check"></i><b>11.1.9</b> Relaciones lineales</a></li>
+<li class="chapter" data-level="11.1.10" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#ventajas-y-desventajas-de-arboles"><i class="fa fa-check"></i><b>11.1.10</b> Ventajas y desventajas de árboles</a></li>
+</ul></li>
+<li class="chapter" data-level="11.2" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#bagging-de-arboles"><i class="fa fa-check"></i><b>11.2</b> Bagging de árboles</a><ul>
+<li class="chapter" data-level="11.2.1" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#ejemplo-42"><i class="fa fa-check"></i><b>11.2.1</b> Ejemplo</a></li>
+<li class="chapter" data-level="11.2.2" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#mejorando-bagging"><i class="fa fa-check"></i><b>11.2.2</b> Mejorando bagging</a></li>
+</ul></li>
+<li class="chapter" data-level="11.3" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#bosques-aleatorios"><i class="fa fa-check"></i><b>11.3</b> Bosques aleatorios</a><ul>
+<li class="chapter" data-level="11.3.1" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#sabiduria-de-las-masas"><i class="fa fa-check"></i><b>11.3.1</b> Sabiduría de las masas</a></li>
+<li class="chapter" data-level="11.3.2" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#ejemplo-43"><i class="fa fa-check"></i><b>11.3.2</b> Ejemplo</a></li>
+<li class="chapter" data-level="11.3.3" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#mas-detalles-de-bosques-aleatorios."><i class="fa fa-check"></i><b>11.3.3</b> Más detalles de bosques aleatorios.</a></li>
+<li class="chapter" data-level="11.3.4" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#importancia-de-variables"><i class="fa fa-check"></i><b>11.3.4</b> Importancia de variables</a></li>
+<li class="chapter" data-level="11.3.5" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#ajustando-arboles-aleatorios."><i class="fa fa-check"></i><b>11.3.5</b> Ajustando árboles aleatorios.</a></li>
+<li class="chapter" data-level="11.3.6" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#ventajas-y-desventajas-de-arboles-aleatorios"><i class="fa fa-check"></i><b>11.3.6</b> Ventajas y desventajas de árboles aleatorios</a></li>
+<li class="chapter" data-level="11.3.7" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#tarea-para-23-de-octubre"><i class="fa fa-check"></i><b>11.3.7</b> Tarea (para 23 de octubre)</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html"><i class="fa fa-check"></i><b>12</b> Métodos basados en árboles: boosting</a><ul>
+<li class="chapter" data-level="12.1" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#forward-stagewise-additive-modeling-fsam"><i class="fa fa-check"></i><b>12.1</b> Forward stagewise additive modeling (FSAM)</a></li>
+<li class="chapter" data-level="12.2" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#discusion-1"><i class="fa fa-check"></i><b>12.2</b> Discusión</a></li>
+<li class="chapter" data-level="12.3" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#algoritmo-fsam"><i class="fa fa-check"></i><b>12.3</b> Algoritmo FSAM</a></li>
+<li class="chapter" data-level="12.4" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#fsam-para-clasificacion-binaria."><i class="fa fa-check"></i><b>12.4</b> FSAM para clasificación binaria.</a></li>
+<li class="chapter" data-level="12.5" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#gradient-boosting"><i class="fa fa-check"></i><b>12.5</b> Gradient boosting</a></li>
+<li class="chapter" data-level="12.6" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#algoritmo-de-gradient-boosting"><i class="fa fa-check"></i><b>12.6</b> Algoritmo de gradient boosting</a></li>
+<li class="chapter" data-level="12.7" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#funciones-de-perdida"><i class="fa fa-check"></i><b>12.7</b> Funciones de pérdida</a><ul>
+<li class="chapter" data-level="12.7.1" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#discusion-adaboost-opcional"><i class="fa fa-check"></i><b>12.7.1</b> Discusión: adaboost (opcional)</a></li>
+<li class="chapter" data-level="" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#ejemplo-46"><i class="fa fa-check"></i>Ejemplo</a></li>
+</ul></li>
+<li class="chapter" data-level="12.8" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#modificaciones-de-gradient-boosting"><i class="fa fa-check"></i><b>12.8</b> Modificaciones de Gradient Boosting</a><ul>
+<li class="chapter" data-level="12.8.1" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#tasa-de-aprendizaje-shrinkage"><i class="fa fa-check"></i><b>12.8.1</b> Tasa de aprendizaje (shrinkage)</a></li>
+<li class="chapter" data-level="12.8.2" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#submuestreo-bag.fraction"><i class="fa fa-check"></i><b>12.8.2</b> Submuestreo (bag.fraction)</a></li>
+<li class="chapter" data-level="12.8.3" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#numero-de-arboles-m"><i class="fa fa-check"></i><b>12.8.3</b> Número de árboles M</a></li>
+<li class="chapter" data-level="12.8.4" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#tamano-de-arboles"><i class="fa fa-check"></i><b>12.8.4</b> Tamaño de árboles</a></li>
+<li class="chapter" data-level="12.8.5" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#controlar-numero-de-casos-para-cortes"><i class="fa fa-check"></i><b>12.8.5</b> Controlar número de casos para cortes</a></li>
+<li class="chapter" data-level="" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#ejemplo-47"><i class="fa fa-check"></i>Ejemplo</a></li>
+<li class="chapter" data-level="12.8.6" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#evaluacion-con-validacion-cruzada."><i class="fa fa-check"></i><b>12.8.6</b> Evaluación con validación cruzada.</a></li>
+</ul></li>
+<li class="chapter" data-level="12.9" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#graficas-de-dependencia-parcial"><i class="fa fa-check"></i><b>12.9</b> Gráficas de dependencia parcial</a><ul>
+<li class="chapter" data-level="12.9.1" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#dependencia-parcial"><i class="fa fa-check"></i><b>12.9.1</b> Dependencia parcial</a></li>
+<li class="chapter" data-level="" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#ejemplo-48"><i class="fa fa-check"></i>Ejemplo</a></li>
+<li class="chapter" data-level="12.9.2" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#discusion-2"><i class="fa fa-check"></i><b>12.9.2</b> Discusión</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#tarea-5"><i class="fa fa-check"></i>Tarea</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="validacion-de-modelos-problemas-comunes.html"><a href="validacion-de-modelos-problemas-comunes.html"><i class="fa fa-check"></i><b>13</b> Validación de modelos: problemas comunes</a><ul>
+<li class="chapter" data-level="13.1" data-path="validacion-de-modelos-problemas-comunes.html"><a href="validacion-de-modelos-problemas-comunes.html#filtracion-de-datos"><i class="fa fa-check"></i><b>13.1</b> Filtración de datos</a><ul>
+<li class="chapter" data-level="13.1.1" data-path="validacion-de-modelos-problemas-comunes.html"><a href="validacion-de-modelos-problemas-comunes.html#series-de-tiempo"><i class="fa fa-check"></i><b>13.1.1</b> Series de tiempo</a></li>
+<li class="chapter" data-level="13.1.2" data-path="validacion-de-modelos-problemas-comunes.html"><a href="validacion-de-modelos-problemas-comunes.html#ejemplo-filtracion-en-el-preprocesamiento"><i class="fa fa-check"></i><b>13.1.2</b> Ejemplo: filtración en el preprocesamiento</a></li>
+<li class="chapter" data-level="13.1.3" data-path="validacion-de-modelos-problemas-comunes.html"><a href="validacion-de-modelos-problemas-comunes.html#uso-de-variables-fuera-de-rango-temporal"><i class="fa fa-check"></i><b>13.1.3</b> Uso de variables fuera de rango temporal</a></li>
+</ul></li>
+<li class="chapter" data-level="13.2" data-path="validacion-de-modelos-problemas-comunes.html"><a href="validacion-de-modelos-problemas-comunes.html#datos-en-conglomerados-y-muestreo-complejo"><i class="fa fa-check"></i><b>13.2</b> Datos en conglomerados y muestreo complejo</a><ul>
+<li class="chapter" data-level="13.2.1" data-path="validacion-de-modelos-problemas-comunes.html"><a href="validacion-de-modelos-problemas-comunes.html#censura-y-evaluacion-incompleta"><i class="fa fa-check"></i><b>13.2.1</b> Censura y evaluación incompleta</a></li>
+</ul></li>
+<li class="chapter" data-level="13.3" data-path="validacion-de-modelos-problemas-comunes.html"><a href="validacion-de-modelos-problemas-comunes.html#ejemplo-tiendas-cerradas"><i class="fa fa-check"></i><b>13.3</b> Ejemplo: tiendas cerradas</a><ul>
+<li class="chapter" data-level="13.3.1" data-path="validacion-de-modelos-problemas-comunes.html"><a href="validacion-de-modelos-problemas-comunes.html#muestras-de-validacion-chicas"><i class="fa fa-check"></i><b>13.3.1</b> Muestras de validación chicas</a></li>
+<li class="chapter" data-level="" data-path="validacion-de-modelos-problemas-comunes.html"><a href="validacion-de-modelos-problemas-comunes.html#ejercicio-8"><i class="fa fa-check"></i>Ejercicio</a></li>
+</ul></li>
+<li class="chapter" data-level="13.4" data-path="validacion-de-modelos-problemas-comunes.html"><a href="validacion-de-modelos-problemas-comunes.html#otros-ejemplos"><i class="fa fa-check"></i><b>13.4</b> Otros ejemplos</a></li>
+<li class="chapter" data-level="13.5" data-path="validacion-de-modelos-problemas-comunes.html"><a href="validacion-de-modelos-problemas-comunes.html#resumen-1"><i class="fa fa-check"></i><b>13.5</b> Resumen</a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Publicado con bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Aprendizaje de máquina</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="validacion-de-modelos-problemas-comunes" class="section level1">
+<h1><span class="header-section-number">Clase 13</span> Validación de modelos: problemas comunes</h1>
+<p>En aprendizaje de máquina, el ajuste y afinación de parámetros es tan importante como la evaluación de desempeño o validación de los modelos resultantes. Ninguna funciona bien sin que la otra sea correctamente ejecutada. Hemos visto que ambas partes tienen dificultades muchas veces sutiles (tanto el ajuste y optimización como la evaluación de las predicciones) que pueden hacer fracasar nuestro ejercicio de modelación.</p>
+<p>En esta parte hablaremos de la evaluación de modelos. En aprendizaje máqina, considerando que utilizamos relativamente pocos supuestos teóricos, dependemos de esa evaluación para asegurarnos que estamos capturando patrones reales y útiles en los datos.</p>
+<p>Todo lo que veremos aplica tanto a separación de muestras de validación como a uso de algún tipo de validación cruzada (validación cruzada, estimación OOB en árboles, validación bootstrap, etc.)</p>
+<div id="filtracion-de-datos" class="section level2">
+<h2><span class="header-section-number">13.1</span> Filtración de datos</h2>
+
+<div class="comentario">
+<ul>
+<li>La <em>filtración de datos</em> ocurre cuando nuestro proceso de validación está contaminado por información que en la tarea real de predicción no tendremos disponible. En consecuencia, nuestras estimaciones de desempeño del modelo (validación) son optimistas en relación al desempeño verdadero.</li>
+<li>También podemos pensar en <em>filtraciones</em> tanto al conjunto de entrenamiento y validación, cuando ambos están contaminados con información que no estará disponible al momento de hacer las predicciones. Esto produce modelos que no es posible poner en producción.
+</div>
+</li>
+</ul>
+<p>El primer tipo de filtraciones es más difícil de detectar antes de la puesta en producción de los modelos. El segundo tipo puede descubrirse cuando nos damos cuenta de que no es posible implementar en producción nuestro modelo porque no hay información disponible que usamos para construirlo (o peor, cuando cometemos un error en la implementación y el modelo se desempeña mal posterioremente).</p>
+<p>Veamos el primer caso: filtración de conjuntos de validación al conjunto de entrenamiento.</p>
+<p>La filtración de datos puede ocurrir de muchas maneras, muchas veces inesperadas. Quizá uno de los ejemplos más típicos es el validación de modelos de series de tiempo.</p>
+<div id="series-de-tiempo" class="section level3">
+<h3><span class="header-section-number">13.1.1</span> Series de tiempo</h3>
+<p>Comenzamos con un ejemplo simulado. Haremos varias simulaciones para incorporar la variación producida en los modelos por la muestra de entrenamineto</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(methods)
+<span class="kw">library</span>(randomForest)
+<span class="kw">library</span>(tidyverse)
+<span class="kw">library</span>(glmnet)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">simular_datos &lt;-<span class="st"> </span><span class="cf">function</span>(<span class="dt">n =</span> <span class="dv">500</span>,...){
+  datos &lt;-<span class="st"> </span><span class="kw">data_frame</span>(<span class="dt">t=</span><span class="dv">1</span><span class="op">:</span>n, <span class="dt">x =</span> <span class="kw">rnorm</span>(n,<span class="dv">0</span>,<span class="dv">1</span>)) 
+  y &lt;-<span class="st"> </span><span class="kw">numeric</span>(n)
+  <span class="co">#nivel &lt;- numeric(n)</span>
+  <span class="co">#nivel[1] &lt;- 10</span>
+  y[<span class="dv">1</span>] &lt;-<span class="st"> </span>datos<span class="op">$</span>x[<span class="dv">1</span>] <span class="co">#+ nivel[1]</span>
+  <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">2</span><span class="op">:</span>n){
+    <span class="co">#nivel[i] &lt;-  nivel[i-1] + rnorm(1, 0, 0.1)</span>
+    <span class="co">#y[i] &lt;- 0.01*i + datos$x[i] + nivel[i] + rnorm(1,0,0.05)</span>
+    y[i] &lt;-<span class="st"> </span><span class="fl">0.01</span><span class="op">*</span>i <span class="op">+</span><span class="st"> </span>datos<span class="op">$</span>x[i] <span class="op">+</span><span class="st"> </span><span class="fl">0.9</span><span class="op">*</span>y[i<span class="op">-</span><span class="dv">1</span>] <span class="op">+</span><span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">1</span>,<span class="dv">0</span>,<span class="fl">0.05</span>)
+  }
+  datos<span class="op">$</span>y &lt;-<span class="st"> </span>y
+  datos
+}
+separar &lt;-<span class="st"> </span><span class="cf">function</span>(df, prop){
+  df &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span class="st"> </span>rowwise <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">tipo =</span> <span class="kw">ifelse</span>(t <span class="op">&gt;</span><span class="st"> </span><span class="kw">floor</span>(<span class="kw">nrow</span>(df)<span class="op">*</span>(prop[<span class="dv">1</span>]<span class="op">+</span>prop[<span class="dv">2</span>])), <span class="st">&#39;prueba&#39;</span>, 
+                             <span class="kw">sample</span>(<span class="kw">c</span>(<span class="st">&#39;entrena&#39;</span>,<span class="st">&#39;valida&#39;</span>),<span class="dv">1</span>)))
+  
+  <span class="kw">split</span>(df, df<span class="op">$</span>tipo)
+}
+
+ajustar_evaluar &lt;-<span class="st"> </span><span class="cf">function</span>(df_split){
+  mod_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">randomForest</span>(y <span class="op">~</span><span class="st"> </span>x <span class="op">+</span><span class="st"> </span>t, <span class="dt">data =</span> df_split[[<span class="st">&#39;entrena&#39;</span>]])
+  error_valida &lt;-<span class="st"> </span><span class="kw">sd</span>(<span class="kw">predict</span>(mod_<span class="dv">1</span>, df_split[[<span class="st">&#39;valida&#39;</span>]])<span class="op">-</span>df_split[[<span class="st">&#39;valida&#39;</span>]]<span class="op">$</span>y)
+  error_prueba &lt;-<span class="st"> </span><span class="kw">sd</span>(<span class="kw">predict</span>(mod_<span class="dv">1</span>, df_split[[<span class="st">&#39;prueba&#39;</span>]])<span class="op">-</span>df_split[[<span class="st">&#39;prueba&#39;</span>]]<span class="op">$</span>y)
+  <span class="kw">c</span>(<span class="dt">error_valida  =</span> error_valida, <span class="dt">error_prueba =</span> error_prueba)
+}</code></pre></div>
+<p>Por ejemplo:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(<span class="kw">simular_datos</span>(), <span class="kw">aes</span>(<span class="dt">x=</span>t, <span class="dt">y=</span>y)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_line</span>()</code></pre></div>
+<p><img src="13-validacion-filtracion_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p>Separamos ingenuamente entrenamiento y prueba y ajustamos un modelo de regresión:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">errores &lt;-<span class="st"> </span><span class="kw">simular_datos</span>(<span class="dv">500</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">separar</span>(<span class="dt">prop=</span> <span class="kw">c</span>(<span class="fl">0.4</span>,<span class="fl">0.4</span>,<span class="fl">0.2</span>)) <span class="op">%&gt;%</span><span class="st"> </span>ajustar_evaluar
+errores</code></pre></div>
+<pre><code>## error_valida error_prueba 
+##     1.894075     3.180963</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">reps_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">map</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">50</span>, simular_datos, <span class="dt">n =</span> <span class="dv">500</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">        </span><span class="kw">map</span>(separar, <span class="dt">prop=</span> <span class="kw">c</span>(<span class="fl">0.6</span>,<span class="fl">0.2</span>,<span class="fl">0.2</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">        </span><span class="kw">map</span>(ajustar_evaluar) <span class="op">%&gt;%</span>
+<span class="st">        </span>transpose <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">map</span>(unlist) <span class="op">%&gt;%</span><span class="st"> </span>as_data_frame
+gr_reps_<span class="dv">1</span> &lt;-<span class="st"> </span>reps_<span class="dv">1</span> <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">rep =</span> <span class="kw">row_number</span>()) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">gather</span>(tipo, valor, <span class="op">-</span>rep)
+<span class="kw">ggplot</span>(reps_<span class="dv">1</span>, <span class="kw">aes</span>(<span class="dt">x=</span>error_valida, <span class="dt">y=</span>error_prueba)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span><span class="kw">geom_abline</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">xlim</span>(<span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">10</span>)) <span class="op">+</span><span class="st"> </span><span class="kw">ylim</span>(<span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">10</span>))</code></pre></div>
+<p><img src="13-validacion-filtracion_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p>Y vemos que los errores de validación son consistentemente menores, y por margen alto, que los errores de prueba. Podemos ver que hay un desacuerdo entre el proceso de validación y de prueba:</p>
+<ul>
+<li>Los valores de validación y de entrenamiento están intercalados, pues fueron seleccionados al azar.</li>
+<li>Pero el error de predicción se calcula para el futuro, y esos datos futuros no tienen traslape en tiempo con la muestra de entrenamiento.</li>
+</ul>
+<p>De esta manera, podríamos decir que cuando hacemos predicciones para el conjunto de validación, se nos <strong>filtran</strong> valores del futuro cercano, lo cual no tenemos disponible a la hora de probar el modelo.</p>
+<p>Podríamos cambiar nuestra manera de probar el modelo, escogendo la muestra de validación al final del periodo.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">separar_valid_futura &lt;-<span class="st"> </span><span class="cf">function</span>(df, prop){
+  df &lt;-<span class="st"> </span>df <span class="op">%&gt;%</span><span class="st"> </span>rowwise <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">tipo =</span> <span class="kw">ifelse</span>(t <span class="op">&lt;</span><span class="st"> </span><span class="kw">nrow</span>(df)<span class="op">*</span>prop[<span class="dv">1</span>], <span class="st">&#39;entrena&#39;</span>,
+                                         <span class="kw">ifelse</span>(t<span class="op">&lt;</span><span class="kw">nrow</span>(df)<span class="op">*</span>(prop[<span class="dv">1</span>]<span class="op">+</span>prop[<span class="dv">2</span>]),<span class="st">&#39;valida&#39;</span>,<span class="st">&#39;prueba&#39;</span>)))
+  <span class="kw">split</span>(df, df<span class="op">$</span>tipo)
+}</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">reps_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">map</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">50</span>, simular_datos, <span class="dt">n =</span> <span class="dv">500</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">        </span><span class="kw">map</span>(separar_valid_futura, <span class="dt">prop=</span> <span class="kw">c</span>(<span class="fl">0.6</span>,<span class="fl">0.2</span>,<span class="fl">0.2</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">        </span><span class="kw">map</span>(ajustar_evaluar) <span class="op">%&gt;%</span>
+<span class="st">        </span>transpose <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">map</span>(unlist) <span class="op">%&gt;%</span><span class="st"> </span>as_data_frame
+gr_reps_<span class="dv">2</span> &lt;-<span class="st"> </span>reps_<span class="dv">2</span> <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">rep =</span> <span class="kw">row_number</span>()) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">gather</span>(tipo, valor, <span class="op">-</span>rep)
+<span class="kw">ggplot</span>(gr_reps_<span class="dv">2</span>, <span class="kw">aes</span>(<span class="dt">x=</span>valor, <span class="dt">group=</span>tipo, <span class="dt">fill=</span>tipo)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_histogram</span>()</code></pre></div>
+<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+<p><img src="13-validacion-filtracion_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(reps_<span class="dv">2</span>, <span class="kw">aes</span>(<span class="dt">x=</span>error_valida, <span class="dt">y=</span>error_prueba)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span><span class="kw">geom_abline</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">xlim</span>(<span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">10</span>)) <span class="op">+</span><span class="st"> </span><span class="kw">ylim</span>(<span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">10</span>))</code></pre></div>
+<p><img src="13-validacion-filtracion_files/figure-html/unnamed-chunk-8-2.png" width="672" /></p>
+<p><em>Observaciónes</em>:</p>
+<ul>
+<li>Nótese que la fuente más grande de error no proviene de el hecho de que el sistema que queremos predecir es dinámico (el primer modelo, por ejemplo, usa valores más cercanos a los del futuro que queremos predecir). El problema es la filtración de datos del pasado cercano y futuro desde el conjunto de validación al de prueba.</li>
+<li>Este era parte del problema en hacer validación aleatoria simple en el concurso de las fotos. Un tratamiento de este tipo para el problema de las fotos ayudaba a obtener estimaciones más realistas del desempeño.</li>
+</ul>
+</div>
+<div id="ejemplo-filtracion-en-el-preprocesamiento" class="section level3">
+<h3><span class="header-section-number">13.1.2</span> Ejemplo: filtración en el preprocesamiento</h3>
+<p>Cuando preprocesamos datos para incluir en el modelo, es importante asegurarnos de no filtrar información de los datos de validación hacia los datos de enrenamiento. Nos aseguramos de esto si nuestro procesamiento, por ejemplo, es caso por caso con parámetros preestablecidos (no calculamos agregados de todos los datos, por ejemplo), o para más seguridad, haciendo por separado el preprocesamiento de entrenamiento y validación y considerando qué valores pasamos de un conjunto de datos al otro.</p>
+<p>Un ejemplo clásico es el de selección de variables, como vimos en el examen. Repetiremos varias veces para confirmar más sólidamente la idea</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">seleccion_ajuste &lt;-<span class="st"> </span><span class="cf">function</span>(...){
+  y &lt;-<span class="st"> </span><span class="kw">rbinom</span>(<span class="dv">50</span>, <span class="dv">1</span>, <span class="fl">0.5</span>)
+  x &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">rnorm</span>(<span class="dv">50</span><span class="op">*</span><span class="dv">500</span>,<span class="dv">0</span>,<span class="dv">1</span>), <span class="dv">50</span>, <span class="dv">500</span>)
+  correlaciones &lt;-<span class="st"> </span><span class="kw">cor</span>(x, y)
+  <span class="co"># Seleccionamos las 50 variables con mayor correlación</span>
+  vars_selec &lt;-<span class="st"> </span><span class="kw">order</span>(correlaciones, <span class="dt">decreasing=</span><span class="ot">TRUE</span>)[<span class="dv">1</span><span class="op">:</span><span class="dv">50</span>]
+  <span class="co"># Hacemos la validación cruzada usual - que en este caso es errónea</span>
+  est_val_cruzada &lt;-<span class="st"> </span><span class="kw">sapply</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>, <span class="cf">function</span>(i){
+    x_vc &lt;-<span class="st"> </span>x[<span class="op">-</span>((<span class="dv">5</span><span class="op">*</span>i <span class="op">-</span><span class="dv">4</span>)<span class="op">:</span>(<span class="dv">5</span><span class="op">*</span>i)),]
+    y_vc &lt;-<span class="st"> </span>y[<span class="op">-</span>((<span class="dv">5</span><span class="op">*</span>i <span class="op">-</span><span class="dv">4</span>)<span class="op">:</span>(<span class="dv">5</span><span class="op">*</span>i))]
+    mod &lt;-<span class="st"> </span><span class="kw">glmnet</span>(<span class="dt">y=</span>y_vc, <span class="dt">x=</span> x_vc[,vars_selec], <span class="dt">alpha=</span><span class="dv">0</span>, <span class="dt">family=</span><span class="st">&#39;binomial&#39;</span>,
+                      <span class="dt">lambda =</span> <span class="fl">0.5</span>)
+    preds_p &lt;-<span class="st"> </span><span class="kw">predict</span>(mod, <span class="dt">newx =</span> x[((<span class="dv">5</span><span class="op">*</span>i <span class="op">-</span><span class="dv">4</span>)<span class="op">:</span>(<span class="dv">5</span><span class="op">*</span>i)),vars_selec])[,<span class="dv">1</span>]
+    <span class="kw">mean</span>((preds_p <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) <span class="op">!=</span><span class="st"> </span>y[((<span class="dv">5</span><span class="op">*</span>i <span class="op">-</span><span class="dv">4</span>)<span class="op">:</span>(<span class="dv">5</span><span class="op">*</span>i))])
+  })
+  error_validacion &lt;-<span class="st"> </span><span class="kw">mean</span>(est_val_cruzada)
+  modelo &lt;-<span class="st"> </span><span class="kw">glmnet</span>(<span class="dt">y=</span>y, <span class="dt">x=</span> x[,vars_selec], <span class="dt">alpha=</span><span class="dv">0</span>, <span class="dt">family=</span><span class="st">&#39;binomial&#39;</span>,
+                    <span class="dt">lambda =</span> <span class="fl">0.5</span>)
+  y_p &lt;-<span class="st"> </span><span class="kw">rbinom</span>(<span class="dv">1000</span>, <span class="dv">1</span>, <span class="fl">0.5</span>)
+  x_p &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">rnorm</span>(<span class="dv">1000</span><span class="op">*</span><span class="dv">500</span>,<span class="dv">0</span>,<span class="dv">1</span>), <span class="dv">1000</span>, <span class="dv">500</span>)
+  preds_p &lt;-<span class="st"> </span><span class="kw">predict</span>(modelo, <span class="dt">newx =</span> x_p[, vars_selec])[,<span class="dv">1</span>]
+  error_prueba &lt;-<span class="st"> </span><span class="kw">mean</span>((preds_p <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) <span class="op">!=</span><span class="st"> </span>y_p)
+  <span class="kw">c</span>(<span class="st">&#39;error_valida&#39;</span>=error_validacion, <span class="st">&#39;error_prueba&#39;</span>=error_prueba)
+}
+<span class="kw">seleccion_ajuste</span>()</code></pre></div>
+<pre><code>## error_valida error_prueba 
+##        0.220        0.484</code></pre>
+<p>El resultado es catastrófico otra vez:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">errores_selec &lt;-<span class="st"> </span><span class="kw">map</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">30</span>, seleccion_ajuste) <span class="op">%&gt;%</span><span class="st"> </span>transpose <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">map</span>(unlist) <span class="op">%&gt;%</span><span class="st"> </span>as.data.frame
+<span class="kw">ggplot</span>(errores_selec, <span class="kw">aes</span>(<span class="dt">x=</span>error_prueba, <span class="dt">y=</span>error_valida)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span><span class="kw">geom_abline</span>(<span class="dt">colour=</span><span class="st">&#39;red&#39;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">xlim</span>(<span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>)) <span class="op">+</span><span class="st"> </span><span class="kw">ylim</span>(<span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>))</code></pre></div>
+<p><img src="13-validacion-filtracion_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<p>Esto lo podemos arreglar haciendo la selección de variables dentro de cada corte de validación cruzada, y así no permitimos que los datos de validación se filtren al conjunto de entrenamiento</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">seleccion_ajuste_correcto &lt;-<span class="st"> </span><span class="cf">function</span>(...){
+  y &lt;-<span class="st"> </span><span class="kw">rbinom</span>(<span class="dv">50</span>, <span class="dv">1</span>, <span class="fl">0.5</span>)
+  x &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">rnorm</span>(<span class="dv">50</span><span class="op">*</span><span class="dv">500</span>,<span class="dv">0</span>,<span class="dv">1</span>), <span class="dv">50</span>, <span class="dv">500</span>)
+  
+  est_val_cruzada &lt;-<span class="st"> </span><span class="kw">sapply</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>, <span class="cf">function</span>(i){
+    x_vc &lt;-<span class="st"> </span>x[<span class="op">-</span>((<span class="dv">5</span><span class="op">*</span>i <span class="op">-</span><span class="dv">4</span>)<span class="op">:</span>(<span class="dv">5</span><span class="op">*</span>i)),]
+    y_vc &lt;-<span class="st"> </span>y[<span class="op">-</span>((<span class="dv">5</span><span class="op">*</span>i <span class="op">-</span><span class="dv">4</span>)<span class="op">:</span>(<span class="dv">5</span><span class="op">*</span>i))]
+    correlaciones_vc &lt;-<span class="st"> </span><span class="kw">cor</span>(x_vc, y_vc)
+    vars_selec &lt;-<span class="st"> </span><span class="kw">order</span>(correlaciones_vc, <span class="dt">decreasing=</span><span class="ot">TRUE</span>)[<span class="dv">1</span><span class="op">:</span><span class="dv">50</span>]
+    mod &lt;-<span class="st"> </span><span class="kw">glmnet</span>(<span class="dt">y=</span>y_vc, <span class="dt">x=</span> x_vc[,vars_selec], <span class="dt">alpha=</span><span class="dv">0</span>, <span class="dt">family=</span><span class="st">&#39;binomial&#39;</span>,
+                      <span class="dt">lambda =</span> <span class="fl">0.5</span>)
+    preds_p &lt;-<span class="st"> </span><span class="kw">predict</span>(mod, <span class="dt">newx =</span> x[((<span class="dv">5</span><span class="op">*</span>i <span class="op">-</span><span class="dv">4</span>)<span class="op">:</span>(<span class="dv">5</span><span class="op">*</span>i)),vars_selec])[,<span class="dv">1</span>]
+    <span class="kw">mean</span>((preds_p <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) <span class="op">!=</span><span class="st"> </span>y[((<span class="dv">5</span><span class="op">*</span>i <span class="op">-</span><span class="dv">4</span>)<span class="op">:</span>(<span class="dv">5</span><span class="op">*</span>i))])
+  })
+  error_validacion &lt;-<span class="st"> </span><span class="kw">mean</span>(est_val_cruzada)
+  y_p &lt;-<span class="st"> </span><span class="kw">rbinom</span>(<span class="dv">1000</span>, <span class="dv">1</span>, <span class="fl">0.5</span>)
+  x_p &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">rnorm</span>(<span class="dv">1000</span><span class="op">*</span><span class="dv">500</span>,<span class="dv">0</span>,<span class="dv">1</span>), <span class="dv">1000</span>, <span class="dv">500</span>)
+  correlaciones &lt;-<span class="st"> </span><span class="kw">cor</span>(x, y)
+  vars_selec &lt;-<span class="st"> </span><span class="kw">order</span>(correlaciones, <span class="dt">decreasing=</span><span class="ot">TRUE</span>)[<span class="dv">1</span><span class="op">:</span><span class="dv">50</span>]
+  modelo &lt;-<span class="st"> </span><span class="kw">glmnet</span>(<span class="dt">y=</span>y, <span class="dt">x=</span> x[,vars_selec], <span class="dt">alpha=</span><span class="dv">0</span>, <span class="dt">family=</span><span class="st">&#39;binomial&#39;</span>,
+                    <span class="dt">lambda =</span> <span class="fl">0.5</span>)
+  preds_p &lt;-<span class="st"> </span><span class="kw">predict</span>(modelo, <span class="dt">newx =</span> x_p[, vars_selec])[,<span class="dv">1</span>]
+  error_prueba &lt;-<span class="st"> </span><span class="kw">mean</span>((preds_p <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) <span class="op">!=</span><span class="st"> </span>y_p)
+  <span class="kw">c</span>(<span class="st">&#39;error_valida&#39;</span>=error_validacion, <span class="st">&#39;error_prueba&#39;</span>=error_prueba)
+}</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">errores_selec &lt;-<span class="st"> </span><span class="kw">map</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">30</span>, seleccion_ajuste_correcto) <span class="op">%&gt;%</span><span class="st"> </span>transpose <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">map</span>(unlist) <span class="op">%&gt;%</span><span class="st"> </span>as.data.frame
+<span class="kw">ggplot</span>(errores_selec, <span class="kw">aes</span>(<span class="dt">x=</span>error_prueba, <span class="dt">y=</span>error_valida)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span><span class="kw">geom_abline</span>(<span class="dt">colour=</span><span class="st">&#39;red&#39;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">xlim</span>(<span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>)) <span class="op">+</span><span class="st"> </span><span class="kw">ylim</span>(<span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>))</code></pre></div>
+<p><img src="13-validacion-filtracion_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+</div>
+<div id="uso-de-variables-fuera-de-rango-temporal" class="section level3">
+<h3><span class="header-section-number">13.1.3</span> Uso de variables fuera de rango temporal</h3>
+<p>Otra razón por la que nuestro proceso de validación puede estar contaminado es porque usamos agregados que no están disponibles al momento de la predicción, y están relacionados con la variable que queremos predecir</p>
+<p>Imaginemos que queremos predecir los clientes que se van a quedar y los que se van a ir en función de las visitas que hacen a un sitio.</p>
+<ul>
+<li><p>Vamos a simular el tiempo que se queda cada cliente independiente de otras variables, y construimos una variable de entrada, el número de visitas, que depende del tiempo que un cliente permanece. Por simplicidad, suponemos que todos los clientes empiezan en el tiempo 0.</p></li>
+<li><p>Vamos a suponer durante el tiempo 0.5 y 1.5, hubo una campaña de ventas para intentar recuperar a clientes abandonadores. Una fracción los clientes que abandonaron entre el tiempo 0.5 y 1.5 recibieron una llamada de servicio a cliente. Esto está registrado en la base de datos.</p></li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">simular_clientes &lt;-<span class="st"> </span><span class="cf">function</span>(n,...){
+    tiempo_cliente &lt;-<span class="st"> </span><span class="kw">rexp</span>(n, <span class="fl">0.5</span>)
+    llamada &lt;-<span class="st"> </span><span class="kw">ifelse</span>(tiempo_cliente <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.5</span> <span class="op">&amp;</span><span class="st"> </span>tiempo_cliente <span class="op">&lt;</span><span class="st"> </span><span class="fl">1.5</span>,
+                      <span class="kw">rbinom</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="fl">0.9</span>), <span class="dv">0</span>)
+    <span class="co">#cuántas visitas, dependen del tiempo (proceso de poisson)</span>
+    num_visitas &lt;-<span class="st"> </span><span class="dv">1</span> <span class="op">+</span><span class="st"> </span><span class="kw">rpois</span>(n, <span class="dv">5</span><span class="op">*</span>tiempo_cliente)
+    <span class="co">#calculamos los tiempos cuando ocurrieron esos eventos</span>
+    tiempos &lt;-<span class="st"> </span><span class="kw">lapply</span>(<span class="dv">1</span><span class="op">:</span>n, <span class="cf">function</span>(i){
+      <span class="kw">c</span>(<span class="dv">0</span>, <span class="kw">runif</span>(num_visitas[i]<span class="op">-</span><span class="dv">1</span>, <span class="dv">0</span>, tiempo_cliente[i]))}) 
+    df &lt;-<span class="st"> </span><span class="kw">data_frame</span>(<span class="dt">id_cliente=</span><span class="dv">1</span><span class="op">:</span>n,
+                     <span class="dt">visitas =</span> tiempos, 
+                     <span class="dt">tiempo_cliente =</span> tiempo_cliente,
+                     <span class="dt">llamada =</span> llamada) 
+    df
+}
+<span class="kw">set.seed</span>(<span class="dv">234</span>)
+<span class="kw">simular_clientes</span>(<span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span>unnest</code></pre></div>
+<pre><code>## # A tibble: 2 x 4
+##   id_cliente tiempo_cliente llamada   visitas
+##        &lt;int&gt;          &lt;dbl&gt;   &lt;int&gt;     &lt;dbl&gt;
+## 1          1        0.98248       1 0.0000000
+## 2          1        0.98248       1 0.7624884</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">clientes_futura &lt;-<span class="st"> </span><span class="kw">simular_clientes</span>(<span class="dv">20000</span>) <span class="op">%&gt;%</span><span class="st"> </span>unnest</code></pre></div>
+<p>Ahora supongamos que hoy estamos en el tiempo t=2, así que los datos que tenemos son los siguientes (también calculamos cuántas visitas ha tendido cada cliente hoy:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">clientes_hoy &lt;-<span class="st"> </span><span class="kw">filter</span>(clientes_futura, visitas <span class="op">&lt;</span><span class="st"> </span><span class="dv">2</span>)
+num_visitas_hoy &lt;-<span class="st"> </span>clientes_hoy <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(id_cliente) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">                                    </span><span class="kw">summarise</span>(<span class="dt">num_visitas=</span><span class="kw">n</span>())</code></pre></div>
+<p>Queremos calificar a nuestros clientes actuales con probabilidad de que se vaya, y queremos también evaluar esta predicción. Para hacer esto, usamos los datos con tiempo &lt; 1. ¿Quienes no se han ido? Filtramos clientes activos al tiempo t=1 y vemos quiénes abandonaron al mes t=2 (próximo mes):</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">clientes_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">filter</span>(clientes_hoy, tiempo_cliente <span class="op">&gt;</span><span class="st"> </span><span class="dv">1</span>) <span class="op">%&gt;%</span>
+<span class="st">              </span><span class="kw">mutate</span>(<span class="dt">abandona =</span> tiempo_cliente <span class="op">&lt;</span><span class="st"> </span><span class="dv">2</span>)</code></pre></div>
+<p>Para hacer nuestro modelo, ahora usamos el número de visitas de hoy:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">datos_mod &lt;-<span class="st"> </span>clientes_<span class="dv">1</span> <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">left_join</span>(num_visitas_hoy)</code></pre></div>
+<pre><code>## Joining, by = &quot;id_cliente&quot;</code></pre>
+<p>Y ahora dividimos entre entrenamiento y prueba:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">72427</span>)
+datos_mod &lt;-<span class="st"> </span>datos_mod <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(id_cliente) <span class="op">%&gt;%</span>
+<span class="st">   </span><span class="kw">summarise</span>(<span class="dt">u =</span> <span class="kw">runif</span>(<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">1</span>), <span class="dt">abandona =</span> <span class="kw">first</span>(abandona), <span class="dt">num_visitas=</span><span class="kw">first</span>(num_visitas),
+             <span class="dt">llamada =</span> <span class="kw">first</span>(llamada))
+entrena &lt;-<span class="st"> </span><span class="kw">filter</span>(datos_mod, u <span class="op">&lt;</span><span class="st"> </span><span class="fl">0.5</span>)
+valida &lt;-<span class="st"> </span><span class="kw">filter</span>(datos_mod, u <span class="op">&gt;=</span><span class="st"> </span><span class="fl">0.5</span>)</code></pre></div>
+<p>Ajustamos nuestro modelo</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mod_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">glm</span>(abandona <span class="op">~</span><span class="st"> </span>num_visitas <span class="op">+</span><span class="st"> </span>llamada, entrena, <span class="dt">family =</span> <span class="st">&#39;binomial&#39;</span>)
+<span class="kw">summary</span>(mod_<span class="dv">1</span>)</code></pre></div>
+<pre><code>## 
+## Call:
+## glm(formula = abandona ~ num_visitas + llamada, family = &quot;binomial&quot;, 
+##     data = entrena)
+## 
+## Deviance Residuals: 
+##      Min        1Q    Median        3Q       Max  
+## -1.24755  -0.70896  -0.53240   0.00014   2.46293  
+## 
+## Coefficients:
+##              Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept)   0.32076    0.12668   2.532   0.0113 *  
+## num_visitas  -0.15735    0.01229 -12.799   &lt;2e-16 ***
+## llamada      19.44652  172.98954   0.112   0.9105    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 8186.9  on 6114  degrees of freedom
+## Residual deviance: 4750.6  on 6112  degrees of freedom
+## AIC: 4756.6
+## 
+## Number of Fisher Scoring iterations: 17</code></pre>
+<p>Esto parece tener sentido: cuantas más visitas, menor proabilidad de abandonar. Probamos (con devianza)</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">preds &lt;-<span class="st"> </span><span class="kw">predict</span>(mod_<span class="dv">1</span>, valida, <span class="dt">type =</span> <span class="st">&#39;response&#39;</span>)
+<span class="op">-</span><span class="dv">2</span><span class="op">*</span><span class="kw">mean</span>(valida<span class="op">$</span>abandona<span class="op">*</span><span class="kw">log</span>(preds) <span class="op">+</span><span class="st"> </span>(<span class="dv">1</span><span class="op">-</span>valida<span class="op">$</span>abandona)<span class="op">*</span><span class="kw">log</span>(<span class="dv">1</span><span class="op">-</span>preds))</code></pre></div>
+<pre><code>## [1] 0.7876797</code></pre>
+<p>Así que parece ser que nuestro modelo está haciendo una predicción razonablemente buena.</p>
+<p>Ahora calificamos a los clientes corrientes del día de hoy (t=2)</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">prueba &lt;-<span class="st"> </span>clientes_hoy <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(tiempo_cliente<span class="op">&gt;=</span><span class="dv">2</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">                </span><span class="kw">group_by</span>(id_cliente) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">summarise</span>(<span class="dt">num_visitas =</span> <span class="kw">length</span>(visitas), 
+                                                   <span class="dt">tiempo_cliente =</span> <span class="kw">first</span>(tiempo_cliente), 
+                                                   <span class="dt">llamada =</span> <span class="kw">first</span>(llamada))
+prueba<span class="op">$</span>abandona &lt;-<span class="st"> </span>prueba<span class="op">$</span>tiempo_cliente <span class="op">&lt;</span><span class="st"> </span><span class="dv">3</span>
+preds &lt;-<span class="st"> </span><span class="kw">predict</span>(mod_<span class="dv">1</span>, prueba, <span class="dt">type =</span> <span class="st">&#39;response&#39;</span>)
+<span class="op">-</span><span class="dv">2</span><span class="op">*</span><span class="kw">mean</span>(prueba<span class="op">$</span>abandona<span class="op">*</span><span class="kw">log</span>(preds) <span class="op">+</span><span class="st"> </span>(<span class="dv">1</span><span class="op">-</span>prueba<span class="op">$</span>abandona)<span class="op">*</span><span class="kw">log</span>(<span class="dv">1</span><span class="op">-</span>preds))</code></pre></div>
+<pre><code>## [1] 1.571454</code></pre>
+<p>Y nuestro modelo se degrada considerablemente - no supimos predecir los abandonadores en el próximo mes. ¿Qué está mal?</p>
+<p>En primer lugar, tenemos filtración de datos porque la variable llamada contiene información futura del abandono de los clientes - aquellos clientes que abandonaron entre t=1 y t=1.5 usaron una llamada, y esto contamina nuestra muestra de entrenamiento con una variable que indica directamente abandono entre t=1 y t=2. <em>No podemos usar esta variable</em>, porque cuando queramos hacer predicciones no vamos a saber que ventas llamó en el futuro a una persona porque había abandonado.</p>
+<p>Ajustamos nuestro modelo sin <em>llamada</em>:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mod_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">glm</span>(abandona <span class="op">~</span><span class="st"> </span>num_visitas , entrena, <span class="dt">family =</span> <span class="st">&#39;binomial&#39;</span>)
+<span class="kw">summary</span>(mod_<span class="dv">1</span>)</code></pre></div>
+<pre><code>## 
+## Call:
+## glm(formula = abandona ~ num_visitas, family = &quot;binomial&quot;, data = entrena)
+## 
+## Deviance Residuals: 
+##     Min       1Q   Median       3Q      Max  
+## -2.1191  -0.9487  -0.5624   1.0391   2.7870  
+## 
+## Coefficients:
+##             Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept)  2.43313    0.09974   24.39   &lt;2e-16 ***
+## num_visitas -0.29981    0.01028  -29.17   &lt;2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 8186.9  on 6114  degrees of freedom
+## Residual deviance: 7089.2  on 6113  degrees of freedom
+## AIC: 7093.2
+## 
+## Number of Fisher Scoring iterations: 4</code></pre>
+<p>y probamos</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">preds &lt;-<span class="st"> </span><span class="kw">predict</span>(mod_<span class="dv">1</span>, valida, <span class="dt">type =</span> <span class="st">&#39;response&#39;</span>)
+<span class="op">-</span><span class="dv">2</span><span class="op">*</span><span class="kw">mean</span>(valida<span class="op">$</span>abandona<span class="op">*</span><span class="kw">log</span>(preds) <span class="op">+</span><span class="st"> </span>(<span class="dv">1</span><span class="op">-</span>valida<span class="op">$</span>abandona)<span class="op">*</span><span class="kw">log</span>(<span class="dv">1</span><span class="op">-</span>preds))</code></pre></div>
+<pre><code>## [1] 1.159981</code></pre>
+<p>Y como esperábamos, el error es más subió.</p>
+<p>Ahora calificamos a los clientes corrientes del día de hoy (t=2)</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">prueba &lt;-<span class="st"> </span>clientes_hoy <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(tiempo_cliente<span class="op">&gt;=</span><span class="dv">2</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">                </span><span class="kw">group_by</span>(id_cliente) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">summarise</span>(<span class="dt">num_visitas =</span> <span class="kw">length</span>(visitas), 
+                                                   <span class="dt">tiempo_cliente =</span> <span class="kw">first</span>(tiempo_cliente), 
+                                                   <span class="dt">llamada =</span> <span class="kw">first</span>(llamada))
+prueba<span class="op">$</span>abandona &lt;-<span class="st"> </span>prueba<span class="op">$</span>tiempo_cliente <span class="op">&lt;</span><span class="st"> </span><span class="dv">3</span>
+preds &lt;-<span class="st"> </span><span class="kw">predict</span>(mod_<span class="dv">1</span>, prueba, <span class="dt">type =</span> <span class="st">&#39;response&#39;</span>)
+<span class="op">-</span><span class="dv">2</span><span class="op">*</span><span class="kw">mean</span>(prueba<span class="op">$</span>abandona<span class="op">*</span><span class="kw">log</span>(preds) <span class="op">+</span><span class="st"> </span>(<span class="dv">1</span><span class="op">-</span>prueba<span class="op">$</span>abandona)<span class="op">*</span><span class="kw">log</span>(<span class="dv">1</span><span class="op">-</span>preds))</code></pre></div>
+<pre><code>## [1] 1.548026</code></pre>
+<p>y vemos que todavía tenemos problemas, aunque menos graves. ¿Qué está pasando?</p>
+<p>Tenemos filtración adicional de datos porque usamos <em>las visitas totales hasta hoy</em>. Cuando este número es grande, quiere decir que un cliente no abandona en el futuro. Así en el modelo usamos el hecho de que no había abandonado para predecir que no abandonó (!!)</p>
+<p>Podemos corregir nuestro modelo haciendo:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">num_visitas_<span class="dv">1</span> &lt;-<span class="st"> </span>clientes_hoy <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(visitas <span class="op">&lt;</span><span class="st"> </span><span class="dv">1</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">group_by</span>(id_cliente) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">summarise</span>(<span class="dt">num_visitas=</span><span class="kw">n</span>())
+datos_mod_<span class="dv">2</span> &lt;-<span class="st"> </span>clientes_<span class="dv">1</span> <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">left_join</span>(num_visitas_<span class="dv">1</span>)</code></pre></div>
+<pre><code>## Joining, by = &quot;id_cliente&quot;</code></pre>
+<p>Y ahora dividimos entre entrenamiento y prueba:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">72427</span>)
+datos_mod_<span class="dv">2</span> &lt;-<span class="st"> </span>datos_mod_<span class="dv">2</span> <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(id_cliente) <span class="op">%&gt;%</span>
+<span class="st">   </span><span class="kw">summarise</span>(<span class="dt">u =</span> <span class="kw">runif</span>(<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">1</span>), <span class="dt">abandona =</span> <span class="kw">first</span>(abandona), <span class="dt">num_visitas=</span><span class="kw">first</span>(num_visitas),
+             <span class="dt">llamada=</span><span class="kw">first</span>(llamada))
+entrena_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">filter</span>(datos_mod_<span class="dv">2</span>, u <span class="op">&lt;</span><span class="st"> </span><span class="fl">0.5</span>)
+valida_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">filter</span>(datos_mod_<span class="dv">2</span>, u <span class="op">&gt;=</span><span class="st"> </span><span class="fl">0.5</span>)</code></pre></div>
+<p>Ajustamos nuestro modelo</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mod_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">glm</span>(abandona <span class="op">~</span>num_visitas, entrena_<span class="dv">2</span>, <span class="dt">family =</span> <span class="st">&#39;binomial&#39;</span>)
+<span class="kw">summary</span>(mod_<span class="dv">2</span>)</code></pre></div>
+<pre><code>## 
+## Call:
+## glm(formula = abandona ~ num_visitas, family = &quot;binomial&quot;, data = entrena_2)
+## 
+## Deviance Residuals: 
+##     Min       1Q   Median       3Q      Max  
+## -1.0237  -1.0022  -0.9862   1.3634   1.4301  
+## 
+## Coefficients:
+##             Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept) -0.35920    0.07556  -4.754    2e-06 ***
+## num_visitas -0.01360    0.01179  -1.153    0.249    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 8186.9  on 6114  degrees of freedom
+## Residual deviance: 8185.6  on 6113  degrees of freedom
+## AIC: 8189.6
+## 
+## Number of Fisher Scoring iterations: 4</code></pre>
+<p>Nótese que el coeficiente de <em>num_visitas</em> es mucho más chico esta vez.</p>
+<p>Esto tiene sentido: cuantas más visitas, menor proabilidad de abandonar. Probamos (tasa de correctos)</p>
+<p>Validamos:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">preds &lt;-<span class="st"> </span><span class="kw">predict</span>(mod_<span class="dv">2</span>, valida, <span class="dt">type =</span> <span class="st">&#39;response&#39;</span>)
+<span class="op">-</span><span class="dv">2</span><span class="op">*</span><span class="kw">mean</span>(valida<span class="op">$</span>abandona<span class="op">*</span><span class="kw">log</span>(preds) <span class="op">+</span><span class="st"> </span>(<span class="dv">1</span><span class="op">-</span>valida<span class="op">$</span>abandona)<span class="op">*</span><span class="kw">log</span>(<span class="dv">1</span><span class="op">-</span>preds))</code></pre></div>
+<pre><code>## [1] 1.323245</code></pre>
+<p>Ahora calificamos a los clientes corrientes del día de hoy (t=2) y vemos qué pasa:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">prueba &lt;-<span class="st"> </span>clientes_hoy <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(tiempo_cliente<span class="op">&gt;=</span><span class="dv">2</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">                </span><span class="kw">group_by</span>(id_cliente) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">summarise</span>(<span class="dt">num_visitas =</span> <span class="kw">length</span>(visitas), 
+                                                   <span class="dt">tiempo_cliente =</span> <span class="kw">first</span>(tiempo_cliente),
+                                                   <span class="dt">llamada =</span> <span class="kw">first</span>(llamada))
+prueba<span class="op">$</span>abandona &lt;-<span class="st"> </span>prueba<span class="op">$</span>tiempo_cliente <span class="op">&lt;</span><span class="st"> </span><span class="dv">3</span>
+preds &lt;-<span class="st"> </span><span class="kw">predict</span>(mod_<span class="dv">2</span>, prueba, <span class="dt">type =</span> <span class="st">&#39;response&#39;</span>)
+<span class="op">-</span><span class="dv">2</span><span class="op">*</span><span class="kw">mean</span>(prueba<span class="op">$</span>abandona<span class="op">*</span><span class="kw">log</span>(preds) <span class="op">+</span><span class="st"> </span>(<span class="dv">1</span><span class="op">-</span>prueba<span class="op">$</span>abandona)<span class="op">*</span><span class="kw">log</span>(<span class="dv">1</span><span class="op">-</span>preds))</code></pre></div>
+<pre><code>## [1] 1.336908</code></pre>
+<p>Y vemos que nuestra validación y desempeño real coinciden, pues nuestro ejercicio de validación ya coincide con la tarea de predicción que nos interesa. En este caso, incluso nuestro proceso de entrenamiento está contaminado con datos que no tendremos cuando hacemos predicciones.</p>
+<ul>
+<li>Desgraciadamente, en este ejemplo simulado no pudimos hacer nada para predecir abandono (por construcción). Pero una validación incorrecta parecía indicar que nuestro modelo podría aportar algo.</li>
+</ul>
+</div>
+</div>
+<div id="datos-en-conglomerados-y-muestreo-complejo" class="section level2">
+<h2><span class="header-section-number">13.2</span> Datos en conglomerados y muestreo complejo</h2>
+<p>En muestras complejas, con el fin de reducir costos, muchas veces se muestrean casos dentro de lo que se llama comunmente <em>unidades primarias de muestreo</em>. Por ejemplo, las unidades primarias de muestreo pueden ser manzanas, y se muestrean varios hogares dentro de cada manzana. Es más simple técnicamente y mejor desde punto de vista del error tomar hogares al azar (no agrupados), pero los costos generalmente aumentan mucho si no usamos alguna agrupación - en este ejemplo, el encuestador tendría que transportarse continuamente para levantar encuestas que fueran seleccionadas sin agrupaciones.</p>
+<p>Como casos dentro de unidades primarias de muestreo son similares, y la mayor parte de las unidades primarias de muestreo no son muestreadas, tenemos un riesgo en nuestra validación: si hacemos conjuntos de validación al azar, podemos incluir casos de las mismas unidades primarias dentro de entremiento y validación. La homogeneidad de casos dentro de unidades primarias hace fácil predecir casos de validación, o dicho de otra manera: se nos está filtrando información desde el conjunto de validación al de entrenamiento (a través del comportamiento común dentro de unidades primarias de muestreo).</p>
+<p>En la realidad, observaremos probablemente casos para los que no tenemos ejemplos de unidades primarias. Así que tenemos que construir nuestra validación para que refleje esta tarea.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">12</span>)
+upms &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="dv">1</span>,<span class="dv">100</span>,<span class="dv">1</span>)
+simular_upms &lt;-<span class="st"> </span><span class="cf">function</span>(n){
+  <span class="kw">map</span>(<span class="kw">seq</span>(<span class="dv">1</span>, n, <span class="dv">1</span>), <span class="cf">function</span>(upm){
+      num_upm &lt;-<span class="st"> </span><span class="kw">runif</span>(<span class="dv">1</span>, <span class="dv">10</span>, <span class="dv">100</span>)
+      a &lt;-<span class="st"> </span><span class="kw">runif</span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">100</span>)
+      b &lt;-<span class="st"> </span><span class="kw">runif</span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>)
+      x &lt;-<span class="st"> </span><span class="kw">rnorm</span>(num_upm, <span class="dv">0</span>, <span class="fl">0.2</span>)
+      z &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>)
+      <span class="kw">data_frame</span>(<span class="dt">upm =</span> upm, <span class="dt">x =</span> x, <span class="dt">z=</span> z, <span class="dt">y =</span> a <span class="op">+</span><span class="st"> </span>b<span class="op">*</span>x <span class="op">+</span><span class="st"> </span><span class="kw">rnorm</span>(num_upm, <span class="dv">0</span>, <span class="dv">1</span>))
+    }) <span class="op">%&gt;%</span><span class="st"> </span>bind_rows
+}
+dat &lt;-<span class="st"> </span><span class="kw">simular_upms</span>(<span class="dt">n=</span><span class="dv">100</span>)
+prueba &lt;-<span class="st"> </span><span class="kw">simular_upms</span>(<span class="dv">1000</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dat &lt;-<span class="st"> </span>dat <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">u=</span><span class="kw">runif</span>(<span class="kw">nrow</span>(dat), <span class="dv">0</span>,<span class="dv">1</span>))
+entrena &lt;-<span class="st"> </span>dat <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(u <span class="op">&lt;</span><span class="st"> </span><span class="fl">0.5</span>)
+valida &lt;-<span class="st"> </span>dat <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(u <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.5</span>)
+mod_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">randomForest</span>(y<span class="op">~</span>x<span class="op">+</span>z, <span class="dt">data=</span>entrena)
+<span class="kw">sd</span>(<span class="kw">predict</span>(mod_<span class="dv">1</span>, valida)<span class="op">-</span>valida<span class="op">$</span>y)</code></pre></div>
+<pre><code>## [1] 13.56648</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sd</span>(<span class="kw">predict</span>(mod_<span class="dv">1</span>, prueba)<span class="op">-</span><span class="st"> </span>prueba<span class="op">$</span>y)</code></pre></div>
+<pre><code>## [1] 33.67454</code></pre>
+<p>La diferencia es considerable. Podemos arreglar haciendo la validación separando distintos upms.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dat &lt;-<span class="st"> </span>dat <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">u=</span><span class="kw">runif</span>(<span class="kw">nrow</span>(dat), <span class="dv">0</span>,<span class="dv">1</span>))
+entrena &lt;-<span class="st"> </span>dat <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(upm <span class="op">&lt;</span><span class="st"> </span><span class="dv">50</span>)
+valida &lt;-<span class="st"> </span>dat <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(upm <span class="op">&gt;=</span><span class="st"> </span><span class="dv">50</span>)
+mod_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">randomForest</span>(y<span class="op">~</span>x<span class="op">+</span>z, <span class="dt">data=</span>entrena)
+<span class="kw">sd</span>(<span class="kw">predict</span>(mod_<span class="dv">1</span>, valida)<span class="op">-</span>valida<span class="op">$</span>y)</code></pre></div>
+<pre><code>## [1] 39.20522</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sd</span>(<span class="kw">predict</span>(mod_<span class="dv">1</span>, prueba)<span class="op">-</span><span class="st"> </span>prueba<span class="op">$</span>y)</code></pre></div>
+<pre><code>## [1] 37.16297</code></pre>
+<p>En encuestas reales, este efecto puede variar dependiendo de la capacidad del modelo, el diseño de la encuesta (por ejemplo, si las unidades primarias de muestreo son más homogéneas o menos homogéneas, etc), y puede ir desde un efecto prácticamente ignorable hasta uno muy grande.</p>
+<div id="censura-y-evaluacion-incompleta" class="section level3">
+<h3><span class="header-section-number">13.2.1</span> Censura y evaluación incompleta</h3>
+<p>Algunas veces, no todos los datos que quisiéramos tener están disponibles para construir nuestros modelos: algunos clientes o casos, por ejemplo, no están en nuestros datos (son datos censurados). Sin embargo, al poner los modelos en producción, hacemos predicciones para <em>todos</em> los datos, y nuestras predicciones malas para aquellos datos antes censurados pueden dañar severamente el desempeño de nuestros modelos.</p>
+<p>Este es un ejemplo de datos faltantes, pero más serio: todos las variables de algunos casos están faltantes, y algunas veces ni siquiera sabemos esto.</p>
+</div>
+</div>
+<div id="ejemplo-tiendas-cerradas" class="section level2">
+<h2><span class="header-section-number">13.3</span> Ejemplo: tiendas cerradas</h2>
+<p>Supongamos que queremos predecir las ventas de tiendas según las características del un local potencial después de un año de ser abiertas. Este modelo tiene el propósito de dedicir si abrir o uno una tienda en un local posible.</p>
+<p>Vamos a hacer este ejemplo con datos simulados.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">h &lt;-<span class="st"> </span><span class="cf">function</span>(z) <span class="dv">1</span><span class="op">/</span>(<span class="dv">1</span><span class="op">+</span><span class="kw">exp</span>(<span class="op">-</span>z))
+simular_tiendas &lt;-<span class="st"> </span><span class="cf">function</span>(n){
+  <span class="co">#Variables de entrada</span>
+  x &lt;-<span class="st"> </span><span class="kw">rnorm</span>(n, <span class="dv">0</span>, <span class="dv">1</span>)
+  a &lt;-<span class="st"> </span><span class="kw">rnorm</span>(n, <span class="dv">0</span>, <span class="dv">1</span>)
+  w &lt;-<span class="st"> </span><span class="kw">rbinom</span>(n, <span class="dv">1</span>, <span class="fl">0.5</span>)
+  
+  <span class="co"># respuesta en ventas después de un año</span>
+  z &lt;-<span class="st">  </span><span class="dv">2</span><span class="op">*</span>x <span class="op">+</span><span class="st"> </span>a<span class="op">+</span><span class="st"> </span>w <span class="op">+</span><span class="st"> </span><span class="kw">rnorm</span>(n, <span class="dv">0</span>, <span class="fl">0.1</span>)
+  ventas &lt;-<span class="st"> </span><span class="kw">exp</span>(z)<span class="op">*</span><span class="fl">1e5</span>
+  <span class="co"># prob de cerrar es alta cuando las ventas son más bajas</span>
+  p_cerrar &lt;-<span class="st"> </span><span class="kw">h</span>(<span class="op">-</span><span class="dv">3</span> <span class="op">-</span><span class="st"> </span><span class="dv">2</span><span class="op">*</span>z)
+  <span class="co"># Algunas tiendas quebraron (dependiendo del nivel de ventas)</span>
+  cerrada &lt;-<span class="st"> </span><span class="kw">rbinom</span>(n, <span class="dv">1</span>, <span class="dt">prob =</span> p_cerrar)
+  <span class="kw">data_frame</span>(<span class="dt">id_tienda=</span><span class="dv">1</span><span class="op">:</span>n, <span class="dt">x=</span>x, <span class="dt">w=</span>w, <span class="dt">a=</span>a, <span class="dt">ventas=</span>ventas, <span class="dt">cerrada =</span> cerrada)
+}
+<span class="kw">simular_tiendas</span>(<span class="dv">10</span>)</code></pre></div>
+<pre><code>## # A tibble: 10 x 6
+##    id_tienda           x     w           a      ventas cerrada
+##        &lt;int&gt;       &lt;dbl&gt; &lt;int&gt;       &lt;dbl&gt;       &lt;dbl&gt;   &lt;int&gt;
+##  1         1  0.41074492     1  0.07368630  674913.217       0
+##  2         2  0.25781219     0  0.62976474  369101.632       0
+##  3         3  0.80262697     1 -0.34351863  910095.139       0
+##  4         4 -0.35724742     1  0.33934325  213056.958       0
+##  5         5  0.05827291     1 -0.60062549  173309.005       0
+##  6         6  0.82610554     0  0.42638566  790395.601       0
+##  7         7 -1.22796182     1 -1.02894403    7525.901       1
+##  8         8  1.27350037     0  0.70299632 2700229.020       0
+##  9         9 -0.66658104     0  0.02756995   27192.405       0
+## 10        10 -1.60667098     1  0.24560395   13335.742       1</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">923</span>)
+tiendas_entrena_valida &lt;-<span class="st"> </span><span class="kw">simular_tiendas</span>(<span class="dv">2000</span>)
+tiendas_prueba &lt;-<span class="st"> </span><span class="kw">simular_tiendas</span>(<span class="dv">2000</span>)
+<span class="kw">table</span>(tiendas_entrena_valida<span class="op">$</span>cerrada)</code></pre></div>
+<pre><code>## 
+##    0    1 
+## 1571  429</code></pre>
+<p>Ahora supongamos que el sistema borró los datos históricos de las tiendas que cerraron. Nuestros datos para trabajar son</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">entrena_valida &lt;-<span class="st"> </span><span class="kw">filter</span>(tiendas_entrena_valida, cerrada <span class="op">==</span><span class="st"> </span><span class="dv">0</span>)
+<span class="kw">nrow</span>(entrena_valida)</code></pre></div>
+<pre><code>## [1] 1571</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">72427</span>)
+datos &lt;-<span class="st"> </span>entrena_valida <span class="op">%&gt;%</span><span class="st"> </span>ungroup <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">u =</span> <span class="kw">runif</span>(<span class="kw">nrow</span>(entrena_valida),<span class="dv">0</span>,<span class="dv">1</span>))
+entrena &lt;-<span class="st"> </span><span class="kw">filter</span>(datos, u <span class="op">&lt;</span><span class="st"> </span><span class="fl">0.5</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="op">-</span>u)
+valida &lt;-<span class="st"> </span><span class="kw">filter</span>(datos, u <span class="op">&gt;=</span><span class="st"> </span><span class="fl">0.5</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="op">-</span>u)
+<span class="kw">nrow</span>(entrena)</code></pre></div>
+<pre><code>## [1] 805</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">nrow</span>(valida)</code></pre></div>
+<pre><code>## [1] 766</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mod_log &lt;-<span class="st"> </span><span class="kw">randomForest</span>(<span class="kw">log</span>(ventas)<span class="op">~</span>x<span class="op">+</span>w<span class="op">+</span>a, <span class="dt">data=</span>entrena, <span class="dt">mtry=</span><span class="dv">3</span>)
+<span class="co">#mod_log &lt;- lm(log(ventas)~x+w+a, data=entrena)</span></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">preds_log &lt;-<span class="st"> </span><span class="kw">predict</span>(mod_log, valida)
+valida<span class="op">$</span>preds_valida &lt;-<span class="st"> </span>preds_log
+<span class="kw">sd</span>(preds_log<span class="op">-</span><span class="kw">log</span>(valida<span class="op">$</span>ventas))</code></pre></div>
+<pre><code>## [1] 0.3000081</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(valida, <span class="kw">aes</span>(<span class="dt">y=</span><span class="kw">log</span>(ventas), <span class="dt">x=</span> preds_valida))<span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>() <span class="op">+</span>
+<span class="st">    </span><span class="kw">geom_abline</span>(<span class="dt">colour=</span><span class="st">&#39;red&#39;</span>)</code></pre></div>
+<p><img src="13-validacion-filtracion_files/figure-html/unnamed-chunk-37-1.png" width="672" /></p>
+<p>Cuando lo aplicamos a nuevas tiendas, desgraciadamente, observamos</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">preds_log &lt;-<span class="st"> </span><span class="kw">predict</span>(mod_log, tiendas_prueba)
+<span class="kw">sd</span>(preds_log<span class="op">-</span><span class="kw">log</span>(tiendas_prueba<span class="op">$</span>ventas))</code></pre></div>
+<pre><code>## [1] 0.5730244</code></pre>
+<p>El error es más alto de lo que esperábamos, y nuestra predicción para las tiendas malas es especialmente malo:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tiendas_prueba<span class="op">$</span>pred_prueba &lt;-<span class="st"> </span>preds_log
+<span class="kw">ggplot</span>(tiendas_prueba, <span class="kw">aes</span>(<span class="dt">y=</span><span class="kw">log</span>(ventas), <span class="dt">x=</span> pred_prueba,<span class="dt">colour=</span>cerrada))<span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>() <span class="op">+</span>
+<span class="st">    </span><span class="kw">geom_abline</span>(<span class="dt">colour=</span><span class="st">&#39;red&#39;</span>)</code></pre></div>
+<p><img src="13-validacion-filtracion_files/figure-html/unnamed-chunk-39-1.png" width="672" /></p>
+<p>Veamos la cadena que produjo este error:</p>
+<ul>
+<li>La variable cerrar está naturalmente relacionada con ventas: cuanto más bajas son las ventas al año, mayor la probabilidad de cerrar.</li>
+<li>En los datos de entrenamiento no tenemos las tiendas que cerraron (que tienen ventas más bajas) - estos datos están censurados</li>
+<li>Nuestro modelo se desempeña bien para tiendas que tienen ventas relativamente altas.</li>
+<li>Pero falla cuando intentamos predecir tiendas con ventas relativamente bajas.</li>
+</ul>
+<p>Soluciones para este problema son analizar cuidadosamente que datos han sido censurados de las bases de datos. En caso de que haya ocurrido, rara vez <em>todos</em> los datos fueron borrados: por ejemplo, quizá la variable respuesta se puede conseguir, y existen algunas de las variables explicativas - en este caso podríamos intentar imputación de datos.</p>
+<div id="muestras-de-validacion-chicas" class="section level3">
+<h3><span class="header-section-number">13.3.1</span> Muestras de validación chicas</h3>
+<p>Una muestra de validación chica es casi tan malo como una muestra de entrenamiento chica. Una muestra de entrenamiento grande nos permite intentar modelos más complejos y flexible. Pero con una muestra de validación demasiado chica, no es posible discriminar entre los que se desempeñan bien y mal, desaprovechando las ganancias que podríamos tener por tener una buena muestra de entrenamiento.</p>
+<p>Podemos ver la situación con el ejemplo de spam</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">spam &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&#39;datos/spam-entrena.csv&#39;</span>)
+spam_prueba &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&#39;datos/spam-prueba.csv&#39;</span>)
+<span class="kw">nrow</span>(spam)</code></pre></div>
+<pre><code>## [1] 3067</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">nrow</span>(spam_prueba)</code></pre></div>
+<pre><code>## [1] 1534</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">spam &lt;-<span class="st"> </span><span class="kw">bind_cols</span>(spam, <span class="kw">data.frame</span>(<span class="kw">matrix</span>(<span class="kw">rnorm</span>(<span class="kw">nrow</span>(spam)<span class="op">*</span><span class="dv">100</span>,<span class="dv">0</span>,<span class="dv">1</span>), <span class="kw">nrow</span>(spam), <span class="dv">100</span>)))
+spam_prueba &lt;-<span class="st"> </span><span class="kw">bind_cols</span>(spam_prueba, <span class="kw">data.frame</span>(<span class="kw">matrix</span>(<span class="kw">rnorm</span>(<span class="kw">nrow</span>(spam_prueba)<span class="op">*</span><span class="dv">100</span>,<span class="dv">0</span>,<span class="dv">1</span>), <span class="kw">nrow</span>(spam_prueba), <span class="dv">100</span>)))</code></pre></div>
+<p>Haremos cortes de distinto tamaño entrenamiento/validación y veremos qué desempeño resulta de escoger nuestro modelo final (lasso) usando una muestra de validación.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(glmnet)
+separar &lt;-<span class="st"> </span><span class="cf">function</span>(datos, prop_entrena){
+  n &lt;-<span class="st"> </span><span class="kw">nrow</span>(datos)
+  datos &lt;-<span class="st"> </span>datos <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">u =</span> <span class="kw">runif</span>(n, <span class="dv">0</span>, <span class="dv">1</span>)) <span class="op">%&gt;%</span>
+<span class="st">    </span><span class="kw">mutate</span>(<span class="dt">tipo =</span> <span class="kw">ifelse</span>(u <span class="op">&lt;</span><span class="st"> </span>prop_entrena, <span class="st">&#39;entrena&#39;</span>, <span class="st">&#39;validación&#39;)) %&gt;%</span>
+<span class="st">    select(-u)</span>
+<span class="st">  print(table(datos$tipo))</span>
+<span class="st">  datos</span>
+<span class="st">}</span>
+
+<span class="st">devianza &lt;- function(z, y){</span>
+<span class="st">  apply(-2*(y*z - log(1+exp(z))),2,mean)</span>
+<span class="st">}</span>
+
+<span class="st">ajusta_valida &lt;- function(datos, spam_prueba){</span>
+<span class="st">  entrena &lt;- datos %&gt;% filter(tipo ==&#39;</span>entrena<span class="st">&#39;) %&gt;% select(-tipo)</span>
+<span class="st">  validación &lt;- datos %&gt;% filter(tipo==&#39;</span>validación&#39;) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="op">-</span>tipo)
+  x &lt;-<span class="st"> </span><span class="kw">as.matrix</span>(entrena <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="op">-</span>spam))
+  y &lt;-<span class="st"> </span>entrena<span class="op">$</span>spam
+  mod &lt;-<span class="st"> </span><span class="kw">glmnet</span>(<span class="dt">x =</span> x, <span class="dt">y =</span> y, <span class="dt">alpha =</span> <span class="fl">0.0</span>, <span class="dt">family =</span><span class="st">&#39;binomial&#39;</span>,
+                <span class="dt">lambda =</span> <span class="kw">exp</span>(<span class="kw">seq</span>(<span class="op">-</span><span class="dv">20</span>, <span class="op">-</span><span class="dv">2</span>, <span class="fl">0.25</span>) ))
+  x_val &lt;-<span class="st"> </span><span class="kw">as.matrix</span>(validación <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="op">-</span>spam))
+  y_val &lt;-<span class="st"> </span>validación$spam
+  x_prueba &lt;-<span class="st"> </span><span class="kw">as.matrix</span>(spam_prueba <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="op">-</span>spam))
+  y_prueba &lt;-<span class="st"> </span>spam_prueba<span class="op">$</span>spam
+  val_error &lt;-<span class="st"> </span><span class="kw">devianza</span>(<span class="kw">predict</span>(mod, x_val, <span class="dt">type=</span><span class="st">&#39;response&#39;</span>), y_val)
+  prueba_error &lt;-<span class="st"> </span><span class="kw">devianza</span>(<span class="kw">predict</span>(mod, x_prueba, <span class="dt">type=</span><span class="st">&#39;response&#39;</span>), y_prueba)
+  <span class="co">#val_error &lt;- apply((predict(mod, x_val)  &gt; 0) != (y_val==1), 2, mean)</span>
+  <span class="co">#prueba_error &lt;- apply((predict(mod, x_prueba)  &gt; 0) != (y_prueba==1), 2, mean)</span>
+  <span class="kw">data_frame</span>(<span class="dt">lambda =</span> mod<span class="op">$</span>lambda, <span class="dt">val_error=</span>val_error, <span class="dt">prueba_error =</span> prueba_error)
+<span class="er">}</span></code></pre></div>
+<p>Si la muestra de validación es chica, podemos escoger un modelo subóptimo, además que la estimación del error es mala</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(tidyr)
+<span class="kw">set.seed</span>(<span class="dv">923</span>)
+dat &lt;-<span class="st"> </span><span class="kw">separar</span>(spam, <span class="fl">0.98</span>)</code></pre></div>
+<pre><code>## 
+##    entrena validación 
+##       3011         56</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">ajusta_valida</span>(dat, spam_prueba) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">gather</span>(tipo, valor, <span class="op">-</span>lambda)
+<span class="kw">ggplot</span>(df_<span class="dv">1</span>, <span class="kw">aes</span>(<span class="dt">x=</span>lambda, <span class="dt">y=</span>valor, <span class="dt">group=</span>tipo, <span class="dt">colour=</span>tipo))<span class="op">+</span><span class="st"> </span><span class="kw">geom_line</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span><span class="kw">scale_x_log10</span>()</code></pre></div>
+<p><img src="13-validacion-filtracion_files/figure-html/unnamed-chunk-42-1.png" width="672" /></p>
+<p>En este caso escogemos un modelo bueno, pero la estimación es mala</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">91123</span>)
+dat &lt;-<span class="st"> </span><span class="kw">separar</span>(spam, <span class="fl">0.98</span>)</code></pre></div>
+<pre><code>## 
+##    entrena validación 
+##       3004         63</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">ajusta_valida</span>(dat, spam_prueba) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">gather</span>(tipo, valor, <span class="op">-</span>lambda)
+<span class="kw">ggplot</span>(df_<span class="dv">1</span>, <span class="kw">aes</span>(<span class="dt">x=</span>lambda, <span class="dt">y=</span>valor, <span class="dt">group=</span>tipo, <span class="dt">colour=</span>tipo))<span class="op">+</span><span class="st"> </span><span class="kw">geom_line</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_point</span>()<span class="op">+</span><span class="st"> </span><span class="kw">scale_x_log10</span>()</code></pre></div>
+<p><img src="13-validacion-filtracion_files/figure-html/unnamed-chunk-43-1.png" width="672" /></p>
+<p>Por otro lado, más datos de validación nos dan una mejor estimación el error y nos permite elegir el modelo óptimo. Pero el modelo no es tan bueno porque usamos menos datos de entrenamiento.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">9113</span>)
+dat &lt;-<span class="st"> </span><span class="kw">separar</span>(spam, <span class="fl">0.2</span>)</code></pre></div>
+<pre><code>## 
+##    entrena validación 
+##        609       2458</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">ajusta_valida</span>(dat, spam_prueba) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">gather</span>(tipo, valor, <span class="op">-</span>lambda)
+<span class="kw">ggplot</span>(df_<span class="dv">1</span>, <span class="kw">aes</span>(<span class="dt">x=</span>lambda, <span class="dt">y=</span>valor, <span class="dt">group=</span>tipo, <span class="dt">colour=</span>tipo))<span class="op">+</span><span class="st"> </span><span class="kw">geom_line</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_point</span>()<span class="op">+</span><span class="st"> </span><span class="kw">scale_x_log10</span>()</code></pre></div>
+<p><img src="13-validacion-filtracion_files/figure-html/unnamed-chunk-44-1.png" width="672" /></p>
+<p>Cuando tenemos una muestra de validación chica, es posible obtener rangos de error para el error. El error de validación es un promedio sobre una muestra (<span class="math inline">\(\overline{x}\)</span>), así que podemos estimar su desviación estándar mediante el error estándar <span class="math inline">\(\frac{s}{\sqrt{n}}\)</span>, donde <span class="math inline">\(s\)</span> es la desviación estándar de los errores individuales de la muestra de entrenamiento.</p>
+<div id="ejemplo-50" class="section level4">
+<h4><span class="header-section-number">13.3.1.1</span> Ejemplo</h4>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">91123</span>)
+dat &lt;-<span class="st"> </span><span class="kw">separar</span>(spam, <span class="fl">0.98</span>)</code></pre></div>
+<pre><code>## 
+##    entrena validación 
+##       3004         63</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">devianza_valor &lt;-<span class="st"> </span><span class="cf">function</span>(z, y){
+  <span class="op">-</span><span class="dv">2</span><span class="op">*</span>(y<span class="op">*</span>z <span class="op">-</span><span class="st"> </span><span class="kw">log</span>(<span class="dv">1</span><span class="op">+</span><span class="kw">exp</span>(z)))
+}
+
+ entrena &lt;-<span class="st"> </span>dat <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(tipo <span class="op">==</span><span class="st">&#39;entrena&#39;</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="op">-</span>tipo)
+  validación &lt;-<span class="st"> </span>dat <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(tipo<span class="op">==</span><span class="st">&#39;validación&#39;) %&gt;% select(-tipo)</span>
+<span class="st">  x &lt;- as.matrix(entrena %&gt;% select(-spam))</span>
+<span class="st">  y &lt;- entrena$spam</span>
+<span class="st">  mod &lt;- glmnet(x = x, y = y, alpha = 0.0, family =&#39;</span>binomial<span class="st">&#39;,</span>
+<span class="st">                lambda = exp(-10 ))</span>
+<span class="st">  x_val &lt;- as.matrix(validación %&gt;% select(-spam))</span>
+<span class="st">  y_val &lt;- validación$spam</span>
+<span class="st">  validacion &lt;- devianza_valor(predict(mod, x_val, type=&#39;</span>response<span class="st">&#39;), y_val)</span></code></pre></div>
+<p>Y ahora podemos calcular el estimador puntual y el error estándar:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">media &lt;-<span class="st"> </span><span class="kw">mean</span>(validacion)
+ee &lt;-<span class="st"> </span><span class="kw">sd</span>(validacion)<span class="op">/</span><span class="kw">sqrt</span>(<span class="kw">length</span>(validacion))
+media</code></pre></div>
+<pre><code>## [1] 1.131755</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ee</code></pre></div>
+<pre><code>## [1] 0.05313999</code></pre>
+<p>Un intervalo del 95% para esta estimación es entonces</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">c</span>(media<span class="op">-</span><span class="dv">2</span><span class="op">*</span>ee, media<span class="op">+</span><span class="dv">2</span><span class="op">*</span>ee)</code></pre></div>
+<pre><code>## [1] 1.025475 1.238035</code></pre>
+<p>Si hacemos más grande la muestra de validación</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dat &lt;-<span class="st"> </span><span class="kw">separar</span>(spam, <span class="fl">0.5</span>)</code></pre></div>
+<pre><code>## 
+##    entrena validación 
+##       1555       1512</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"> entrena &lt;-<span class="st"> </span>dat <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(tipo <span class="op">==</span><span class="st">&#39;entrena&#39;</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="op">-</span>tipo)
+  validación &lt;-<span class="st"> </span>dat <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(tipo<span class="op">==</span><span class="st">&#39;validación&#39;) %&gt;% select(-tipo)</span>
+<span class="st">  x &lt;- as.matrix(entrena %&gt;% select(-spam))</span>
+<span class="st">  y &lt;- entrena$spam</span>
+<span class="st">  mod &lt;- glmnet(x = x, y = y, alpha = 0.0, family =&#39;</span>binomial<span class="st">&#39;,</span>
+<span class="st">                lambda = exp(-10 ))</span>
+<span class="st">  x_val &lt;- as.matrix(validación %&gt;% select(-spam))</span>
+<span class="st">  y_val &lt;- validación$spam</span>
+<span class="st">  validacion &lt;- devianza_valor(predict(mod, x_val, type=&#39;</span>response<span class="st">&#39;), y_val)</span>
+<span class="st">  media &lt;- mean(validacion)</span>
+<span class="st">ee &lt;- sd(validacion)/sqrt(length(validacion))</span>
+<span class="st">media</span></code></pre></div>
+<pre><code>## [1] 1.221689</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ee</code></pre></div>
+<pre><code>## [1] 0.01238195</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">c</span>(media<span class="op">-</span><span class="dv">2</span><span class="op">*</span>ee, media<span class="op">+</span><span class="dv">2</span><span class="op">*</span>ee)</code></pre></div>
+<pre><code>## [1] 1.196925 1.246453</code></pre>
+</div>
+</div>
+<div id="ejercicio-8" class="section level3 unnumbered">
+<h3>Ejercicio</h3>
+<ul>
+<li>Repite el ejercicio anterior para la tasa de clasificación incorrecta (ajusta un modelo y calcula el estimador de validación del error junto a su error estándar)</li>
+<li>Repite el ejercicio anterior para un problema de regresión: en este caso, considera que el error cuadrático medio es el promedio de los errores cuadráticos de cada caso de validación.</li>
+<li>¿Cómo harías un intervalo para la raíz del error cuadrático medio? ¿Para el error absoluto promedio?</li>
+</ul>
+</div>
+</div>
+<div id="otros-ejemplos" class="section level2">
+<h2><span class="header-section-number">13.4</span> Otros ejemplos</h2>
+<ul>
+<li><p>En kaggle: un concurso para detectar cáncer de próstata contenía una variable que indicaba si el paciente había tenido una operación de próstata o no. Claramente esta variable contiene información acerca de la respuesta, pero un modelo que contiene esta variable no es útil (ve al futuro para la mayoría de los pacientes). En este caso es una filtración de la respuesta a conjunto de entrenamiento y validación.</p></li>
+<li><p>E-commerce: si intentamos predecir quién va a hacer grandes compras, variables como iva incurrido o uso de envío gratis (que solo aplica a compras grandes) son variables que filtran información de lo que queremos predecir y no son útiles en el modelo final. Estas variables también ven al futuro.</p></li>
+<li><p>En kaggle: en el proceso de recolección de los datos, el tamaño de archivos de grabaciones que contenían llamadas de ballenas era diferente de los que no contenían llamadas. Esta es una filtración, pues en la realidad no tendremos a alguien que prepare estos archivos de la misma manera.</p></li>
+</ul>
+</div>
+<div id="resumen-1" class="section level2">
+<h2><span class="header-section-number">13.5</span> Resumen</h2>
+<ul>
+<li>El procesamiento de datos para modelo predictivos es difícil.</li>
+<li>Cuando hay una dimensión temporal, es bueno usarla a lo largo de todo el proceso para poner una barrera entre entrenamiento y validación.</li>
+<li>Cuando los datos están organizados en grupos dentro de los que hacemos predicciones, preguntarnos si queremos predecir para nuevos grupos o los mismo grupos existentes (ejemplo de las unidades primarias de muestreo).</li>
+<li>Investigar cuando hay casos faltantes, y evaluar qué tan peligroso es construir un modelo para hacer predicciones</li>
+<li>Muchas filtraciones son muy sutiles y dificiles de detectar. Puede tener que ver con cómo funcionan los sistemas que registran los datos, decisiones de diseños de base de datos, decisiones de limpieza de datos.</li>
+<li>Siempre es bueno proponer un piloto para verificar que nuestros modelos funcionan como se espera - y considerar que una degradación del desempeño puede deberse a una filtración.</li>
+</ul>
+
+<div id="refs" class="references">
+<div>
+<p>Bishop, Christopher M. 2006. <em>Pattern Recognition and Machine Learning (Information Science and Statistics)</em>. Secaucus, NJ, USA: Springer-Verlag New York, Inc.</p>
+</div>
+<div>
+<p>Goodfellow, Ian, Yoshua Bengio, and Aaron Courville. 2016. <em>Deep Learning</em>. MIT Press.</p>
+</div>
+<div>
+<p>Hastie, Trevor, Robert Tibshirani, and Jerome Friedman. 2017. <em>The Elements of Statistical Learning</em>. Springer Series in Statistics. Springer New York Inc. <a href="http://web.stanford.edu/~hastie/ElemStatLearn/" class="uri">http://web.stanford.edu/~hastie/ElemStatLearn/</a>.</p>
+</div>
+<div>
+<p>James, Gareth, Daniela Witten, Trevor Hastie, and Robert Tibshirani. 2014. <em>An Introduction to Statistical Learning: With Applications in R</em>. Springer Publishing Company, Incorporated. <a href="http://www-bcf.usc.edu/~gareth/ISL/" class="uri">http://www-bcf.usc.edu/~gareth/ISL/</a>.</p>
+</div>
+<div>
+<p>Ng, Andrew. 2017. “Machine Learning.” <a href="https://www.coursera.org/learn/machine-learning" class="uri">https://www.coursera.org/learn/machine-learning</a>.</p>
+</div>
+<div>
+<p>Srivastava, Nitish, Geoffrey Hinton, Alex Krizhevsky, Ilya Sutskever, and Ruslan Salakhutdinov. 2014. “Dropout: A Simple Way to Prevent Neural Networks from Overfitting.” <em>J. Mach. Learn. Res.</em> 15 (1). JMLR.org: 1929–58. <a href="http://dl.acm.org/citation.cfm?id=2627435.2670313" class="uri">http://dl.acm.org/citation.cfm?id=2627435.2670313</a>.</p>
+</div>
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="metodos-basados-en-arboles-boosting.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"google": false,
+"weibo": false,
+"instapper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/felipegonzalez/aprendizaje-maquina-2017/edit/master/13-validacion-filtracion.Rmd",
+"text": "Edit"
+},
+"download": ["aprendizaje-maquina.pdf", "aprendizaje-maquina.epub"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:" && /^https?:/.test(script.src))
+      script.src  = script.src.replace(/^https?:/, '');
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

@@ -25,7 +25,7 @@
 <meta name="author" content="Felipe González">
 
 
-<meta name="date" content="2017-11-01">
+<meta name="date" content="2017-11-04">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -316,6 +316,22 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="12.9.2" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#discusion-2"><i class="fa fa-check"></i><b>12.9.2</b> Discusión</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#tarea-5"><i class="fa fa-check"></i>Tarea</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="validacion-de-modelos-problemas-comunes.html"><a href="validacion-de-modelos-problemas-comunes.html"><i class="fa fa-check"></i><b>13</b> Validación de modelos: problemas comunes</a><ul>
+<li class="chapter" data-level="13.1" data-path="validacion-de-modelos-problemas-comunes.html"><a href="validacion-de-modelos-problemas-comunes.html#filtracion-de-datos"><i class="fa fa-check"></i><b>13.1</b> Filtración de datos</a><ul>
+<li class="chapter" data-level="13.1.1" data-path="validacion-de-modelos-problemas-comunes.html"><a href="validacion-de-modelos-problemas-comunes.html#series-de-tiempo"><i class="fa fa-check"></i><b>13.1.1</b> Series de tiempo</a></li>
+<li class="chapter" data-level="13.1.2" data-path="validacion-de-modelos-problemas-comunes.html"><a href="validacion-de-modelos-problemas-comunes.html#ejemplo-filtracion-en-el-preprocesamiento"><i class="fa fa-check"></i><b>13.1.2</b> Ejemplo: filtración en el preprocesamiento</a></li>
+<li class="chapter" data-level="13.1.3" data-path="validacion-de-modelos-problemas-comunes.html"><a href="validacion-de-modelos-problemas-comunes.html#uso-de-variables-fuera-de-rango-temporal"><i class="fa fa-check"></i><b>13.1.3</b> Uso de variables fuera de rango temporal</a></li>
+</ul></li>
+<li class="chapter" data-level="13.2" data-path="validacion-de-modelos-problemas-comunes.html"><a href="validacion-de-modelos-problemas-comunes.html#datos-en-conglomerados-y-muestreo-complejo"><i class="fa fa-check"></i><b>13.2</b> Datos en conglomerados y muestreo complejo</a><ul>
+<li class="chapter" data-level="13.2.1" data-path="validacion-de-modelos-problemas-comunes.html"><a href="validacion-de-modelos-problemas-comunes.html#censura-y-evaluacion-incompleta"><i class="fa fa-check"></i><b>13.2.1</b> Censura y evaluación incompleta</a></li>
+</ul></li>
+<li class="chapter" data-level="13.3" data-path="validacion-de-modelos-problemas-comunes.html"><a href="validacion-de-modelos-problemas-comunes.html#ejemplo-tiendas-cerradas"><i class="fa fa-check"></i><b>13.3</b> Ejemplo: tiendas cerradas</a><ul>
+<li class="chapter" data-level="13.3.1" data-path="validacion-de-modelos-problemas-comunes.html"><a href="validacion-de-modelos-problemas-comunes.html#muestras-de-validacion-chicas"><i class="fa fa-check"></i><b>13.3.1</b> Muestras de validación chicas</a></li>
+<li class="chapter" data-level="" data-path="validacion-de-modelos-problemas-comunes.html"><a href="validacion-de-modelos-problemas-comunes.html#ejercicio-8"><i class="fa fa-check"></i>Ejercicio</a></li>
+</ul></li>
+<li class="chapter" data-level="13.4" data-path="validacion-de-modelos-problemas-comunes.html"><a href="validacion-de-modelos-problemas-comunes.html#otros-ejemplos"><i class="fa fa-check"></i><b>13.4</b> Otros ejemplos</a></li>
+<li class="chapter" data-level="13.5" data-path="validacion-de-modelos-problemas-comunes.html"><a href="validacion-de-modelos-problemas-comunes.html#resumen-1"><i class="fa fa-check"></i><b>13.5</b> Resumen</a></li>
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Publicado con bookdown</a></li>
@@ -995,16 +1011,16 @@ beta &lt;-<span class="st"> </span><span class="kw">runif</span>(<span class="dv
 dev_ent &lt;-<span class="st"> </span><span class="kw">devianza_calc</span>(x_ent_s, y_ent)
 grad &lt;-<span class="st"> </span><span class="kw">grad_calc</span>(x_ent_s, y_ent)
 <span class="kw">dev_ent</span>(beta)</code></pre></div>
-<pre><code>## [1] 235955.9</code></pre>
+<pre><code>## [1] 272519.4</code></pre>
 <p>Hacemos algunas revisiiones del gradiente:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">beta_<span class="dv">2</span> &lt;-<span class="st"> </span>beta 
 epsilon &lt;-<span class="st"> </span><span class="fl">0.00001</span>
 beta_<span class="dv">2</span>[<span class="dv">1000</span>] &lt;-<span class="st"> </span>beta[<span class="dv">1000</span>] <span class="op">+</span><span class="st"> </span>epsilon
 
 (<span class="kw">dev_ent</span>(beta_<span class="dv">2</span>) <span class="op">-</span><span class="st"> </span><span class="kw">dev_ent</span>(beta))<span class="op">/</span>epsilon</code></pre></div>
-<pre><code>## [1] -869.423</code></pre>
+<pre><code>## [1] -178.2372</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">grad</span>(beta)[<span class="dv">1000</span>]</code></pre></div>
-<pre><code>## [1] -869.4246</code></pre>
+<pre><code>## [1] -178.2392</code></pre>
 <p>Ya ahora podemos hacer descenso:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">iteraciones &lt;-<span class="st"> </span><span class="kw">descenso</span>(<span class="dv">2000</span>, <span class="kw">rep</span>(<span class="dv">0</span>, <span class="dv">257</span><span class="op">*</span><span class="dv">9</span>), <span class="dt">eta=</span><span class="fl">0.001</span>, 
                         <span class="dt">h_deriv =</span> grad, <span class="dt">dev_fun =</span> dev_ent)</code></pre></div>
