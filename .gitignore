@@ -6,3 +6,4 @@
 _book/
 .rds
 *_files/
+*.md
