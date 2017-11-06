@@ -3,7 +3,7 @@
 En aprendizaje de máquina, el ajuste y afinación de parámetros es tan importante
 como la evaluación de desempeño o validación de los modelos resultantes. Ninguna funciona
 bien sin que la otra sea correctamente ejecutada. Hemos visto que ambas partes tienen 
-dificultades muchas veces sutiles 
+dificultades algunas veces sutiles 
 (tanto el ajuste y optimización como la evaluación de las predicciones) que pueden 
 hacer fracasar nuestro ejercicio de modelación. 
 
@@ -527,6 +527,13 @@ ignorable hasta
 uno muy grande.
 
 
+### Ejemplo {-}
+Otro ejemplo de datos en conglomerados está en nuestro ejemplo de reconocimiento
+de dígitos. Considera por qué es importante separar a las personas que escribieron
+los dígitos en entrenamiento y validación, y no los dígitos particulares.
+
+
+
 
 ### Censura y evaluación incompleta
 
@@ -805,11 +812,15 @@ esta variable contiene información acerca de la respuesta, pero un modelo que c
 esta variable no es útil (ve al futuro para la mayoría de los pacientes). En este caso es una filtración de la respuesta a conjunto de entrenamiento y validación.
 
 - E-commerce: si intentamos predecir quién va a hacer grandes compras, variables
-como iva incurrido o uso de envío gratis (que solo aplica a compras grandes) son variables
-que filtran información de lo que queremos predecir y no son útiles en el modelo
+como iva (impuesto) incurrido o uso de envío gratis (que solo aplica a compras grandes) son variables que filtran información de lo que queremos predecir y no son útiles en el modelo
 final. Estas variables también ven al futuro.
 
-- En kaggle: en el proceso de recolección de los datos, el tamaño de archivos de grabaciones que contenían llamadas de ballenas era diferente de los que no contenían llamadas. Esta es una filtración, pues en la realidad no tendremos a alguien que prepare estos archivos de la misma manera.
+- En kaggle: en el proceso de recolección de los datos, el tamaño de archivos de grabaciones que contenían llamadas de ballenas era diferente de los que no contenían llamadas. Esta es una filtración, pues en la tarea real de predicción no tendremos a alguien que prepare estos archivos de la misma manera.
+
+- Recientemente se publicó un artículo donde se argumentaba que era posible distinguir
+(usando redes neuronales convolucionales) caras de criminales y no criminales. Las fotos se obtuvieron de fotos de la policía
+(criminales) y fotos de idetificaciones (no criminales). ¿Qué crees que podría fallar
+aquí en términos de filtración de datos?
 
 ## Resumen
 
@@ -826,7 +837,9 @@ base de datos, decisiones de limpieza de datos.
 - Siempre es bueno proponer un piloto para verificar que nuestros modelos funcionan
 como se espera - y considerar que una degradación del desempeño puede deberse a una
 filtración.
-
+- Finalmente, recordamos que la mejor división es entrenamiento-validación-prueba,
+con separaciones claras entre ellos. Usamos validación para ajustar hiperparámetros, y con prueba sólo evaluamos
+unos cuantos modelos.
 
 
 
