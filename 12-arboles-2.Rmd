@@ -786,6 +786,41 @@ condicional de $x_2$ dada $x_1$), de manera que utiliza información acerca
 de la relación que hay entre $x_1$ y $x_2$. La función de dependencia parcial
 da el efecto de $x_1$ tomando en cuenta los efectos promedio de las otras variables.
 
+
+## xgboost y gbm
+
+Los paquetes *xgboost* y *gbm* parecen ser los más populares para hacer
+gradient boosting.  *xgboost*,
+adicionalmente, parece ser más rápido y más flexible que *gbm* (paralelización, uso de GPU integrado). Existe una lista considerable de competencias de predicción donde el algoritmo/implementación
+ganadora es *xgboost*. 
+
+
+```{r}
+library(xgboost)
+x <- entrena %>% select(-vSalePrice) %>% model.matrix(~., .)
+x_entrena <- x[1:1100, ]
+x_valida <- x[1101:1460, ]
+set.seed(1293)
+d_entrena <- xgb.DMatrix(x_entrena, label = log(entrena$vSalePrice[1:1100])) 
+d_valida <- xgb.DMatrix(x_valida, label = log(entrena$vSalePrice[1101:1460])) 
+watchlist <- list(eval = d_valida, train = d_entrena)
+params <- list(booster = "gbtree",
+               max_depth = 3, 
+               eta = 0.03, 
+               nthread = 1, 
+               subsample = 0.75, 
+               lambda = 0.001,
+               objective = "reg:linear", 
+               eval_metric = "rmse")
+bst <- xgb.train(params, d_entrena, nrounds = 1000, watchlist = watchlist, verbose=1)
+eval <- bst$evaluation_log %>% gather(tipo, rmse, -iter)
+ggplot(eval, aes(x=iter, y=rmse, colour=tipo, group= tipo)) + geom_line() +
+  scale_y_log10()
+               
+            
+```
+
+
 ## Tarea {-}
 
 
