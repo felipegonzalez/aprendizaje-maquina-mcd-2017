@@ -3,7 +3,7 @@
 En aprendizaje de máquina, el ajuste y afinación de parámetros es tan importante
 como la evaluación de desempeño o validación de los modelos resultantes. Ninguna funciona
 bien sin que la otra sea correctamente ejecutada. Hemos visto que ambas partes tienen 
-dificultades muchas veces sutiles 
+dificultades algunas veces sutiles 
 (tanto el ajuste y optimización como la evaluación de las predicciones) que pueden 
 hacer fracasar nuestro ejercicio de modelación. 
 
@@ -37,7 +37,7 @@ entrenamiento.
 La filtración de datos puede ocurrir de muchas maneras, muchas veces inesperadas.
 Quizá uno de los ejemplos más típicos es el validación de modelos de series de tiempo.
 
-### Series de tiempo 
+## Series de tiempo 
 Comenzamos con un ejemplo simulado. Haremos varias simulaciones para incorporar
 la variación producida en los modelos por la muestra de entrenamineto
 
@@ -100,7 +100,7 @@ errores
 
 ```
 ## error_valida error_prueba 
-##     1.894075     3.180963
+##     1.866324     2.976573
 ```
 
 ```r
@@ -178,7 +178,7 @@ de datos del pasado cercano y futuro desde el conjunto de validación al de prue
 a obtener estimaciones más realistas del desempeño.
 
 
-### Ejemplo: filtración en el preprocesamiento
+## Filtración en el preprocesamiento
 
 Cuando preprocesamos datos para incluir en el modelo, es importante asegurarnos de no filtrar
 información de los datos de validación hacia los datos de enrenamiento. Nos aseguramos
@@ -221,7 +221,7 @@ seleccion_ajuste()
 
 ```
 ## error_valida error_prueba 
-##        0.220        0.484
+##        0.160        0.499
 ```
 
 El resultado es catastrófico otra vez:
@@ -279,12 +279,14 @@ ggplot(errores_selec, aes(x=error_prueba, y=error_valida)) + geom_point() + geom
 
 
 
-### Uso de variables fuera de rango temporal
+## Uso de variables fuera de rango temporal
 
 Otra razón por la que nuestro proceso de validación puede estar contaminado es porque
 usamos agregados que no están disponibles al momento de
 la predicción, y están relacionados
-con la variable que queremos predecir
+con la variable que queremos predecir. La contaminación puede ser del conjunto
+de validación al de entrenamiento, o puede incluir tanto entrenamiento como validación.
+
 
 Imaginemos que queremos predecir los clientes que se van a quedar y los que se van 
 a ir en función de las visitas que hacen a un sitio. 
@@ -721,6 +723,13 @@ ignorable hasta
 uno muy grande.
 
 
+### Ejemplo {-}
+Otro ejemplo de datos en conglomerados está en nuestro ejemplo de reconocimiento
+de dígitos. Considera por qué es importante separar a las personas que escribieron
+los dígitos en entrenamiento y validación, y no los dígitos particulares.
+
+
+
 
 ### Censura y evaluación incompleta
 
@@ -728,13 +737,13 @@ Algunas veces, no todos los datos que quisiéramos tener están disponibles
 para construir nuestros modelos: algunos clientes o casos, por ejemplo, no están
 en nuestros datos (son datos censurados). Sin embargo, al poner los modelos en producción,
 hacemos predicciones para *todos* los datos, y nuestras predicciones malas para
-aquellos datos antes censurados pueden dañar severamente el desempeño de nuestros
+aquellos casos antes censurados pueden dañar severamente el desempeño de nuestros
 modelos.
 
 Este es un ejemplo de datos faltantes, pero más serio: todos las variables de 
 algunos casos están faltantes, y algunas veces ni siquiera sabemos esto.
 
-## Ejemplo: tiendas cerradas
+### Ejemplo: tiendas cerradas
 
 Supongamos que queremos predecir las ventas de tiendas según las características
 del un local potencial después de un año de
@@ -892,7 +901,7 @@ borrados: por ejemplo, quizá la variable respuesta se puede conseguir, y existe
 de las variables explicativas - en este caso podríamos intentar imputación de datos.
 
 
-### Muestras de validación chicas
+## Muestras de validación chicas
 
 Una muestra de validación chica es casi tan malo como una muestra de entrenamiento
 chica. Una muestra de entrenamiento grande nos permite intentar modelos más
@@ -1166,11 +1175,15 @@ esta variable contiene información acerca de la respuesta, pero un modelo que c
 esta variable no es útil (ve al futuro para la mayoría de los pacientes). En este caso es una filtración de la respuesta a conjunto de entrenamiento y validación.
 
 - E-commerce: si intentamos predecir quién va a hacer grandes compras, variables
-como iva incurrido o uso de envío gratis (que solo aplica a compras grandes) son variables
-que filtran información de lo que queremos predecir y no son útiles en el modelo
+como iva (impuesto) incurrido o uso de envío gratis (que solo aplica a compras grandes) son variables que filtran información de lo que queremos predecir y no son útiles en el modelo
 final. Estas variables también ven al futuro.
 
-- En kaggle: en el proceso de recolección de los datos, el tamaño de archivos de grabaciones que contenían llamadas de ballenas era diferente de los que no contenían llamadas. Esta es una filtración, pues en la realidad no tendremos a alguien que prepare estos archivos de la misma manera.
+- En kaggle: en el proceso de recolección de los datos, el tamaño de archivos de grabaciones que contenían llamadas de ballenas era diferente de los que no contenían llamadas. Esta es una filtración, pues en la tarea real de predicción no tendremos a alguien que prepare estos archivos de la misma manera.
+
+- Recientemente se publicó un artículo donde se argumentaba que era posible distinguir
+(usando redes neuronales convolucionales) caras de criminales y no criminales. Las fotos se obtuvieron de fotos de la policía
+(criminales) y fotos de idetificaciones (no criminales). ¿Qué crees que podría fallar
+aquí en términos de filtración de datos?
 
 ## Resumen
 
@@ -1187,7 +1200,9 @@ base de datos, decisiones de limpieza de datos.
 - Siempre es bueno proponer un piloto para verificar que nuestros modelos funcionan
 como se espera - y considerar que una degradación del desempeño puede deberse a una
 filtración.
-
+- Finalmente, recordamos que la mejor división es entrenamiento-validación-prueba,
+con separaciones claras entre ellos. Usamos validación para ajustar hiperparámetros, y con prueba sólo evaluamos
+unos cuantos modelos.
 
 
 
