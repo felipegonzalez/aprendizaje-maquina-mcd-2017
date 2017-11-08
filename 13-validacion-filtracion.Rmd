@@ -844,7 +844,8 @@ unos cuantos modelos.
 
 
 
-
+## Tarea {-}
+Ver instrucciones en el script *scripts/tarea_11_boosting.Rmd*
 
 
 
