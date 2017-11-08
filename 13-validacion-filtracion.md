@@ -100,7 +100,7 @@ errores
 
 ```
 ## error_valida error_prueba 
-##     1.551182     3.946572
+##      1.92238      3.26128
 ```
 
 ```r
@@ -221,7 +221,7 @@ seleccion_ajuste()
 
 ```
 ## error_valida error_prueba 
-##        0.200        0.471
+##        0.060        0.481
 ```
 
 El resultado es catastrófico otra vez:
@@ -1207,7 +1207,8 @@ unos cuantos modelos.
 
 
 
-
+## Tarea {-}
+Ver instrucciones en el script *scripts/tarea_11_boosting.Rmd*
 
 
 

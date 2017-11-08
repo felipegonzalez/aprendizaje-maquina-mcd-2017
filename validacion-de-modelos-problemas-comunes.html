@@ -333,6 +333,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul></li>
 <li class="chapter" data-level="13.7" data-path="validacion-de-modelos-problemas-comunes.html"><a href="validacion-de-modelos-problemas-comunes.html#otros-ejemplos"><i class="fa fa-check"></i><b>13.7</b> Otros ejemplos</a></li>
 <li class="chapter" data-level="13.8" data-path="validacion-de-modelos-problemas-comunes.html"><a href="validacion-de-modelos-problemas-comunes.html#resumen-1"><i class="fa fa-check"></i><b>13.8</b> Resumen</a></li>
+<li class="chapter" data-level="" data-path="validacion-de-modelos-problemas-comunes.html"><a href="validacion-de-modelos-problemas-comunes.html#tarea-6"><i class="fa fa-check"></i>Tarea</a></li>
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Publicado con bookdown</a></li>
@@ -414,7 +415,7 @@ ajustar_evaluar &lt;-<span class="st"> </span><span class="cf">function</span>(d
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">errores &lt;-<span class="st"> </span><span class="kw">simular_datos</span>(<span class="dv">500</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">separar</span>(<span class="dt">prop=</span> <span class="kw">c</span>(<span class="fl">0.4</span>,<span class="fl">0.4</span>,<span class="fl">0.2</span>)) <span class="op">%&gt;%</span><span class="st"> </span>ajustar_evaluar
 errores</code></pre></div>
 <pre><code>## error_valida error_prueba 
-##     1.551182     3.946572</code></pre>
+##      1.92238      3.26128</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">reps_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">map</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">50</span>, simular_datos, <span class="dt">n =</span> <span class="dv">500</span>) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">        </span><span class="kw">map</span>(separar, <span class="dt">prop=</span> <span class="kw">c</span>(<span class="fl">0.6</span>,<span class="fl">0.2</span>,<span class="fl">0.2</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">        </span><span class="kw">map</span>(ajustar_evaluar) <span class="op">%&gt;%</span>
@@ -484,7 +485,7 @@ gr_reps_<span class="dv">2</span> &lt;-<span class="st"> </span>reps_<span class
 }
 <span class="kw">seleccion_ajuste</span>()</code></pre></div>
 <pre><code>## error_valida error_prueba 
-##        0.200        0.471</code></pre>
+##        0.060        0.481</code></pre>
 <p>El resultado es catastrófico otra vez:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">errores_selec &lt;-<span class="st"> </span><span class="kw">map</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">30</span>, seleccion_ajuste) <span class="op">%&gt;%</span><span class="st"> </span>transpose <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">map</span>(unlist) <span class="op">%&gt;%</span><span class="st"> </span>as.data.frame
 <span class="kw">ggplot</span>(errores_selec, <span class="kw">aes</span>(<span class="dt">x=</span>error_prueba, <span class="dt">y=</span>error_valida)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span><span class="kw">geom_abline</span>(<span class="dt">colour=</span><span class="st">&#39;red&#39;</span>) <span class="op">+</span>
@@ -995,6 +996,10 @@ media</code></pre></div>
 <li>Siempre es bueno proponer un piloto para verificar que nuestros modelos funcionan como se espera - y considerar que una degradación del desempeño puede deberse a una filtración.</li>
 <li>Finalmente, recordamos que la mejor división es entrenamiento-validación-prueba, con separaciones claras entre ellos. Usamos validación para ajustar hiperparámetros, y con prueba sólo evaluamos unos cuantos modelos.</li>
 </ul>
+</div>
+<div id="tarea-6" class="section level2 unnumbered">
+<h2>Tarea</h2>
+<p>Ver instrucciones en el script <em>scripts/tarea_11_boosting.Rmd</em></p>
 
 <div id="refs" class="references">
 <div>
