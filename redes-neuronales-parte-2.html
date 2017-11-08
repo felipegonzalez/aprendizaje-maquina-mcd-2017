@@ -25,7 +25,7 @@
 <meta name="author" content="Felipe González">
 
 
-<meta name="date" content="2017-11-06">
+<meta name="date" content="2017-11-08">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -715,13 +715,13 @@ history &lt;-<span class="st"> </span>modelo <span class="op">%&gt;%</span><span
 <p>Ver los pesos:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">get_weights</span>(modelo)</code></pre></div>
 <pre><code>## [[1]]
-##            [,1]
-## [1,] -0.6220235
-## [2,]  0.1445031
-## [3,]  0.2730345
+##             [,1]
+## [1,] -0.65801489
+## [2,]  0.09270756
+## [3,]  0.38111207
 ## 
 ## [[2]]
-## [1] 1.639471</code></pre>
+## [1] 1.639609</code></pre>
 <p>Y verificamos que concuerda con la salida de <em>glm</em>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mod_logistico &lt;-<span class="st"> </span><span class="kw">glm</span>(g <span class="op">~</span><span class="st"> </span>x_<span class="dv">1</span> <span class="op">+</span><span class="st"> </span>x_<span class="dv">2</span><span class="op">+</span><span class="st"> </span>x_<span class="dv">3</span>, <span class="dt">data =</span> dat_ent, <span class="dt">family =</span> <span class="st">&#39;binomial&#39;</span>) 
 <span class="kw">coef</span>(mod_logistico)</code></pre></div>
@@ -786,13 +786,13 @@ history &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><s
 score &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">evaluate</span>(x_test, y_test)
 score</code></pre></div>
 <pre><code>## $loss
-## [1] 0.2929311
+## [1] 0.2820845
 ## 
 ## $acc
-## [1] 0.9307424
+## [1] 0.9317389
 ## 
 ## $categorical_crossentropy
-## [1] 0.2918795</code></pre>
+## [1] 0.2810378</code></pre>
 <p>Podemos también intentar con el ejemplo de spam:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(readr)
 <span class="kw">library</span>(tidyr)
@@ -828,13 +828,13 @@ tab_confusion &lt;-<span class="st"> </span><span class="kw">table</span>(modelo
 tab_confusion</code></pre></div>
 <pre><code>##    y_valid
 ##       0   1
-##   0 905  77
-##   1  22 530</code></pre>
+##   0 885  43
+##   1  42 564</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">prop.table</span>(tab_confusion, <span class="dv">2</span>)</code></pre></div>
 <pre><code>##    y_valid
 ##              0          1
-##   0 0.97626753 0.12685338
-##   1 0.02373247 0.87314662</code></pre>
+##   0 0.95469256 0.07084020
+##   1 0.04530744 0.92915980</code></pre>
 </div>
 </div>
 <div id="activaciones-relu" class="section level2">
@@ -886,13 +886,13 @@ history &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><s
 score &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">evaluate</span>(x_test, y_test)
 score</code></pre></div>
 <pre><code>## $loss
-## [1] 0.2996233
+## [1] 0.3000131
 ## 
 ## $acc
-## [1] 0.9427005
+## [1] 0.9412058
 ## 
 ## $categorical_crossentropy
-## [1] 0.2166399</code></pre>
+## [1] 0.2229587</code></pre>
 </div>
 </div>
 <div id="dropout-para-regularizacion" class="section level2">
@@ -983,36 +983,36 @@ hist_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">as
 <p><img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-46-1.png" width="480" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">get_weights</span>(modelo_dropout)[[<span class="dv">3</span>]]</code></pre></div>
 <pre><code>##              [,1]
-##  [1,] -1.47085369
-##  [2,]  1.41944611
-##  [3,]  0.26933905
-##  [4,] -1.38423371
-##  [5,]  0.32339194
-##  [6,]  1.31126809
-##  [7,]  0.04797861
-##  [8,]  0.38201040
-##  [9,]  0.85110885
-## [10,] -1.33009493
-## [11,] -1.40267384
-## [12,] -1.31569958
-## [13,] -1.57071126
-## [14,]  0.13785340
-## [15,] -1.99087942
-## [16,]  1.37718034
-## [17,] -1.26187408
-## [18,]  1.05055964
-## [19,] -1.60515463
-## [20,]  0.24217917
-## [21,]  0.34592587
-## [22,]  1.50292110
-## [23,] -1.90369666
-## [24,] -1.80790460
-## [25,]  0.35612637
-## [26,]  0.32798997
-## [27,]  0.27415282
-## [28,]  1.46296394
-## [29,]  1.30455244
-## [30,]  1.13510287</code></pre>
+##  [1,]  0.01920476
+##  [2,] -0.13151009
+##  [3,] -0.26728767
+##  [4,] -1.69642627
+##  [5,] -1.18035281
+##  [6,] -1.27820587
+##  [7,] -1.19837070
+##  [8,]  1.22166646
+##  [9,]  1.20194173
+## [10,] -1.55084157
+## [11,] -1.32918572
+## [12,]  1.31243801
+## [13,]  0.78282726
+## [14,]  1.34177840
+## [15,] -1.83553326
+## [16,] -1.80402255
+## [17,] -1.29835773
+## [18,] -1.17661583
+## [19,] -1.29663920
+## [20,]  1.09501708
+## [21,]  0.85608256
+## [22,]  1.40796638
+## [23,] -0.28546500
+## [24,] -1.91770303
+## [25,] -1.20121706
+## [26,] -1.29527068
+## [27,]  0.08705351
+## [28,]  1.01192462
+## [29,] -1.52157485
+## [30,] -1.27519608</code></pre>
 <p>¿Cuáles de estas unidades tienen peso positivo y negativo en la capa final?</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pesos_capa_f &lt;-<span class="st"> </span><span class="kw">get_weights</span>(modelo_dropout)[[<span class="dv">3</span>]]
 <span class="kw">graf_pesos</span>(pesos[, pesos_capa_f <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.5</span>], <span class="dt">mostrar_facets =</span> <span class="ot">TRUE</span>)</code></pre></div>
@@ -1055,13 +1055,13 @@ history &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><s
 score &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">evaluate</span>(x_test, y_test)
 score</code></pre></div>
 <pre><code>## $loss
-## [1] 0.2163486
+## [1] 0.2248405
 ## 
 ## $acc
-## [1] 0.9536622
+## [1] 0.9521674
 ## 
 ## $categorical_crossentropy
-## [1] 0.2121095</code></pre>
+## [1] 0.2207327</code></pre>
 
 </div>
 </div>
