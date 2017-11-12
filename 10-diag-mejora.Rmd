@@ -63,6 +63,7 @@ de pelíıculas: buscamos clasificar una reseña como positiva o negativa depend
 (estos datos fueron etiquetados por una persona).
 
 ```{r, message=FALSE, warning=FALSE, echo =FALSE}
+library(methods)
 library(readr)
 library(ggplot2)
 library(dplyr)

@@ -920,7 +920,7 @@ Consideramos una arquitectura de dos capas para el problema de diabetes
 if(Sys.info()['nodename'] == 'vainilla.local'){
   # esto es por mi instalación particular de tensorflow - típicamente
   # no es necesario que corras esta línea.
-  Sys.setenv(TENSORFLOW_PYTHON="/usr/local/bin/python")
+  #Sys.setenv(TENSORFLOW_PYTHON="/usr/local/bin/python")
 }
 library(keras)
 ```
@@ -1254,7 +1254,7 @@ hiperparams$init_grupo <- cut(hiperparams$init_pesos, breaks=c(0.2,0.5,0.8))
    facet_wrap(~init_grupo, ncol=1)
 ```
 
-#### Nota (entrenamientokeras)
+#### Nota (entrenamiento en keras)
 
 Al entrenar con keras, nótese que
 
