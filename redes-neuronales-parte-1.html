@@ -7,7 +7,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Aprendizaje de máquina</title>
   <meta name="description" content="Notas y material para el curso de aprendizaje de máquina 2017 (ITAM)">
-  <meta name="generator" content="bookdown 0.5.6 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown 0.5.8 and GitBook 2.6.7">
 
   <meta property="og:title" content="Aprendizaje de máquina" />
   <meta property="og:type" content="book" />
@@ -25,7 +25,7 @@
 <meta name="author" content="Felipe González">
 
 
-<meta name="date" content="2017-11-08">
+<meta name="date" content="2017-11-12">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -939,7 +939,7 @@ Nótese que back-propagation consiste principalmente de mutliplicaciones de matr
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="cf">if</span>(<span class="kw">Sys.info</span>()[<span class="st">&#39;nodename&#39;</span>] <span class="op">==</span><span class="st"> &#39;vainilla.local&#39;</span>){
   <span class="co"># esto es por mi instalación particular de tensorflow - típicamente</span>
   <span class="co"># no es necesario que corras esta línea.</span>
-  <span class="kw">Sys.setenv</span>(<span class="dt">TENSORFLOW_PYTHON=</span><span class="st">&quot;/usr/local/bin/python&quot;</span>)
+  <span class="co">#Sys.setenv(TENSORFLOW_PYTHON=&quot;/usr/local/bin/python&quot;)</span>
 }
 <span class="kw">library</span>(keras)</code></pre></div>
 <pre><code>## 
@@ -999,24 +999,24 @@ modelo_tc <span class="op">%&gt;%</span><span class="st"> </span>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">score &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">evaluate</span>(x_valid_s, y_valid)
 score</code></pre></div>
 <pre><code>## $loss
-## [1] 0.4384889
+## [1] 0.4348974
 ## 
 ## $acc
-## [1] 0.7951807
+## [1] 0.7981928
 ## 
 ## $binary_crossentropy
-## [1] 0.4341561</code></pre>
+## [1] 0.4304499</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tab_confusion &lt;-<span class="st"> </span><span class="kw">table</span>(modelo_tc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">predict_classes</span>(x_valid_s),y_valid) 
 tab_confusion</code></pre></div>
 <pre><code>##    y_valid
 ##       0   1
-##   0 195  40
-##   1  28  69</code></pre>
+##   0 192  36
+##   1  31  73</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">prop.table</span>(tab_confusion, <span class="dv">2</span>)</code></pre></div>
 <pre><code>##    y_valid
 ##             0         1
-##   0 0.8744395 0.3669725
-##   1 0.1255605 0.6330275</code></pre>
+##   0 0.8609865 0.3302752
+##   1 0.1390135 0.6697248</code></pre>
 <p>Es importante monitorear las curvas de aprendizaje (entrenamiento y validación) para diagnosticar mejoras:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df_iteraciones &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(iteraciones)
 <span class="kw">ggplot</span>(df_iteraciones, <span class="kw">aes</span>(<span class="dt">x=</span>epoch, <span class="dt">y=</span>value, <span class="dt">colour=</span>data, <span class="dt">group=</span>data)) <span class="op">+</span><span class="st"> </span>
@@ -1208,8 +1208,8 @@ hiperparams<span class="op">$</span>init_grupo &lt;-<span class="st"> </span><sp
 <span class="st">    </span><span class="kw">geom_point</span>(<span class="dt">alpha =</span> <span class="fl">0.75</span>) <span class="op">+</span><span class="st"> </span><span class="kw">scale_x_log10</span>() <span class="op">+</span>
 <span class="st">   </span><span class="kw">facet_wrap</span>(<span class="op">~</span>init_grupo, <span class="dt">ncol=</span><span class="dv">1</span>)</code></pre></div>
 <p><img src="07-redes-neuronales_files/figure-html/unnamed-chunk-59-1.png" width="480" /></p>
-<div id="nota-entrenamientokeras" class="section level4">
-<h4><span class="header-section-number">7.6.4.1</span> Nota (entrenamientokeras)</h4>
+<div id="nota-entrenamiento-en-keras" class="section level4">
+<h4><span class="header-section-number">7.6.4.1</span> Nota (entrenamiento en keras)</h4>
 <p>Al entrenar con keras, nótese que</p>
 <ul>
 <li>El valor de <em>loss</em> (pérdida de entrenamiento) incluye regularización (ridge, sin unidades dropout), pero el valor de <em>val_loss</em> no los incluye.</li>
@@ -1299,8 +1299,7 @@ gitbook.start({
     var script = document.createElement("script");
     script.type = "text/javascript";
     var src = "";
-    if (src === "") return;
-    if (src === "true") src = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (src === "" || src === "true") src = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
     if (location.protocol !== "file:" && /^https?:/.test(src))
       src = src.replace(/^https?:/, '');
     script.src = src;

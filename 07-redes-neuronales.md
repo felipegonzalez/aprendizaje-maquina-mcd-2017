@@ -1168,7 +1168,7 @@ Consideramos una arquitectura de dos capas para el problema de diabetes
 if(Sys.info()['nodename'] == 'vainilla.local'){
   # esto es por mi instalación particular de tensorflow - típicamente
   # no es necesario que corras esta línea.
-  Sys.setenv(TENSORFLOW_PYTHON="/usr/local/bin/python")
+  #Sys.setenv(TENSORFLOW_PYTHON="/usr/local/bin/python")
 }
 library(keras)
 ```
@@ -1264,13 +1264,13 @@ score
 
 ```
 ## $loss
-## [1] 0.4384889
+## [1] 0.4348974
 ## 
 ## $acc
-## [1] 0.7951807
+## [1] 0.7981928
 ## 
 ## $binary_crossentropy
-## [1] 0.4341561
+## [1] 0.4304499
 ```
 
 ```r
@@ -1281,8 +1281,8 @@ tab_confusion
 ```
 ##    y_valid
 ##       0   1
-##   0 195  40
-##   1  28  69
+##   0 192  36
+##   1  31  73
 ```
 
 ```r
@@ -1292,8 +1292,8 @@ prop.table(tab_confusion, 2)
 ```
 ##    y_valid
 ##             0         1
-##   0 0.8744395 0.3669725
-##   1 0.1255605 0.6330275
+##   0 0.8609865 0.3302752
+##   1 0.1390135 0.6697248
 ```
 
 Es importante monitorear las curvas de aprendizaje (entrenamiento y
@@ -1637,7 +1637,7 @@ hiperparams$init_grupo <- cut(hiperparams$init_pesos, breaks=c(0.2,0.5,0.8))
 
 <img src="07-redes-neuronales_files/figure-html/unnamed-chunk-59-1.png" width="480" />
 
-#### Nota (entrenamientokeras)
+#### Nota (entrenamiento en keras)
 
 Al entrenar con keras, nótese que
 
