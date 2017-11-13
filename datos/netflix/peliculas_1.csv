@@ -1,0 +1,647 @@
+pelicula_id,year,name
+1,2003,Something's Gotta Give
+2,1992,Reservoir Dogs
+3,2003,X2: X-Men United
+4,2004,Taking Lives
+5,1959,North by Northwest
+6,2004,Harold and Kumar Go to White Castle
+7,2001,Bridget Jones's Diary
+8,2000,High Fidelity
+9,2000,Pay It Forward
+10,1999,Dogma
+11,1997,Chasing Amy
+12,2003,House of Sand and Fog
+13,2005,Hostage
+14,2004,Kill Bill: Vol. 2
+15,2003,The Matrix: Revolutions
+16,2002,Frida
+17,2001,Rush Hour 2
+18,1999,American Beauty
+19,1994,Speed
+20,1991,Robin Hood: Prince of Thieves
+21,2000,The Perfect Storm
+22,2004,Mean Girls
+23,1994,Clerks
+24,1975,Jaws
+25,2004,Ray
+26,1999,The Mummy
+27,2003,Uptown Girls
+28,2005,Coach Carter
+29,2001,Training Day
+30,2003,Secondhand Lions
+31,1991,Fried Green Tomatoes
+32,2001,The Wedding Planner
+33,2001,A Beautiful Mind
+34,1983,National Lampoon's Vacation
+35,2004,Man on Fire
+36,2001,Dr. Dolittle 2
+37,2003,S.W.A.T.
+38,1994,The Professional
+39,1991,Hook
+40,2003,The Recruit
+41,1969,Midnight Cowboy
+42,2002,Bend It Like Beckham
+43,2002,National Lampoon's Van Wilder
+44,1993,Sleepless in Seattle
+45,2003,American Wedding
+46,1982,Poltergeist
+47,2001,Life as a House
+48,1995,The American President
+49,1986,Aliens: Collector's Edition
+50,1980,Nine to Five
+51,1993,Grumpy Old Men
+52,1998,Ever After: A Cinderella Story
+53,2004,The Life Aquatic with Steve Zissou
+54,1984,Beverly Hills Cop
+55,1984,Sixteen Candles
+56,1987,Lethal Weapon
+57,1990,Die Hard 2: Die Harder
+58,1998,U.S. Marshals
+59,1994,Beverly Hills Cop III
+60,2004,Eternal Sunshine of the Spotless Mind
+61,2003,Pirates of the Caribbean: The Curse of the Black Pearl
+62,2004,50 First Dates
+63,2000,Hollow Man
+64,1999,The Talented Mr. Ripley
+65,1997,Liar Liar
+66,2003,Identity
+67,1999,Being John Malkovich
+68,1993,Rudy
+69,2000,What Women Want
+70,1995,Bad Boys
+71,2002,Collateral Damage
+72,1981,On Golden Pond
+73,1992,Aladdin: Platinum Edition
+74,2004,Super Size Me
+75,2004,The Bourne Supremacy
+76,2004,Along Came Polly
+77,1996,Scream
+78,1979,Alien: Collector's Edition
+79,2001,Lord of the Rings: The Fellowship of the Ring
+80,1987,Planes Trains and Automobiles
+81,1984,This Is Spinal Tap
+82,1992,Wayne's World
+83,2001,Y Tu Mama Tambien
+84,2003,Freaky Friday
+85,2001,Don't Say a Word
+86,2002,Ghost Ship
+87,1989,When Harry Met Sally
+88,2003,The Missing
+89,2002,The Pianist
+90,1995,Braveheart
+91,2001,Serendipity
+92,1991,The Silence of the Lambs
+93,2003,Elf
+94,2004,Finding Neverland
+95,1989,Heathers
+96,1987,Moonstruck
+97,2003,The Rundown
+98,1994,The Lion King: Special Edition
+99,1990,Ghost
+100,2004,Blade: Trinity
+101,2004,Napoleon Dynamite
+102,2003,Daredevil
+103,2004,Sideways
+104,1974,The Godfather Part II
+105,2002,About a Boy
+106,2004,The Village
+107,2000,The Family Man
+108,2003,Whale Rider
+109,2002,28 Days Later
+110,1993,Sister Act 2: Back in the Habit
+111,2002,Men in Black II
+112,1992,Forever Young
+113,1999,10 Things I Hate About You
+114,1988,Beaches
+115,1939,The Wizard of Oz: Collector's Edition
+116,1992,Lethal Weapon 3
+117,2003,The Last Samurai
+118,2003,Bad Boys II
+119,1964,Goldfinger
+120,2004,Saw
+121,1998,Elizabeth
+122,2002,About Schmidt
+123,1990,Flatliners
+124,2002,The Sum of All Fears
+125,2003,Bruce Almighty
+126,2005,Batman Begins
+127,2001,The Others
+128,2004,Garden State
+129,2003,The Matrix: Reloaded
+130,1999,End of Days
+131,2004,Shrek 2
+132,2003,Finding Nemo (Widescreen)
+133,2004,Friday Night Lights
+134,2002,Signs
+135,2001,Planet of the Apes
+136,1998,Patch Adams
+137,2000,Shanghai Noon
+138,2001,Jurassic Park III
+139,1997,The Full Monty
+140,1984,Footloose: Special Collector's Edition
+141,1999,Sleepy Hollow
+142,2004,The Passion of the Christ
+143,1982,An Officer and a Gentleman
+144,1999,The Sixth Sense
+145,2004,In Good Company
+146,1995,While You Were Sleeping
+147,2002,Bowling for Columbine
+148,2002,Road to Perdition
+149,1984,A Nightmare on Elm Street
+150,2003,The Italian Job
+151,2003,Love Actually
+152,1990,Dances With Wolves: Special Edition
+153,1989,Steel Magnolias
+154,2004,The Forgotten
+155,1982,Gandhi
+156,1988,Rain Man
+157,2000,Erin Brockovich
+158,1999,Deuce Bigalow: Male Gigolo
+159,1999,Wild Wild West
+160,2000,Proof of Life
+161,1995,Heat: Special Edition
+162,1997,The Lost World: Jurassic Park
+163,1987,Overboard
+164,1979,Apocalypse Now Redux
+165,2003,Bringing Down the House
+166,1989,Glory
+167,1992,The Bodyguard
+168,2004,Catwoman
+169,2003,Runaway Jury
+170,2003,Paycheck
+171,2000,Gone in 60 Seconds
+172,1996,Mission: Impossible
+173,1991,Sleeping With the Enemy
+174,2003,Seabiscuit
+175,2000,What Lies Beneath
+176,2005,Constantine
+177,1992,My Cousin Vinny
+178,2003,Under the Tuscan Sun
+179,1999,Girl Interrupted
+180,1998,Rushmore
+181,2005,The Longest Yard
+182,1992,Patriot Games
+183,2000,Miss Congeniality
+184,1995,Tommy Boy
+185,2005,Guess Who
+186,2004,Shark Tale
+187,2001,Jay and Silent Bob Strike Back
+188,2004,Dodgeball: A True Underdog Story
+189,1987,Spaceballs
+190,2004,I Robot
+191,1964,Dr. Strangelove
+192,1979,Monty Python's Life of Brian
+193,1967,Cool Hand Luke
+194,1976,Rocky
+195,1980,Star Wars: Episode V: The Empire Strikes Back
+196,2000,Best in Show
+197,1996,The Nutty Professor
+198,2003,Bad Santa
+199,1990,GoodFellas: Special Edition
+200,2000,Almost Famous
+201,1992,Scent of a Woman
+202,1983,Trading Places
+203,1996,Sling Blade
+204,2003,Underworld
+205,2004,Raising Helen
+206,2002,One Hour Photo
+207,2000,Memento
+208,2000,Snatch
+209,1999,Fight Club
+210,2001,The Mummy Returns
+211,2005,Sin City
+212,2001,Amelie
+213,2001,I Am Sam
+214,2002,The Bourne Identity
+215,2004,Starsky & Hutch
+216,1979,Apocalypse Now
+217,2004,Collateral
+218,1984,The Terminator
+219,1983,Scarface: 20th Anniversary Edition
+220,2002,My Big Fat Greek Wedding
+221,2002,Frailty
+222,1990,The Hunt for Red October
+223,1990,Pretty Woman
+224,1990,Edward Scissorhands
+225,2000,Big Momma's House
+226,1998,Rush Hour
+227,2004,Saved!
+228,1992,Sister Act
+229,1987,Good Morning Vietnam
+230,1962,To Kill a Mockingbird
+231,2000,Space Cowboys
+232,2002,City of God
+233,2002,Unfaithful
+234,2004,Spanglish
+235,1984,Gremlins
+236,2002,Murder By Numbers
+237,1998,A Bug's Life
+238,2000,Charlie's Angels
+239,2002,Insomnia
+240,1994,Legends of the Fall
+241,2005,Be Cool
+242,1999,Entrapment
+243,2001,Black Hawk Down
+244,1954,Rear Window
+245,2002,Divine Secrets of the Ya-Ya Sisterhood
+246,1985,The Breakfast Club
+247,2002,High Crimes
+248,1995,Billy Madison
+249,2001,The Fast and the Furious
+250,2003,Cheaper by the Dozen
+251,2003,Calendar Girls
+252,2003,Terminator 3: Rise of the Machines
+253,1986,Ferris Bueller's Day Off
+254,1998,Armageddon
+255,1995,The Usual Suspects
+256,1994,Natural Born Killers
+257,2000,The Whole Nine Yards
+258,2002,Austin Powers in Goldmember
+259,1998,Dr. Dolittle
+260,2002,Lord of the Rings: The Two Towers: Extended Edition
+261,2003,Charlie's Angels: Full Throttle
+262,1993,The Pelican Brief
+263,1987,The Princess Bride
+264,1987,The Untouchables
+265,2001,The Lord of the Rings: The Fellowship of the Ring: Extended Edition
+266,1986,Stand by Me
+267,2000,Men of Honor
+268,1987,Beverly Hills Cop II
+269,2001,Monster's Ball
+270,1984,Romancing the Stone
+271,2004,Secret Window
+272,1989,Driving Miss Daisy
+273,1993,Mrs. Doubtfire
+274,1996,Phenomenon
+275,1939,Gone with the Wind: Collector's Edition
+276,2002,Die Another Day
+277,1998,Blade
+278,2003,The Life of David Gale
+279,2000,Scary Movie
+280,1987,Fatal Attraction
+281,1987,Dirty Dancing
+282,1986,Top Gun
+283,2003,Once Upon a Time in Mexico
+284,2004,Anchorman: The Legend of Ron Burgundy
+285,1995,Apollo 13
+286,2000,O Brother Where Art Thou?
+287,1988,Willow
+288,2003,The Station Agent
+289,1999,Cruel Intentions
+290,2002,Punch-Drunk Love
+291,2002,Antwone Fisher
+292,2000,Finding Forrester
+293,2001,In the Bedroom
+294,1999,Eyes Wide Shut
+295,1994,Interview with the Vampire
+296,1987,Predator: Collector's Edition
+297,1977,Annie Hall
+298,1995,The Net
+299,2003,Holes
+300,1997,Grosse Pointe Blank
+301,1975,One Flew Over the Cuckoo's Nest
+302,2004,The Grudge
+303,2000,Unbreakable
+304,2001,Enemy at the Gates
+305,2002,Minority Report
+306,2004,Ladder 49
+307,1996,Eraser
+308,1995,Seven
+309,2003,Lara Croft: Tomb Raider: The Cradle of Life
+310,2002,Catch Me If You Can
+311,2002,Star Wars: Episode II: Attack of the Clones
+312,2002,Ice Age
+313,1996,Happy Gilmore
+314,2001,The Royal Tenenbaums
+315,1966,The Good the Bad and the Ugly
+316,1941,Citizen Kane
+317,1996,A Time to Kill
+318,1999,Election
+319,1997,Good Will Hunting
+320,1991,Terminator 2: Extreme Edition
+321,2002,The Rookie
+322,1997,Boogie Nights
+323,1980,Caddyshack
+324,1997,Kiss the Girls
+325,2001,Ghost World
+326,1988,Cocktail
+327,1995,Crimson Tide
+328,1989,Turner and Hooch
+329,1985,The Goonies
+330,2001,Pearl Harbor
+331,1986,Platoon
+332,2004,The Chronicles of Riddick
+333,2004,The Butterfly Effect: Director's Cut
+334,2001,A Knight's Tale
+335,1998,There's Something About Mary: Special Edition
+336,1998,Stepmom
+337,1983,Star Wars: Episode VI: Return of the Jedi
+338,2003,Daddy Day Care
+339,2000,28 Days
+340,1997,As Good as It Gets
+341,2002,Mr. Deeds
+342,2003,Basic
+343,2001,Shallow Hal
+344,1997,L.A. Confidential
+345,1981,Stripes
+346,2000,The 6th Day
+347,1997,The Fifth Element
+348,1999,Star Wars: Episode I: The Phantom Menace
+349,2005,Monster-in-Law
+350,1988,Die Hard
+351,1981,Raiders of the Lost Ark
+352,1993,Indecent Proposal
+353,1996,Broken Arrow
+354,1995,Father of the Bride 2
+355,2003,The League of Extraordinary Gentlemen
+356,2001,American Pie 2
+357,1985,Weird Science
+358,1993,Groundhog Day
+359,2004,The Girl Next Door
+360,2004,Ocean's Twelve
+361,1999,Runaway Bride
+362,1997,My Best Friend's Wedding
+363,1999,The Bone Collector
+364,2003,Final Destination 2
+365,2000,Road Trip
+366,1971,A Clockwork Orange
+367,2003,Cold Mountain
+368,2003,The School of Rock
+369,2002,We Were Soldiers
+370,2002,Windtalkers
+371,2002,Gangs of New York
+372,1976,Taxi Driver
+373,2000,U-571
+374,1985,Back to the Future
+375,1960,Psycho
+376,2004,Cellular
+377,2003,Just Married
+378,1994,Ace Ventura: Pet Detective
+379,2004,The Incredibles
+380,2004,Fahrenheit 9/11
+381,2003,Radio
+382,1994,Pulp Fiction
+383,2004,Meet the Fockers
+384,2001,Monsters Inc.
+385,2002,Maid in Manhattan
+386,1998,American History X
+387,1968,2001: A Space Odyssey
+388,2003,21 Grams
+389,2003,Master and Commander: The Far Side of the World
+390,1999,The Cider House Rules
+391,1983,Risky Business
+392,2001,The Princess Diaries (Widescreen)
+393,2000,Frequency
+394,1994,Forrest Gump
+395,2004,The Manchurian Candidate
+396,2000,Rules of Engagement
+397,2003,Shanghai Knights
+398,1999,American Pie
+399,1980,Airplane!
+400,2002,Harry Potter and the Chamber of Secrets
+401,1992,A League of Their Own
+402,2002,Lord of the Rings: The Two Towers
+403,2005,Hotel Rwanda
+404,2000,Final Destination
+405,2001,Swordfish
+406,2005,Elektra
+407,1984,Indiana Jones and the Temple of Doom
+408,2004,Million Dollar Baby
+409,1987,Three Men and a Baby
+410,1993,In the Line of Fire
+411,1980,The Shining
+412,2000,Mission: Impossible II
+413,1996,Primal Fear
+414,2004,Twisted
+415,1965,The Sound of Music
+416,2002,Adaptation
+417,2001,Kate & Leopold
+418,1983,48 Hrs.
+419,2004,Spider-Man 2
+420,2003,Big Fish
+421,2003,Lost in Translation
+422,2002,The Good Girl
+423,1979,The Jerk
+424,1972,The Godfather
+425,2001,Along Came a Spider
+426,1995,Mr. Holland's Opus
+427,1996,The Rock
+428,2004,Harry Potter and the Prisoner of Azkaban
+429,1988,Coming to America
+430,2001,A.I. Artificial Intelligence
+431,1989,Lethal Weapon 2
+432,1996,Twister
+433,1999,October Sky
+434,2002,Blade 2
+435,2001,Spy Game
+436,2001,Behind Enemy Lines
+437,1999,Boys Don't Cry
+438,1984,The NeverEnding Story
+439,2003,Mystic River
+440,1978,National Lampoon's Animal House
+441,2001,John Q
+442,2002,Hero
+443,2004,Hidalgo
+444,1991,Thelma & Louise: Special Edition
+445,2000,X-Men
+446,1993,Schindler's List
+447,2001,Moulin Rouge
+448,1999,Double Jeopardy
+449,1997,Men in Black
+450,2004,The Aviator
+451,2002,Two Weeks Notice
+452,1993,What's Eating Gilbert Grape
+453,2004,Troy
+454,1974,Chinatown
+455,2000,Coyote Ugly
+456,1998,Sex and the City: Season 1
+457,1997,Austin Powers: International Man of Mystery
+458,2005,Crash
+459,1985,National Lampoon's European Vacation
+460,1974,Blazing Saddles
+461,2002,Chicago
+462,1994,True Lies
+463,1983,Terms of Endearment
+464,2002,The Count of Monte Cristo
+465,2000,Billy Elliot
+466,1996,Swingers
+467,1999,The General's Daughter
+468,2004,Jersey Girl
+469,2002,Enough
+470,1988,Bull Durham
+471,1988,A Fish Called Wanda
+472,1999,Never Been Kissed
+473,1997,Life Is Beautiful
+474,1999,Office Space
+475,1994,The Client
+476,1982,Fast Times at Ridgemont High
+477,1997,Air Force One
+478,1995,Toy Story
+479,1992,Basic Instinct
+480,2000,Gladiator
+481,1996,The First Wives Club
+482,1996,Jerry Maguire
+483,2004,The Princess Diaries 2: Royal Engagement
+484,2000,Cast Away
+485,2003,Tears of the Sun
+486,1971,Willy Wonka & the Chocolate Factory
+487,2004,The Notebook
+488,1990,Total Recall
+489,1998,Enemy of the State
+490,1964,Mary Poppins
+491,1996,Trainspotting: Collector's Edition
+492,2000,Pitch Black
+493,2004,Sky Captain and the World of Tomorrow
+494,1990,Misery
+495,2003,Lord of the Rings: The Return of the King
+496,2004,I Heart Huckabees
+497,1969,Butch Cassidy and the Sundance Kid
+498,1999,The Thomas Crown Affair
+499,2000,The Sopranos: Season 2
+500,1993,Jurassic Park
+501,2000,The Patriot
+502,1975,Monty Python and the Holy Grail
+503,2003,What a Girl Wants
+504,1998,Lethal Weapon 4
+505,1987,Raising Arizona
+506,2002,Spider-Man
+507,2003,Kill Bill: Vol. 1
+508,1995,12 Monkeys
+509,1988,The Naked Gun
+510,2001,Hannibal
+511,2003,How to Lose a Guy in 10 Days
+512,2004,King Arthur
+513,1994,The Shawshank Redemption: Special Edition
+514,1998,You've Got Mail
+515,1995,Die Hard With a Vengeance
+516,2002,Analyze That
+517,1998,The Truman Show
+518,2001,Shrek (Full-screen)
+519,2004,The Stepford Wives
+520,1998,The Waterboy
+521,1989,Field of Dreams
+522,1989,Batman
+523,1999,The Matrix
+524,2001,Tomb Raider
+525,2002,XXX: Special Edition
+526,1999,Austin Powers: The Spy Who Shagged Me
+527,1988,Beetlejuice
+528,1995,Dead Man Walking
+529,1982,Blade Runner
+530,2004,Team America: World Police
+531,1998,City of Angels
+532,1989,Dead Poets Society
+533,2004,Without a Paddle
+534,1986,Pretty in Pink
+535,2003,Lord of the Rings: The Return of the King: Extended Edition
+536,2003,Monster
+537,1991,City Slickers
+538,1999,Notting Hill
+539,1978,Grease
+540,2004,White Chicks
+541,1999,Sex and the City: Season 2
+542,1995,Leaving Las Vegas
+543,1991,My Girl
+544,2001,Ocean's Eleven
+545,2004,Miracle
+546,1996,Independence Day
+547,2004,Walking Tall
+548,1993,The Firm
+549,2004,The Day After Tomorrow
+550,2001,Zoolander
+551,1999,Three Kings
+552,2003,Intolerable Cruelty
+553,1999,Big Daddy
+554,2000,Traffic
+555,2004,Eurotrip
+556,1998,The Big Lebowski
+557,2003,Phone Booth
+558,1996,Ransom
+559,2003,Mona Lisa Smile
+560,2002,Sweet Home Alabama
+561,2004,Lemony Snicket's A Series of Unfortunate Events
+562,1977,Close Encounters of the Third Kind
+563,1988,Big
+564,1984,Amadeus
+565,2003,Legally Blonde 2: Red White & Blonde
+566,2003,Matchstick Men
+567,1998,The Mask of Zorro
+568,2000,Remember the Titans
+569,2004,Van Helsing
+570,2004,Hellboy
+571,1967,The Graduate
+572,2000,The Replacements
+573,1989,Say Anything
+574,2004,13 Going on 30
+575,2005,Miss Congeniality 2: Armed and Fabulous
+576,1994,Clear and Present Danger
+577,1991,Father of the Bride
+578,1999,The Sopranos: Season 1
+579,1958,Vertigo
+580,1997,Con Air
+581,1977,Star Wars: Episode IV: A New Hope
+582,2000,Crouching Tiger Hidden Dragon
+583,2002,Red Dragon
+584,1990,Kindergarten Cop
+585,2002,The Hours
+586,2005,Hide and Seek
+587,1999,The Green Mile
+588,2004,Laws of Attraction
+589,1993,The Fugitive
+590,2002,Panic Room
+591,2004,The Prince and Me
+592,1996,The Birdcage
+593,1998,The Wedding Singer
+594,2000,Chocolat
+595,2004,Alien vs. Predator
+596,1961,West Side Story
+597,2004,Shall We Dance?
+598,1995,GoldenEye
+599,2001,K-Pax
+600,1992,Unforgiven
+601,1992,The Last of the Mohicans
+602,2004,Closer
+603,1992,A Few Good Men
+604,2003,American Splendor
+605,2003,Old School
+606,1999,Magnolia
+607,1997,Face/Off
+608,2001,Blow
+609,1973,The Exorcist
+610,1993,Tombstone
+611,1997,Titanic
+612,2003,Anger Management
+613,1990,Days of Thunder
+614,2003,Out of Time
+615,2004,Bridget Jones: The Edge of Reason
+616,1989,Indiana Jones and the Last Crusade
+617,2001,Donnie Darko
+618,2002,Confessions of a Dangerous Mind
+619,2000,Meet the Parents
+620,1997,The Devil's Advocate
+621,2003,Gothika
+622,1993,Philadelphia
+623,1998,Saving Private Ryan
+624,2004,National Treasure
+625,2004,Maria Full of Grace
+626,2002,In America
+627,1998,The Negotiator
+628,2000,Me Myself & Irene
+629,2001,Legally Blonde
+630,2005,Hitch
+631,2002,E.T. the Extra-Terrestrial: The 20th Anniversary (Rerelease)
+632,2004,The Punisher
+633,1987,Full Metal Jacket
+634,2004,The Terminal
+635,2002,Secretary
+636,2005,Sahara
+637,1998,Run Lola Run
+638,1982,Tootsie
+639,2002,The Ring
+640,1995,Clueless
+641,2000,Requiem for a Dream
+642,1984,Ghostbusters
+643,2001,Vanilla Sky
+644,2001,Harry Potter and the Sorcerer's Stone
+645,1992,A River Runs Through It
+646,1998,Shakespeare in Love
