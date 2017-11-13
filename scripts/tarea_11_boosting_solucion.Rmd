@@ -1,0 +1,278 @@
+---
+title: "Tarea 10: Gradient boosting"
+output: html_document
+---
+
+## Datos
+
+Consideraremos otro problema de predicción de valor de casas en el estado
+de California. Necesitaremos estos dos paquetes para hacer gráficas
+
+```{r}
+library(rgeos)
+library(maptools)
+library(maps)
+```
+
+
+La descripción de los datos es:
+
+&P Letters Data
+We collected information on the variables using all the block groups in California from the 1990 Census. In this sample a block group on average includes 1425.5 individuals living in a geographically compact area. Naturally, the geographical area included varies inversely with the population density. We computed distances among the centroids of each block group as measured in latitude and longitude. We excluded all the block groups reporting zero entries for the independent and dependent variables. The final data contained 20,640 observations on 9 variables. The dependent variable is ln(median house value).
+
+INTERCEPT	
+MEDIAN INCOME	
+MEDIAN INCOME2	
+MEDIAN INCOME3	
+ln(MEDIAN AGE)	
+ln(TOTAL ROOMS/ POPULATION)	
+ln(BEDROOMS/ POPULATION)	
+ln(POPULATION/ HOUSEHOLDS)	
+ln(HOUSEHOLDS)		
+
+The file cadata.txt contains all the the variables. Specifically, it contains median house value, median income, housing median age, total rooms, total bedrooms, population, households, latitude, and longitude in that order. 
+
+Reference
+
+Pace, R. Kelley and Ronald Barry, Sparse Spatial Autoregressions, Statistics and Probability Letters, 33 (1997) 291-297.
+
+Puedes encontrar los datos en la carpeta datos del repositorio (california_housing)
+
+
+
+
+
+Popdemos ver la ubicación de los block groups:
+
+```{r}
+data <- read.table("../datos/california_housing/cadata.txt", skip=27, sep="",
+    strip.white=TRUE)
+nrow(data)
+names(data) <- c("med_value","med_income","housing_med_age",
+    "total_rooms","total_bedrooms",
+    "pop","households","lat","long")
+
+map('county','california')
+points(data$long, data$lat,cex=0.2)           
+nrow(data)
+```
+
+
+**Observación**: aunque arriba explica que la variable dependiente es
+ln(median house value), esto es para el artículo que hace referencia a los datos.
+En los datos, la variable med_value no tiene logaritmo:
+
+```{r}
+quantile(data$med_value)
+```
+
+Podemos normalizar algunas variables y cambiar unidades para que sea más fácil
+interpretar
+
+```{r}
+#promedio de cuartos por hogar
+data$ave_room <- data$total_rooms/data$households
+data$ave_bedroom <- data$total_bedrooms/data$households
+# escalado de  valor (cientos de miles de dólares)
+data$med_value_scaled <- data$med_value/100000
+#promedio de número de habitantes por número de hogares
+data$ave_occupancy <- data$pop/data$households 
+#ojo: gbm usa el orden de los datos
+set.seed(122323)
+data_f <- data[sample(1:nrow(data), nrow(data)),]
+```
+
+
+## Pregunta 1: Discute validación y prueba
+
+Separamos datos de entrenamiento y prueba (vamos a usar validación cruzada
+para seleccionar modelos):
+
+```{r}
+data_f_valid <- data_f[1:4000,]
+data_f_train <- data_f[4000:20640, ]
+```
+
+¿Crees que habría una mejor manera de separar estos datos en entrenamiento
+y prueba? Recuerda que esto
+depende de la tarea de predicción que buscamos hacer (lee también la descripción
+de los datos). ¿Cómo cambiaría tu estrategia de estimación si tus datos
+fueran a nivel de hogar (y no a nivel de *block group*, que es una
+agrupación de manzanas, como en este ejemplo).
+
+## Pregunta 2: Ajusta un modelo de gradient boosting
+
+Puedes utilizar una función como la que sigue. Utilizamos como medida de error
+el error absoluto medio (por eso ponemos laplace en *distribution*):
+```{r}
+library(gbm)
+gbm_2 <- function(n.trees, shrinkage, interaction.depth, bag.fraction){
+    fit_boost <- gbm((med_value_scaled) ~ med_income + 
+            households + 
+            lat + long + ave_room + 
+            ave_bedroom + housing_med_age +
+            ave_occupancy,
+            data=data_f_train,
+            n.trees=n.trees,
+            distribution="laplace",
+            shrinkage=shrinkage,
+            interaction.depth = interaction.depth,
+            bag.fraction = bag.fraction,
+            train.fraction=1,
+            n.minobsinnode = 10,
+            cv.folds=10,
+            keep.data=TRUE,
+            verbose=FALSE
+            )
+    fit_boost
+}
+```
+
+Corre un modelo con 800 árboles, tasa de aprendizaje de 0.07, profundidad 6
+y bag.fraction (submuestreo) de 0.5:
+
+```{r}
+system.time(modelo <- gbm_2(n.trees=800, shrinkage=0.07, interaction.depth=6, bag.fraction=0.5))
+```
+
+Puedes graficar el error de validación cruzada con
+
+```{r}
+gbm.perf(modelo)
+plot(modelo$cv.error[-c(1:10)], type="l") # (opcional) quitar las primeras 10 iteraciones.
+tail(modelo$cv.error)
+```
+
+## Pregunta 3: Intenta no usar bag.fraction
+
+En este ejemplo, ¿Qué pasa con el error de validación cruzada 
+en el ejemplo anterior si no usas submuestreo? ¿Cuánto tiempo tarda en correr
+en comparación al modelo anterior?
+
+```{r}
+system.time(modelo <- gbm_2(n.trees=800, shrinkage=0.07, interaction.depth=6, bag.fraction=1))
+gbm.perf(modelo)
+tail(modelo$cv.error)
+```
+
+Nota: si alto de la gráfica está dominado por las primeras iteraciones, puedes
+quitarlas (digamos las primeras diez) para ver mejor qué pasa conforme
+hacemos más iteraciones.
+
+## Pregunta 4: Tasa de aprendizaje demasiado alta
+
+Intenta poner la tasa de aprendizaje más alta (por ejemplo 0.5) En este ejemplo, ¿Qué pasa
+con el error de validación cruzada?
+
+```{r}
+modelo <- gbm_2(n.trees=800, shrinkage=0.75, interaction.depth=6, bag.fraction=0.5) 
+plot(modelo$cv.error[-c(1:10)], type="l") # (opcional) quitar las primeras 10 iteraciones.
+tail(modelo$cv.error)
+```
+
+El desempeño se degrada considerablemente (podríamos tomar menos árboles para
+evitar sobreajuste).
+
+
+## Pregunta 5: Refina tu modelo
+
+Intenta hacer shrinkage un poco más chico y correr el modelo con más iteraciones (n.trees).
+¿Qué tan chico pudiste hacer el error de validación cruzada? Si haces
+shrinkage muy chico, ¿qué tienes qué hacer con el número de árboles (n.trees) para
+obtener buen desempeño?
+
+
+```{r}
+fit_boost <- gbm_2(n.trees=2500, shrinkage=0.05, interaction.depth=6, bag.fraction=0.5)
+plot(fit_boost$cv.error, type="l", col="red")
+```
+
+## Pregunta 6: Evalúa el modelo que seleccionaaste
+
+Calcula con la muestra de prueba nuestra estimación final del error de predicción
+(recuerda usar el error absoluto promedio). 
+Compara con regresión lineal. Haz una gráfica de predicciones de prueba contra
+valores observados. Calcula el valor en dólares de los 10\% más grandes de los
+errores de prueba y del 10\% de los errores más chicos (usa la función quantile)
+
+
+```{r}
+pred_test <- predict(fit_boost, data_f_valid, n.trees=2500)
+mean(abs(pred_test-data_f_valid$med_value_scaled))
+plot(data_f_valid$med_value_scaled, pred_test)
+```
+
+Veamos los errores en dólares:
+
+```{r}
+#Errores en dólares:
+round(100000*quantile(sort(abs(pred_test-data_f_valid$med_value_scaled)), probs=seq(0,1,0.1)),2)
+#Extraemos el mejor número de árboles
+best_iter_test <- gbm.perf(fit_boost,method="cv")
+print(best_iter_test) 
+#Resumen e importancias con el mejor número de iteraciones
+```
+
+## Pregunta 7: Importancia de variables y gráficas de dependencia parcial
+
+- Usa la funcón summary para obtener las importancias relativas de las variables
+(en este caso, son de tipo gini, y están normalizadas para sumar 1).
+```{r}
+summary(fit_boost,n.trees=best_iter_test) 
+```
+
+- ¿Cómo es la gráfica de dependencia parcial del ingreso mediano?
+
+```{r}
+plot(fit_boost, i.var=1)
+rug(quantile(data_f_valid$med_income, probs=seq(0,1,0.1)))
+```
+
+- ¿Cómo es la gráfica de dependencia parcial de la variable households? ¿Qué puedes
+decir de la variación que ves para valores grandes de households? (Considera
+ dónde está la mayoría de los datos de household). ¿Cómo rediseñarías esta gráfica
+ si quisieras presentarla para explicar el efecto de esta variable?
+
+```{r}
+plot(fit_boost, i.var=2) 
+rug(quantile(data_f_train$households, probs=seq(0,1,0.1)))
+hist(data_f_train$households, breaks=1000)
+```
+
+```{r}
+##Volvemos a hacer con un rango más razonable
+plot(fit_boost, i.var=2, xlim=c(0,1000)) 
+rug(quantile(data_f_train$households, probs=seq(0,1,0.1)))
+```
+
+- Usualmente, latitud y longitud sólo tiene sentido considerarlas juntas en una gráfica de 
+dependencia parcial (como interacción). Haz la gráfica de dependencia parcial para estas dos variables
+
+```{r}
+# Latitud y longitud sólo tienen sentido como interacción
+plot(fit_boost, i.var=c(4,3))
+```
+
+Sobrepone al mapa para entender esta relación. Puedes usar el siguiente
+código:
+
+```{r, fig.width=5, fig.height=6}
+# fit_boost es el modelo final que ajustaste
+# obtener los datos de la gráfica de dependencia parcial
+grid_pos <- plot(fit_boost, i.var=c(4,3), n.trees=1000, return.grid=TRUE)
+library(kknn)
+library(Hmisc)
+# Calcular con 1 vecino más cercano el valor de dependencia parcial
+# para cada caso de entrenamiento (no son los mismos valores)
+knn_1 <- kknn(y~long+lat, grid_pos, data_f_train[ , c("long","lat")], k=1,
+    kernel="rectangular")
+data_f_train$lat_long_partial <- knn_1$fitted.values
+# Cortar para obtener colores
+data_f_train$lat_long_partial_cat <- cut2(data_f_train$lat_long_partial, g=10)
+plot(data_f_train$long, data_f_train$lat,
+     col=rev(heat.colors(10, alpha=0.8))[data_f_train$lat_long_partial_cat], pch=16,
+        cex=0.8)
+map('county','california', add=TRUE, col="gray80")
+```
+
+¿Cuáles son las zonas más caras de California?
