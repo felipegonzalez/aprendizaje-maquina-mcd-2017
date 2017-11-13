@@ -80,7 +80,11 @@ peliculas_nom <- c('Gladiator','Memento','X-Men','Scream','Amores Perros',
 v <- c(-1.5, -0.5, 4, -1,-3,  -3, 0, 1, -0.5, 3.5)
 normalizar <- function(x){
   norma <- sqrt(sum(x^2))
-  x_norm <- ifelse(norma > 0,  x/norma, 0)
+  if(norma > 0){
+    x_norm <- x/norma
+  } else {
+    x_norm <- x
+  }
   x_norm
 }
 v <- normalizar(v)
@@ -593,7 +597,7 @@ podemos demostrar igual que arriba que
 
 $$|| X - \sigma_1 u_1 v_1^t - \sigma_2 u_2 v_2^{t} ||_F^2 = \textrm{Tr} (XX^t) - (\sigma_1^2 + \sigma_2^2)$$
 De modo que obtenemos la mejor aproximación escogiendo los dos valores de $\sigma_1^2$ y $\sigma_2^2$
-más grande para los que hay solución de \@ref(eq:valor-propio-derecho) y \@ref(eq:valor-propio-izquierdo) y
+más grandes para los que hay solución de \@ref(eq:valor-propio-derecho) y \@ref(eq:valor-propio-izquierdo) y
 
 **Observaciones**:
 
@@ -603,7 +607,7 @@ es posible demostrar que la mejor aproximación de rango 2 se puede construir de
 por ejemplo [estas notas](https://www.cs.cmu.edu/~venkatg/teaching/CStheory-infoage/book-chapter-4.pdf).
 - En el caso de dimensión 2, vemos que **la solución es incremental**: $\sigma_1, u_1, v_1$ son los
 mismos que para la solución de dimensión 1. En dimensión 2, tenemos que buscar el siguiente
-valor singular más grande después de $\sigma_1$, de forma que tenemos $\sigma_1^2 \leq \sigma_2^2$.
+valor singular más grande después de $\sigma_1$, de forma que tenemos $\sigma_1^2 \geq \sigma_2^2$.
 La solución entonces es agregar $\sigma_2 u_2 v_2^t$, donde $(u_2,v_2)$ es el par de vectores
 propios izquierdo y derecho.
 
@@ -655,7 +659,8 @@ El objeto de salida contiene los valores singulares (en *d*). Nótese que ya hab
 calculado por fuerza bruta el primer valor singular:
 
 ```{r}
-svd_gasto$d
+sigma <- svd_gasto$d
+sigma
 ```
 
 Los vectores $v_1,v_2,v_3$ (pesos de las variables) en nuestras tres nuevas dimensiones, 
@@ -707,7 +712,7 @@ O calculando la aproximación y la diferencia directamente. Podemos hacerlo de l
 X_arr_2 <- d[1]*tcrossprod(u[,1], v[,1]) + d[2]*tcrossprod(u[,2], v[,2])
 sum((X_arr - X_arr_2)^2)
 ```
-Pero podemos calcular $X_arr_2$ en forma matricial, haciendo
+Pero podemos calcular la aproximación $X_2$ en forma matricial, haciendo
 ```{r}
 X_arr_2 <- u[,1:2] %*% diag(d[1:2]) %*% t(v[,1:2])
 sum((X_arr - X_arr_2)^2)
@@ -825,7 +830,7 @@ $\sigma u_1$
 
 - Las proyecciones de los datos sobre el segundo vector $v_2$ están dadas igualmente por 
 $\sigma_2 u_2$. Sumamos esta proyección a la de la primera dimensión para obtener una mejor
-aproximación a los datos (en este caso, exacta)
+aproximación a los datos (en este caso, exacta).
 
 Por ejemplo, seleccionemos el primer punto y obtengamos sus proyecciones:
 
@@ -838,7 +843,7 @@ datos[1,]
 
 Podemos graficar la aproximación sucesiva:
 
-```{r}
+```{r, message=FALSE, warning=FALSE}
 datos$selec <- c('seleccionado', rep('no_seleccionado', nrow(datos)-1))
 ggplot(datos) + geom_point(aes(x=x_1, y=x_2, colour=selec, size=selec)) +
   geom_vline(xintercept = 0, colour='red') +
@@ -858,7 +863,7 @@ ggplot(datos) + geom_point(aes(x=x_1, y=x_2, colour=selec, size=selec)) +
 ## SVD para películas de netflix
 
 Vamos a intentar encontrar dimensiones latentes para los datos del concurso
-de predicción de Netflix (una de las componentes de las soluciones ganadaras
+de predicción de Netflix (una de las componentes de las soluciones ganadoras
 fue descomposición en valores singulares).
 
 ```{r}
@@ -870,11 +875,10 @@ peliculas_nombres
 
 Hay muchas peliculas que no son evaluadas por ningún usuario. Aquí tenemos que decidir
 cómo tratar estos datos: si los rellenamos con 0, la implicación es que un usuario
-tiene bajo interés en una película que no ha visto. Podemos también poner la media
-de cada usuario, indicando que no tiene preferencia clara por esa película. Intentemos la segunda opcion
+tiene bajo interés en una película que no ha visto. Hay otras opciones (y quizá un
+método que trate apropiadamente los datos faltantes es mejor).
 
-
-```{r}
+```{r, message=FALSE, warning=FALSE}
 library(Matrix)
 library(methods)
 library(irlba)
@@ -899,8 +903,8 @@ Veamos primero las componentes 2, 3 y 4.
 
 
 ```{r}
-qplot(svd_parcial$u[,2]*sqrt(svd_parcial$d[2]))
-qplot(svd_parcial$v[,2]*sqrt(svd_parcial$d[2]))
+qplot(svd_parcial$u[,2])
+qplot(svd_parcial$v[,2])#
 ```
 
 
@@ -924,8 +928,8 @@ Dejamos la primer componente porque es más bien consecuencia de cómo construim
 la matriz que buscamos descomponer:
 
 ```{r}
-qplot(svd_parcial$u[,1]*sqrt(svd_parcial$d[1]))
-qplot(svd_parcial$v[,1]*sqrt(svd_parcial$d[1]))
+qplot(svd_parcial$u[,1])
+qplot(svd_parcial$v[,1])
 ```
 Esta componente está asociada con el número de evaluaciones que tiene cada
 usuario y que tiene cada persona
@@ -945,5 +949,5 @@ En realidad es una distorsión producida por cómo hemos tratado los datos ("imp
 cero cuando no existe una evaluación).
 
 
-
+## Componentes principales
 
