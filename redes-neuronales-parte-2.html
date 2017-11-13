@@ -25,7 +25,7 @@
 <meta name="author" content="Felipe González">
 
 
-<meta name="date" content="2017-11-12">
+<meta name="date" content="2017-11-13">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -334,6 +334,29 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="13.7" data-path="validacion-de-modelos-problemas-comunes.html"><a href="validacion-de-modelos-problemas-comunes.html#otros-ejemplos"><i class="fa fa-check"></i><b>13.7</b> Otros ejemplos</a></li>
 <li class="chapter" data-level="13.8" data-path="validacion-de-modelos-problemas-comunes.html"><a href="validacion-de-modelos-problemas-comunes.html#resumen-1"><i class="fa fa-check"></i><b>13.8</b> Resumen</a></li>
 <li class="chapter" data-level="" data-path="validacion-de-modelos-problemas-comunes.html"><a href="validacion-de-modelos-problemas-comunes.html#tarea-6"><i class="fa fa-check"></i>Tarea</a></li>
+</ul></li>
+<li class="chapter" data-level="14" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html"><i class="fa fa-check"></i><b>14</b> Reducción de dimensionalidad</a><ul>
+<li class="chapter" data-level="14.1" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#descomposicion-aditiva-en-matrices-de-rango-1"><i class="fa fa-check"></i><b>14.1</b> Descomposición aditiva en matrices de rango 1</a><ul>
+<li class="chapter" data-level="14.1.1" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#matrices-de-rango-1"><i class="fa fa-check"></i><b>14.1.1</b> Matrices de rango 1</a></li>
+<li class="chapter" data-level="" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#ejemplo-una-matriz-de-rango-1-de-preferencias"><i class="fa fa-check"></i>Ejemplo: una matriz de rango 1 de preferencias</a></li>
+</ul></li>
+<li class="chapter" data-level="14.2" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#aproximacion-con-matrices-de-rango-1."><i class="fa fa-check"></i><b>14.2</b> Aproximación con matrices de rango 1.</a><ul>
+<li class="chapter" data-level="" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#ejemplo-52"><i class="fa fa-check"></i>Ejemplo</a></li>
+<li class="chapter" data-level="14.2.1" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#suma-de-matrices-de-rango-1."><i class="fa fa-check"></i><b>14.2.1</b> Suma de matrices de rango 1.</a></li>
+<li class="chapter" data-level="" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#ejemplo-peliculas"><i class="fa fa-check"></i>Ejemplo: películas</a></li>
+</ul></li>
+<li class="chapter" data-level="14.3" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#aproximacion-con-matrices-de-rango-bajo"><i class="fa fa-check"></i><b>14.3</b> Aproximación con matrices de rango bajo</a><ul>
+<li class="chapter" data-level="14.3.1" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#discusion-aproximacion-de-rango-1."><i class="fa fa-check"></i><b>14.3.1</b> Discusión: aproximación de rango 1.</a></li>
+<li class="chapter" data-level="14.3.2" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#discusion-aproximaciones-de-rango-mas-alto"><i class="fa fa-check"></i><b>14.3.2</b> Discusión: aproximaciones de rango más alto</a></li>
+<li class="chapter" data-level="" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#ejemplo-54"><i class="fa fa-check"></i>Ejemplo</a></li>
+</ul></li>
+<li class="chapter" data-level="14.4" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#descomposicion-en-valores-singulares-svd-o-dvs"><i class="fa fa-check"></i><b>14.4</b> Descomposición en valores singulares (SVD o DVS)</a></li>
+<li class="chapter" data-level="14.5" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#interpretacion-geometrica"><i class="fa fa-check"></i><b>14.5</b> Interpretación geométrica</a></li>
+<li class="chapter" data-level="14.6" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#svd-para-peliculas-de-netflix"><i class="fa fa-check"></i><b>14.6</b> SVD para películas de netflix</a><ul>
+<li class="chapter" data-level="14.6.1" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#calidad-de-representacion-de-svd."><i class="fa fa-check"></i><b>14.6.1</b> Calidad de representación de SVD.</a></li>
+<li class="chapter" data-level="" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#ejemplo-55"><i class="fa fa-check"></i>Ejemplo</a></li>
+</ul></li>
+<li class="chapter" data-level="14.7" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#componentes-principales"><i class="fa fa-check"></i><b>14.7</b> Componentes principales</a></li>
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Publicado con bookdown</a></li>
@@ -716,13 +739,13 @@ history &lt;-<span class="st"> </span>modelo <span class="op">%&gt;%</span><span
 <p>Ver los pesos:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">get_weights</span>(modelo)</code></pre></div>
 <pre><code>## [[1]]
-##            [,1]
-## [1,] -0.6842774
-## [2,]  0.1031383
-## [3,]  0.3146820
+##             [,1]
+## [1,] -0.63397878
+## [2,]  0.08024704
+## [3,]  0.31525204
 ## 
 ## [[2]]
-## [1] 1.645761</code></pre>
+## [1] 1.640087</code></pre>
 <p>Y verificamos que concuerda con la salida de <em>glm</em>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mod_logistico &lt;-<span class="st"> </span><span class="kw">glm</span>(g <span class="op">~</span><span class="st"> </span>x_<span class="dv">1</span> <span class="op">+</span><span class="st"> </span>x_<span class="dv">2</span><span class="op">+</span><span class="st"> </span>x_<span class="dv">3</span>, <span class="dt">data =</span> dat_ent, <span class="dt">family =</span> <span class="st">&#39;binomial&#39;</span>) 
 <span class="kw">coef</span>(mod_logistico)</code></pre></div>
@@ -787,13 +810,13 @@ history &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><s
 score &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">evaluate</span>(x_test, y_test)
 score</code></pre></div>
 <pre><code>## $loss
-## [1] 0.2888451
+## [1] 0.2975167
 ## 
 ## $acc
-## [1] 0.9327354
+## [1] 0.9282511
 ## 
 ## $categorical_crossentropy
-## [1] 0.2877979</code></pre>
+## [1] 0.2964655</code></pre>
 <p>Podemos también intentar con el ejemplo de spam:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(readr)
 <span class="kw">library</span>(tidyr)
@@ -829,13 +852,13 @@ tab_confusion &lt;-<span class="st"> </span><span class="kw">table</span>(modelo
 tab_confusion</code></pre></div>
 <pre><code>##    y_valid
 ##       0   1
-##   0 896  62
-##   1  31 545</code></pre>
+##   0 888  52
+##   1  39 555</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">prop.table</span>(tab_confusion, <span class="dv">2</span>)</code></pre></div>
 <pre><code>##    y_valid
 ##              0          1
-##   0 0.96655879 0.10214168
-##   1 0.03344121 0.89785832</code></pre>
+##   0 0.95792880 0.08566722
+##   1 0.04207120 0.91433278</code></pre>
 </div>
 </div>
 <div id="activaciones-relu" class="section level2">
@@ -887,13 +910,13 @@ history &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><s
 score &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">evaluate</span>(x_test, y_test)
 score</code></pre></div>
 <pre><code>## $loss
-## [1] 0.292938
+## [1] 0.2881492
 ## 
 ## $acc
 ## [1] 0.9431988
 ## 
 ## $categorical_crossentropy
-## [1] 0.2151786</code></pre>
+## [1] 0.2122254</code></pre>
 </div>
 </div>
 <div id="dropout-para-regularizacion" class="section level2">
@@ -984,36 +1007,36 @@ hist_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">as
 <p><img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-46-1.png" width="480" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">get_weights</span>(modelo_dropout)[[<span class="dv">3</span>]]</code></pre></div>
 <pre><code>##             [,1]
-##  [1,]  1.0976852
-##  [2,] -1.5290800
-##  [3,] -1.1824570
-##  [4,] -1.1627115
-##  [5,] -0.9239522
-##  [6,] -1.6583337
-##  [7,] -1.4222071
-##  [8,]  1.2381860
-##  [9,]  1.1621883
-## [10,] -1.3461934
-## [11,]  0.9603542
-## [12,] -1.4174902
-## [13,]  0.7522846
-## [14,] -1.6592968
-## [15,]  1.2322993
-## [16,] -1.5323583
-## [17,]  1.3460201
-## [18,] -1.5573415
-## [19,]  0.9944229
-## [20,] -1.4876921
-## [21,] -1.2927330
-## [22,]  0.7922330
-## [23,]  0.5639163
-## [24,]  0.3916576
-## [25,] -1.4523222
-## [26,] -1.3594295
-## [27,] -1.3706082
-## [28,] -1.4323736
-## [29,]  1.0572836
-## [30,]  0.7372717</code></pre>
+##  [1,]  0.7190892
+##  [2,]  1.1031516
+##  [3,] -1.4753615
+##  [4,]  0.8989074
+##  [5,] -1.2449259
+##  [6,]  1.1577359
+##  [7,] -1.2831899
+##  [8,] -1.1745189
+##  [9,] -1.3436258
+## [10,]  1.2947464
+## [11,] -1.3146142
+## [12,]  1.1498533
+## [13,]  0.3708550
+## [14,]  0.3131512
+## [15,]  0.9201385
+## [16,]  1.4547421
+## [17,]  1.1021944
+## [18,] -1.2791796
+## [19,]  1.1054069
+## [20,] -1.8643150
+## [21,]  1.3726612
+## [22,]  0.9302514
+## [23,]  1.2201425
+## [24,] -1.7544816
+## [25,] -1.3278039
+## [26,] -1.4924103
+## [27,] -1.2393262
+## [28,] -1.5133498
+## [29,]  1.0399492
+## [30,] -1.6747082</code></pre>
 <p>¿Cuáles de estas unidades tienen peso positivo y negativo en la capa final?</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pesos_capa_f &lt;-<span class="st"> </span><span class="kw">get_weights</span>(modelo_dropout)[[<span class="dv">3</span>]]
 <span class="kw">graf_pesos</span>(pesos[, pesos_capa_f <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.5</span>], <span class="dt">mostrar_facets =</span> <span class="ot">TRUE</span>)</code></pre></div>
@@ -1056,13 +1079,13 @@ history &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><s
 score &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">evaluate</span>(x_test, y_test)
 score</code></pre></div>
 <pre><code>## $loss
-## [1] 0.2282575
+## [1] 0.2249587
 ## 
 ## $acc
-## [1] 0.9461883
+## [1] 0.9496761
 ## 
 ## $categorical_crossentropy
-## [1] 0.2241534</code></pre>
+## [1] 0.2208391</code></pre>
 
 </div>
 </div>

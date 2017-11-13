@@ -1,0 +1,1303 @@
+<!DOCTYPE html>
+<html >
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Aprendizaje de máquina</title>
+  <meta name="description" content="Notas y material para el curso de aprendizaje de máquina 2017 (ITAM)">
+  <meta name="generator" content="bookdown 0.5.8 and GitBook 2.6.7">
+
+  <meta property="og:title" content="Aprendizaje de máquina" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="Notas y material para el curso de aprendizaje de máquina 2017 (ITAM)" />
+  <meta name="github-repo" content="felipegonzalez/aprendizaje-maquina-2017" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Aprendizaje de máquina" />
+  
+  <meta name="twitter:description" content="Notas y material para el curso de aprendizaje de máquina 2017 (ITAM)" />
+  
+
+<meta name="author" content="Felipe González">
+
+
+<meta name="date" content="2017-11-13">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  
+  
+<link rel="prev" href="validacion-de-modelos-problemas-comunes.html">
+
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+<link rel="stylesheet" href="toc.css" type="text/css" />
+<link rel="stylesheet" href="font-awesome.min.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Aprendizaje Máquina</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Temario y referencias</a><ul>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#evaluacion"><i class="fa fa-check"></i>Evaluación</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#software-r-y-rstudio"><i class="fa fa-check"></i>Software: R y Rstudio</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#referencias-principales"><i class="fa fa-check"></i>Referencias principales</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#otras-referencias"><i class="fa fa-check"></i>Otras referencias</a></li>
+</ul></li>
+<li class="chapter" data-level="1" data-path="introduccion.html"><a href="introduccion.html"><i class="fa fa-check"></i><b>1</b> Introducción</a><ul>
+<li class="chapter" data-level="1.1" data-path="introduccion.html"><a href="introduccion.html#que-es-aprendizaje-de-maquina-machine-learning"><i class="fa fa-check"></i><b>1.1</b> ¿Qué es aprendizaje de máquina (machine learning)?</a></li>
+<li class="chapter" data-level="1.2" data-path="introduccion.html"><a href="introduccion.html#aprendizaje-supervisado-1"><i class="fa fa-check"></i><b>1.2</b> Aprendizaje Supervisado</a><ul>
+<li class="chapter" data-level="1.2.1" data-path="introduccion.html"><a href="introduccion.html#proceso-generador-de-datos-modelo-teorico"><i class="fa fa-check"></i><b>1.2.1</b> Proceso generador de datos (modelo teórico)</a></li>
+</ul></li>
+<li class="chapter" data-level="1.3" data-path="introduccion.html"><a href="introduccion.html#predicciones"><i class="fa fa-check"></i><b>1.3</b> Predicciones</a></li>
+<li class="chapter" data-level="1.4" data-path="introduccion.html"><a href="introduccion.html#cuantificacion-de-error-o-precision"><i class="fa fa-check"></i><b>1.4</b> Cuantificación de error o precisión</a></li>
+<li class="chapter" data-level="1.5" data-path="introduccion.html"><a href="introduccion.html#aprendizaje"><i class="fa fa-check"></i><b>1.5</b> Tarea de aprendizaje supervisado</a><ul>
+<li class="chapter" data-level="1.5.1" data-path="introduccion.html"><a href="introduccion.html#observaciones"><i class="fa fa-check"></i><b>1.5.1</b> Observaciones</a></li>
+</ul></li>
+<li class="chapter" data-level="1.6" data-path="introduccion.html"><a href="introduccion.html#por-que-tenemos-errores"><i class="fa fa-check"></i><b>1.6</b> ¿Por qué tenemos errores?</a></li>
+<li class="chapter" data-level="1.7" data-path="introduccion.html"><a href="introduccion.html#como-estimar-f"><i class="fa fa-check"></i><b>1.7</b> ¿Cómo estimar f?</a></li>
+<li class="chapter" data-level="1.8" data-path="introduccion.html"><a href="introduccion.html#resumen"><i class="fa fa-check"></i><b>1.8</b> Resumen</a></li>
+<li class="chapter" data-level="1.9" data-path="introduccion.html"><a href="introduccion.html#tarea"><i class="fa fa-check"></i><b>1.9</b> Tarea</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="regresion.html"><a href="regresion.html"><i class="fa fa-check"></i><b>2</b> Regresión lineal</a><ul>
+<li class="chapter" data-level="2.1" data-path="introduccion.html"><a href="introduccion.html#introduccion"><i class="fa fa-check"></i><b>2.1</b> Introducción</a></li>
+<li class="chapter" data-level="2.2" data-path="regresion.html"><a href="regresion.html#aprendizaje-de-coeficientes-ajuste"><i class="fa fa-check"></i><b>2.2</b> Aprendizaje de coeficientes (ajuste)</a></li>
+<li class="chapter" data-level="2.3" data-path="regresion.html"><a href="regresion.html#descenso-en-gradiente"><i class="fa fa-check"></i><b>2.3</b> Descenso en gradiente</a><ul>
+<li class="chapter" data-level="2.3.1" data-path="regresion.html"><a href="regresion.html#seleccion-de-tamano-de-paso-eta"><i class="fa fa-check"></i><b>2.3.1</b> Selección de tamaño de paso <span class="math inline">\(\eta\)</span></a></li>
+<li class="chapter" data-level="2.3.2" data-path="regresion.html"><a href="regresion.html#funciones-de-varias-variables"><i class="fa fa-check"></i><b>2.3.2</b> Funciones de varias variables</a></li>
+</ul></li>
+<li class="chapter" data-level="2.4" data-path="regresion.html"><a href="regresion.html#descenso-en-gradiente-para-regresion-lineal"><i class="fa fa-check"></i><b>2.4</b> Descenso en gradiente para regresión lineal</a></li>
+<li class="chapter" data-level="2.5" data-path="regresion.html"><a href="regresion.html#normalizacion-de-entradas"><i class="fa fa-check"></i><b>2.5</b> Normalización de entradas</a></li>
+<li class="chapter" data-level="2.6" data-path="regresion.html"><a href="regresion.html#interpretacion-de-modelos-lineales"><i class="fa fa-check"></i><b>2.6</b> Interpretación de modelos lineales</a></li>
+<li class="chapter" data-level="2.7" data-path="regresion.html"><a href="regresion.html#solucion-analitica"><i class="fa fa-check"></i><b>2.7</b> Solución analítica</a></li>
+<li class="chapter" data-level="2.8" data-path="regresion.html"><a href="regresion.html#por-que-el-modelo-lineal-funciona-bien-muchas-veces"><i class="fa fa-check"></i><b>2.8</b> ¿Por qué el modelo lineal funciona bien (muchas veces)?</a><ul>
+<li class="chapter" data-level="2.8.1" data-path="regresion.html"><a href="regresion.html#k-vecinos-mas-cercanos"><i class="fa fa-check"></i><b>2.8.1</b> k vecinos más cercanos</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="regresion.html"><a href="regresion.html#tarea-1"><i class="fa fa-check"></i>Tarea</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="logistica.html"><a href="logistica.html"><i class="fa fa-check"></i><b>3</b> Regresión logística</a><ul>
+<li class="chapter" data-level="3.1" data-path="logistica.html"><a href="logistica.html#el-problema-de-clasificacion"><i class="fa fa-check"></i><b>3.1</b> El problema de clasificación</a><ul>
+<li class="chapter" data-level="" data-path="logistica.html"><a href="logistica.html#que-estimar-en-problemas-de-clasificacion"><i class="fa fa-check"></i>¿Qué estimar en problemas de clasificación?</a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="logistica.html"><a href="logistica.html#estimacion-de-probabilidades-de-clase"><i class="fa fa-check"></i><b>3.2</b> Estimación de probabilidades de clase</a><ul>
+<li class="chapter" data-level="" data-path="logistica.html"><a href="logistica.html#ejemplo-10"><i class="fa fa-check"></i>Ejemplo</a></li>
+<li class="chapter" data-level="3.2.1" data-path="logistica.html"><a href="logistica.html#k-vecinos-mas-cercanos-1"><i class="fa fa-check"></i><b>3.2.1</b> k-vecinos más cercanos</a></li>
+<li class="chapter" data-level="" data-path="logistica.html"><a href="logistica.html#ejemplo-12"><i class="fa fa-check"></i>Ejemplo</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="logistica.html"><a href="logistica.html#error-para-modelos-de-clasificacion"><i class="fa fa-check"></i><b>3.3</b> Error para modelos de clasificación</a><ul>
+<li class="chapter" data-level="3.3.1" data-path="logistica.html"><a href="logistica.html#ejercicio-1"><i class="fa fa-check"></i><b>3.3.1</b> Ejercicio</a></li>
+<li class="chapter" data-level="3.3.2" data-path="logistica.html"><a href="logistica.html#error-de-clasificacion-y-funcion-de-perdida-0-1"><i class="fa fa-check"></i><b>3.3.2</b> Error de clasificación y función de pérdida 0-1</a></li>
+<li class="chapter" data-level="3.3.3" data-path="logistica.html"><a href="logistica.html#discusion-relacion-entre-devianza-y-error-de-clasificacion"><i class="fa fa-check"></i><b>3.3.3</b> Discusión: relación entre devianza y error de clasificación</a></li>
+</ul></li>
+<li class="chapter" data-level="3.4" data-path="logistica.html"><a href="logistica.html#regresion-logistica"><i class="fa fa-check"></i><b>3.4</b> Regresión logística</a><ul>
+<li class="chapter" data-level="3.4.1" data-path="logistica.html"><a href="logistica.html#regresion-logistica-simple"><i class="fa fa-check"></i><b>3.4.1</b> Regresión logística simple</a></li>
+<li class="chapter" data-level="3.4.2" data-path="logistica.html"><a href="logistica.html#funcion-logistica"><i class="fa fa-check"></i><b>3.4.2</b> Función logística</a></li>
+<li class="chapter" data-level="3.4.3" data-path="logistica.html"><a href="logistica.html#regresion-logistica-1"><i class="fa fa-check"></i><b>3.4.3</b> Regresión logística</a></li>
+</ul></li>
+<li class="chapter" data-level="3.5" data-path="logistica.html"><a href="logistica.html#aprendizaje-de-coeficientes-para-regresion-logistica-binomial."><i class="fa fa-check"></i><b>3.5</b> Aprendizaje de coeficientes para regresión logística (binomial).</a></li>
+<li class="chapter" data-level="3.6" data-path="logistica.html"><a href="logistica.html#observaciones-adicionales"><i class="fa fa-check"></i><b>3.6</b> Observaciones adicionales</a></li>
+<li class="chapter" data-level="3.7" data-path="logistica.html"><a href="logistica.html#ejercicio-datos-de-diabetes"><i class="fa fa-check"></i><b>3.7</b> Ejercicio: datos de diabetes</a><ul>
+<li class="chapter" data-level="" data-path="logistica.html"><a href="logistica.html#tarea-2"><i class="fa fa-check"></i>Tarea</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="mas-sobre-problemas-de-clasificacion.html"><a href="mas-sobre-problemas-de-clasificacion.html"><i class="fa fa-check"></i><b>4</b> Más sobre problemas de clasificación</a><ul>
+<li class="chapter" data-level="4.1" data-path="mas-sobre-problemas-de-clasificacion.html"><a href="mas-sobre-problemas-de-clasificacion.html#analisis-de-error-para-clasificadores-binarios"><i class="fa fa-check"></i><b>4.1</b> Análisis de error para clasificadores binarios</a><ul>
+<li class="chapter" data-level="4.1.1" data-path="mas-sobre-problemas-de-clasificacion.html"><a href="mas-sobre-problemas-de-clasificacion.html#punto-de-corte-para-un-clasificador-binario"><i class="fa fa-check"></i><b>4.1.1</b> Punto de corte para un clasificador binario</a></li>
+<li class="chapter" data-level="4.1.2" data-path="mas-sobre-problemas-de-clasificacion.html"><a href="mas-sobre-problemas-de-clasificacion.html#espacio-roc-de-clasificadores"><i class="fa fa-check"></i><b>4.1.2</b> Espacio ROC de clasificadores</a></li>
+</ul></li>
+<li class="chapter" data-level="4.2" data-path="mas-sobre-problemas-de-clasificacion.html"><a href="mas-sobre-problemas-de-clasificacion.html#perfil-de-un-clasificador-binario-y-curvas-roc"><i class="fa fa-check"></i><b>4.2</b> Perfil de un clasificador binario y curvas ROC</a></li>
+<li class="chapter" data-level="4.3" data-path="mas-sobre-problemas-de-clasificacion.html"><a href="mas-sobre-problemas-de-clasificacion.html#regresion-logistica-para-problemas-de-mas-de-2-clases"><i class="fa fa-check"></i><b>4.3</b> Regresión logística para problemas de más de 2 clases</a><ul>
+<li class="chapter" data-level="4.3.1" data-path="mas-sobre-problemas-de-clasificacion.html"><a href="mas-sobre-problemas-de-clasificacion.html#regresion-logistica-multinomial"><i class="fa fa-check"></i><b>4.3.1</b> Regresión logística multinomial</a></li>
+<li class="chapter" data-level="4.3.2" data-path="mas-sobre-problemas-de-clasificacion.html"><a href="mas-sobre-problemas-de-clasificacion.html#interpretacion-de-coeficientes"><i class="fa fa-check"></i><b>4.3.2</b> Interpretación de coeficientes</a></li>
+<li class="chapter" data-level="4.3.3" data-path="mas-sobre-problemas-de-clasificacion.html"><a href="mas-sobre-problemas-de-clasificacion.html#ejemplo-clasificacion-de-digitos-con-regresion-multinomial"><i class="fa fa-check"></i><b>4.3.3</b> Ejemplo: Clasificación de dígitos con regresión multinomial</a></li>
+<li class="chapter" data-level="" data-path="mas-sobre-problemas-de-clasificacion.html"><a href="mas-sobre-problemas-de-clasificacion.html#discusion"><i class="fa fa-check"></i>Discusión</a></li>
+</ul></li>
+<li class="chapter" data-level="4.4" data-path="mas-sobre-problemas-de-clasificacion.html"><a href="mas-sobre-problemas-de-clasificacion.html#descenso-en-gradiente-para-regresion-multinomial-logistica"><i class="fa fa-check"></i><b>4.4</b> Descenso en gradiente para regresión multinomial logística</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="regularizacion.html"><a href="regularizacion.html"><i class="fa fa-check"></i><b>5</b> Regularización</a><ul>
+<li class="chapter" data-level="5.1" data-path="regularizacion.html"><a href="regularizacion.html#sesgo-y-varianza-de-predictores"><i class="fa fa-check"></i><b>5.1</b> Sesgo y varianza de predictores</a><ul>
+<li class="chapter" data-level="5.1.1" data-path="regularizacion.html"><a href="regularizacion.html#sesgo-y-varianza-en-modelos-lineales"><i class="fa fa-check"></i><b>5.1.1</b> Sesgo y varianza en modelos lineales</a></li>
+<li class="chapter" data-level="5.1.2" data-path="regularizacion.html"><a href="regularizacion.html#reduciendo-varianza-de-los-coeficientes"><i class="fa fa-check"></i><b>5.1.2</b> Reduciendo varianza de los coeficientes</a></li>
+</ul></li>
+<li class="chapter" data-level="5.2" data-path="regularizacion.html"><a href="regularizacion.html#regularizacion-ridge"><i class="fa fa-check"></i><b>5.2</b> Regularización ridge</a><ul>
+<li class="chapter" data-level="5.2.1" data-path="regularizacion.html"><a href="regularizacion.html#seleccion-de-coeficiente-de-regularizacion"><i class="fa fa-check"></i><b>5.2.1</b> Selección de coeficiente de regularización</a></li>
+</ul></li>
+<li class="chapter" data-level="5.3" data-path="regularizacion.html"><a href="regularizacion.html#entrenamiento-validacion-y-prueba"><i class="fa fa-check"></i><b>5.3</b> Entrenamiento, Validación y Prueba</a><ul>
+<li class="chapter" data-level="5.3.1" data-path="regularizacion.html"><a href="regularizacion.html#validacion-cruzada"><i class="fa fa-check"></i><b>5.3.1</b> Validación cruzada</a></li>
+<li class="chapter" data-level="" data-path="regularizacion.html"><a href="regularizacion.html#ejercicio-5"><i class="fa fa-check"></i>Ejercicio</a></li>
+</ul></li>
+<li class="chapter" data-level="5.4" data-path="regularizacion.html"><a href="regularizacion.html#regularizacion-lasso"><i class="fa fa-check"></i><b>5.4</b> Regularización lasso</a></li>
+<li class="chapter" data-level="5.5" data-path="regularizacion.html"><a href="regularizacion.html#tarea-3"><i class="fa fa-check"></i><b>5.5</b> Tarea</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="extensiones-para-regresion-lineal-y-logistica.html"><a href="extensiones-para-regresion-lineal-y-logistica.html"><i class="fa fa-check"></i><b>6</b> Extensiones para regresión lineal y logística</a><ul>
+<li class="chapter" data-level="6.1" data-path="extensiones-para-regresion-lineal-y-logistica.html"><a href="extensiones-para-regresion-lineal-y-logistica.html#como-hacer-mas-flexible-el-modelo-lineal"><i class="fa fa-check"></i><b>6.1</b> Cómo hacer más flexible el modelo lineal</a></li>
+<li class="chapter" data-level="6.2" data-path="extensiones-para-regresion-lineal-y-logistica.html"><a href="extensiones-para-regresion-lineal-y-logistica.html#transformacion-de-entradas"><i class="fa fa-check"></i><b>6.2</b> Transformación de entradas</a></li>
+<li class="chapter" data-level="6.3" data-path="extensiones-para-regresion-lineal-y-logistica.html"><a href="extensiones-para-regresion-lineal-y-logistica.html#variables-cualitativas"><i class="fa fa-check"></i><b>6.3</b> Variables cualitativas</a></li>
+<li class="chapter" data-level="6.4" data-path="extensiones-para-regresion-lineal-y-logistica.html"><a href="extensiones-para-regresion-lineal-y-logistica.html#interacciones"><i class="fa fa-check"></i><b>6.4</b> Interacciones</a></li>
+<li class="chapter" data-level="6.5" data-path="extensiones-para-regresion-lineal-y-logistica.html"><a href="extensiones-para-regresion-lineal-y-logistica.html#categorizacion-de-variables"><i class="fa fa-check"></i><b>6.5</b> Categorización de variables</a></li>
+<li class="chapter" data-level="6.6" data-path="extensiones-para-regresion-lineal-y-logistica.html"><a href="extensiones-para-regresion-lineal-y-logistica.html#splines"><i class="fa fa-check"></i><b>6.6</b> Splines</a><ul>
+<li class="chapter" data-level="6.6.1" data-path="extensiones-para-regresion-lineal-y-logistica.html"><a href="extensiones-para-regresion-lineal-y-logistica.html#cuando-usar-estas-tecnicas"><i class="fa fa-check"></i><b>6.6.1</b> ¿Cuándo usar estas técnicas?</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html"><i class="fa fa-check"></i><b>7</b> Redes neuronales (parte 1)</a><ul>
+<li class="chapter" data-level="7.1" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#introduccion-a-redes-neuronales"><i class="fa fa-check"></i><b>7.1</b> Introducción a redes neuronales</a><ul>
+<li class="chapter" data-level="" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#como-construyen-entradas-las-redes-neuronales"><i class="fa fa-check"></i>¿Cómo construyen entradas las redes neuronales?</a></li>
+<li class="chapter" data-level="" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#como-ajustar-los-parametros"><i class="fa fa-check"></i>¿Cómo ajustar los parámetros?</a></li>
+</ul></li>
+<li class="chapter" data-level="7.2" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#interacciones-en-redes-neuronales"><i class="fa fa-check"></i><b>7.2</b> Interacciones en redes neuronales</a></li>
+<li class="chapter" data-level="7.3" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#calculo-en-redes-feed-forward."><i class="fa fa-check"></i><b>7.3</b> Cálculo en redes: feed-forward.</a></li>
+<li class="chapter" data-level="" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#notacion-1"><i class="fa fa-check"></i>Notación</a></li>
+<li class="chapter" data-level="7.4" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#feed-forward"><i class="fa fa-check"></i><b>7.4</b> Feed forward</a></li>
+<li class="chapter" data-level="7.5" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#backpropagation-calculo-del-gradiente"><i class="fa fa-check"></i><b>7.5</b> Backpropagation: cálculo del gradiente</a><ul>
+<li class="chapter" data-level="7.5.1" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#calculo-para-un-caso-de-entrenamiento"><i class="fa fa-check"></i><b>7.5.1</b> Cálculo para un caso de entrenamiento</a></li>
+<li class="chapter" data-level="7.5.2" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#algoritmo-de-backpropagation"><i class="fa fa-check"></i><b>7.5.2</b> Algoritmo de backpropagation</a></li>
+</ul></li>
+<li class="chapter" data-level="7.6" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#ajuste-de-parametros-introduccion"><i class="fa fa-check"></i><b>7.6</b> Ajuste de parámetros (introducción)</a><ul>
+<li class="chapter" data-level="7.6.1" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#ejemplo-31"><i class="fa fa-check"></i><b>7.6.1</b> Ejemplo</a></li>
+<li class="chapter" data-level="7.6.2" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#hiperparametros-busqueda-manual"><i class="fa fa-check"></i><b>7.6.2</b> Hiperparámetros: búsqueda manual</a></li>
+<li class="chapter" data-level="7.6.3" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#hiperparametros-busqueda-en-grid"><i class="fa fa-check"></i><b>7.6.3</b> Hiperparámetros: búsqueda en grid</a></li>
+<li class="chapter" data-level="7.6.4" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#hiperparametros-busqueda-aleatoria"><i class="fa fa-check"></i><b>7.6.4</b> Hiperparámetros: búsqueda aleatoria</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#tarea-para-25-de-septiembre"><i class="fa fa-check"></i>Tarea (para 25 de septiembre)</a></li>
+<li class="chapter" data-level="" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#tarea-2-de-octubre"><i class="fa fa-check"></i>Tarea (2 de octubre)</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="redes-neuronales-parte-2.html"><a href="redes-neuronales-parte-2.html"><i class="fa fa-check"></i><b>8</b> Redes neuronales (parte 2)</a><ul>
+<li class="chapter" data-level="8.1" data-path="redes-neuronales-parte-2.html"><a href="redes-neuronales-parte-2.html#descenso-estocastico"><i class="fa fa-check"></i><b>8.1</b> Descenso estocástico</a></li>
+<li class="chapter" data-level="8.2" data-path="redes-neuronales-parte-2.html"><a href="redes-neuronales-parte-2.html#algoritmo-de-descenso-estocastico"><i class="fa fa-check"></i><b>8.2</b> Algoritmo de descenso estocástico</a></li>
+<li class="chapter" data-level="8.3" data-path="redes-neuronales-parte-2.html"><a href="redes-neuronales-parte-2.html#por-que-usar-descenso-estocastico-por-minilotes"><i class="fa fa-check"></i><b>8.3</b> ¿Por qué usar descenso estocástico por minilotes?</a></li>
+<li class="chapter" data-level="8.4" data-path="redes-neuronales-parte-2.html"><a href="redes-neuronales-parte-2.html#escogiendo-la-tasa-de-aprendizaje"><i class="fa fa-check"></i><b>8.4</b> Escogiendo la tasa de aprendizaje</a></li>
+<li class="chapter" data-level="8.5" data-path="redes-neuronales-parte-2.html"><a href="redes-neuronales-parte-2.html#mejoras-al-algoritmo-de-descenso-estocastico."><i class="fa fa-check"></i><b>8.5</b> Mejoras al algoritmo de descenso estocástico.</a><ul>
+<li class="chapter" data-level="8.5.1" data-path="redes-neuronales-parte-2.html"><a href="redes-neuronales-parte-2.html#decaimiento-de-tasa-de-aprendizaje"><i class="fa fa-check"></i><b>8.5.1</b> Decaimiento de tasa de aprendizaje</a></li>
+<li class="chapter" data-level="8.5.2" data-path="redes-neuronales-parte-2.html"><a href="redes-neuronales-parte-2.html#momento"><i class="fa fa-check"></i><b>8.5.2</b> Momento</a></li>
+<li class="chapter" data-level="8.5.3" data-path="redes-neuronales-parte-2.html"><a href="redes-neuronales-parte-2.html#otras-variaciones"><i class="fa fa-check"></i><b>8.5.3</b> Otras variaciones</a></li>
+</ul></li>
+<li class="chapter" data-level="8.6" data-path="redes-neuronales-parte-2.html"><a href="redes-neuronales-parte-2.html#ajuste-de-redes-con-descenso-estocastico"><i class="fa fa-check"></i><b>8.6</b> Ajuste de redes con descenso estocástico</a></li>
+<li class="chapter" data-level="8.7" data-path="redes-neuronales-parte-2.html"><a href="redes-neuronales-parte-2.html#activaciones-relu"><i class="fa fa-check"></i><b>8.7</b> Activaciones relu</a></li>
+<li class="chapter" data-level="8.8" data-path="redes-neuronales-parte-2.html"><a href="redes-neuronales-parte-2.html#dropout-para-regularizacion"><i class="fa fa-check"></i><b>8.8</b> Dropout para regularización</a><ul>
+<li class="chapter" data-level="" data-path="redes-neuronales-parte-2.html"><a href="redes-neuronales-parte-2.html#ejemplo-35"><i class="fa fa-check"></i>Ejemplo</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="redes-convolucionales.html"><a href="redes-convolucionales.html"><i class="fa fa-check"></i><b>9</b> Redes convolucionales</a><ul>
+<li class="chapter" data-level="9.1" data-path="redes-convolucionales.html"><a href="redes-convolucionales.html#filtros-convolucionales"><i class="fa fa-check"></i><b>9.1</b> Filtros convolucionales</a><ul>
+<li class="chapter" data-level="" data-path="redes-convolucionales.html"><a href="redes-convolucionales.html#filtros-en-una-dimension"><i class="fa fa-check"></i>Filtros en una dimensión</a></li>
+<li class="chapter" data-level="" data-path="redes-convolucionales.html"><a href="redes-convolucionales.html#filtros-convolucionales-en-dos-dimensiones"><i class="fa fa-check"></i>Filtros convolucionales en dos dimensiones</a></li>
+</ul></li>
+<li class="chapter" data-level="9.2" data-path="redes-convolucionales.html"><a href="redes-convolucionales.html#filtros-convolucionales-para-redes-neuronales"><i class="fa fa-check"></i><b>9.2</b> Filtros convolucionales para redes neuronales</a></li>
+<li class="chapter" data-level="9.3" data-path="redes-convolucionales.html"><a href="redes-convolucionales.html#capas-de-agregacion-pooling"><i class="fa fa-check"></i><b>9.3</b> Capas de agregación (pooling)</a></li>
+<li class="chapter" data-level="9.4" data-path="redes-convolucionales.html"><a href="redes-convolucionales.html#ejemplo-arquitectura-lenet"><i class="fa fa-check"></i><b>9.4</b> Ejemplo (arquitectura LeNet):</a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="diagnostico-y-mejora-de-modelos.html"><a href="diagnostico-y-mejora-de-modelos.html"><i class="fa fa-check"></i><b>10</b> Diagnóstico y mejora de modelos</a><ul>
+<li class="chapter" data-level="10.1" data-path="diagnostico-y-mejora-de-modelos.html"><a href="diagnostico-y-mejora-de-modelos.html#aspectos-generales"><i class="fa fa-check"></i><b>10.1</b> Aspectos generales</a></li>
+<li class="chapter" data-level="10.2" data-path="diagnostico-y-mejora-de-modelos.html"><a href="diagnostico-y-mejora-de-modelos.html#que-hacer-cuando-el-desempeno-no-es-satisfactorio"><i class="fa fa-check"></i><b>10.2</b> ¿Qué hacer cuando el desempeño no es satisfactorio?</a></li>
+<li class="chapter" data-level="10.3" data-path="diagnostico-y-mejora-de-modelos.html"><a href="diagnostico-y-mejora-de-modelos.html#pipeline-de-procesamiento"><i class="fa fa-check"></i><b>10.3</b> Pipeline de procesamiento</a></li>
+<li class="chapter" data-level="10.4" data-path="diagnostico-y-mejora-de-modelos.html"><a href="diagnostico-y-mejora-de-modelos.html#diagnosticos-sesgo-y-varianza"><i class="fa fa-check"></i><b>10.4</b> Diagnósticos: sesgo y varianza</a></li>
+<li class="chapter" data-level="10.5" data-path="diagnostico-y-mejora-de-modelos.html"><a href="diagnostico-y-mejora-de-modelos.html#refinando-el-pipeline"><i class="fa fa-check"></i><b>10.5</b> Refinando el pipeline</a></li>
+<li class="chapter" data-level="10.6" data-path="diagnostico-y-mejora-de-modelos.html"><a href="diagnostico-y-mejora-de-modelos.html#consiguiendo-mas-datos"><i class="fa fa-check"></i><b>10.6</b> Consiguiendo más datos</a></li>
+<li class="chapter" data-level="10.7" data-path="diagnostico-y-mejora-de-modelos.html"><a href="diagnostico-y-mejora-de-modelos.html#usar-datos-adicionales"><i class="fa fa-check"></i><b>10.7</b> Usar datos adicionales</a></li>
+<li class="chapter" data-level="10.8" data-path="diagnostico-y-mejora-de-modelos.html"><a href="diagnostico-y-mejora-de-modelos.html#examen-de-modelo-y-analisis-de-errores"><i class="fa fa-check"></i><b>10.8</b> Examen de modelo y Análisis de errores</a></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html"><i class="fa fa-check"></i><b>11</b> Métodos basados en árboles</a><ul>
+<li class="chapter" data-level="11.1" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#arboles-para-regresion-y-clasificacion."><i class="fa fa-check"></i><b>11.1</b> Árboles para regresión y clasificación.</a><ul>
+<li class="chapter" data-level="11.1.1" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#arboles-para-clasificacion"><i class="fa fa-check"></i><b>11.1.1</b> Árboles para clasificación</a></li>
+<li class="chapter" data-level="11.1.2" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#tipos-de-particion"><i class="fa fa-check"></i><b>11.1.2</b> Tipos de partición</a></li>
+<li class="chapter" data-level="11.1.3" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#medidas-de-impureza"><i class="fa fa-check"></i><b>11.1.3</b> Medidas de impureza</a></li>
+<li class="chapter" data-level="11.1.4" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#reglas-de-particion-y-tamano-del-arobl"><i class="fa fa-check"></i><b>11.1.4</b> Reglas de partición y tamaño del árobl</a></li>
+<li class="chapter" data-level="11.1.5" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#costo---complejidad-breiman"><i class="fa fa-check"></i><b>11.1.5</b> Costo - Complejidad (Breiman)</a></li>
+<li class="chapter" data-level="11.1.6" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#opcional-predicciones-con-cart"><i class="fa fa-check"></i><b>11.1.6</b> (Opcional) Predicciones con CART</a></li>
+<li class="chapter" data-level="11.1.7" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#arboles-para-regresion"><i class="fa fa-check"></i><b>11.1.7</b> Árboles para regresión</a></li>
+<li class="chapter" data-level="11.1.8" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#variabilidad-en-el-proceso-de-construccion"><i class="fa fa-check"></i><b>11.1.8</b> Variabilidad en el proceso de construcción</a></li>
+<li class="chapter" data-level="11.1.9" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#relaciones-lineales"><i class="fa fa-check"></i><b>11.1.9</b> Relaciones lineales</a></li>
+<li class="chapter" data-level="11.1.10" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#ventajas-y-desventajas-de-arboles"><i class="fa fa-check"></i><b>11.1.10</b> Ventajas y desventajas de árboles</a></li>
+</ul></li>
+<li class="chapter" data-level="11.2" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#bagging-de-arboles"><i class="fa fa-check"></i><b>11.2</b> Bagging de árboles</a><ul>
+<li class="chapter" data-level="11.2.1" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#ejemplo-42"><i class="fa fa-check"></i><b>11.2.1</b> Ejemplo</a></li>
+<li class="chapter" data-level="11.2.2" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#mejorando-bagging"><i class="fa fa-check"></i><b>11.2.2</b> Mejorando bagging</a></li>
+</ul></li>
+<li class="chapter" data-level="11.3" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#bosques-aleatorios"><i class="fa fa-check"></i><b>11.3</b> Bosques aleatorios</a><ul>
+<li class="chapter" data-level="11.3.1" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#sabiduria-de-las-masas"><i class="fa fa-check"></i><b>11.3.1</b> Sabiduría de las masas</a></li>
+<li class="chapter" data-level="11.3.2" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#ejemplo-43"><i class="fa fa-check"></i><b>11.3.2</b> Ejemplo</a></li>
+<li class="chapter" data-level="11.3.3" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#mas-detalles-de-bosques-aleatorios."><i class="fa fa-check"></i><b>11.3.3</b> Más detalles de bosques aleatorios.</a></li>
+<li class="chapter" data-level="11.3.4" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#importancia-de-variables"><i class="fa fa-check"></i><b>11.3.4</b> Importancia de variables</a></li>
+<li class="chapter" data-level="11.3.5" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#ajustando-arboles-aleatorios."><i class="fa fa-check"></i><b>11.3.5</b> Ajustando árboles aleatorios.</a></li>
+<li class="chapter" data-level="11.3.6" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#ventajas-y-desventajas-de-arboles-aleatorios"><i class="fa fa-check"></i><b>11.3.6</b> Ventajas y desventajas de árboles aleatorios</a></li>
+<li class="chapter" data-level="11.3.7" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#tarea-para-23-de-octubre"><i class="fa fa-check"></i><b>11.3.7</b> Tarea (para 23 de octubre)</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html"><i class="fa fa-check"></i><b>12</b> Métodos basados en árboles: boosting</a><ul>
+<li class="chapter" data-level="12.1" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#forward-stagewise-additive-modeling-fsam"><i class="fa fa-check"></i><b>12.1</b> Forward stagewise additive modeling (FSAM)</a></li>
+<li class="chapter" data-level="12.2" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#discusion-1"><i class="fa fa-check"></i><b>12.2</b> Discusión</a></li>
+<li class="chapter" data-level="12.3" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#algoritmo-fsam"><i class="fa fa-check"></i><b>12.3</b> Algoritmo FSAM</a></li>
+<li class="chapter" data-level="12.4" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#fsam-para-clasificacion-binaria."><i class="fa fa-check"></i><b>12.4</b> FSAM para clasificación binaria.</a></li>
+<li class="chapter" data-level="12.5" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#gradient-boosting"><i class="fa fa-check"></i><b>12.5</b> Gradient boosting</a></li>
+<li class="chapter" data-level="12.6" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#algoritmo-de-gradient-boosting"><i class="fa fa-check"></i><b>12.6</b> Algoritmo de gradient boosting</a></li>
+<li class="chapter" data-level="12.7" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#funciones-de-perdida"><i class="fa fa-check"></i><b>12.7</b> Funciones de pérdida</a><ul>
+<li class="chapter" data-level="12.7.1" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#discusion-adaboost-opcional"><i class="fa fa-check"></i><b>12.7.1</b> Discusión: adaboost (opcional)</a></li>
+<li class="chapter" data-level="" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#ejemplo-46"><i class="fa fa-check"></i>Ejemplo</a></li>
+</ul></li>
+<li class="chapter" data-level="12.8" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#modificaciones-de-gradient-boosting"><i class="fa fa-check"></i><b>12.8</b> Modificaciones de Gradient Boosting</a><ul>
+<li class="chapter" data-level="12.8.1" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#tasa-de-aprendizaje-shrinkage"><i class="fa fa-check"></i><b>12.8.1</b> Tasa de aprendizaje (shrinkage)</a></li>
+<li class="chapter" data-level="12.8.2" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#submuestreo-bag.fraction"><i class="fa fa-check"></i><b>12.8.2</b> Submuestreo (bag.fraction)</a></li>
+<li class="chapter" data-level="12.8.3" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#numero-de-arboles-m"><i class="fa fa-check"></i><b>12.8.3</b> Número de árboles M</a></li>
+<li class="chapter" data-level="12.8.4" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#tamano-de-arboles"><i class="fa fa-check"></i><b>12.8.4</b> Tamaño de árboles</a></li>
+<li class="chapter" data-level="12.8.5" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#controlar-numero-de-casos-para-cortes"><i class="fa fa-check"></i><b>12.8.5</b> Controlar número de casos para cortes</a></li>
+<li class="chapter" data-level="" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#ejemplo-47"><i class="fa fa-check"></i>Ejemplo</a></li>
+<li class="chapter" data-level="12.8.6" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#evaluacion-con-validacion-cruzada."><i class="fa fa-check"></i><b>12.8.6</b> Evaluación con validación cruzada.</a></li>
+</ul></li>
+<li class="chapter" data-level="12.9" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#graficas-de-dependencia-parcial"><i class="fa fa-check"></i><b>12.9</b> Gráficas de dependencia parcial</a><ul>
+<li class="chapter" data-level="12.9.1" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#dependencia-parcial"><i class="fa fa-check"></i><b>12.9.1</b> Dependencia parcial</a></li>
+<li class="chapter" data-level="" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#ejemplo-48"><i class="fa fa-check"></i>Ejemplo</a></li>
+<li class="chapter" data-level="12.9.2" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#discusion-2"><i class="fa fa-check"></i><b>12.9.2</b> Discusión</a></li>
+</ul></li>
+<li class="chapter" data-level="12.10" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#xgboost-y-gbm"><i class="fa fa-check"></i><b>12.10</b> xgboost y gbm</a></li>
+<li class="chapter" data-level="" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#tarea-5"><i class="fa fa-check"></i>Tarea</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="validacion-de-modelos-problemas-comunes.html"><a href="validacion-de-modelos-problemas-comunes.html"><i class="fa fa-check"></i><b>13</b> Validación de modelos: problemas comunes</a><ul>
+<li class="chapter" data-level="13.1" data-path="validacion-de-modelos-problemas-comunes.html"><a href="validacion-de-modelos-problemas-comunes.html#filtracion-de-datos"><i class="fa fa-check"></i><b>13.1</b> Filtración de datos</a></li>
+<li class="chapter" data-level="13.2" data-path="validacion-de-modelos-problemas-comunes.html"><a href="validacion-de-modelos-problemas-comunes.html#series-de-tiempo"><i class="fa fa-check"></i><b>13.2</b> Series de tiempo</a></li>
+<li class="chapter" data-level="13.3" data-path="validacion-de-modelos-problemas-comunes.html"><a href="validacion-de-modelos-problemas-comunes.html#filtracion-en-el-preprocesamiento"><i class="fa fa-check"></i><b>13.3</b> Filtración en el preprocesamiento</a></li>
+<li class="chapter" data-level="13.4" data-path="validacion-de-modelos-problemas-comunes.html"><a href="validacion-de-modelos-problemas-comunes.html#uso-de-variables-fuera-de-rango-temporal"><i class="fa fa-check"></i><b>13.4</b> Uso de variables fuera de rango temporal</a></li>
+<li class="chapter" data-level="13.5" data-path="validacion-de-modelos-problemas-comunes.html"><a href="validacion-de-modelos-problemas-comunes.html#datos-en-conglomerados-y-muestreo-complejo"><i class="fa fa-check"></i><b>13.5</b> Datos en conglomerados y muestreo complejo</a><ul>
+<li class="chapter" data-level="" data-path="validacion-de-modelos-problemas-comunes.html"><a href="validacion-de-modelos-problemas-comunes.html#ejemplo-50"><i class="fa fa-check"></i>Ejemplo</a></li>
+<li class="chapter" data-level="13.5.1" data-path="validacion-de-modelos-problemas-comunes.html"><a href="validacion-de-modelos-problemas-comunes.html#censura-y-evaluacion-incompleta"><i class="fa fa-check"></i><b>13.5.1</b> Censura y evaluación incompleta</a></li>
+<li class="chapter" data-level="13.5.2" data-path="validacion-de-modelos-problemas-comunes.html"><a href="validacion-de-modelos-problemas-comunes.html#ejemplo-tiendas-cerradas"><i class="fa fa-check"></i><b>13.5.2</b> Ejemplo: tiendas cerradas</a></li>
+</ul></li>
+<li class="chapter" data-level="13.6" data-path="validacion-de-modelos-problemas-comunes.html"><a href="validacion-de-modelos-problemas-comunes.html#muestras-de-validacion-chicas"><i class="fa fa-check"></i><b>13.6</b> Muestras de validación chicas</a><ul>
+<li class="chapter" data-level="" data-path="validacion-de-modelos-problemas-comunes.html"><a href="validacion-de-modelos-problemas-comunes.html#ejercicio-8"><i class="fa fa-check"></i>Ejercicio</a></li>
+</ul></li>
+<li class="chapter" data-level="13.7" data-path="validacion-de-modelos-problemas-comunes.html"><a href="validacion-de-modelos-problemas-comunes.html#otros-ejemplos"><i class="fa fa-check"></i><b>13.7</b> Otros ejemplos</a></li>
+<li class="chapter" data-level="13.8" data-path="validacion-de-modelos-problemas-comunes.html"><a href="validacion-de-modelos-problemas-comunes.html#resumen-1"><i class="fa fa-check"></i><b>13.8</b> Resumen</a></li>
+<li class="chapter" data-level="" data-path="validacion-de-modelos-problemas-comunes.html"><a href="validacion-de-modelos-problemas-comunes.html#tarea-6"><i class="fa fa-check"></i>Tarea</a></li>
+</ul></li>
+<li class="chapter" data-level="14" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html"><i class="fa fa-check"></i><b>14</b> Reducción de dimensionalidad</a><ul>
+<li class="chapter" data-level="14.1" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#descomposicion-aditiva-en-matrices-de-rango-1"><i class="fa fa-check"></i><b>14.1</b> Descomposición aditiva en matrices de rango 1</a><ul>
+<li class="chapter" data-level="14.1.1" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#matrices-de-rango-1"><i class="fa fa-check"></i><b>14.1.1</b> Matrices de rango 1</a></li>
+<li class="chapter" data-level="" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#ejemplo-una-matriz-de-rango-1-de-preferencias"><i class="fa fa-check"></i>Ejemplo: una matriz de rango 1 de preferencias</a></li>
+</ul></li>
+<li class="chapter" data-level="14.2" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#aproximacion-con-matrices-de-rango-1."><i class="fa fa-check"></i><b>14.2</b> Aproximación con matrices de rango 1.</a><ul>
+<li class="chapter" data-level="" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#ejemplo-52"><i class="fa fa-check"></i>Ejemplo</a></li>
+<li class="chapter" data-level="14.2.1" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#suma-de-matrices-de-rango-1."><i class="fa fa-check"></i><b>14.2.1</b> Suma de matrices de rango 1.</a></li>
+<li class="chapter" data-level="" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#ejemplo-peliculas"><i class="fa fa-check"></i>Ejemplo: películas</a></li>
+</ul></li>
+<li class="chapter" data-level="14.3" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#aproximacion-con-matrices-de-rango-bajo"><i class="fa fa-check"></i><b>14.3</b> Aproximación con matrices de rango bajo</a><ul>
+<li class="chapter" data-level="14.3.1" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#discusion-aproximacion-de-rango-1."><i class="fa fa-check"></i><b>14.3.1</b> Discusión: aproximación de rango 1.</a></li>
+<li class="chapter" data-level="14.3.2" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#discusion-aproximaciones-de-rango-mas-alto"><i class="fa fa-check"></i><b>14.3.2</b> Discusión: aproximaciones de rango más alto</a></li>
+<li class="chapter" data-level="" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#ejemplo-54"><i class="fa fa-check"></i>Ejemplo</a></li>
+</ul></li>
+<li class="chapter" data-level="14.4" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#descomposicion-en-valores-singulares-svd-o-dvs"><i class="fa fa-check"></i><b>14.4</b> Descomposición en valores singulares (SVD o DVS)</a></li>
+<li class="chapter" data-level="14.5" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#interpretacion-geometrica"><i class="fa fa-check"></i><b>14.5</b> Interpretación geométrica</a></li>
+<li class="chapter" data-level="14.6" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#svd-para-peliculas-de-netflix"><i class="fa fa-check"></i><b>14.6</b> SVD para películas de netflix</a><ul>
+<li class="chapter" data-level="14.6.1" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#calidad-de-representacion-de-svd."><i class="fa fa-check"></i><b>14.6.1</b> Calidad de representación de SVD.</a></li>
+<li class="chapter" data-level="" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#ejemplo-55"><i class="fa fa-check"></i>Ejemplo</a></li>
+</ul></li>
+<li class="chapter" data-level="14.7" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#componentes-principales"><i class="fa fa-check"></i><b>14.7</b> Componentes principales</a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Publicado con bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Aprendizaje de máquina</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="reduccion-de-dimensionalidad" class="section level1">
+<h1><span class="header-section-number">Clase 14</span> Reducción de dimensionalidad</h1>
+<p>En esta parte veremos métodos no supervisados: no existe variable a predecir. En estos métodos buscamos reexpresiones útiles de nuestros datos para que sean más fáciles de entender o de explorar, para intentar comprimirlos, para poder usarlos de manera más conveniente en procesos posteriores (por ejemplo, predicción).</p>
+<p>En esta parte veremos técnicas de reducción de dimensionalidad, en particular la descomposición en valores singulares, que es una de las más útiles. La descomposición en valores singulares puede verse como un tipo de descomposición aditiva en matrices de rango uno, así que comenzaremos explicando estos conceptos.</p>
+<div id="descomposicion-aditiva-en-matrices-de-rango-1" class="section level2">
+<h2><span class="header-section-number">14.1</span> Descomposición aditiva en matrices de rango 1</h2>
+<p>Supongamos que tenemos una matriz de datos <span class="math inline">\(X\)</span> de tamaño <span class="math inline">\(n\times p\)</span> (todas son variables numéricas). En los renglones tenemos los casos (<span class="math inline">\(n\)</span>) y las columnas son las variables <span class="math inline">\(p\)</span>. Típicamente pensamos que las columnas o variables están todas definidas en una misma escala: por ejemplo, cantidades de dinero, poblaciones, número de eventos, etc. Cuando no es así, entonces normalizamos las variables de alguna forma para no tener unidades.</p>
+<div id="matrices-de-rango-1" class="section level3">
+<h3><span class="header-section-number">14.1.1</span> Matrices de rango 1</h3>
+<p>Una de las estructuras de datos más simples que podemos imaginar (que sea interesante) para un tabla de este tipo es que se trata de una matriz de datos de rango 1. Es generada por un <em>score</em> de individuos que determina mediante un <em>peso</em> el valor de una variable. Es decir, el individuo <span class="math inline">\(i\)</span> en la variable <span class="math inline">\(j\)</span> es</p>
+<p><span class="math display">\[X_{ij} = \sigma u_i v_j\]</span></p>
+<p>Donde <span class="math inline">\(u=(u_1,u_2,\ldots, u_n)\)</span> son los <em>scores</em> de los individuos y <span class="math inline">\(v = (v_1, v_2, \ldots, v_p)\)</span> son los pesos de las variables. Tanto <span class="math inline">\(u\)</span> como <span class="math inline">\(v\)</span> son vectores normalizados, es decir <span class="math inline">\(||u||=||v||=1\)</span>. La constante <span class="math inline">\(\sigma\)</span> nos permite pensar que los vectores <span class="math inline">\(u\)</span> y <span class="math inline">\(v\)</span> están normalizados.</p>
+<p>Esto se puede escribir, en notación matricial, como</p>
+<p><span class="math display">\[X = \sigma u v^t\]</span> donde consideramos a <span class="math inline">\(u\)</span> y <span class="math inline">\(v\)</span> como matrices columna.</p>
+
+<div class="comentario">
+<ul>
+<li><p>Una matriz de rango uno (o en general de rango bajo) es más simple de analizar. En rango 1, tenemos que entender la variación de <span class="math inline">\(n+p\)</span> datos (componentes de <span class="math inline">\(u\)</span> y <span class="math inline">\(v\)</span>), mientras que en una matriz general tenemos que entender <span class="math inline">\(n\times p\)</span> datos.</p></li>
+<li><p>Cada variable <span class="math inline">\(j\)</span> de las observaciones es un reescalamiento del índice o score <span class="math inline">\(u\)</span> de las personas por el factor <span class="math inline">\(\sigma v_j\)</span>. Igualmente, cada caso <span class="math inline">\(i\)</span> de las observaciones es un reescalamiento del índice o peso <span class="math inline">\(v\)</span> de las variables por el factor <span class="math inline">\(\sigma u_i\)</span>.</p></li>
+<li><span class="math inline">\(u\)</span> y <span class="math inline">\(v\)</span> representan una dimensión (dimensión latente, componente) de estos datos.
+</div>
+</li>
+</ul>
+</div>
+<div id="ejemplo-una-matriz-de-rango-1-de-preferencias" class="section level3 unnumbered">
+<h3>Ejemplo: una matriz de rango 1 de preferencias</h3>
+<p>Supongamos que las columnas de <span class="math inline">\(X\)</span> son películas (<span class="math inline">\(p\)</span>), los renglones (<span class="math inline">\(n\)</span>) personas, y la entrada <span class="math inline">\(X_{ij}\)</span> es la afinidad de la persona <span class="math inline">\(i\)</span> por la película <span class="math inline">\(j\)</span>. Vamos a suponer que estos datos tienen una estructura ficticia de rango 1, basada en las preferencias de las personas por películas de ciencia ficción.</p>
+<p>Construimos los pesos de las películas que refleja qué tanto son de ciencia ficción o no. Podemos pensar que cada uno de estos valores el el <em>peso</em> de la película en la dimensión de ciencia ficción.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(tidyverse)
+peliculas_nom &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;Gladiator&#39;</span>,<span class="st">&#39;Memento&#39;</span>,<span class="st">&#39;X-Men&#39;</span>,<span class="st">&#39;Scream&#39;</span>,<span class="st">&#39;Amores Perros&#39;</span>,
+               <span class="st">&#39;Billy Elliot&#39;</span>, <span class="st">&#39;Lord of the Rings&#39;</span>,<span class="st">&#39;Mulholland drive&#39;</span>,
+                <span class="st">&#39;Amelie&#39;</span>,<span class="st">&#39;Planet of the Apes&#39;</span>)
+<span class="co"># variable latente que describe el contenido de ciencia ficción de cada </span>
+v &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="op">-</span><span class="fl">1.5</span>, <span class="op">-</span><span class="fl">0.5</span>, <span class="dv">4</span>, <span class="op">-</span><span class="dv">1</span>,<span class="op">-</span><span class="dv">3</span>,  <span class="op">-</span><span class="dv">3</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="op">-</span><span class="fl">0.5</span>, <span class="fl">3.5</span>)
+normalizar &lt;-<span class="st"> </span><span class="cf">function</span>(x){
+  norma &lt;-<span class="st"> </span><span class="kw">sqrt</span>(<span class="kw">sum</span>(x<span class="op">^</span><span class="dv">2</span>))
+  <span class="cf">if</span>(norma <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>){
+    x_norm &lt;-<span class="st"> </span>x<span class="op">/</span>norma
+  } <span class="cf">else</span> {
+    x_norm &lt;-<span class="st"> </span>x
+  }
+  x_norm
+}
+v &lt;-<span class="st"> </span><span class="kw">normalizar</span>(v)
+peliculas &lt;-<span class="st"> </span><span class="kw">data_frame</span>(<span class="dt">pelicula =</span> peliculas_nom, <span class="dt">v =</span> v) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">arrange</span>(v)
+peliculas</code></pre></div>
+<pre><code>## # A tibble: 10 x 2
+##              pelicula         v
+##                 &lt;chr&gt;     &lt;dbl&gt;
+##  1      Amores Perros -0.420084
+##  2       Billy Elliot -0.420084
+##  3          Gladiator -0.210042
+##  4             Scream -0.140028
+##  5            Memento -0.070014
+##  6             Amelie -0.070014
+##  7  Lord of the Rings  0.000000
+##  8   Mulholland drive  0.140028
+##  9 Planet of the Apes  0.490098
+## 10              X-Men  0.560112</code></pre>
+<p>Ahora pensamos que tenemos con individuos con <em>scores</em> de qué tanto les gusta la ciencia ficción</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">102</span>)
+u &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">15</span>, <span class="dv">0</span>, <span class="dv">1</span>)
+u &lt;-<span class="st"> </span><span class="kw">normalizar</span>(u)
+personas &lt;-<span class="st"> </span><span class="kw">data_frame</span>(<span class="dt">persona =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">15</span>, <span class="dt">u =</span> u)
+<span class="kw">head</span>(personas)</code></pre></div>
+<pre><code>## # A tibble: 6 x 2
+##   persona           u
+##     &lt;int&gt;       &lt;dbl&gt;
+## 1       1  0.04215632
+## 2       2  0.18325375
+## 3       3 -0.31599557
+## 4       4  0.46314650
+## 5       5  0.28921210
+## 6       6  0.28037223</code></pre>
+<p>Podemos entonces construir la afinidad de cada persona por cada película (matriz <span class="math inline">\(n\times p\)</span> ) multiplicando el <em>score</em> de cada persona (en la dimensión ciencia ficción) por el peso de la película (en la dimensión ciencia ficción). Por ejemplo, para una persona, tenemos que su índice es</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">personas<span class="op">$</span>u[<span class="dv">2</span>]</code></pre></div>
+<pre><code>## [1] 0.1832537</code></pre>
+<p>Esta persona tiene afinidad por la ciencia ficción, así que sus niveles de gusto por las películas son (multiplicando por <span class="math inline">\(\sigma = 100\)</span>, que en este caso es una constante arbitraria seleccionada para el ejemplo):</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data_frame</span>(<span class="dt">pelicula=</span>peliculas<span class="op">$</span>pelicula,  <span class="dt">afinidad=</span> <span class="dv">100</span><span class="op">*</span>personas<span class="op">$</span>u[<span class="dv">2</span>]<span class="op">*</span>peliculas<span class="op">$</span>v) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">arrange</span>(<span class="kw">desc</span>(afinidad))</code></pre></div>
+<pre><code>## # A tibble: 10 x 2
+##              pelicula  afinidad
+##                 &lt;chr&gt;     &lt;dbl&gt;
+##  1              X-Men 10.264263
+##  2 Planet of the Apes  8.981230
+##  3   Mulholland drive  2.566066
+##  4  Lord of the Rings  0.000000
+##  5            Memento -1.283033
+##  6             Amelie -1.283033
+##  7             Scream -2.566066
+##  8          Gladiator -3.849099
+##  9      Amores Perros -7.698197
+## 10       Billy Elliot -7.698197</code></pre>
+<p>Consideremos otra persona</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">personas<span class="op">$</span>u[<span class="dv">15</span>]</code></pre></div>
+<pre><code>## [1] -0.05320133</code></pre>
+<p>Esta persona tiene disgusto ligero por la ciencia ficción, y sus scores de las películas son:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data_frame</span>(<span class="dt">pelicula=</span>peliculas<span class="op">$</span>pelicula,  <span class="dt">afinidad=</span> <span class="dv">100</span><span class="op">*</span>personas<span class="op">$</span>u[<span class="dv">15</span>]<span class="op">*</span>peliculas<span class="op">$</span>v)</code></pre></div>
+<pre><code>## # A tibble: 10 x 2
+##              pelicula   afinidad
+##                 &lt;chr&gt;      &lt;dbl&gt;
+##  1      Amores Perros  2.2349029
+##  2       Billy Elliot  2.2349029
+##  3          Gladiator  1.1174515
+##  4             Scream  0.7449676
+##  5            Memento  0.3724838
+##  6             Amelie  0.3724838
+##  7  Lord of the Rings  0.0000000
+##  8   Mulholland drive -0.7449676
+##  9 Planet of the Apes -2.6073868
+## 10              X-Men -2.9798706</code></pre>
+<p>Si fuera tan simple el gusto por las películas (simplemente depende si contienen ciencia ficción o no, y si a la persona le gusta o no), la matriz <span class="math inline">\(X\)</span> de observaciones sería</p>
+<p><span class="math display">\[X_1 = \sigma uv^t\]</span> donde consideramos a <span class="math inline">\(u\)</span> y <span class="math inline">\(v\)</span> como vectores columna. El producto es de una matriz de <span class="math inline">\(n\times 1\)</span> contra una de <span class="math inline">\(1\times p\)</span>, lo cual da una matriz de <span class="math inline">\(n\timesp\)</span>.</p>
+<p>Podemos calcular como:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">X =<span class="st"> </span><span class="dv">100</span><span class="op">*</span><span class="kw">tcrossprod</span>(personas<span class="op">$</span>u, peliculas<span class="op">$</span>v ) <span class="co"># tcrossprod(x,y) da x %*% t(y)</span>
+<span class="kw">colnames</span>(X) &lt;-<span class="st"> </span>peliculas<span class="op">$</span>pelicula
+<span class="kw">head</span>(<span class="kw">round</span>(X, <span class="dv">1</span>))</code></pre></div>
+<pre><code>##      Amores Perros Billy Elliot Gladiator Scream Memento Amelie
+## [1,]          -1.8         -1.8      -0.9   -0.6    -0.3   -0.3
+## [2,]          -7.7         -7.7      -3.8   -2.6    -1.3   -1.3
+## [3,]          13.3         13.3       6.6    4.4     2.2    2.2
+## [4,]         -19.5        -19.5      -9.7   -6.5    -3.2   -3.2
+## [5,]         -12.1        -12.1      -6.1   -4.0    -2.0   -2.0
+## [6,]         -11.8        -11.8      -5.9   -3.9    -2.0   -2.0
+##      Lord of the Rings Mulholland drive Planet of the Apes X-Men
+## [1,]                 0              0.6                2.1   2.4
+## [2,]                 0              2.6                9.0  10.3
+## [3,]                 0             -4.4              -15.5 -17.7
+## [4,]                 0              6.5               22.7  25.9
+## [5,]                 0              4.0               14.2  16.2
+## [6,]                 0              3.9               13.7  15.7</code></pre>
+<p>O usando data.frames como</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">peliculas <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">crossing</span>(personas) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">afinidad =</span> <span class="kw">round</span>(<span class="dv">100</span><span class="op">*</span>u<span class="op">*</span>v, <span class="dv">2</span>)) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">select</span>(persona, pelicula, afinidad) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">spread</span>(pelicula, afinidad) </code></pre></div>
+<pre><code>## # A tibble: 15 x 11
+##    persona Amelie `Amores Perros` `Billy Elliot` Gladiator
+##  *   &lt;int&gt;  &lt;dbl&gt;           &lt;dbl&gt;          &lt;dbl&gt;     &lt;dbl&gt;
+##  1       1  -0.30           -1.77          -1.77     -0.89
+##  2       2  -1.28           -7.70          -7.70     -3.85
+##  3       3   2.21           13.27          13.27      6.64
+##  4       4  -3.24          -19.46         -19.46     -9.73
+##  5       5  -2.02          -12.15         -12.15     -6.07
+##  6       6  -1.96          -11.78         -11.78     -5.89
+##  7       7  -1.47           -8.79          -8.79     -4.40
+##  8       8  -0.41           -2.49          -2.49     -1.24
+##  9       9  -0.90           -5.39          -5.39     -2.70
+## 10      10  -3.11          -18.67         -18.67     -9.34
+## 11      11  -2.36          -14.17         -14.17     -7.09
+## 12      12  -0.19           -1.13          -1.13     -0.57
+## 13      13   1.03            6.15           6.15      3.08
+## 14      14   2.08           12.45          12.45      6.23
+## 15      15   0.37            2.23           2.23      1.12
+## # ... with 6 more variables: `Lord of the Rings` &lt;dbl&gt;, Memento &lt;dbl&gt;,
+## #   `Mulholland drive` &lt;dbl&gt;, `Planet of the Apes` &lt;dbl&gt;, Scream &lt;dbl&gt;,
+## #   `X-Men` &lt;dbl&gt;</code></pre>
+<p>Nótese que en este ejemplo podemos simplificar mucho el análisis: en lugar de ver la tabla completa, podemos simplemente considerar los dos vectores de índices (pesos y scores), y trabajar como si fuera un problema de una sola dimensión.</p>
+<hr />
+</div>
+</div>
+<div id="aproximacion-con-matrices-de-rango-1." class="section level2">
+<h2><span class="header-section-number">14.2</span> Aproximación con matrices de rango 1.</h2>
+<p>En general, las matrices de datos reales no son de rango 1. Más bien nos interesa saber si se puede hacer una buena aproximación de rango 1.</p>
+
+<div class="comentario">
+El problema que nos interesa es el inverso: si tenemos la tabla <span class="math inline">\(X\)</span>, ¿cómo sabemos si se puede escribir aproximadamente en la forma simple de una matriz de rango uno? Nótese que si lo pudiéramos hacer, esto simplificaría mucho nuestro análisis de estos datos, y obtendríamos información valiosa.
+</div>
+
+<p>Medimos la diferencia entre una matriz de datos general <span class="math inline">\(X\)</span> y una matriz de rango 1 <span class="math inline">\(\sigma uv^t\)</span> mediante la norma Frobenius:</p>
+<p><span class="math display">\[ ||X-\sigma uv^t||^2_F = \sum_{i,j} (X_{i,j} - \sigma u_iv_j)^2\]</span></p>
+<p>Nos interesa resolver</p>
+<p><span class="math display">\[\min_{\sigma, u,v} || X - \sigma uv^t ||_F^2\]</span></p>
+<p>donde <span class="math inline">\(\sigma\)</span> es un escalar, <span class="math inline">\(u\)</span> es un vector columna de tamaño <span class="math inline">\(n\)</span> y <span class="math inline">\(v\)</span> es un vector columna de tamaño <span class="math inline">\(p\)</span>. Suponemos que los vectores <span class="math inline">\(u\)</span> y <span class="math inline">\(v\)</span> tienen norma uno. Esto no es necesario - podemos absorber constantes en <span class="math inline">\(\sigma\)</span>.</p>
+<div id="ejemplo-52" class="section level3 unnumbered">
+<h3>Ejemplo</h3>
+<p>Por ejemplo, la siguiente tabla tiene gastos personales en distintos rubros en distintos años para todo Estados Unidos (en dólares nominales).</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(tidyverse)
+X_arr &lt;-<span class="st"> </span>USPersonalExpenditure[, <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">3</span>,<span class="dv">5</span>)]
+X_arr</code></pre></div>
+<pre><code>##                       1940  1950  1960
+## Food and Tobacco    22.200 59.60 86.80
+## Household Operation 10.500 29.00 46.20
+## Medical and Health   3.530  9.71 21.10
+## Personal Care        1.040  2.45  5.40
+## Private Education    0.341  1.80  3.64</code></pre>
+<p>En este ejemplo podríamos tener la intuición de que la proporción de gasto se ha mantenido aproximadamente constante en cada año, y que todos los rubros han aumentado debido a la inflación. Podríamos intentar hacer varias normalizaciones para probar esta idea, pero quisiéramos idear una estrategia general.</p>
+<p>Digamos que el vector <span class="math inline">\(u\)</span> denota los niveles generales de cada rubro (es un vector de longitud 5), y el vector <span class="math inline">\(v\)</span> denota los niveles generales de cada año (un vector de longitud 3). Queremos ver si es razonable aproximar <span class="math display">\[X\approx uv^t\]</span></p>
+<p><strong>Observación</strong>: En este caso, la ecuación de arriba <span class="math inline">\(X_{i,j} = u_iv_j\)</span> expresa que hay niveles generales para cada rubro <span class="math inline">\(i\)</span> a lo largo de todos los años, y para obtener una aproximación ajustamos con un factor <span class="math inline">\(v_j\)</span> de inflación el año <span class="math inline">\(j\)</span></p>
+<p>La mejor manera de entender este problema es con álgebra lineal, como veremos más adelante. Por el momento intentemos aproximar directamente, intentando resolver (podemos normalizar <span class="math inline">\(u\)</span> y <span class="math inline">\(v\)</span> más tarde y encontrar la <span class="math inline">\(\sigma\)</span>):</p>
+<p><span class="math display">\[\min_{u,v} \sum_{i,j} (X_{i,j} - u_iv_j)^2 = \min_{u,v} ||X-uv^t||^2_F\]</span></p>
+<p><strong>Observación</strong>:Este problema tiene varios mínimos, pues podemos mover constantes de <span class="math inline">\(u\)</span> a <span class="math inline">\(v\)</span> (tiene múltiples soluciones). Hay varias maneras de lidiar con esto (por ejemplo, normalizando). Por el momento, corremos la optimización para encontrar una solución:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">error &lt;-<span class="st"> </span><span class="cf">function</span>(pars){
+  v_tipos &lt;-<span class="st"> </span>pars[<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>]
+  u_estados &lt;-<span class="st"> </span>pars[<span class="dv">4</span><span class="op">:</span><span class="dv">8</span>]
+  <span class="kw">mean</span>((X_arr <span class="op">-</span><span class="st"> </span><span class="kw">tcrossprod</span>(u_estados, v_tipos))<span class="op">^</span><span class="dv">2</span>) <span class="co">#tcrossprod da x %*% t(y)</span>
+}
+optim_decomp &lt;-<span class="st"> </span><span class="kw">optim</span>(<span class="kw">rep</span>(<span class="fl">0.1</span>, <span class="dv">5</span> <span class="op">+</span><span class="st"> </span><span class="dv">3</span>), error, <span class="dt">method =</span><span class="st">&#39;BFGS&#39;</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">v_años &lt;-<span class="st"> </span>optim_decomp<span class="op">$</span>par[<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>]
+u_rubros &lt;-<span class="st"> </span>optim_decomp<span class="op">$</span>par[<span class="dv">4</span><span class="op">:</span><span class="dv">8</span>]</code></pre></div>
+<p>La matriz <span class="math inline">\(X_1=uv^t\)</span> que obtuvimos es:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">X_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">tcrossprod</span>(u_rubros, v_años)
+<span class="kw">round</span>(X_<span class="dv">1</span>, <span class="dv">1</span>)</code></pre></div>
+<pre><code>##      [,1] [,2] [,3]
+## [1,] 21.6 58.4 87.8
+## [2,] 11.1 30.1 45.3
+## [3,]  4.7 12.6 18.9
+## [4,]  1.2  3.2  4.8
+## [5,]  0.8  2.2  3.3</code></pre>
+<p>Podemos ver qué tan buena es la aproximación:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">R &lt;-<span class="st"> </span>X_arr <span class="op">-</span><span class="st"> </span>X_<span class="dv">1</span>
+<span class="kw">qplot</span>(<span class="kw">as.numeric</span>(X_<span class="dv">1</span>), <span class="kw">as.numeric</span>(<span class="kw">as.matrix</span>(X_arr))) <span class="op">+</span><span class="st"> </span><span class="kw">geom_abline</span>(<span class="dt">colour=</span><span class="st">&#39;red&#39;</span>)</code></pre></div>
+<p><img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">round</span>(R,<span class="dv">2</span>)</code></pre></div>
+<pre><code>##                      1940  1950  1960
+## Food and Tobacco     0.60  1.25 -0.98
+## Household Operation -0.65 -1.11  0.90
+## Medical and Health  -1.12 -2.87  2.18
+## Personal Care       -0.15 -0.77  0.55
+## Private Education   -0.46 -0.38  0.36</code></pre>
+<p>donde vemos que nuestra aproximación explica en buena parte la variación de los datos en la tabla <span class="math inline">\(X\)</span>. La descomposición que obtuvimos es de la forma <span class="math display">\[X = uv^t + R\]</span> donde <span class="math inline">\(R\)</span> tiene norma Frobenius relativamente chica.</p>
+<p><strong>Observaciones</strong>:</p>
+<ul>
+<li>Este método nos da un ordenamiento de rubros de gasto según su nivel general, y un ordenamiento de años según su nivel general de gasto.</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data_frame</span>(<span class="dt">rubro =</span> <span class="kw">rownames</span>(X_arr), <span class="dt">nivel =</span> u_rubros) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">arrange</span>(<span class="kw">desc</span>(nivel))</code></pre></div>
+<pre><code>## # A tibble: 5 x 2
+##                 rubro     nivel
+##                 &lt;chr&gt;     &lt;dbl&gt;
+## 1    Food and Tobacco 9.7404116
+## 2 Household Operation 5.0268356
+## 3  Medical and Health 2.0992569
+## 4       Personal Care 0.5380014
+## 5   Private Education 0.3634288</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data_frame</span>(añ<span class="dt">o =</span> <span class="kw">colnames</span>(X_arr), <span class="dt">nivel =</span> v_años)</code></pre></div>
+<pre><code>## # A tibble: 3 x 2
+##     año    nivel
+##   &lt;chr&gt;    &lt;dbl&gt;
+## 1  1940 2.217377
+## 2  1950 5.990600
+## 3  1960 9.011784</code></pre>
+<ul>
+<li><p>Pudimos explicar estos datos usando esos dos índices (5+3=7 números) en lugar de toda la tabla(5(3)=15 números).</p></li>
+<li><p>Una vez explicado esto, podemos concentrarnos en los patrones que hemos aislado en la matriz <span class="math inline">\(R\)</span>. Podríamos repetir buscando una aproximación igual a la que acabomos de hacer para la matriz <span class="math inline">\(X\)</span>, o podríamos hacer distintos tipos de análisis.</p></li>
+</ul>
+<hr />
+</div>
+<div id="suma-de-matrices-de-rango-1." class="section level3">
+<h3><span class="header-section-number">14.2.1</span> Suma de matrices de rango 1.</h3>
+<p>La matriz de datos <span class="math inline">\(X\)</span> muchas veces no puede aproximarse bien con una sola matriz de rango 1. Podríamos entonces buscar descomponer los datos en más de una dimensión latente:</p>
+<p><span class="math display">\[X = \sigma_1 u_1v_1^t + \sigma_2 u_2v_2^t+\ldots+ \sigma_k u_kv_k^t\]</span></p>
+</div>
+<div id="ejemplo-peliculas" class="section level3 unnumbered">
+<h3>Ejemplo: películas</h3>
+<p>En nuestro ejemplo anterior, claramente debe haber otras dimensiones latentes que expliquen la afinidad por una película. Por ejemplo, quizá podríamos considerar el gusto por películas <em>mainstream</em> vs películas independientes.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">peliculas_nom &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;Gladiator&#39;</span>,<span class="st">&#39;Memento&#39;</span>,<span class="st">&#39;X-Men&#39;</span>,<span class="st">&#39;Scream&#39;</span>,<span class="st">&#39;Amores Perros&#39;</span>,
+               <span class="st">&#39;Billy Elliot&#39;</span>, <span class="st">&#39;Lord of the Rings&#39;</span>,<span class="st">&#39;Mulholland drive&#39;</span>,
+                <span class="st">&#39;Amelie&#39;</span>,<span class="st">&#39;Planet of the Apes&#39;</span>)
+<span class="co"># variable latente que describe el contenido de ciencia ficción de cada </span>
+v_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="op">-</span><span class="fl">1.5</span>, <span class="op">-</span><span class="fl">0.5</span>, <span class="dv">4</span>, <span class="op">-</span><span class="dv">1</span>,<span class="op">-</span><span class="dv">3</span>,  <span class="op">-</span><span class="dv">3</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="op">-</span><span class="fl">0.5</span>, <span class="fl">3.5</span>)
+v_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">4.1</span>, <span class="fl">0.2</span>, <span class="fl">3.5</span>, <span class="fl">1.5</span>, <span class="op">-</span><span class="fl">3.0</span>, <span class="op">-</span><span class="fl">2.5</span>, <span class="fl">2.0</span>, <span class="op">-</span><span class="fl">4.5</span>, <span class="op">-</span><span class="fl">1.0</span>, <span class="fl">2.6</span>) <span class="co">#mainstream o no</span>
+v_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">normalizar</span>(v_<span class="dv">1</span>)
+v_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">normalizar</span>(v_<span class="dv">2</span>)
+peliculas &lt;-<span class="st"> </span><span class="kw">data_frame</span>(<span class="dt">pelicula =</span> peliculas_nom, <span class="dt">v_1 =</span> v_<span class="dv">1</span>, <span class="dt">v_2 =</span> v_<span class="dv">2</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">arrange</span>(v_<span class="dv">2</span>)
+peliculas</code></pre></div>
+<pre><code>## # A tibble: 10 x 3
+##              pelicula       v_1         v_2
+##                 &lt;chr&gt;     &lt;dbl&gt;       &lt;dbl&gt;
+##  1   Mulholland drive  0.140028 -0.50754390
+##  2      Amores Perros -0.420084 -0.33836260
+##  3       Billy Elliot -0.420084 -0.28196884
+##  4             Amelie -0.070014 -0.11278753
+##  5            Memento -0.070014  0.02255751
+##  6             Scream -0.140028  0.16918130
+##  7  Lord of the Rings  0.000000  0.22557507
+##  8 Planet of the Apes  0.490098  0.29324759
+##  9              X-Men  0.560112  0.39475637
+## 10          Gladiator -0.210042  0.46242889</code></pre>
+<p>Y las personas tienen también <em>scores</em> en esta nueva dimensión, que aquí simulamos al azar</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">personas &lt;-<span class="st"> </span>personas <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">u_1 =</span> u, <span class="dt">u_2 =</span> <span class="kw">normalizar</span>(<span class="kw">rnorm</span>(<span class="dv">15</span>, <span class="dv">0</span>, <span class="dv">1</span>))) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="op">-</span>u)
+<span class="kw">head</span>(personas)</code></pre></div>
+<pre><code>## # A tibble: 6 x 3
+##   persona         u_1         u_2
+##     &lt;int&gt;       &lt;dbl&gt;       &lt;dbl&gt;
+## 1       1  0.04215632 -0.06231047
+## 2       2  0.18325375 -0.37654521
+## 3       3 -0.31599557  0.41966960
+## 4       4  0.46314650 -0.40146285
+## 5       5  0.28921210  0.12705318
+## 6       6  0.28037223  0.18002499</code></pre>
+<p>Por ejemplo, la segunda persona persona le gusta la ciencia ficción, y pero prefiere fuertemente películas independientes.</p>
+<p>Podemos graficar a las personas según su interés en ciencia ficción y mainstream:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(personas, <span class="kw">aes</span>(<span class="dt">x =</span> u_<span class="dv">1</span>, <span class="dt">y=</span>u_<span class="dv">2</span>)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> <span class="dv">0</span>, <span class="dt">colour=</span><span class="st">&#39;red&#39;</span>) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">yintercept =</span> <span class="dv">0</span>, <span class="dt">colour=</span><span class="st">&#39;red&#39;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">xlab</span>(<span class="st">&#39;Ciencia ficción&#39;)+</span>
+<span class="st">  ylab(&#39;</span>Mainstream<span class="st">&#39;)</span></code></pre></div>
+<p><img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-19-1.png" width="480" /></p>
+<p>Y también podemos graficar las películas</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(peliculas, <span class="kw">aes</span>(<span class="dt">x =</span> v_<span class="dv">1</span>, <span class="dt">y=</span>v_<span class="dv">2</span>, <span class="dt">label =</span> pelicula)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> <span class="dv">0</span>, <span class="dt">colour=</span><span class="st">&#39;red&#39;</span>) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">yintercept =</span> <span class="dv">0</span>, <span class="dt">colour=</span><span class="st">&#39;red&#39;</span>)<span class="op">+</span><span class="st"> </span><span class="kw">xlab</span>(<span class="st">&#39;Ciencia ficción&#39;)+</span>
+<span class="st">  ylab(&#39;</span>Mainstream<span class="st">&#39;) + geom_text()</span></code></pre></div>
+<p><img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-20-1.png" width="480" /></p>
+<p>¿Cómo calculariamos ahora la afinidad de una persona por una película? Necesitamos calcular (dando el mismo peso a las dos dimensiones) <span class="math display">\[X_{i,j} = \sigma_1 u_{1,i} v_{1,j} + \sigma_2 u_{2,i} v_{2,j}\]</span></p>
+<p>Usamos la notación <span class="math inline">\(u_{k,i}\)</span> para denotar la componente <span class="math inline">\(i\)</span> del vector <span class="math inline">\(u_k\)</span>.</p>
+<p>Antes pusimos <span class="math inline">\(\sigma_1=100\)</span>. Supongamos que la siguiente componente es un poco menos importante que la primera. Podriamos escoger <span class="math inline">\(\sigma_2=70\)</span>, por ejemplo.</p>
+<p>Podríamos hacer</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(purrr)
+<span class="kw">library</span>(stringr)
+personas_larga &lt;-<span class="st"> </span>personas <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">gather</span>(dimension, u, u_<span class="dv">1</span><span class="op">:</span>u_<span class="dv">2</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">separate</span>(dimension, <span class="kw">c</span>(<span class="st">&#39;x&#39;</span>,<span class="st">&#39;dim&#39;</span>), <span class="st">&#39;_&#39;</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="op">-</span>x)
+<span class="kw">head</span>(personas_larga)</code></pre></div>
+<pre><code>## # A tibble: 6 x 3
+##   persona   dim           u
+##     &lt;int&gt; &lt;chr&gt;       &lt;dbl&gt;
+## 1       1     1  0.04215632
+## 2       2     1  0.18325375
+## 3       3     1 -0.31599557
+## 4       4     1  0.46314650
+## 5       5     1  0.28921210
+## 6       6     1  0.28037223</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">peliculas_larga &lt;-<span class="st"> </span>peliculas <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">gather</span>(dimension, v, v_<span class="dv">1</span><span class="op">:</span>v_<span class="dv">2</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">separate</span>(dimension, <span class="kw">c</span>(<span class="st">&#39;x&#39;</span>,<span class="st">&#39;dim&#39;</span>), <span class="st">&#39;_&#39;</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="op">-</span>x)
+<span class="kw">head</span>(peliculas_larga)</code></pre></div>
+<pre><code>## # A tibble: 6 x 3
+##           pelicula   dim         v
+##              &lt;chr&gt; &lt;chr&gt;     &lt;dbl&gt;
+## 1 Mulholland drive     1  0.140028
+## 2    Amores Perros     1 -0.420084
+## 3     Billy Elliot     1 -0.420084
+## 4           Amelie     1 -0.070014
+## 5          Memento     1 -0.070014
+## 6           Scream     1 -0.140028</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sigma_df &lt;-<span class="st"> </span><span class="kw">data_frame</span>(<span class="dt">dim =</span> <span class="kw">c</span>(<span class="st">&#39;1&#39;</span>,<span class="st">&#39;2&#39;</span>), <span class="dt">sigma =</span> <span class="kw">c</span>(<span class="dv">100</span>,<span class="dv">70</span>))</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df_dim &lt;-<span class="st"> </span>personas_larga <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">left_join</span>(peliculas_larga) <span class="op">%&gt;%</span>
+<span class="st">                        </span><span class="kw">left_join</span>(sigma_df) <span class="op">%&gt;%</span>
+<span class="st">                        </span><span class="kw">mutate</span>(<span class="dt">afinidad =</span> sigma<span class="op">*</span>u<span class="op">*</span>v)</code></pre></div>
+<pre><code>## Joining, by = &quot;dim&quot;
+## Joining, by = &quot;dim&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df_agg &lt;-<span class="st"> </span>df_dim <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(persona, pelicula) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">afinidad =</span> <span class="kw">round</span>(<span class="kw">sum</span>(afinidad),<span class="dv">2</span>))
+df_agg <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">spread</span>(pelicula, afinidad)</code></pre></div>
+<pre><code>## # A tibble: 15 x 11
+## # Groups:   persona [15]
+##    persona Amelie `Amores Perros` `Billy Elliot` Gladiator
+##  *   &lt;int&gt;  &lt;dbl&gt;           &lt;dbl&gt;          &lt;dbl&gt;     &lt;dbl&gt;
+##  1       1   0.20           -0.30          -0.54     -2.90
+##  2       2   1.69            1.22          -0.27    -16.04
+##  3       3  -1.10            3.33           4.99     20.22
+##  4       4  -0.07           -9.95         -11.53    -22.72
+##  5       5  -3.03          -15.16         -14.66     -1.96
+##  6       6  -3.38          -16.04         -15.33     -0.06
+##  7       7  -1.07           -7.60          -7.80     -6.02
+##  8       8   2.08            4.99           3.74    -11.46
+##  9       9   0.95            0.17          -0.76    -10.29
+## 10      10  -2.44          -16.65         -16.99    -12.10
+## 11      11  -2.01          -13.12         -13.30     -8.52
+## 12      12  -0.34           -1.60          -1.52      0.07
+## 13      13   0.70            5.17           5.33      4.42
+## 14      14   0.01            6.27           7.30     14.68
+## 15      15  -3.43           -9.17          -7.27     16.70
+## # ... with 6 more variables: `Lord of the Rings` &lt;dbl&gt;, Memento &lt;dbl&gt;,
+## #   `Mulholland drive` &lt;dbl&gt;, `Planet of the Apes` &lt;dbl&gt;, Scream &lt;dbl&gt;,
+## #   `X-Men` &lt;dbl&gt;</code></pre>
+<p><strong>Observación</strong>: Piensa qué harías si vieras esta tabla directamente, e imagina cómo simplificaría la comprensión y análisis si conocieras las matrices de rango 1 con las que se construyó este ejemplo.</p>
+<p>Consideremos la persona 2:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">filter</span>(personas, persona<span class="op">==</span><span class="dv">2</span>)</code></pre></div>
+<pre><code>## # A tibble: 1 x 3
+##   persona       u_1        u_2
+##     &lt;int&gt;     &lt;dbl&gt;      &lt;dbl&gt;
+## 1       2 0.1832537 -0.3765452</code></pre>
+<p>Que tiene gusto por la ciencia ficción y le gustan películas independientes. Sus afinidades son:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">filter</span>(df_agg, persona<span class="op">==</span><span class="dv">2</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">arrange</span>(<span class="kw">desc</span>(afinidad))</code></pre></div>
+<pre><code>## # A tibble: 10 x 3
+## # Groups:   persona [1]
+##    persona           pelicula afinidad
+##      &lt;int&gt;              &lt;chr&gt;    &lt;dbl&gt;
+##  1       2   Mulholland drive    15.94
+##  2       2             Amelie     1.69
+##  3       2 Planet of the Apes     1.25
+##  4       2      Amores Perros     1.22
+##  5       2              X-Men    -0.14
+##  6       2       Billy Elliot    -0.27
+##  7       2            Memento    -1.88
+##  8       2  Lord of the Rings    -5.95
+##  9       2             Scream    -7.03
+## 10       2          Gladiator   -16.04</code></pre>
+<p>Explicaríamos así esta descomposición:</p>
+<ul>
+<li>Cada persona <span class="math inline">\(i\)</span> tiene un nivel de gusto por ciencia ficción (<span class="math inline">\(u_{1,i}\)</span>) y otro nivel de gusto por películas independientes (<span class="math inline">\(u_{2,i}\)</span>).</li>
+<li>Cada película <span class="math inline">\(j\)</span> tiene una calificación o peso en la dimensión de ciencia ficción (<span class="math inline">\(v_{1,i}\)</span>) y un peso en la dimensión de independiente (<span class="math inline">\(v_{2,i}\)</span>)</li>
+</ul>
+<p>La afinidad de una persona <span class="math inline">\(i\)</span> por una película <span class="math inline">\(j\)</span> se calcula como</p>
+<p><span class="math display">\[ \sigma_1 u_{1,i}v_{1,j}  + \sigma_2 u_{2,i}v_{2,j}\]</span></p>
+
+<div class="comentario">
+<ul>
+<li>Una matriz de rango 2 es una suma (o suma ponderada) de matrices de rango 1</li>
+<li>Las explicaciones de matrices de rango aplican para cada sumando (ver arriba)</li>
+<li>En este caso, hay dos dimensiones latentes que explican los datos: preferencia por independientes y preferencia por ciencia ficción. En este ejemplo ficticio estas componentes explica del todo a los datos.
+</div>
+</li>
+</ul>
+<hr />
+</div>
+</div>
+<div id="aproximacion-con-matrices-de-rango-bajo" class="section level2">
+<h2><span class="header-section-number">14.3</span> Aproximación con matrices de rango bajo</h2>
+
+<div class="comentario">
+Nuestro problema generalmente es el inverso: si tenemos la matriz de datos <span class="math inline">\(X\)</span>, ¿podemos encontrar un número bajo <span class="math inline">\(k\)</span> de dimensiones de forma que <span class="math inline">\(X\)</span> se escribe (o aproxima) como suma de matrices de <span class="math inline">\(k\)</span> matrices rango 1? Lograr esto sería muy bueno, pues otra vez simplificamos el análisis a solo un número de dimensiones <span class="math inline">\(k\)</span> (muy) menor a <span class="math inline">\(p\)</span>, el número de variables, sin perder mucha información (con buen grado de aproximación). - Adicionalmente, las dimensiones encontradas pueden mostrar patrones interesantes que iluminan los datos, esqpecialmente en términos de aquellas dimensiones que aportan mucho a la aproximación.
+</div>
+
+<p>En general, buscamos encontrar una aproximación de la matriz <span class="math inline">\(X\)</span> mediante una suma de matrices de rango 1</p>
+<p><span class="math display">\[X \approx \sigma_1 u_1v_1^t + \sigma_2 v_2v_2^t+\ldots+ \sigma_k u_kv_k^t.\]</span></p>
+<p>A esta aproximación le llamamos una <em>aproximación de rango</em> <span class="math inline">\(k\)</span>. Hay muchas maneras de hacer esto, y probablemente la mayoría de ellas no son muy interesantes. Podemos más concretamente preguntar, ¿cuál es la mejor aproximación de rango <span class="math inline">\(k\)</span> que hay?</p>
+<p><span class="math display">\[\min_{X_k} || X - X_k ||_F^2\]</span> donde consideramos la distancia entre <span class="math inline">\(X\)</span> y <span class="math inline">\(X_k\)</span> con la norma de Frobenius, que está definida por:</p>
+<p><span class="math display">\[|| A  ||_F^2 = \sum_{i,j} a_{i,j}^2\]</span> y es una medida de qué tan cerca están las dos matrices <span class="math inline">\(A\)</span> y <span class="math inline">\(B\)</span>, componente a componente.</p>
+<div id="discusion-aproximacion-de-rango-1." class="section level3">
+<h3><span class="header-section-number">14.3.1</span> Discusión: aproximación de rango 1.</h3>
+<p>Empecemos resolviendo el problema más simple, que es</p>
+<p><span class="math display">\[\min_{\sigma,u,v} || X - \sigma uv^t ||_F^2\]</span></p>
+<p>donde <span class="math inline">\(\sigma\)</span> es un escalar, <span class="math inline">\(u\)</span> es un vector columna de tamaño <span class="math inline">\(n\)</span> y <span class="math inline">\(v\)</span> es un vector columna de tamaño <span class="math inline">\(p\)</span>. Suponemos que los vectores <span class="math inline">\(u\)</span> y <span class="math inline">\(v\)</span> tienen norma uno.</p>
+<p>El objetivo que queremos minimizar es <span class="math display">\[\sum_{i,j} (X_{i,j} - \sigma u_iv_j)^2\]</span></p>
+<p>Derivando con respecto a <span class="math inline">\(u_i\)</span> y <span class="math inline">\(v_j\)</span>, e igualando a cero, obtenemos (la sigma podemos quitarla en la derivada, pues multiplica todo el lado derecho):</p>
+<span class="math display">\[\frac{\partial}{\partial u_i} = -2\sum_{j} (X_{i,j} - \sigma u_iv_j)v_j = 0\]</span> <span class="math display">\[\frac{\partial}{\partial v_j} = -2\sum_{i} (X_{i,j} - \sigma u_iv_j)u_i = 0\]</span> Que simplificando (y usando que la norma de <span class="math inline">\(u\)</span> y <span class="math inline">\(v\)</span> es igual a 1: <span class="math inline">\(\sum_iu_i^2 = \sum_j v_j^2=1\)</span>) quedan: <span class="math display">\[\sum_j X_{i,j}v_j =  \sigma u_i,\]</span> <span class="math display">\[\sum_i X_{i,j}u_i =\sigma  v_j,\]</span> O en forma matricial
+<span class="math display" id="eq:valor-propio-derecho">\[\begin{equation}
+Xv = \sigma u
+\tag{14.1}
+\end{equation}\]</span>
+<span class="math display" id="eq:valor-propio-izquierdo">\[\begin{equation}
+u^t X= \sigma v^t.
+\tag{14.2}
+\end{equation}\]</span>
+<p>Podemos resolver este par de ecuaciones para encontrar la solución al problema de optimización de arriba. Este problema tiene varias soluciones (con distintas <span class="math inline">\(\sigma\)</span>), pero veremos cómo podemos escoger la que de mejor la aproximación (adelanto: escoger las solución con <span class="math inline">\(\sigma^2\)</span> más grande).</p>
+
+<div class="comentario">
+A un par de vectores <span class="math inline">\((u,v)\)</span> que cumplen esta propiedad les llamamos <strong>vector propio izquierdo</strong> (<span class="math inline">\(u\)</span>) y <strong>vector propio derecho</strong> (<span class="math inline">\(v\)</span>), con <strong>valor singular</strong> asociado <span class="math inline">\(\sigma\)</span>. Por convención, tomamos <span class="math inline">\(\sigma \geq 0\)</span> (si no, podemos multiplicar a <span class="math inline">\(u\)</span> por menos, por ejemplo).
+</div>
+
+<p>Y tenemos un resultado importante que nos será útil, y que explica el nombre de estos vectores:</p>
+
+<div class="comentario">
+<p>Si <span class="math inline">\((u,v)\)</span> son vectores propios de <span class="math inline">\(X\)</span> asociados a <span class="math inline">\(\sigma\)</span>, entonces</p>
+<ul>
+<li><p><span class="math inline">\(v\)</span> es un vector propio de la matriz cuadrada <span class="math inline">\(X^tX\)</span> (<span class="math inline">\(p\times p\)</span>) con valor propio <span class="math inline">\(\sigma^2\)</span>.</p></li>
+<li><span class="math inline">\(u\)</span> es un vector propio de la matrix cuadrada <span class="math inline">\(XX^t\)</span> (<span class="math inline">\(n\times n\)</span>) con valor propio <span class="math inline">\(\sigma^2\)</span>.
+</div>
+</li>
+</ul>
+<p><strong>Observaciones</strong>:</p>
+<ul>
+<li><p>La demostración es fácil pues aplicando <span class="math inline">\(X^t\)</span> a ambos lados de <a href="reduccion-de-dimensionalidad.html#eq:valor-propio-derecho">(14.1)</a>, obtenemos <span class="math inline">\(X^t X v= \sigma X^t u\)</span>, que implica <span class="math inline">\((X^t X) v= \sigma (u^tX)^t = \sigma^2 v\)</span>. Podemos hacer lo mismo para <a href="reduccion-de-dimensionalidad.html#eq:valor-propio-izquierdo">(14.2)</a>.</p></li>
+<li><p>Nótese que <span class="math inline">\(X^tX\)</span> es una matriz simétrica. Por el teorema espectral, existe una base ortogonal de vectores propios (usual) <span class="math inline">\(v_1, v_2, \ldots, v_p\)</span> con valores propios reales. Adicionalmente, como <span class="math inline">\(X^tX\)</span> es positivo-definida, entonces todos estos vectores propios tienen valor propio no negativos.</p></li>
+</ul>
+<div id="ejemplo-53" class="section level4 unnumbered unnumbered">
+<h4>Ejemplo</h4>
+<p>Verifiquemos en el ejemplo del gasto en rubros. Si comparamos <span class="math inline">\(Xv\)</span> con <span class="math inline">\(u\)</span>, vemos que son colineales (es decir, <span class="math inline">\(Xv=\sigma u\)</span>):</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">qplot</span>(<span class="kw">as.matrix</span>(X_arr) <span class="op">%*%</span><span class="st"> </span>v_años, u_rubros) <span class="op">+</span><span class="st"> </span><span class="kw">geom_smooth</span>(<span class="dt">method=</span><span class="st">&#39;lm&#39;</span>)</code></pre></div>
+<p><img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-29-1.png" width="672" /></p>
+<p>Y además</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">u_rubros_norm &lt;-<span class="st"> </span><span class="kw">normalizar</span>(u_rubros)
+v_años_norm &lt;-<span class="st"> </span><span class="kw">normalizar</span>(v_años)
+sigma_x_v &lt;-<span class="st"> </span>(<span class="kw">t</span>(u_rubros_norm) <span class="op">%*%</span><span class="st"> </span><span class="kw">as.matrix</span>(X_arr))
+sigma_x_v</code></pre></div>
+<pre><code>##          1940     1950     1960
+## [1,] 24.78838 66.96964 100.7439</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">v_años_norm</code></pre></div>
+<pre><code>## [1] 0.2007384 0.5423272 0.8158341</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sigma_x_v<span class="op">/</span>v_años_norm</code></pre></div>
+<pre><code>##         1940     1950     1960
+## [1,] 123.486 123.4857 123.4858</code></pre>
+<p>Y efectivamente vemos que <span class="math inline">\((u,v)\)</span> (normalizados) forman satisfacen las ecuaciones mostradas arriba, con <span class="math inline">\(\sigma\)</span> igual a:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">first</span>(sigma_x_v<span class="op">/</span>v_años_norm)</code></pre></div>
+<pre><code>## [1] 123.486</code></pre>
+<hr />
+<p>Si hay varias soluciones, ¿cuál <span class="math inline">\(\sigma\)</span> escogemos?</p>
+<p>Supongamos que encontramos dos vectores propios <span class="math inline">\((u,v)\)</span> (izquierdo y derecho) con valor propio asociado <span class="math inline">\(\sigma\)</span>. Podemos evaluar la calidad de la aproximación usando la igualdad <span class="math display">\[\||A||_F^2 = traza (AA^t)\]</span> que es fácil de demostrar, pues la componente <span class="math inline">\((i,i)\)</span> de <span class="math inline">\(AA^t\)</span> está dada por el producto punto del renglon <span class="math inline">\(i\)</span> de A por el renglón <span class="math inline">\(i\)</span> de <span class="math inline">\(A\)</span>, que es <span class="math inline">\(\sum_{i,j}a_{i,j}^2.\)</span></p>
+<p>Entonces tenemos que</p>
+<p><span class="math display">\[||X-\sigma uv^t||_F^2 = \mathrm{Tr} ((X-\sigma uv^t)(X-\sigma uv^t)^t)\]</span></p>
+<p>que es igual a</p>
+<p><span class="math display">\[ \mathrm{Tr} (XX^t) - 2\sigma \mathrm{Tr} ( X(vu^t)) + \sigma^2\mathrm{Tr}(uv^tvu^t)\]</span></p>
+<p>Como <span class="math inline">\(u\)</span> y <span class="math inline">\(v\)</span> tienen norma 1, tenemos que <span class="math inline">\(v^tv=1\)</span>, y <span class="math inline">\(uu^t=I\)</span>, donde <span class="math inline">\(I\)</span> es la identidad. Adicionalmente, usando el hecho de que <span class="math inline">\(Xv=\sigma u\)</span> obtenemos</p>
+<p><span class="math display">\[ ||X-\sigma uv^t||_F^2 = \mathrm{Tr} (XX^t) - \sigma^2\]</span> que es una igualdad interesante: quiere decir que <strong>la mejor aproximación se encuentra encontrando el par de valores propios tal que el valor propio asociado <span class="math inline">\(\sigma\)</span> tiene el valor <span class="math inline">\(\sigma^2\)</span> más grande posible.</strong> La cantidad a la cantidad <span class="math inline">\(\mathrm{Tr} (XX^t)\)</span> está dada por <span class="math display">\[\mathrm{Tr} (XX^t) = ||X||_F^2 = \sum_{i,j} X_{i,j}^2,\]</span> que es una medida del “tamaño” de la matriz <span class="math inline">\(X\)</span>.</p>
+</div>
+</div>
+<div id="discusion-aproximaciones-de-rango-mas-alto" class="section level3">
+<h3><span class="header-section-number">14.3.2</span> Discusión: aproximaciones de rango más alto</h3>
+<p>Vamos a repetir el análisis para dimensión 2, repitiendo el proceso que hicimos arriba. Denotamos como <span class="math inline">\(u_1\)</span> y <span class="math inline">\(v_1\)</span> los vectores <span class="math inline">\(u\)</span> y <span class="math inline">\(v\)</span> que encontramos en el paso anterior. Ahora buscamos minimizar</p>
+<p><span class="math display">\[\min_{u_2,v_2} || X - \sigma_1 u_1 v_1^t - \sigma_2 u_2 v_2^{t} ||_F^2\]</span> Repetimos el argumento de arriba y derivando respecto a las componentes de <span class="math inline">\(u_2,v_2\)</span>, y usando el hecho de que <span class="math inline">\((u_1, v_1)\)</span> son vectores propios derecho e izquierdo asociados a <span class="math inline">\(\sigma_1\)</span>, obtenemos:</p>
+<ul>
+<li><span class="math inline">\(v_2\)</span> es ortogonal a <span class="math inline">\(v_1\)</span></li>
+<li><span class="math inline">\((u_2, v_2)\)</span> tienen que ser vectores propios derecho e izquierdo asociados a <span class="math inline">\(\sigma_2\geq 0\)</span></li>
+</ul>
+<p>Usando el hecho de que <span class="math inline">\(v_1\)</span> y <span class="math inline">\(v_2\)</span> son ortogonales, podemos podemos demostrar igual que arriba que</p>
+<p><span class="math display">\[|| X - \sigma_1 u_1 v_1^t - \sigma_2 u_2 v_2^{t} ||_F^2 = \textrm{Tr} (XX^t) - (\sigma_1^2 + \sigma_2^2)\]</span> De modo que obtenemos la mejor aproximación escogiendo los dos valores de <span class="math inline">\(\sigma_1^2\)</span> y <span class="math inline">\(\sigma_2^2\)</span> más grandes para los que hay solución de <a href="reduccion-de-dimensionalidad.html#eq:valor-propio-derecho">(14.1)</a> y <a href="reduccion-de-dimensionalidad.html#eq:valor-propio-izquierdo">(14.2)</a> y</p>
+<p><strong>Observaciones</strong>:</p>
+<ul>
+<li>Aunque aquí usamos un argumento incremental o <em>greedy</em> (comenzando con la mejor aproximación de rango 1), es posible demostrar que la mejor aproximación de rango 2 se puede construir de este modo. Ver por ejemplo <a href="https://www.cs.cmu.edu/~venkatg/teaching/CStheory-infoage/book-chapter-4.pdf">estas notas</a>.</li>
+<li>En el caso de dimensión 2, vemos que <strong>la solución es incremental</strong>: <span class="math inline">\(\sigma_1, u_1, v_1\)</span> son los mismos que para la solución de dimensión 1. En dimensión 2, tenemos que buscar el siguiente valor singular más grande después de <span class="math inline">\(\sigma_1\)</span>, de forma que tenemos <span class="math inline">\(\sigma_1^2 \geq \sigma_2^2\)</span>. La solución entonces es agregar <span class="math inline">\(\sigma_2 u_2 v_2^t\)</span>, donde <span class="math inline">\((u_2,v_2)\)</span> es el par de vectores propios izquierdo y derecho.</li>
+</ul>
+<p>Ahora podemos enunciar nuestro teorema:</p>
+
+<div class="comentario">
+<p><strong>Aproximación de matrices mediante valores singulares</strong></p>
+<p>Sea <span class="math inline">\(X\)</span> una matriz <span class="math inline">\(n\times p\)</span>, y supongamos que <span class="math inline">\(p&lt;n\)</span>. Entonces, para cada <span class="math inline">\(k \leq p\)</span>, podemos aproximar a la matriz <span class="math inline">\(X\)</span> como una suma <span class="math inline">\(X_k\)</span> de <span class="math inline">\(k\)</span> matrices de rango 1: <span class="math display">\[X_k =  \sigma_1 u_1v_1^t + \sigma_2 u_2v_2^t + \ldots \sigma_k u_kv_k^t,\]</span> donde</p>
+<ul>
+<li><span class="math inline">\(\sigma_1^2 \geq \sigma_2^2 \geq \cdots \geq \sigma_k^2\geq 0\)</span></li>
+<li>La calidad de la aproximación está dada por <span class="math display">\[||X-X_k||^2_F = ||X||^2_F - 
+  (\sigma_1^2+ \sigma_2^2 + \cdots + \sigma_k^2),\]</span> de forma que cada aproximación es sucesivamente mejor.</li>
+<li><span class="math inline">\(v_1,\ldots, v_k\)</span> son vectores ortogonales de norma 1</li>
+<li><span class="math inline">\(u_1,\ldots, u_k\)</span> son vectores ortogonales de norma 1</li>
+<li>Los vectores <span class="math inline">\((u_i,v_i)\)</span> son un par de vectores propios izquierdo y derechos para <span class="math inline">\(X\)</span> con valor singular <span class="math inline">\(\sigma_i\)</span>.
+</div>
+</li>
+</ul>
+<p><strong>Observaciones</strong>:</p>
+<ol style="list-style-type: decimal">
+<li><p>Normalmente no optimizamos como hicimos en el ejemplo de la matriz de gastos para encontrar las aproximación de rango bajo, sino que se usan algoritmos para encontrar vectores propios de <span class="math inline">\(X^tX\)</span> (que son las <span class="math inline">\(v\)</span>’s), o más generalmente algoritmos basados en álgebra lineal que intentan encontrar directamente los pares de vectores (u_i, v_i), y otros algoritmos numéricos (por ejemplo, basados en iteraciones).</p></li>
+<li><p>Un resultado interesante (que faltaría por demostrar) es que si tomamos la aproximación de rango <span class="math inline">\(p\)</span> (cuando <span class="math inline">\(p&lt;n\)</span>), obtenemos que <span class="math display">\[X= \sigma_1 u_1v_1^t + \sigma_2 u_2v_2^t + \ldots \sigma_p u_pv_p^t\]</span> es decir, la aproximación es exacta. Esto es un fraseo del <strong>teorema de descomposición en valores singulares</strong>, que normalmente se expresa de otra forma (ver más adelante).</p></li>
+</ol>
+</div>
+<div id="ejemplo-54" class="section level3 unnumbered">
+<h3>Ejemplo</h3>
+<p>Consideremos el ejemplo de los gastos. Podemos usar la función <em>svd</em> de R</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">svd_gasto &lt;-<span class="st"> </span><span class="kw">svd</span>(X_arr)</code></pre></div>
+<p>El objeto de salida contiene los valores singulares (en <em>d</em>). Nótese que ya habíamos calculado por fuerza bruta el primer valor singular:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sigma &lt;-<span class="st"> </span>svd_gasto<span class="op">$</span>d
+sigma</code></pre></div>
+<pre><code>## [1] 123.4857584   4.5673718   0.3762533</code></pre>
+<p>Los vectores <span class="math inline">\(v_1,v_2,v_3\)</span> (pesos de las variables) en nuestras tres nuevas dimensiones, que son las columnas de</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">v &lt;-<span class="st"> </span>svd_gasto<span class="op">$</span>v
+<span class="kw">rownames</span>(v) &lt;-<span class="st"> </span><span class="kw">colnames</span>(X_arr)
+v</code></pre></div>
+<pre><code>##            [,1]       [,2]        [,3]
+## 1940 -0.2007388 -0.3220495 -0.92519623
+## 1950 -0.5423269 -0.7499672  0.37872247
+## 1960 -0.8158342  0.5777831 -0.02410854</code></pre>
+<p>y los vectores <span class="math inline">\(u_1,u_2,u_3\)</span>, que son los scores de los estados en cada dimensión</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dim</span>(svd_gasto<span class="op">$</span>u)</code></pre></div>
+<pre><code>## [1] 5 3</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">u &lt;-<span class="st"> </span>(svd_gasto<span class="op">$</span>u)
+<span class="kw">rownames</span>(u) &lt;-<span class="st"> </span><span class="kw">rownames</span>(X_arr)
+u</code></pre></div>
+<pre><code>##                            [,1]       [,2]       [,3]
+## Food and Tobacco    -0.87130286 -0.3713244 -0.1597823
+## Household Operation -0.44966139  0.3422116  0.4108311
+## Medical and Health  -0.18778444  0.8259030 -0.2584369
+## Personal Care       -0.04812680  0.2074885 -0.4372590
+## Private Education   -0.03250802  0.1408623  0.7400691</code></pre>
+<p>Podemos considerar ahora la segunda dimensión que encontramos.</p>
+<ul>
+<li><p>En los scores: <span class="math inline">\(u_2\)</span> tiene valores altos en el rubro 3 (salud), y valores negativos en rubro 1. Es un patrón de gasto más alto en todo menos en comida (que es el rubro 1), especialmente en salud.</p></li>
+<li><p>Ahora vemos <span class="math inline">\(v_2\)</span>: tiene un valor alto en el año 60 (3a entrada), y valores más negativos para los dos primeros años (40 y 50)</p></li>
+<li><p>Así que decimos que en los 60, el ingreso se desplazó hacia salud (y otros rubros en general), reduciéndose el de comida.</p></li>
+</ul>
+<p>Si multiplicamos podemos ver la contribución de esta matriz de rango 1 (en billones (US) de dólares):</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">d &lt;-<span class="st"> </span>svd_gasto<span class="op">$</span>d
+(d[<span class="dv">2</span>]<span class="op">*</span><span class="kw">tcrossprod</span>(svd_gasto<span class="op">$</span>u[,<span class="dv">2</span>], svd_gasto<span class="op">$</span>v[,<span class="dv">2</span>])) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">round</span>(<span class="dv">1</span>)</code></pre></div>
+<pre><code>##      [,1] [,2] [,3]
+## [1,]  0.5  1.3 -1.0
+## [2,] -0.5 -1.2  0.9
+## [3,] -1.2 -2.8  2.2
+## [4,] -0.3 -0.7  0.5
+## [5,] -0.2 -0.5  0.4</code></pre>
+<p>Este es un efecto relativamente chico (comparado con el patrón estable de la primera dimensión), pero ilumina todavía un aspecto adicional de esta tablita.</p>
+<p>La norma de la diferencia entre la matriz <span class="math inline">\(X\)</span> y la aproximación de rango 2 podemos calcularla de dos maneras:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sum</span>(X_arr<span class="op">^</span><span class="dv">2</span>) <span class="op">-</span><span class="st"> </span><span class="kw">sum</span>(d[<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>]<span class="op">^</span><span class="dv">2</span>)</code></pre></div>
+<pre><code>## [1] 0.1415665</code></pre>
+<p>O calculando la aproximación y la diferencia directamente. Podemos hacerlo de la siguiente forma</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">X_arr_<span class="dv">2</span> &lt;-<span class="st"> </span>d[<span class="dv">1</span>]<span class="op">*</span><span class="kw">tcrossprod</span>(u[,<span class="dv">1</span>], v[,<span class="dv">1</span>]) <span class="op">+</span><span class="st"> </span>d[<span class="dv">2</span>]<span class="op">*</span><span class="kw">tcrossprod</span>(u[,<span class="dv">2</span>], v[,<span class="dv">2</span>])
+<span class="kw">sum</span>((X_arr <span class="op">-</span><span class="st"> </span>X_arr_<span class="dv">2</span>)<span class="op">^</span><span class="dv">2</span>)</code></pre></div>
+<pre><code>## [1] 0.1415665</code></pre>
+<p>Pero podemos calcular la aproximación <span class="math inline">\(X_2\)</span> en forma matricial, haciendo</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">X_arr_<span class="dv">2</span> &lt;-<span class="st"> </span>u[,<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>] <span class="op">%*%</span><span class="st"> </span><span class="kw">diag</span>(d[<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>]) <span class="op">%*%</span><span class="st"> </span><span class="kw">t</span>(v[,<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>])
+<span class="kw">sum</span>((X_arr <span class="op">-</span><span class="st"> </span>X_arr_<span class="dv">2</span>)<span class="op">^</span><span class="dv">2</span>)</code></pre></div>
+<pre><code>## [1] 0.1415665</code></pre>
+</div>
+</div>
+<div id="descomposicion-en-valores-singulares-svd-o-dvs" class="section level2">
+<h2><span class="header-section-number">14.4</span> Descomposición en valores singulares (SVD o DVS)</h2>
+<p>Aunque ya hemos enunciado los resultados, podemos enunciar el teorema de descomposición en valores singulares en términos matriciales.</p>
+<p>Supongamos entonces que tenemos una aproximación de rango <span class="math inline">\(k\)</span></p>
+<p><span class="math display">\[X_k = \sigma_1 u_1v_1^t + \sigma_2 u_2v_2^t + \ldots \sigma_k u_kv_k^t\]</span></p>
+<p>Se puede ver que esta aproximación se escribe como (considera todos los vectores como vectores columna)</p>
+<p><span class="math display">\[ X_k = (u_1,u_2, \ldots, u_k) \left(     
+{\begin{array}{ccccc}
+\sigma_1 &amp; 0 &amp; \cdots &amp; \cdots &amp; 0 \\
+0 &amp; \sigma_2 &amp; 0 &amp;\cdots &amp; 0 \\
+\vdots &amp; &amp; &amp; \vdots\\
+0 &amp; 0 &amp; 0 &amp; \cdots &amp; \sigma_k  \\
+\end{array} }
+\right)
+\left (
+\begin{array}{c}
+v_1^t \\
+v_2^t \\
+\vdots \\
+v_k^t
+\end{array}
+\right)
+\]</span></p>
+<p>o más simplemente, como</p>
+<p><span class="math display">\[X_k = U_k \Sigma_k V_k^t\]</span> donde <span class="math inline">\(U_k\)</span> (<span class="math inline">\(n\times k\)</span>) contiene los vectores <span class="math inline">\(u_i\)</span> en sus columnas, <span class="math inline">\(V_k\)</span> (<span class="math inline">\(k\times p\)</span>) contiene los vectores <span class="math inline">\(v_j\)</span> en sus columnas, y la matriz <span class="math inline">\(\Sigma_k\)</span> es la matriz diagonal con los primeros <span class="math inline">\(\sigma_1\geq \sigma_2\geq\cdots \sigma_k\)</span> valores singulares.</p>
+<p>Ver el ejemplo anterior para ver cómo los cálculos son iguales.</p>
+
+<div class="comentario">
+<p>Sea <span class="math inline">\(X\)</span> una matriz de <span class="math inline">\(n\times p\)</span> con <span class="math inline">\(p\leq n\)</span>. Entonces existe una factorización <span class="math display">\[X=U\Sigma V^t,\]</span></p>
+<ul>
+<li><p>Las columnas de U y V son vectores ortogonales unitarios.</p></li>
+<li><p><span class="math inline">\(\Sigma\)</span> es una matriz diagonal con valores no-negativos (valores singulares)</p></li>
+<li>Los valores singulares de <span class="math inline">\(\Sigma\)</span> estan ordenados en orden decreciente.
+</div>
+</li>
+</ul>
+<p>Una vez que tenemos esta descomposición, podemos extraer la aproximación que nos sea útil.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="st">&quot;imagenes/svd.png&quot;</span>)</code></pre></div>
+<p><img src="imagenes/svd.png" width="500" /></p>
+</div>
+<div id="interpretacion-geometrica" class="section level2">
+<h2><span class="header-section-number">14.5</span> Interpretación geométrica</h2>
+<p>La descomposición en valores singulares también se puede interpretar geométricamente. Notamos antes de ver un ejemplo que la componente de la proyección de los datos sobre el vector <span class="math inline">\(v_1\)</span> está dada por <span class="math display">\[Xv_1 = \sigma_1 u_1,\]</span></p>
+<p>de forma que la proyección de no de los datos, digamos el <span class="math inline">\(j\)</span>-ésimo, es</p>
+<p><span class="math display">\[\sigma_1 u_{1,j} v_1\]</span></p>
+<p>Consideremos unos datos simulados</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">3221</span>)
+x_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">200</span>,<span class="dv">2</span>, <span class="dv">1</span>)
+x_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">200</span>,<span class="dv">0</span>,<span class="dv">1</span>) <span class="op">+</span><span class="st"> </span>x_<span class="dv">1</span>
+datos &lt;-<span class="st"> </span><span class="kw">data_frame</span>(x_<span class="dv">1</span>, x_<span class="dv">2</span>)
+<span class="kw">ggplot</span>(datos, <span class="kw">aes</span>(<span class="dt">x=</span>x_<span class="dv">1</span>, <span class="dt">y=</span>x_<span class="dv">2</span>)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> <span class="dv">0</span>, <span class="dt">colour=</span><span class="st">&#39;red&#39;</span>) <span class="op">+</span>
+<span class="st"> </span><span class="kw">geom_hline</span>(<span class="dt">yintercept =</span> <span class="dv">0</span>, <span class="dt">colour=</span><span class="st">&#39;red&#39;</span>)</code></pre></div>
+<p><img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-43-1.png" width="672" /></p>
+<p>Hacemos descomposición en valores singulares y graficamos</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">svd_x &lt;-<span class="st"> </span><span class="kw">svd</span>(datos)
+v &lt;-<span class="st"> </span>svd_x<span class="op">$</span>v <span class="op">%&gt;%</span><span class="st"> </span>t <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">as.data.frame</span>() 
+u &lt;-<span class="st"> </span>svd_x<span class="op">$</span>u <span class="op">%&gt;%</span><span class="st"> </span>data.frame
+<span class="kw">colnames</span>(v) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;x_1&#39;</span>,<span class="st">&#39;x_2&#39;</span>)
+<span class="kw">colnames</span>(u) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;x_1&#39;</span>,<span class="st">&#39;x_2&#39;</span>)
+d &lt;-<span class="st"> </span>svd_x<span class="op">$</span>d
+v</code></pre></div>
+<pre><code>##          x_1        x_2
+## 1 -0.6726219 -0.7399864
+## 2 -0.7399864  0.6726219</code></pre>
+<p>Graficamos ahora los dos vectores <span class="math inline">\(v_1\)</span> y <span class="math inline">\(v_2\)</span></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(datos) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x=</span>x_<span class="dv">1</span>, <span class="dt">y=</span>x_<span class="dv">2</span>)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> <span class="dv">0</span>, <span class="dt">colour=</span><span class="st">&#39;red&#39;</span>) <span class="op">+</span>
+<span class="st"> </span><span class="kw">geom_hline</span>(<span class="dt">yintercept =</span> <span class="dv">0</span>, <span class="dt">colour=</span><span class="st">&#39;red&#39;</span>) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_segment</span>(<span class="dt">data =</span> v, <span class="kw">aes</span>(<span class="dt">xend=</span> <span class="op">-</span><span class="dv">5</span><span class="op">*</span>x_<span class="dv">1</span>, <span class="dt">yend=</span><span class="op">-</span><span class="dv">5</span><span class="op">*</span>x_<span class="dv">2</span>, <span class="dt">x=</span><span class="dv">0</span>, <span class="dt">y=</span><span class="dv">0</span>), <span class="dt">col=</span><span class="st">&#39;red&#39;</span>, <span class="dt">size=</span><span class="fl">1.1</span>,
+               <span class="dt">arrow =</span> <span class="kw">arrow</span>(<span class="dt">length =</span> <span class="kw">unit</span>(<span class="fl">0.3</span>,<span class="st">&quot;cm&quot;</span>)))  <span class="op">+</span>
+<span class="st">  </span><span class="kw">coord_equal</span>()</code></pre></div>
+<p><img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-45-1.png" width="672" /></p>
+<ul>
+<li><p>El primer vector es el “que pasa más cercano a los puntos”, en el sentido de que la distancia entre los datos proyectados al vector y los datos es lo más chica posible (mejor aproximación). La proyección de los datos sobre <span class="math inline">\(v\)</span> es igual a <span class="math inline">\(Xv_1=\sigma_1 u_1\)</span>, es decir, está dada por <span class="math inline">\(\sigma u_1\)</span></p></li>
+<li><p>Las proyecciones de los datos sobre el segundo vector <span class="math inline">\(v_2\)</span> están dadas igualmente por <span class="math inline">\(\sigma_2 u_2\)</span>. Sumamos esta proyección a la de la primera dimensión para obtener una mejor aproximación a los datos (en este caso, exacta).</p></li>
+</ul>
+<p>Por ejemplo, seleccionemos el primer punto y obtengamos sus proyecciones:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">proy_<span class="dv">1</span> &lt;-<span class="st"> </span>(d[<span class="dv">1</span>])<span class="op">*</span>u[<span class="dv">1</span>,<span class="dv">1</span>]<span class="op">*</span>v[<span class="dv">1</span>,] <span class="co">#v_1 por el score en la dimensión 1 u[1,1]</span>
+proy_<span class="dv">2</span> &lt;-<span class="st"> </span>(d[<span class="dv">2</span>])<span class="op">*</span>u[<span class="dv">1</span>,<span class="dv">2</span>]<span class="op">*</span>v[<span class="dv">2</span>,] <span class="co">#v_2 por el score en la dimensión 1 u[1,1]</span>
+proy_<span class="dv">2</span> <span class="op">+</span><span class="st"> </span>proy_<span class="dv">1</span></code></pre></div>
+<pre><code>##        x_1      x_2
+## 2 3.030313 1.883698</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">datos[<span class="dv">1</span>,]</code></pre></div>
+<pre><code>## # A tibble: 1 x 2
+##        x_1      x_2
+##      &lt;dbl&gt;    &lt;dbl&gt;
+## 1 3.030313 1.883698</code></pre>
+<p>Podemos graficar la aproximación sucesiva:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">datos<span class="op">$</span>selec &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;seleccionado&#39;</span>, <span class="kw">rep</span>(<span class="st">&#39;no_seleccionado&#39;</span>, <span class="kw">nrow</span>(datos)<span class="op">-</span><span class="dv">1</span>))
+<span class="kw">ggplot</span>(datos) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x=</span>x_<span class="dv">1</span>, <span class="dt">y=</span>x_<span class="dv">2</span>, <span class="dt">colour=</span>selec, <span class="dt">size=</span>selec)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> <span class="dv">0</span>, <span class="dt">colour=</span><span class="st">&#39;red&#39;</span>) <span class="op">+</span>
+<span class="st"> </span><span class="kw">geom_hline</span>(<span class="dt">yintercept =</span> <span class="dv">0</span>, <span class="dt">colour=</span><span class="st">&#39;red&#39;</span>) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_segment</span>(<span class="kw">aes</span>(<span class="dt">xend=</span> proy_<span class="dv">1</span>[<span class="dv">1</span>], <span class="dt">yend=</span>proy_<span class="dv">1</span>[<span class="dv">2</span>], <span class="dt">x=</span><span class="dv">0</span>, <span class="dt">y=</span><span class="dv">0</span>), <span class="dt">col=</span><span class="st">&#39;red&#39;</span>, <span class="dt">size=</span><span class="fl">1.1</span>,
+               <span class="dt">arrow =</span> <span class="kw">arrow</span>(<span class="dt">length =</span> <span class="kw">unit</span>(<span class="fl">0.3</span>,<span class="st">&quot;cm&quot;</span>)))  <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_segment</span>(<span class="kw">aes</span>(<span class="dt">xend=</span> proy_<span class="dv">2</span>[<span class="dv">1</span>] <span class="op">+</span><span class="st"> </span>proy_<span class="dv">1</span>[<span class="dv">1</span>], <span class="dt">yend=</span>proy_<span class="dv">2</span>[<span class="dv">2</span>] <span class="op">+</span><span class="st"> </span>proy_<span class="dv">1</span>[<span class="dv">2</span>], 
+                     <span class="dt">x=</span>proy_<span class="dv">1</span>[<span class="dv">1</span>], <span class="dt">y=</span>proy_<span class="dv">1</span>[<span class="dv">2</span>]), 
+                <span class="dt">col=</span><span class="st">&#39;red&#39;</span>, <span class="dt">size=</span><span class="fl">1.1</span>,
+                <span class="dt">arrow =</span> <span class="kw">arrow</span>(<span class="dt">length =</span> <span class="kw">unit</span>(<span class="fl">0.2</span>,<span class="st">&quot;cm&quot;</span>)))  <span class="op">+</span>
+<span class="st">  </span><span class="kw">coord_equal</span>()</code></pre></div>
+<p><img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-47-1.png" width="672" /></p>
+
+<div class="comentario">
+<p>Las aproximaciones de la descomposión en valores singulares mediante matrices de rango 1 puede entenderse como la búsqueda sucesiva de subespacios de dimensión baja, donde al proyectar los datos perdemos poca información.</p>
+Estas proyecciones en dimensiones bajas pueden utlizarse para entender patrones en los datos, y como entrada para otro análisis posterior.
+</div>
+
+</div>
+<div id="svd-para-peliculas-de-netflix" class="section level2">
+<h2><span class="header-section-number">14.6</span> SVD para películas de netflix</h2>
+<p>Vamos a intentar encontrar dimensiones latentes para los datos del concurso de predicción de Netflix (una de las componentes de las soluciones ganadoras fue descomposición en valores singulares).</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#no correr en notas - son unas 50 millones de evaluaciones</span>
+<span class="cf">if</span>(<span class="ot">FALSE</span>){
+  evals &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&#39;datos/netflix/muestra_calificaciones_1.csv&#39;</span>)
+  evals
+}</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">peliculas_nombres &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&#39;datos/netflix/peliculas_1.csv&#39;</span>)</code></pre></div>
+<pre><code>## Parsed with column specification:
+## cols(
+##   pelicula_id = col_integer(),
+##   year = col_integer(),
+##   name = col_character()
+## )</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">peliculas_nombres</code></pre></div>
+<pre><code>## # A tibble: 646 x 3
+##    pelicula_id  year                                name
+##          &lt;int&gt; &lt;int&gt;                               &lt;chr&gt;
+##  1           1  2003              Something&#39;s Gotta Give
+##  2           2  1992                      Reservoir Dogs
+##  3           3  2003                    X2: X-Men United
+##  4           4  2004                        Taking Lives
+##  5           5  1959                  North by Northwest
+##  6           6  2004 Harold and Kumar Go to White Castle
+##  7           7  2001               Bridget Jones&#39;s Diary
+##  8           8  2000                       High Fidelity
+##  9           9  2000                      Pay It Forward
+## 10          10  1999                               Dogma
+## # ... with 636 more rows</code></pre>
+<p>Hay muchas peliculas que no son evaluadas por ningún usuario. Aquí tenemos que decidir cómo tratar estos datos: si los rellenamos con 0, la implicación es que un usuario tiene bajo interés en una película que no ha visto. Hay otras opciones (y quizá un método que trate apropiadamente los datos faltantes es mejor).</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#no correr en notas</span>
+<span class="kw">library</span>(Matrix)
+<span class="kw">library</span>(methods)
+<span class="kw">library</span>(irlba)
+<span class="cf">if</span>(<span class="ot">FALSE</span>){
+  evals &lt;-<span class="st"> </span>evals <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(usuario_id) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">calif_centrada =</span> calif <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(calif))
+  <span class="co">#Usamos matriz rala - de otra manera la matriz es demasiado grande</span>
+  evals_mat &lt;-<span class="st"> </span><span class="kw">sparseMatrix</span>(<span class="dt">i =</span> evals<span class="op">$</span>usuario_id, <span class="dt">j=</span>evals<span class="op">$</span>pelicula_id, <span class="dt">x =</span> evals<span class="op">$</span>calif)
+  svd_parcial &lt;-<span class="st"> </span><span class="kw">irlba</span>(evals_mat, <span class="dv">4</span>)
+  <span class="kw">saveRDS</span>(svd_parcial, <span class="dt">file =</span><span class="st">&#39;cache_obj/svd_netflix.rds&#39;</span>)
+}</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">svd_parcial &lt;-<span class="st"> </span><span class="kw">readRDS</span>(<span class="st">&#39;cache_obj/svd_netflix.rds&#39;</span>)
+svd_parcial<span class="op">$</span>d</code></pre></div>
+<pre><code>## [1] 16853.865  5346.353  4170.122  3970.022</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#no correr en notas</span>
+<span class="cf">if</span>(<span class="ot">FALSE</span>){
+V_peliculas &lt;-<span class="st"> </span><span class="kw">data_frame</span>(<span class="dt">v_1 =</span> svd_parcial<span class="op">$</span>v[,<span class="dv">1</span>], <span class="dt">v_2 =</span> svd_parcial<span class="op">$</span>v[,<span class="dv">2</span>],
+                     <span class="dt">v_3 =</span> svd_parcial<span class="op">$</span>v[,<span class="dv">3</span>], <span class="dt">v_4 =</span> svd_parcial<span class="op">$</span>v[,<span class="dv">4</span>],
+                     <span class="dt">pelicula_id=</span><span class="dv">1</span><span class="op">:</span><span class="kw">ncol</span>(evals_mat)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">                </span><span class="kw">left_join</span>(peliculas_nombres)
+U_usuarios &lt;-<span class="st"> </span><span class="kw">data_frame</span>(<span class="dt">u_1 =</span> svd_parcial<span class="op">$</span>u[,<span class="dv">1</span>], <span class="dt">v_2=</span>svd_parcial<span class="op">$</span>u[,<span class="dv">2</span>],
+                         <span class="dt">u_3 =</span> svd_parcial<span class="op">$</span>u[,<span class="dv">3</span>], <span class="dt">u_4 =</span> svd_parcial<span class="op">$</span>u[,<span class="dv">4</span>],
+                         <span class="dt">usuario_id =</span> <span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(evals_mat))
+<span class="kw">saveRDS</span>(V_peliculas, <span class="dt">file =</span> <span class="st">&#39;cache_obj/v_peliculas.rds&#39;</span>)
+<span class="kw">saveRDS</span>(U_usuarios, <span class="dt">file =</span> <span class="st">&#39;cache_obj/u_usuarios.rds&#39;</span>)
+}</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">V_peliculas &lt;-<span class="st"> </span><span class="kw">readRDS</span>(<span class="st">&#39;cache_obj/v_peliculas.rds&#39;</span>)
+U_usuarios &lt;-<span class="st"> </span><span class="kw">readRDS</span>(<span class="st">&#39;cache_obj/u_usuarios.rds&#39;</span>)</code></pre></div>
+<p>Veamos primero las componentes 2, 3 y 4.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">qplot</span>(svd_parcial<span class="op">$</span>u[,<span class="dv">2</span>])</code></pre></div>
+<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+<p><img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-55-1.png" width="672" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">qplot</span>(svd_parcial<span class="op">$</span>v[,<span class="dv">2</span>])<span class="co">#</span></code></pre></div>
+<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+<p><img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-55-2.png" width="672" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pel_graf &lt;-<span class="st"> </span>V_peliculas <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">dist_0 =</span> <span class="kw">sqrt</span>(v_<span class="dv">2</span><span class="op">^</span><span class="dv">2</span> <span class="op">+</span><span class="st"> </span>v_<span class="dv">3</span><span class="op">^</span><span class="dv">2</span>)) 
+muestra &lt;-<span class="st"> </span>pel_graf <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">etiqueta =</span> <span class="kw">ifelse</span>(dist_<span class="dv">0</span> <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.08</span>, name, <span class="st">&#39;&#39;</span>))
+<span class="kw">ggplot</span>(muestra, <span class="kw">aes</span>(<span class="dt">x=</span>v_<span class="dv">2</span>, <span class="dt">y=</span>v_<span class="dv">3</span>, <span class="dt">label=</span>etiqueta)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>(<span class="dt">alpha=</span><span class="fl">0.2</span>) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_text</span>(<span class="dt">size=</span><span class="fl">2.5</span>) <span class="op">+</span><span class="st"> </span><span class="kw">xlab</span>(<span class="st">&#39;Mainstream vs Independiente&#39;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">ylab</span>(<span class="st">&#39;Violenta/Acción vs Drama&#39;</span>)</code></pre></div>
+<p><img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-56-1.png" width="672" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pel_graf &lt;-<span class="st"> </span>V_peliculas <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">dist_0 =</span> <span class="kw">sqrt</span>(v_<span class="dv">3</span><span class="op">^</span><span class="dv">2</span> <span class="op">+</span><span class="st"> </span>v_<span class="dv">4</span><span class="op">^</span><span class="dv">2</span>)) 
+muestra &lt;-<span class="st"> </span>pel_graf <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">etiqueta =</span> <span class="kw">ifelse</span>(dist_<span class="dv">0</span> <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.08</span>, name, <span class="st">&#39;&#39;</span>))
+<span class="kw">ggplot</span>(muestra, <span class="kw">aes</span>(<span class="dt">x=</span>v_<span class="dv">3</span>, <span class="dt">y=</span>v_<span class="dv">4</span>, <span class="dt">label=</span>etiqueta)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>(<span class="dt">alpha=</span><span class="fl">0.2</span>) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_text</span>(<span class="dt">size=</span><span class="fl">2.5</span>)  <span class="op">+</span><span class="st"> </span><span class="kw">xlab</span>(<span class="st">&#39;Violenta/Acción vs Drama&#39;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">ylab</span>(<span class="st">&#39;Fantasía/Ciencia Ficción&#39;)</span></code></pre></div>
+<p><img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-57-1.png" width="672" /></p>
+<p>Dejamos la primer componente porque es más bien consecuencia de cómo construimos la matriz que buscamos descomponer:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">qplot</span>(svd_parcial<span class="op">$</span>u[,<span class="dv">1</span>])</code></pre></div>
+<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+<p><img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-58-1.png" width="672" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">qplot</span>(svd_parcial<span class="op">$</span>v[,<span class="dv">1</span>])</code></pre></div>
+<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+<p><img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-58-2.png" width="672" /> Esta componente está asociada con el número de evaluaciones que tiene cada usuario y que tiene cada persona</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="cf">if</span>(<span class="ot">FALSE</span>){
+  evals_num_u &lt;-<span class="st"> </span>evals <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(usuario_id) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">summarise</span>(<span class="dt">num_evals =</span> <span class="kw">n</span>())
+  <span class="kw">saveRDS</span>(evals_num_u, <span class="st">&#39;cache_obj/evals_num_u.rds&#39;</span>)
+}</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">evals_num_u &lt;-<span class="st"> </span><span class="kw">readRDS</span>(<span class="st">&#39;cache_obj/evals_num_u.rds&#39;</span>)
+<span class="kw">qplot</span>(evals_num_u<span class="op">$</span>num_evals, svd_parcial<span class="op">$</span>u[,<span class="dv">1</span>])</code></pre></div>
+<p><img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-60-1.png" width="672" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="cf">if</span>(<span class="ot">FALSE</span>){
+  evals_num_p &lt;-<span class="st"> </span>evals <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(pelicula_id) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">summarise</span>(<span class="dt">num_evals =</span> <span class="kw">n</span>(), <span class="dt">calif_prom=</span><span class="kw">mean</span>(calif))
+  <span class="kw">saveRDS</span>(evals_num_p, <span class="st">&#39;cache_obj/evals_num_p.rds&#39;</span>)
+}</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">evals_num_p &lt;-<span class="st"> </span><span class="kw">readRDS</span>(<span class="st">&#39;cache_obj/evals_num_p.rds&#39;</span>)
+<span class="kw">qplot</span>(evals_num_p<span class="op">$</span>num_evals, svd_parcial<span class="op">$</span>v[,<span class="dv">1</span>])</code></pre></div>
+<p><img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-62-1.png" width="672" /></p>
+<p>Esta dimensión aparece pues la primera aproximación de rango 1 intenta replicar los valores “bajos” de pocas evaluaciones tanto en usuarios como en películas. En realidad es una distorsión producida por cómo hemos tratado los datos (“imputando” cero cuando no existe una evaluación).</p>
+<div id="calidad-de-representacion-de-svd." class="section level3">
+<h3><span class="header-section-number">14.6.1</span> Calidad de representación de SVD.</h3>
+<p>Podemos hacer varios cálculos para entender qué tan buena es nuestra aproximación de rango bajo <span class="math inline">\(X_k\)</span>. Por ejemplo, podríamos calcular las diferencias de <span class="math inline">\(X-X_k\)</span> y presentarlas de distinta forma.</p>
+</div>
+<div id="ejemplo-55" class="section level3 unnumbered">
+<h3>Ejemplo</h3>
+<p>En el ejemplo de rubros de gasto, podríamos mostrar las diferencias en billones (us) de dólares, donde vemos que la aproximación es bastante buena</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">qplot</span>(<span class="kw">as.numeric</span>(X_arr<span class="op">-</span>X_arr_<span class="dv">2</span>))</code></pre></div>
+<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+<p><img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-63-1.png" width="672" /></p>
+<p>Que podríamos resumir, por ejemplo, con la media de errores absolutos:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">mean</span>(<span class="kw">abs</span>(<span class="kw">as.numeric</span>(X_arr<span class="op">-</span>X_arr_<span class="dv">2</span>)))</code></pre></div>
+<pre><code>## [1] 0.06683576</code></pre>
+<p>Otra opción es usar la norma Frobenius, calculando para la apoximación de rango 1</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="dv">1</span> <span class="op">-</span><span class="st"> </span>(<span class="kw">sum</span>(X_arr<span class="op">^</span><span class="dv">2</span>) <span class="op">-</span><span class="st"> </span><span class="kw">sum</span>(svd_gasto<span class="op">$</span>d[<span class="dv">1</span>]<span class="op">^</span><span class="dv">2</span>))<span class="op">/</span><span class="kw">sum</span>(X_arr<span class="op">^</span><span class="dv">2</span>)</code></pre></div>
+<pre><code>## [1] 0.9986246</code></pre>
+<p>Lo que indica que capturamos 99.8% de la información, y para la de rango 2: d</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="dv">1</span><span class="op">-</span>(<span class="kw">sum</span>(X_arr<span class="op">^</span><span class="dv">2</span>) <span class="op">-</span><span class="st"> </span><span class="kw">sum</span>(svd_gasto<span class="op">$</span>d[<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>]<span class="op">^</span><span class="dv">2</span>))<span class="op">/</span><span class="kw">sum</span>(X_arr<span class="op">^</span><span class="dv">2</span>)</code></pre></div>
+<pre><code>## [1] 0.9999907</code></pre>
+<p>Lo que indica que estos datos (en 3 variables), podemos entenderlos mediante un análisis de dos dimensiones</p>
+<hr />
+
+<div class="comentario">
+Podemos medir la calidad de la representación de <span class="math inline">\(X\)</span> (<span class="math inline">\(n\times p\)</span> con <span class="math inline">\(p &lt; n\)</span>) de una aproximación <span class="math inline">\(X_k\)</span> de SVD mediante <span class="math display">\[1-\frac{||X-X_k||_2^F}{||X||_2^F}  = \frac{\sigma_1^2 + \sigma_2^2 + \cdots \sigma_k^2}{|sigma_1^2 + \sigma_2^2 + \cdots \sigma_p^2},\]</span> que es un valor entre 0 y 1. Cuanto más cercana a 1 está, mejor es la representación.
+</div>
+
+<p><strong>Observaciones</strong>: Dependiendo de nuestro objetivo, nos interesa alcanzar distintos niveles de calidad de representación. Por ejemplo, algunas reglas de dedo:</p>
+<ul>
+<li><p>Si queremos usar los datos para un proceso posterior, o dar una descripción casi completa de los datos, quizá buscamos calidad <span class="math inline">\(&gt;0.9\)</span> o mayor.</p></li>
+<li><p>Si nos interesa extraer los patrones más importantes, podemos considerar valores de calidad mucho más chicos, entendiendo que hay una buena parte de la información que no se explican por nuestra aproximación.</p></li>
+</ul>
+<div id="ejemplo-56" class="section level4 unnumbered">
+<h4>Ejemplo</h4>
+<p>Para el problema de Netflix podemos calcular la calidad de representación dada por las primeras 4 dimensiones</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#norma_X  &lt;- sum(evals$calif^2)</span>
+norma_X &lt;-<span class="st"> </span><span class="dv">738958222</span>
+<span class="kw">sum</span>(svd_parcial<span class="op">$</span>d<span class="op">^</span><span class="dv">2</span>)<span class="op">/</span>norma_X</code></pre></div>
+<pre><code>## [1] 0.4679388</code></pre>
+<p>Lo que indica que todavía hay mucha información por explorar en los datos de netflix. La contribución a este porcentaje de cada dimensión</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">(svd_parcial<span class="op">$</span>d[<span class="dv">1</span>]<span class="op">^</span><span class="dv">2</span>)<span class="op">/</span>norma_X</code></pre></div>
+<pre><code>## [1] 0.3843962</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">(svd_parcial<span class="op">$</span>d[<span class="dv">2</span>]<span class="op">^</span><span class="dv">2</span>)<span class="op">/</span>norma_X</code></pre></div>
+<pre><code>## [1] 0.0386808</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">(svd_parcial<span class="op">$</span>d[<span class="dv">3</span>]<span class="op">^</span><span class="dv">2</span>)<span class="op">/</span>norma_X</code></pre></div>
+<pre><code>## [1] 0.02353302</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">(svd_parcial<span class="op">$</span>d[<span class="dv">3</span>]<span class="op">^</span><span class="dv">2</span>)<span class="op">/</span>norma_X</code></pre></div>
+<pre><code>## [1] 0.02353302</code></pre>
+</div>
+</div>
+</div>
+<div id="componentes-principales" class="section level2">
+<h2><span class="header-section-number">14.7</span> Componentes principales</h2>
+<p>Componentes principales es la descomposición en valores singulares aplicada a una matriz de datos centrada por columna. Esta operación convierte el problema de aproximación de matrices de rango bajo en uno de aproximaciones que buscan explicar la mayoría de la <em>covarianza</em> de las variables de la matriz de datos <span class="math inline">\(X\)</span>.</p>
+<p>Consideremos entonces una matriz de datos <span class="math inline">\(X\)</span> de tamaño <span class="math inline">\(n\times p\)</span>. Definimos la <strong>matrix centrada</strong> por columna <span class="math inline">\(\tilde{X}\)</span> , que se calcula como <span class="math display">\[\tilde{X}_{i,j} = X_{i,j} - \mu_j\]</span> donde <span class="math inline">\(\mu_j = \frac{1}{n} \sum_j X_{i,j}\)</span>.</p>
+
+<div id="refs" class="references">
+<div>
+<p>Bishop, Christopher M. 2006. <em>Pattern Recognition and Machine Learning (Information Science and Statistics)</em>. Secaucus, NJ, USA: Springer-Verlag New York, Inc.</p>
+</div>
+<div>
+<p>Goodfellow, Ian, Yoshua Bengio, and Aaron Courville. 2016. <em>Deep Learning</em>. MIT Press.</p>
+</div>
+<div>
+<p>Hastie, Trevor, Robert Tibshirani, and Jerome Friedman. 2017. <em>The Elements of Statistical Learning</em>. Springer Series in Statistics. Springer New York Inc. <a href="http://web.stanford.edu/~hastie/ElemStatLearn/" class="uri">http://web.stanford.edu/~hastie/ElemStatLearn/</a>.</p>
+</div>
+<div>
+<p>James, Gareth, Daniela Witten, Trevor Hastie, and Robert Tibshirani. 2014. <em>An Introduction to Statistical Learning: With Applications in R</em>. Springer Publishing Company, Incorporated. <a href="http://www-bcf.usc.edu/~gareth/ISL/" class="uri">http://www-bcf.usc.edu/~gareth/ISL/</a>.</p>
+</div>
+<div>
+<p>Ng, Andrew. 2017. “Machine Learning.” <a href="https://www.coursera.org/learn/machine-learning" class="uri">https://www.coursera.org/learn/machine-learning</a>.</p>
+</div>
+<div>
+<p>Srivastava, Nitish, Geoffrey Hinton, Alex Krizhevsky, Ilya Sutskever, and Ruslan Salakhutdinov. 2014. “Dropout: A Simple Way to Prevent Neural Networks from Overfitting.” <em>J. Mach. Learn. Res.</em> 15 (1). JMLR.org: 1929–58. <a href="http://dl.acm.org/citation.cfm?id=2627435.2670313" class="uri">http://dl.acm.org/citation.cfm?id=2627435.2670313</a>.</p>
+</div>
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="validacion-de-modelos-problemas-comunes.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"google": false,
+"weibo": false,
+"instapper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/felipegonzalez/aprendizaje-maquina-2017/edit/master/14-reducir-dimensionalidad.Rmd",
+"text": "Edit"
+},
+"download": ["aprendizaje-maquina.pdf", "aprendizaje-maquina.epub"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "";
+    if (src === "" || src === "true") src = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:" && /^https?:/.test(src))
+      src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

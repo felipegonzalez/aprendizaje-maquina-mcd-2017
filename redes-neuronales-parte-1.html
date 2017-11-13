@@ -25,7 +25,7 @@
 <meta name="author" content="Felipe González">
 
 
-<meta name="date" content="2017-11-12">
+<meta name="date" content="2017-11-13">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -334,6 +334,29 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="13.7" data-path="validacion-de-modelos-problemas-comunes.html"><a href="validacion-de-modelos-problemas-comunes.html#otros-ejemplos"><i class="fa fa-check"></i><b>13.7</b> Otros ejemplos</a></li>
 <li class="chapter" data-level="13.8" data-path="validacion-de-modelos-problemas-comunes.html"><a href="validacion-de-modelos-problemas-comunes.html#resumen-1"><i class="fa fa-check"></i><b>13.8</b> Resumen</a></li>
 <li class="chapter" data-level="" data-path="validacion-de-modelos-problemas-comunes.html"><a href="validacion-de-modelos-problemas-comunes.html#tarea-6"><i class="fa fa-check"></i>Tarea</a></li>
+</ul></li>
+<li class="chapter" data-level="14" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html"><i class="fa fa-check"></i><b>14</b> Reducción de dimensionalidad</a><ul>
+<li class="chapter" data-level="14.1" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#descomposicion-aditiva-en-matrices-de-rango-1"><i class="fa fa-check"></i><b>14.1</b> Descomposición aditiva en matrices de rango 1</a><ul>
+<li class="chapter" data-level="14.1.1" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#matrices-de-rango-1"><i class="fa fa-check"></i><b>14.1.1</b> Matrices de rango 1</a></li>
+<li class="chapter" data-level="" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#ejemplo-una-matriz-de-rango-1-de-preferencias"><i class="fa fa-check"></i>Ejemplo: una matriz de rango 1 de preferencias</a></li>
+</ul></li>
+<li class="chapter" data-level="14.2" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#aproximacion-con-matrices-de-rango-1."><i class="fa fa-check"></i><b>14.2</b> Aproximación con matrices de rango 1.</a><ul>
+<li class="chapter" data-level="" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#ejemplo-52"><i class="fa fa-check"></i>Ejemplo</a></li>
+<li class="chapter" data-level="14.2.1" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#suma-de-matrices-de-rango-1."><i class="fa fa-check"></i><b>14.2.1</b> Suma de matrices de rango 1.</a></li>
+<li class="chapter" data-level="" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#ejemplo-peliculas"><i class="fa fa-check"></i>Ejemplo: películas</a></li>
+</ul></li>
+<li class="chapter" data-level="14.3" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#aproximacion-con-matrices-de-rango-bajo"><i class="fa fa-check"></i><b>14.3</b> Aproximación con matrices de rango bajo</a><ul>
+<li class="chapter" data-level="14.3.1" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#discusion-aproximacion-de-rango-1."><i class="fa fa-check"></i><b>14.3.1</b> Discusión: aproximación de rango 1.</a></li>
+<li class="chapter" data-level="14.3.2" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#discusion-aproximaciones-de-rango-mas-alto"><i class="fa fa-check"></i><b>14.3.2</b> Discusión: aproximaciones de rango más alto</a></li>
+<li class="chapter" data-level="" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#ejemplo-54"><i class="fa fa-check"></i>Ejemplo</a></li>
+</ul></li>
+<li class="chapter" data-level="14.4" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#descomposicion-en-valores-singulares-svd-o-dvs"><i class="fa fa-check"></i><b>14.4</b> Descomposición en valores singulares (SVD o DVS)</a></li>
+<li class="chapter" data-level="14.5" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#interpretacion-geometrica"><i class="fa fa-check"></i><b>14.5</b> Interpretación geométrica</a></li>
+<li class="chapter" data-level="14.6" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#svd-para-peliculas-de-netflix"><i class="fa fa-check"></i><b>14.6</b> SVD para películas de netflix</a><ul>
+<li class="chapter" data-level="14.6.1" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#calidad-de-representacion-de-svd."><i class="fa fa-check"></i><b>14.6.1</b> Calidad de representación de SVD.</a></li>
+<li class="chapter" data-level="" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#ejemplo-55"><i class="fa fa-check"></i>Ejemplo</a></li>
+</ul></li>
+<li class="chapter" data-level="14.7" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#componentes-principales"><i class="fa fa-check"></i><b>14.7</b> Componentes principales</a></li>
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Publicado con bookdown</a></li>
@@ -999,24 +1022,24 @@ modelo_tc <span class="op">%&gt;%</span><span class="st"> </span>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">score &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">evaluate</span>(x_valid_s, y_valid)
 score</code></pre></div>
 <pre><code>## $loss
-## [1] 0.4348974
+## [1] 0.4327774
 ## 
 ## $acc
-## [1] 0.7981928
+## [1] 0.8042169
 ## 
 ## $binary_crossentropy
-## [1] 0.4304499</code></pre>
+## [1] 0.4287254</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tab_confusion &lt;-<span class="st"> </span><span class="kw">table</span>(modelo_tc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">predict_classes</span>(x_valid_s),y_valid) 
 tab_confusion</code></pre></div>
 <pre><code>##    y_valid
 ##       0   1
-##   0 192  36
-##   1  31  73</code></pre>
+##   0 196  38
+##   1  27  71</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">prop.table</span>(tab_confusion, <span class="dv">2</span>)</code></pre></div>
 <pre><code>##    y_valid
 ##             0         1
-##   0 0.8609865 0.3302752
-##   1 0.1390135 0.6697248</code></pre>
+##   0 0.8789238 0.3486239
+##   1 0.1210762 0.6513761</code></pre>
 <p>Es importante monitorear las curvas de aprendizaje (entrenamiento y validación) para diagnosticar mejoras:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df_iteraciones &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(iteraciones)
 <span class="kw">ggplot</span>(df_iteraciones, <span class="kw">aes</span>(<span class="dt">x=</span>epoch, <span class="dt">y=</span>value, <span class="dt">colour=</span>data, <span class="dt">group=</span>data)) <span class="op">+</span><span class="st"> </span>
