@@ -1127,9 +1127,8 @@ $$\tilde{X}_{i,j} = X_{i,j} - \mu_j$$
 donde $\mu_j = \frac{1}{n} \sum_j X_{i,j}$.
 
 
-- La primera diferencia entre svd y svd con columnas centradas (componentes principales) 
-es que en svd las proyecciones se hacen pasando por el origen, pero en componentes principales se
-hacen a partir del centroide de los datos
+- La diferencia en construcción entre svd y svd con columnas centradas (componentes principales) 
+es que en svd las proyecciones se hacen pasando por el origen, pero en componentes principales se hacen a partir del centroide de los datos
 
 ### Ejemplo {-}
 
@@ -1198,6 +1197,53 @@ Y verificamos que los resultados son los mismos:
 qplot(scores[,1], comps[,1])
 qplot(scores[,2], -comps[,2])
 ```
+
+---
+
+### Varianza y Covarianza en componentes principales.
+
+Cuando centramos por columna, la svd es un tipo de análisis de la matriz
+de varianzas y covarianzas de la matriz $X$, dada por
+
+$$C = \frac{1}{n} \tilde{X}^t \tilde{X}$$
+(Nota: asegúrate de que entiendes por qué esta es la matriz de varianzas y covarianzas
+de $X$). 
+
+Y nótese que las proyecciones $\tilde{X}v_j = \sigma_j u_j = d_j$ satisfacen que
+
+1. La media de las proyecciones d_j es igual a cero
+
+Pues $$\sigma_j \sum_k {u_{j,k}} = \sum_k \sum_i (\tilde{X}_{k,i})v_{j,i} =
+\sum_i v_{j,i}\sum_k (\tilde{X}_{k,i}) = 0,$$
+pues las columnas de $\tilde{X}$ tienen media cero.
+
+2- $\sigma_j^2$ es la varianza de la proyección $d_j$, pues
+$$Var(d_j) = \sigma_j^2 \sum_k (u_{j,k} - 0)^2 = \sigma_j^2,$$
+pues el vector $u_j$ tienen norma 1.
+
+3. La ortogonalidad de los vectores $u_j$ se interpreta ahora en términos
+de covarianza:
+$$Cov(d_i,d_j) = \frac{1}{n}\sum_{k=1}^n (d_{i,k}-0)(d_{j,k}-0) =
+\frac{1}{n}\sum_{k=1}^n \sigma_j\sigma_i u_{i,k}u_{j,k} = 0$$
+
+
+Esto implica, de acuerdo a lo que vimos antes en SVD, que en componentes
+principales 
+
+Buscamos sucesivamente direcciones para proyectar *que tienen
+varianza máxima* (ver ejemplo anterior), y que sean no correlacionadas de forma
+que no compartan información lineal entre ellas.
+
+Adicionalmente, vimos que podíamos escribir
+$$||\tilde{X}||^2_F =  \sum_{j=1}^p \sigma_{j}$$
+Y el lado izquierdo es en este caso una suma de varianzas:
+$$\sum_{j=1}^p Var(X_j) =  \sum_{j=1}^p \sigma_{j}.$$
+El lado izquierdo se llama *Varianza total* de la matriz $X$. Componentes principales particiona la varianza total de la matriz $X$ en 
+componentes 
+
+
+
+
 
 ### Ejemplo: más apropiado hacer svd sin centrar {-}
 
