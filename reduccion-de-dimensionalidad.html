@@ -7,7 +7,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Aprendizaje de máquina</title>
   <meta name="description" content="Notas y material para el curso de aprendizaje de máquina 2017 (ITAM)">
-  <meta name="generator" content="bookdown 0.5.8 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown 0.5.9 and GitBook 2.6.7">
 
   <meta property="og:title" content="Aprendizaje de máquina" />
   <meta property="og:type" content="book" />
@@ -575,9 +575,9 @@ X_arr</code></pre></div>
 <p><span class="math display">\[\min_{u,v} \sum_{i,j} (X_{i,j} - u_iv_j)^2 = \min_{u,v} ||X-uv^t||^2_F\]</span></p>
 <p><strong>Observación</strong>:Este problema tiene varios mínimos, pues podemos mover constantes de <span class="math inline">\(u\)</span> a <span class="math inline">\(v\)</span> (tiene múltiples soluciones). Hay varias maneras de lidiar con esto (por ejemplo, normalizando). Por el momento, corremos la optimización para encontrar una solución:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">error &lt;-<span class="st"> </span><span class="cf">function</span>(pars){
-  v_tipos &lt;-<span class="st"> </span>pars[<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>]
-  u_estados &lt;-<span class="st"> </span>pars[<span class="dv">4</span><span class="op">:</span><span class="dv">8</span>]
-  <span class="kw">mean</span>((X_arr <span class="op">-</span><span class="st"> </span><span class="kw">tcrossprod</span>(u_estados, v_tipos))<span class="op">^</span><span class="dv">2</span>) <span class="co">#tcrossprod da x %*% t(y)</span>
+  v &lt;-<span class="st"> </span>pars[<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>]
+  u &lt;-<span class="st"> </span>pars[<span class="dv">4</span><span class="op">:</span><span class="dv">8</span>]
+  <span class="kw">mean</span>((X_arr <span class="op">-</span><span class="st"> </span><span class="kw">tcrossprod</span>(u, v))<span class="op">^</span><span class="dv">2</span>) <span class="co">#tcrossprod da x %*% t(y)</span>
 }
 optim_decomp &lt;-<span class="st"> </span><span class="kw">optim</span>(<span class="kw">rep</span>(<span class="fl">0.1</span>, <span class="dv">5</span> <span class="op">+</span><span class="st"> </span><span class="dv">3</span>), error, <span class="dt">method =</span><span class="st">&#39;BFGS&#39;</span>)</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">v_años &lt;-<span class="st"> </span>optim_decomp<span class="op">$</span>par[<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>]
@@ -792,7 +792,8 @@ df_agg <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">s
 <h2><span class="header-section-number">14.3</span> Aproximación con matrices de rango bajo</h2>
 
 <div class="comentario">
-Nuestro problema generalmente es el inverso: si tenemos la matriz de datos <span class="math inline">\(X\)</span>, ¿podemos encontrar un número bajo <span class="math inline">\(k\)</span> de dimensiones de forma que <span class="math inline">\(X\)</span> se escribe (o aproxima) como suma de matrices de <span class="math inline">\(k\)</span> matrices rango 1? Lograr esto sería muy bueno, pues otra vez simplificamos el análisis a solo un número de dimensiones <span class="math inline">\(k\)</span> (muy) menor a <span class="math inline">\(p\)</span>, el número de variables, sin perder mucha información (con buen grado de aproximación). - Adicionalmente, las dimensiones encontradas pueden mostrar patrones interesantes que iluminan los datos, esqpecialmente en términos de aquellas dimensiones que aportan mucho a la aproximación.
+<p>Nuestro problema generalmente es el inverso: si tenemos la matriz de datos <span class="math inline">\(X\)</span>, ¿podemos encontrar un número bajo <span class="math inline">\(k\)</span> de dimensiones de forma que <span class="math inline">\(X\)</span> se escribe (o aproxima) como suma de matrices de <span class="math inline">\(k\)</span> matrices rango 1? Lograr esto sería muy bueno, pues otra vez simplificamos el análisis a solo un número de dimensiones <span class="math inline">\(k\)</span> (muy) menor a <span class="math inline">\(p\)</span>, el número de variables, sin perder mucha información (con buen grado de aproximación).</p>
+Adicionalmente, las dimensiones encontradas pueden mostrar patrones interesantes que iluminan los datos, esqpecialmente en términos de aquellas dimensiones que aportan mucho a la aproximación.
 </div>
 
 <p>En general, buscamos encontrar una aproximación de la matriz <span class="math inline">\(X\)</span> mediante una suma de matrices de rango 1</p>
@@ -807,7 +808,7 @@ Nuestro problema generalmente es el inverso: si tenemos la matriz de datos <span
 <p>donde <span class="math inline">\(\sigma\)</span> es un escalar, <span class="math inline">\(u\)</span> es un vector columna de tamaño <span class="math inline">\(n\)</span> y <span class="math inline">\(v\)</span> es un vector columna de tamaño <span class="math inline">\(p\)</span>. Suponemos que los vectores <span class="math inline">\(u\)</span> y <span class="math inline">\(v\)</span> tienen norma uno.</p>
 <p>El objetivo que queremos minimizar es <span class="math display">\[\sum_{i,j} (X_{i,j} - \sigma u_iv_j)^2\]</span></p>
 <p>Derivando con respecto a <span class="math inline">\(u_i\)</span> y <span class="math inline">\(v_j\)</span>, e igualando a cero, obtenemos (la sigma podemos quitarla en la derivada, pues multiplica todo el lado derecho):</p>
-<span class="math display">\[\frac{\partial}{\partial u_i} = -2\sum_{j} (X_{i,j} - \sigma u_iv_j)v_j = 0\]</span> <span class="math display">\[\frac{\partial}{\partial v_j} = -2\sum_{i} (X_{i,j} - \sigma u_iv_j)u_i = 0\]</span> Que simplificando (y usando que la norma de <span class="math inline">\(u\)</span> y <span class="math inline">\(v\)</span> es igual a 1: <span class="math inline">\(\sum_iu_i^2 = \sum_j v_j^2=1\)</span>) quedan: <span class="math display">\[\sum_j X_{i,j}v_j =  \sigma u_i,\]</span> <span class="math display">\[\sum_i X_{i,j}u_i =\sigma  v_j,\]</span> O en forma matricial
+<span class="math display">\[\frac{\partial}{\partial u_i} = -2\sigma\sum_{j} (X_{i,j} - \sigma u_iv_j)v_j = 0\]</span> <span class="math display">\[\frac{\partial}{\partial v_j} = -2\sigma\sum_{i} (X_{i,j} - \sigma u_iv_j)u_i = 0\]</span> Que simplificando (y usando que la norma de <span class="math inline">\(u\)</span> y <span class="math inline">\(v\)</span> es igual a 1: <span class="math inline">\(\sum_iu_i^2 = \sum_j v_j^2=1\)</span>) quedan: <span class="math display">\[\sum_j X_{i,j}v_j =  \sigma u_i,\]</span> <span class="math display">\[\sum_i X_{i,j}u_i =\sigma  v_j,\]</span> O en forma matricial
 <span class="math display" id="eq:valor-propio-derecho">\[\begin{equation}
 Xv = \sigma u
 \tag{14.1}
@@ -840,23 +841,26 @@ A un par de vectores <span class="math inline">\((u,v)\)</span> que cumplen esta
 <div id="ejemplo-53" class="section level4 unnumbered unnumbered">
 <h4>Ejemplo</h4>
 <p>Verifiquemos en el ejemplo del gasto en rubros. Si comparamos <span class="math inline">\(Xv\)</span> con <span class="math inline">\(u\)</span>, vemos que son colineales (es decir, <span class="math inline">\(Xv=\sigma u\)</span>):</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">qplot</span>(<span class="kw">as.matrix</span>(X_arr) <span class="op">%*%</span><span class="st"> </span>v_años, u_rubros) <span class="op">+</span><span class="st"> </span><span class="kw">geom_smooth</span>(<span class="dt">method=</span><span class="st">&#39;lm&#39;</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># qplot(Xv, u), si Xv=sigma*u entonces Xv y u deben ser proporcionales</span>
+<span class="kw">qplot</span>(<span class="kw">as.matrix</span>(X_arr) <span class="op">%*%</span><span class="st"> </span>v_años, u_rubros) <span class="op">+</span><span class="st"> </span><span class="kw">geom_smooth</span>(<span class="dt">method=</span><span class="st">&#39;lm&#39;</span>)</code></pre></div>
 <p><img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-29-1.png" width="672" /></p>
-<p>Y además</p>
+<p>Y también</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># qplot(u^tX, v^t), si u^tXv=sigma*v entonces Xv y u deben ser proporcionales</span>
+<span class="kw">qplot</span>(<span class="kw">t</span>(<span class="kw">as.matrix</span>(X_arr)) <span class="op">%*%</span><span class="st"> </span>u_rubros, (v_años) ) <span class="op">+</span><span class="st"> </span><span class="kw">geom_smooth</span>(<span class="dt">method=</span><span class="st">&#39;lm&#39;</span>)</code></pre></div>
+<p><img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-30-1.png" width="672" /></p>
+<p>Ahora normalizamos <span class="math inline">\(u\)</span> y <span class="math inline">\(v\)</span> para encontrar <span class="math inline">\(\sigma\)</span>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">u_rubros_norm &lt;-<span class="st"> </span><span class="kw">normalizar</span>(u_rubros)
 v_años_norm &lt;-<span class="st"> </span><span class="kw">normalizar</span>(v_años)
-sigma_x_v &lt;-<span class="st"> </span>(<span class="kw">t</span>(u_rubros_norm) <span class="op">%*%</span><span class="st"> </span><span class="kw">as.matrix</span>(X_arr))
-sigma_x_v</code></pre></div>
-<pre><code>##          1940     1950     1960
-## [1,] 24.78838 66.96964 100.7439</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">v_años_norm</code></pre></div>
-<pre><code>## [1] 0.2007384 0.5423272 0.8158341</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sigma_x_v<span class="op">/</span>v_años_norm</code></pre></div>
-<pre><code>##         1940     1950     1960
-## [1,] 123.486 123.4857 123.4858</code></pre>
+(<span class="kw">as.matrix</span>(X_arr) <span class="op">%*%</span><span class="st"> </span>v_años_norm)<span class="op">/</span>u_rubros_norm</code></pre></div>
+<pre><code>##                         [,1]
+## Food and Tobacco    123.4858
+## Household Operation 123.4855
+## Medical and Health  123.4864
+## Personal Care       123.4891
+## Private Education   123.4799</code></pre>
 <p>Y efectivamente vemos que <span class="math inline">\((u,v)\)</span> (normalizados) forman satisfacen las ecuaciones mostradas arriba, con <span class="math inline">\(\sigma\)</span> igual a:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">first</span>(sigma_x_v<span class="op">/</span>v_años_norm)</code></pre></div>
-<pre><code>## [1] 123.486</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">first</span>((<span class="kw">as.matrix</span>(X_arr) <span class="op">%*%</span><span class="st"> </span>v_años_norm)<span class="op">/</span>u_rubros_norm)</code></pre></div>
+<pre><code>## [1] 123.4858</code></pre>
 <hr />
 <p>Si hay varias soluciones, ¿cuál <span class="math inline">\(\sigma\)</span> escogemos?</p>
 <p>Supongamos que encontramos dos vectores propios <span class="math inline">\((u,v)\)</span> (izquierdo y derecho) con valor propio asociado <span class="math inline">\(\sigma\)</span>. Podemos evaluar la calidad de la aproximación usando la igualdad <span class="math display">\[\||A||_F^2 = traza (AA^t)\]</span> que es fácil de demostrar, pues la componente <span class="math inline">\((i,i)\)</span> de <span class="math inline">\(AA^t\)</span> está dada por el producto punto del renglon <span class="math inline">\(i\)</span> de A por el renglón <span class="math inline">\(i\)</span> de <span class="math inline">\(A\)</span>, que es <span class="math inline">\(\sum_{i,j}a_{i,j}^2.\)</span></p>
@@ -864,7 +868,7 @@ sigma_x_v</code></pre></div>
 <p><span class="math display">\[||X-\sigma uv^t||_F^2 = \mathrm{Tr} ((X-\sigma uv^t)(X-\sigma uv^t)^t)\]</span></p>
 <p>que es igual a</p>
 <p><span class="math display">\[ \mathrm{Tr} (XX^t) - 2\sigma \mathrm{Tr} ( X(vu^t)) + \sigma^2\mathrm{Tr}(uv^tvu^t)\]</span></p>
-<p>Como <span class="math inline">\(u\)</span> y <span class="math inline">\(v\)</span> tienen norma 1, tenemos que <span class="math inline">\(v^tv=1\)</span>, y <span class="math inline">\(uu^t=I\)</span>, donde <span class="math inline">\(I\)</span> es la identidad. Adicionalmente, usando el hecho de que <span class="math inline">\(Xv=\sigma u\)</span> obtenemos</p>
+<p>Como <span class="math inline">\(u\)</span> y <span class="math inline">\(v\)</span> tienen norma 1, tenemos que <span class="math inline">\(v^tv=1\)</span>, y <span class="math inline">\(\textrm{Tr(uu^t)} = \sum_i u_i^2 = 1\)</span>. Adicionalmente, usando el hecho de que <span class="math inline">\(Xv=\sigma u\)</span> obtenemos</p>
 <p><span class="math display">\[ ||X-\sigma uv^t||_F^2 = \mathrm{Tr} (XX^t) - \sigma^2\]</span> que es una igualdad interesante: quiere decir que <strong>la mejor aproximación se encuentra encontrando el par de valores propios tal que el valor propio asociado <span class="math inline">\(\sigma\)</span> tiene el valor <span class="math inline">\(\sigma^2\)</span> más grande posible.</strong> La cantidad a la cantidad <span class="math inline">\(\mathrm{Tr} (XX^t)\)</span> está dada por <span class="math display">\[\mathrm{Tr} (XX^t) = ||X||_F^2 = \sum_{i,j} X_{i,j}^2,\]</span> que es una medida del “tamaño” de la matriz <span class="math inline">\(X\)</span>.</p>
 </div>
 </div>
@@ -873,8 +877,9 @@ sigma_x_v</code></pre></div>
 <p>Vamos a repetir el análisis para dimensión 2, repitiendo el proceso que hicimos arriba. Denotamos como <span class="math inline">\(u_1\)</span> y <span class="math inline">\(v_1\)</span> los vectores <span class="math inline">\(u\)</span> y <span class="math inline">\(v\)</span> que encontramos en el paso anterior. Ahora buscamos minimizar</p>
 <p><span class="math display">\[\min_{u_2,v_2} || X - \sigma_1 u_1 v_1^t - \sigma_2 u_2 v_2^{t} ||_F^2\]</span> Repetimos el argumento de arriba y derivando respecto a las componentes de <span class="math inline">\(u_2,v_2\)</span>, y usando el hecho de que <span class="math inline">\((u_1, v_1)\)</span> son vectores propios derecho e izquierdo asociados a <span class="math inline">\(\sigma_1\)</span>, obtenemos:</p>
 <ul>
-<li><span class="math inline">\(v_2\)</span> es ortogonal a <span class="math inline">\(v_1\)</span></li>
-<li><span class="math inline">\((u_2, v_2)\)</span> tienen que ser vectores propios derecho e izquierdo asociados a <span class="math inline">\(\sigma_2\geq 0\)</span></li>
+<li><span class="math inline">\(v_2\)</span> es ortogonal a <span class="math inline">\(v_1\)</span>.</li>
+<li><span class="math inline">\(u_2\)</span> es ortogonal a <span class="math inline">\(u_1\)</span>.</li>
+<li><span class="math inline">\((u_2, v_2)\)</span> tienen que ser vectores propios derecho e izquierdo asociados a <span class="math inline">\(\sigma_2\geq 0\)</span>.</li>
 </ul>
 <p>Usando el hecho de que <span class="math inline">\(v_1\)</span> y <span class="math inline">\(v_2\)</span> son ortogonales, podemos podemos demostrar igual que arriba que</p>
 <p><span class="math display">\[|| X - \sigma_1 u_1 v_1^t - \sigma_2 u_2 v_2^{t} ||_F^2 = \textrm{Tr} (XX^t) - (\sigma_1^2 + \sigma_2^2)\]</span> De modo que obtenemos la mejor aproximación escogiendo los dos valores de <span class="math inline">\(\sigma_1^2\)</span> y <span class="math inline">\(\sigma_2^2\)</span> más grandes para los que hay solución de <a href="reduccion-de-dimensionalidad.html#eq:valor-propio-derecho">(14.1)</a> y <a href="reduccion-de-dimensionalidad.html#eq:valor-propio-izquierdo">(14.2)</a> y</p>
@@ -887,21 +892,21 @@ sigma_x_v</code></pre></div>
 
 <div class="comentario">
 <p><strong>Aproximación de matrices mediante valores singulares</strong></p>
-<p>Sea <span class="math inline">\(X\)</span> una matriz <span class="math inline">\(n\times p\)</span>, y supongamos que <span class="math inline">\(p&lt;n\)</span>. Entonces, para cada <span class="math inline">\(k \leq p\)</span>, podemos aproximar a la matriz <span class="math inline">\(X\)</span> como una suma <span class="math inline">\(X_k\)</span> de <span class="math inline">\(k\)</span> matrices de rango 1: <span class="math display">\[X_k =  \sigma_1 u_1v_1^t + \sigma_2 u_2v_2^t + \ldots \sigma_k u_kv_k^t,\]</span> donde</p>
+<p>Sea <span class="math inline">\(X\)</span> una matriz <span class="math inline">\(n\times p\)</span>, y supongamos que <span class="math inline">\(p&lt;n\)</span>. Entonces, para cada <span class="math inline">\(k \leq p\)</span>, la mejor aproximación de rango <span class="math inline">\(k\)</span> a la matriz <span class="math inline">\(X\)</span> se puede escribir como una suma <span class="math inline">\(X_k\)</span> de <span class="math inline">\(k\)</span> matrices de rango 1: <span class="math display">\[X_k =  \sigma_1 u_1v_1^t + \sigma_2 u_2v_2^t + \ldots \sigma_k u_kv_k^t,\]</span> donde</p>
 <ul>
-<li><span class="math inline">\(\sigma_1^2 \geq \sigma_2^2 \geq \cdots \geq \sigma_k^2\geq 0\)</span></li>
 <li>La calidad de la aproximación está dada por <span class="math display">\[||X-X_k||^2_F = ||X||^2_F - 
   (\sigma_1^2+ \sigma_2^2 + \cdots + \sigma_k^2),\]</span> de forma que cada aproximación es sucesivamente mejor.</li>
+<li><span class="math inline">\(\sigma_1^2 \geq \sigma_2^2 \geq \cdots \geq \sigma_k^2\geq 0\)</span></li>
+<li>Los vectores <span class="math inline">\((u_i,v_i)\)</span> son un par de vectores propios izquierdo y derechos para <span class="math inline">\(X\)</span> con valor singular <span class="math inline">\(\sigma_i\)</span>.</li>
 <li><span class="math inline">\(v_1,\ldots, v_k\)</span> son vectores ortogonales de norma 1</li>
 <li><span class="math inline">\(u_1,\ldots, u_k\)</span> son vectores ortogonales de norma 1</li>
-<li>Los vectores <span class="math inline">\((u_i,v_i)\)</span> son un par de vectores propios izquierdo y derechos para <span class="math inline">\(X\)</span> con valor singular <span class="math inline">\(\sigma_i\)</span>.
-</div>
-</li>
 </ul>
+</div>
+
 <p><strong>Observaciones</strong>:</p>
 <ol style="list-style-type: decimal">
 <li><p>Normalmente no optimizamos como hicimos en el ejemplo de la matriz de gastos para encontrar las aproximación de rango bajo, sino que se usan algoritmos para encontrar vectores propios de <span class="math inline">\(X^tX\)</span> (que son las <span class="math inline">\(v\)</span>’s), o más generalmente algoritmos basados en álgebra lineal que intentan encontrar directamente los pares de vectores (u_i, v_i), y otros algoritmos numéricos (por ejemplo, basados en iteraciones).</p></li>
-<li><p>Un resultado interesante (que faltaría por demostrar) es que si tomamos la aproximación de rango <span class="math inline">\(p\)</span> (cuando <span class="math inline">\(p&lt;n\)</span>), obtenemos que <span class="math display">\[X= \sigma_1 u_1v_1^t + \sigma_2 u_2v_2^t + \ldots \sigma_p u_pv_p^t\]</span> es decir, la aproximación es exacta. Esto es un fraseo del <strong>teorema de descomposición en valores singulares</strong>, que normalmente se expresa de otra forma (ver más adelante).</p></li>
+<li><p>Un resultado interesante (que faltaría por demostrar) es que si tomamos la aproximación de rango <span class="math inline">\(p\)</span> (cuando <span class="math inline">\(p\leq n\)</span>), obtenemos que <span class="math display">\[X= \sigma_1 u_1v_1^t + \sigma_2 u_2v_2^t + \ldots \sigma_p u_pv_p^t\]</span> es decir, la aproximación es exacta. Esto es un fraseo del <strong>teorema de descomposición en valores singulares</strong>, que normalmente se expresa de otra forma (ver más adelante).</p></li>
 </ol>
 </div>
 <div id="ejemplo-54" class="section level3 unnumbered">
@@ -1014,7 +1019,7 @@ datos &lt;-<span class="st"> </span><span class="kw">data_frame</span>(x_<span c
 <span class="kw">ggplot</span>(datos, <span class="kw">aes</span>(<span class="dt">x=</span>x_<span class="dv">1</span>, <span class="dt">y=</span>x_<span class="dv">2</span>)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> <span class="dv">0</span>, <span class="dt">colour=</span><span class="st">&#39;red&#39;</span>) <span class="op">+</span>
 <span class="st"> </span><span class="kw">geom_hline</span>(<span class="dt">yintercept =</span> <span class="dv">0</span>, <span class="dt">colour=</span><span class="st">&#39;red&#39;</span>)</code></pre></div>
-<p><img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-43-1.png" width="672" /></p>
+<p><img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-44-1.png" width="672" /></p>
 <p>Hacemos descomposición en valores singulares y graficamos</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">svd_x &lt;-<span class="st"> </span><span class="kw">svd</span>(datos)
 v &lt;-<span class="st"> </span>svd_x<span class="op">$</span>v <span class="op">%&gt;%</span><span class="st"> </span>t <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">as.data.frame</span>() 
@@ -1033,7 +1038,7 @@ v</code></pre></div>
 <span class="st">  </span><span class="kw">geom_segment</span>(<span class="dt">data =</span> v, <span class="kw">aes</span>(<span class="dt">xend=</span> <span class="op">-</span><span class="dv">5</span><span class="op">*</span>x_<span class="dv">1</span>, <span class="dt">yend=</span><span class="op">-</span><span class="dv">5</span><span class="op">*</span>x_<span class="dv">2</span>, <span class="dt">x=</span><span class="dv">0</span>, <span class="dt">y=</span><span class="dv">0</span>), <span class="dt">col=</span><span class="st">&#39;red&#39;</span>, <span class="dt">size=</span><span class="fl">1.1</span>,
                <span class="dt">arrow =</span> <span class="kw">arrow</span>(<span class="dt">length =</span> <span class="kw">unit</span>(<span class="fl">0.3</span>,<span class="st">&quot;cm&quot;</span>)))  <span class="op">+</span>
 <span class="st">  </span><span class="kw">coord_equal</span>()</code></pre></div>
-<p><img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-45-1.png" width="672" /></p>
+<p><img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-46-1.png" width="672" /></p>
 <ul>
 <li><p>El primer vector es el “que pasa más cercano a los puntos”, en el sentido de que la distancia entre los datos proyectados al vector y los datos es lo más chica posible (mejor aproximación). La proyección de los datos sobre <span class="math inline">\(v\)</span> es igual a <span class="math inline">\(Xv_1=\sigma_1 u_1\)</span>, es decir, está dada por <span class="math inline">\(\sigma u_1\)</span></p></li>
 <li><p>Las proyecciones de los datos sobre el segundo vector <span class="math inline">\(v_2\)</span> están dadas igualmente por <span class="math inline">\(\sigma_2 u_2\)</span>. Sumamos esta proyección a la de la primera dimensión para obtener una mejor aproximación a los datos (en este caso, exacta).</p></li>
@@ -1061,7 +1066,7 @@ proy_<span class="dv">2</span> <span class="op">+</span><span class="st"> </span
                 <span class="dt">col=</span><span class="st">&#39;red&#39;</span>, <span class="dt">size=</span><span class="fl">1.1</span>,
                 <span class="dt">arrow =</span> <span class="kw">arrow</span>(<span class="dt">length =</span> <span class="kw">unit</span>(<span class="fl">0.2</span>,<span class="st">&quot;cm&quot;</span>)))  <span class="op">+</span>
 <span class="st">  </span><span class="kw">coord_equal</span>()</code></pre></div>
-<p><img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-47-1.png" width="672" /></p>
+<p><img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-48-1.png" width="672" /></p>
 
 <div class="comentario">
 <p>Las aproximaciones de la descomposión en valores singulares mediante matrices de rango 1 puede entenderse como la búsqueda sucesiva de subespacios de dimensión baja, donde al proyectar los datos perdemos poca información.</p>
@@ -1133,41 +1138,41 @@ U_usuarios &lt;-<span class="st"> </span><span class="kw">readRDS</span>(<span c
 <p>Veamos primero las componentes 2, 3 y 4.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">qplot</span>(svd_parcial<span class="op">$</span>u[,<span class="dv">2</span>])</code></pre></div>
 <pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
-<p><img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-55-1.png" width="672" /></p>
+<p><img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-56-1.png" width="672" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">qplot</span>(svd_parcial<span class="op">$</span>v[,<span class="dv">2</span>])<span class="co">#</span></code></pre></div>
 <pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
-<p><img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-55-2.png" width="672" /></p>
+<p><img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-56-2.png" width="672" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pel_graf &lt;-<span class="st"> </span>V_peliculas <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">dist_0 =</span> <span class="kw">sqrt</span>(v_<span class="dv">2</span><span class="op">^</span><span class="dv">2</span> <span class="op">+</span><span class="st"> </span>v_<span class="dv">3</span><span class="op">^</span><span class="dv">2</span>)) 
 muestra &lt;-<span class="st"> </span>pel_graf <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">etiqueta =</span> <span class="kw">ifelse</span>(dist_<span class="dv">0</span> <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.08</span>, name, <span class="st">&#39;&#39;</span>))
 <span class="kw">ggplot</span>(muestra, <span class="kw">aes</span>(<span class="dt">x=</span>v_<span class="dv">2</span>, <span class="dt">y=</span>v_<span class="dv">3</span>, <span class="dt">label=</span>etiqueta)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>(<span class="dt">alpha=</span><span class="fl">0.2</span>) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">geom_text</span>(<span class="dt">size=</span><span class="fl">2.5</span>) <span class="op">+</span><span class="st"> </span><span class="kw">xlab</span>(<span class="st">&#39;Mainstream vs Independiente&#39;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">ylab</span>(<span class="st">&#39;Violenta/Acción vs Drama&#39;</span>)</code></pre></div>
-<p><img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-56-1.png" width="672" /></p>
+<p><img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-57-1.png" width="672" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pel_graf &lt;-<span class="st"> </span>V_peliculas <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">dist_0 =</span> <span class="kw">sqrt</span>(v_<span class="dv">3</span><span class="op">^</span><span class="dv">2</span> <span class="op">+</span><span class="st"> </span>v_<span class="dv">4</span><span class="op">^</span><span class="dv">2</span>)) 
 muestra &lt;-<span class="st"> </span>pel_graf <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">etiqueta =</span> <span class="kw">ifelse</span>(dist_<span class="dv">0</span> <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.08</span>, name, <span class="st">&#39;&#39;</span>))
 <span class="kw">ggplot</span>(muestra, <span class="kw">aes</span>(<span class="dt">x=</span>v_<span class="dv">3</span>, <span class="dt">y=</span>v_<span class="dv">4</span>, <span class="dt">label=</span>etiqueta)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>(<span class="dt">alpha=</span><span class="fl">0.2</span>) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">geom_text</span>(<span class="dt">size=</span><span class="fl">2.5</span>)  <span class="op">+</span><span class="st"> </span><span class="kw">xlab</span>(<span class="st">&#39;Violenta/Acción vs Drama&#39;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">ylab</span>(<span class="st">&#39;Fantasía/Ciencia Ficción&#39;)</span></code></pre></div>
-<p><img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-57-1.png" width="672" /></p>
+<p><img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-58-1.png" width="672" /></p>
 <p>Dejamos la primer componente porque es más bien consecuencia de cómo construimos la matriz que buscamos descomponer:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">qplot</span>(svd_parcial<span class="op">$</span>u[,<span class="dv">1</span>])</code></pre></div>
 <pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
-<p><img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-58-1.png" width="672" /></p>
+<p><img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-59-1.png" width="672" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">qplot</span>(svd_parcial<span class="op">$</span>v[,<span class="dv">1</span>])</code></pre></div>
 <pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
-<p><img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-58-2.png" width="672" /> Esta componente está asociada con el número de evaluaciones que tiene cada usuario y que tiene cada persona</p>
+<p><img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-59-2.png" width="672" /> Esta componente está asociada con el número de evaluaciones que tiene cada usuario y que tiene cada persona</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="cf">if</span>(<span class="ot">FALSE</span>){
   evals_num_u &lt;-<span class="st"> </span>evals <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(usuario_id) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">summarise</span>(<span class="dt">num_evals =</span> <span class="kw">n</span>())
   <span class="kw">saveRDS</span>(evals_num_u, <span class="st">&#39;cache_obj/evals_num_u.rds&#39;</span>)
 }</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">evals_num_u &lt;-<span class="st"> </span><span class="kw">readRDS</span>(<span class="st">&#39;cache_obj/evals_num_u.rds&#39;</span>)
 <span class="kw">qplot</span>(evals_num_u<span class="op">$</span>num_evals, svd_parcial<span class="op">$</span>u[,<span class="dv">1</span>])</code></pre></div>
-<p><img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-60-1.png" width="672" /></p>
+<p><img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-61-1.png" width="672" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="cf">if</span>(<span class="ot">FALSE</span>){
   evals_num_p &lt;-<span class="st"> </span>evals <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(pelicula_id) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">summarise</span>(<span class="dt">num_evals =</span> <span class="kw">n</span>(), <span class="dt">calif_prom=</span><span class="kw">mean</span>(calif))
   <span class="kw">saveRDS</span>(evals_num_p, <span class="st">&#39;cache_obj/evals_num_p.rds&#39;</span>)
 }</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">evals_num_p &lt;-<span class="st"> </span><span class="kw">readRDS</span>(<span class="st">&#39;cache_obj/evals_num_p.rds&#39;</span>)
 <span class="kw">qplot</span>(evals_num_p<span class="op">$</span>num_evals, svd_parcial<span class="op">$</span>v[,<span class="dv">1</span>])</code></pre></div>
-<p><img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-62-1.png" width="672" /></p>
+<p><img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-63-1.png" width="672" /></p>
 <p>Esta dimensión aparece pues la primera aproximación de rango 1 intenta replicar los valores “bajos” de pocas evaluaciones tanto en usuarios como en películas. En realidad es una distorsión producida por cómo hemos tratado los datos (“imputando” cero cuando no existe una evaluación).</p>
 <div id="calidad-de-representacion-de-svd." class="section level3">
 <h3><span class="header-section-number">14.6.1</span> Calidad de representación de SVD.</h3>
@@ -1178,7 +1183,7 @@ muestra &lt;-<span class="st"> </span>pel_graf <span class="op">%&gt;%</span><sp
 <p>En el ejemplo de rubros de gasto, podríamos mostrar las diferencias en billones (us) de dólares, donde vemos que la aproximación es bastante buena</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">qplot</span>(<span class="kw">as.numeric</span>(X_arr<span class="op">-</span>X_arr_<span class="dv">2</span>))</code></pre></div>
 <pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
-<p><img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-63-1.png" width="672" /></p>
+<p><img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-64-1.png" width="672" /></p>
 <p>Que podríamos resumir, por ejemplo, con la media de errores absolutos:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">mean</span>(<span class="kw">abs</span>(<span class="kw">as.numeric</span>(X_arr<span class="op">-</span>X_arr_<span class="dv">2</span>)))</code></pre></div>
 <pre><code>## [1] 0.06683576</code></pre>
@@ -1233,7 +1238,7 @@ norma_X &lt;-<span class="st"> </span><span class="dv">738958222</span>
 <span class="kw">ggplot</span>(datos_c, <span class="kw">aes</span>(<span class="dt">x=</span>x_<span class="dv">1</span>, <span class="dt">y=</span>x_<span class="dv">2</span>)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> <span class="dv">0</span>, <span class="dt">colour=</span><span class="st">&#39;red&#39;</span>) <span class="op">+</span>
 <span class="st"> </span><span class="kw">geom_hline</span>(<span class="dt">yintercept =</span> <span class="dv">0</span>, <span class="dt">colour=</span><span class="st">&#39;red&#39;</span>)</code></pre></div>
-<p><img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-70-1.png" width="672" /></p>
+<p><img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-71-1.png" width="672" /></p>
 <p>Y ahora calculamos la descomposición en valores singulares</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">svd_x &lt;-<span class="st"> </span><span class="kw">svd</span>(datos_c)
 v &lt;-<span class="st"> </span>svd_x<span class="op">$</span>v <span class="op">%&gt;%</span><span class="st"> </span>t <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">as.data.frame</span>() 
@@ -1253,7 +1258,7 @@ v</code></pre></div>
 <span class="st">  </span><span class="kw">geom_segment</span>(<span class="dt">data =</span> v, <span class="kw">aes</span>(<span class="dt">xend=</span> <span class="dv">5</span><span class="op">*</span>x_<span class="dv">1</span>, <span class="dt">yend=</span><span class="dv">5</span><span class="op">*</span>x_<span class="dv">2</span>, <span class="dt">x=</span><span class="dv">0</span>, <span class="dt">y=</span><span class="dv">0</span>), <span class="dt">col=</span><span class="st">&#39;red&#39;</span>, <span class="dt">size=</span><span class="fl">1.1</span>,
                <span class="dt">arrow =</span> <span class="kw">arrow</span>(<span class="dt">length =</span> <span class="kw">unit</span>(<span class="fl">0.3</span>,<span class="st">&quot;cm&quot;</span>)))  <span class="op">+</span>
 <span class="st">  </span><span class="kw">coord_equal</span>()</code></pre></div>
-<p><img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-72-1.png" width="672" /></p>
+<p><img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-73-1.png" width="672" /></p>
 <p>Las componentes de las proyecciones de los datos sobre las direcciones principales dan las <strong>componentes principales</strong> (nótese que multiplicamos por los valores singulares):</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(svd_x<span class="op">$</span>u <span class="op">%*%</span><span class="st"> </span><span class="kw">diag</span>(svd_x<span class="op">$</span>d))</code></pre></div>
 <pre><code>##            [,1]       [,2]
@@ -1268,7 +1273,7 @@ v</code></pre></div>
 <span class="kw">ggplot</span>(comps, <span class="kw">aes</span>(<span class="dt">x=</span>X1, <span class="dt">y=</span>X2)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>()<span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> <span class="dv">0</span>, <span class="dt">colour=</span><span class="st">&#39;red&#39;</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">yintercept =</span> <span class="dv">0</span>, <span class="dt">colour=</span><span class="st">&#39;red&#39;</span>)</code></pre></div>
-<p><img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-74-1.png" width="672" /></p>
+<p><img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-75-1.png" width="672" /></p>
 <p>Este resultado lo podemos obtener directamente usando la función <em>princomp</em></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">comp_principales &lt;-<span class="st"> </span><span class="kw">princomp</span>(datos <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="op">-</span>selec))
 scores &lt;-<span class="st"> </span>comp_principales<span class="op">$</span>scores
@@ -1282,9 +1287,9 @@ scores &lt;-<span class="st"> </span>comp_principales<span class="op">$</span>sc
 ## [6,] -1.2267878 -0.3470759</code></pre>
 <p>Y verificamos que los resultados son los mismos:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">qplot</span>(scores[,<span class="dv">1</span>], comps[,<span class="dv">1</span>])</code></pre></div>
-<p><img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-76-1.png" width="384" /></p>
+<p><img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-77-1.png" width="384" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">qplot</span>(scores[,<span class="dv">2</span>], <span class="op">-</span>comps[,<span class="dv">2</span>])</code></pre></div>
-<p><img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-76-2.png" width="384" /></p>
+<p><img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-77-2.png" width="384" /></p>
 </div>
 <div id="ejemplo-mas-apropiado-hacer-svd-sin-centrar" class="section level3 unnumbered">
 <h3>Ejemplo: más apropiado hacer svd sin centrar</h3>

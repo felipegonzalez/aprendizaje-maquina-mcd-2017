@@ -7,7 +7,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Aprendizaje de máquina</title>
   <meta name="description" content="Notas y material para el curso de aprendizaje de máquina 2017 (ITAM)">
-  <meta name="generator" content="bookdown 0.5.8 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown 0.5.9 and GitBook 2.6.7">
 
   <meta property="og:title" content="Aprendizaje de máquina" />
   <meta property="og:type" content="book" />
@@ -443,7 +443,7 @@ ajustar_evaluar &lt;-<span class="st"> </span><span class="cf">function</span>(d
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">errores &lt;-<span class="st"> </span><span class="kw">simular_datos</span>(<span class="dv">500</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">separar</span>(<span class="dt">prop=</span> <span class="kw">c</span>(<span class="fl">0.4</span>,<span class="fl">0.4</span>,<span class="fl">0.2</span>)) <span class="op">%&gt;%</span><span class="st"> </span>ajustar_evaluar
 errores</code></pre></div>
 <pre><code>## error_valida error_prueba 
-##     1.642366     4.300068</code></pre>
+##     1.539002     5.161448</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">reps_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">map</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">50</span>, simular_datos, <span class="dt">n =</span> <span class="dv">500</span>) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">        </span><span class="kw">map</span>(separar, <span class="dt">prop=</span> <span class="kw">c</span>(<span class="fl">0.6</span>,<span class="fl">0.2</span>,<span class="fl">0.2</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">        </span><span class="kw">map</span>(ajustar_evaluar) <span class="op">%&gt;%</span>
@@ -513,7 +513,7 @@ gr_reps_<span class="dv">2</span> &lt;-<span class="st"> </span>reps_<span class
 }
 <span class="kw">seleccion_ajuste</span>()</code></pre></div>
 <pre><code>## error_valida error_prueba 
-##        0.060        0.505</code></pre>
+##        0.140        0.517</code></pre>
 <p>El resultado es catastrófico otra vez:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">errores_selec &lt;-<span class="st"> </span><span class="kw">map</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">30</span>, seleccion_ajuste) <span class="op">%&gt;%</span><span class="st"> </span>transpose <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">map</span>(unlist) <span class="op">%&gt;%</span><span class="st"> </span>as.data.frame
 <span class="kw">ggplot</span>(errores_selec, <span class="kw">aes</span>(<span class="dt">x=</span>error_prueba, <span class="dt">y=</span>error_valida)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span><span class="kw">geom_abline</span>(<span class="dt">colour=</span><span class="st">&#39;red&#39;</span>) <span class="op">+</span>

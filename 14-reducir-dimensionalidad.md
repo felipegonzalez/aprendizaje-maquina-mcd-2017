@@ -358,9 +358,9 @@ normalizando). Por el momento, corremos la optimización para encontrar una solu
 
 ```r
 error <- function(pars){
-  v_tipos <- pars[1:3]
-  u_estados <- pars[4:8]
-  mean((X_arr - tcrossprod(u_estados, v_tipos))^2) #tcrossprod da x %*% t(y)
+  v <- pars[1:3]
+  u <- pars[4:8]
+  mean((X_arr - tcrossprod(u, v))^2) #tcrossprod da x %*% t(y)
 }
 optim_decomp <- optim(rep(0.1, 5 + 3), error, method ='BFGS')
 ```
@@ -725,7 +725,8 @@ a los datos.</div>\EndKnitrBlock{comentario}
 matrices de $k$ matrices rango 1? Lograr esto sería muy bueno, pues otra vez
 simplificamos el análisis a solo un número de dimensiones $k$ (muy) menor a $p$,
 el número de variables, sin perder mucha información (con buen grado de aproximación).
-- Adicionalmente, las dimensiones encontradas pueden mostrar  patrones interesantes que iluminan los datos,
+
+Adicionalmente, las dimensiones encontradas pueden mostrar  patrones interesantes que iluminan los datos,
 esqpecialmente en términos de aquellas dimensiones que aportan mucho a la aproximación.</div>\EndKnitrBlock{comentario}
 
 
@@ -762,8 +763,8 @@ $$\sum_{i,j} (X_{i,j} - \sigma u_iv_j)^2$$
 Derivando con respecto a $u_i$ y $v_j$, e igualando a cero, obtenemos (la sigma
 podemos quitarla en la derivada, pues multiplica todo el lado derecho):
 
-$$\frac{\partial}{\partial u_i} = -2\sum_{j} (X_{i,j} - \sigma u_iv_j)v_j = 0$$
-$$\frac{\partial}{\partial v_j} = -2\sum_{i} (X_{i,j} - \sigma u_iv_j)u_i = 0$$
+$$\frac{\partial}{\partial u_i} = -2\sigma\sum_{j} (X_{i,j} - \sigma u_iv_j)v_j = 0$$
+$$\frac{\partial}{\partial v_j} = -2\sigma\sum_{i} (X_{i,j} - \sigma u_iv_j)u_i = 0$$
 Que simplificando (y usando que la norma de $u$ y $v$ es igual a 1: $\sum_iu_i^2 = \sum_j v_j^2=1$) quedan:
 $$\sum_j X_{i,j}v_j =  \sigma u_i,$$
 $$\sum_i X_{i,j}u_i =\sigma  v_j,$$
@@ -818,51 +819,48 @@ Verifiquemos en el ejemplo del gasto en rubros. Si comparamos $Xv$ con $u$, vemo
 que son colineales (es decir, $Xv=\sigma u$):
 
 ```r
+# qplot(Xv, u), si Xv=sigma*u entonces Xv y u deben ser proporcionales
 qplot(as.matrix(X_arr) %*% v_años, u_rubros) + geom_smooth(method='lm')
 ```
 
 <img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-29-1.png" width="672" />
 
-Y además
+Y también
+
+```r
+# qplot(u^tX, v^t), si u^tXv=sigma*v entonces Xv y u deben ser proporcionales
+qplot(t(as.matrix(X_arr)) %*% u_rubros, (v_años) ) + geom_smooth(method='lm')
+```
+
+<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-30-1.png" width="672" />
+
+
+Ahora normalizamos $u$ y $v$ para encontrar $\sigma$:
 
 ```r
 u_rubros_norm <- normalizar(u_rubros)
 v_años_norm <- normalizar(v_años)
-sigma_x_v <- (t(u_rubros_norm) %*% as.matrix(X_arr))
-sigma_x_v
+(as.matrix(X_arr) %*% v_años_norm)/u_rubros_norm
 ```
 
 ```
-##          1940     1950     1960
-## [1,] 24.78838 66.96964 100.7439
-```
-
-```r
-v_años_norm
-```
-
-```
-## [1] 0.2007384 0.5423272 0.8158341
-```
-
-```r
-sigma_x_v/v_años_norm
-```
-
-```
-##         1940     1950     1960
-## [1,] 123.486 123.4857 123.4858
+##                         [,1]
+## Food and Tobacco    123.4858
+## Household Operation 123.4855
+## Medical and Health  123.4864
+## Personal Care       123.4891
+## Private Education   123.4799
 ```
 
 Y efectivamente vemos que $(u,v)$ (normalizados) forman satisfacen las ecuaciones mostradas arriba,
 con $\sigma$ igual a:
 
 ```r
-first(sigma_x_v/v_años_norm)
+first((as.matrix(X_arr) %*% v_años_norm)/u_rubros_norm)
 ```
 
 ```
-## [1] 123.486
+## [1] 123.4858
 ```
 
 ---
@@ -885,7 +883,8 @@ que es igual a
 
 $$ \mathrm{Tr} (XX^t) - 2\sigma \mathrm{Tr} ( X(vu^t)) + \sigma^2\mathrm{Tr}(uv^tvu^t)$$ 
 
-Como $u$ y $v$ tienen norma 1, tenemos que $v^tv=1$, y $uu^t=I$, donde $I$ es la identidad.
+Como $u$ y $v$ tienen norma 1, tenemos que $v^tv=1$, y 
+$\textrm{Tr(uu^t)} = \sum_i u_i^2 = 1$.
 Adicionalmente, usando el hecho de que $Xv=\sigma u$ obtenemos
 
 $$ ||X-\sigma uv^t||_F^2 = \mathrm{Tr} (XX^t) - \sigma^2$$
@@ -895,7 +894,6 @@ asociado $\sigma$ tiene el valor $\sigma^2$ más grande posible.** La cantidad
 a la cantidad $\mathrm{Tr} (XX^t)$ está dada por
 $$\mathrm{Tr} (XX^t) = ||X||_F^2 = \sum_{i,j} X_{i,j}^2,$$
 que es una medida del "tamaño" de la matriz $X$.
-
 
 
 
@@ -910,8 +908,9 @@ Repetimos el argumento de arriba y derivando respecto a las componentes de $u_2,
 y usando el hecho de que $(u_1, v_1)$ son vectores propios derecho e izquierdo asociados
 a $\sigma_1$, obtenemos:
 
-- $v_2$ es ortogonal a $v_1$
-- $(u_2, v_2)$ tienen que ser vectores propios derecho e izquierdo asociados a $\sigma_2\geq 0$
+- $v_2$ es ortogonal a $v_1$.
+- $u_2$ es ortogonal a $u_1$.
+- $(u_2, v_2)$ tienen que ser vectores propios derecho e izquierdo asociados a $\sigma_2\geq 0$.
 
 
 Usando el hecho de que $v_1$ y $v_2$ son ortogonales, podemos
@@ -938,19 +937,20 @@ Ahora podemos enunciar nuestro teorema:
 \BeginKnitrBlock{comentario}<div class="comentario">**Aproximación de matrices mediante valores singulares**
   
 Sea $X$ una matriz $n\times p$, y supongamos que $p<n$. Entonces, para cada $k \leq p$, 
-  podemos aproximar a la matriz $X$ como una suma $X_k$ de $k$ matrices de rango 1:
+  la mejor aproximación de rango $k$ a la  matriz $X$ se puede escribir como
+una suma $X_k$ de $k$ matrices de rango 1:
 $$X_k =  \sigma_1 u_1v_1^t + \sigma_2 u_2v_2^t + \ldots \sigma_k u_kv_k^t,$$
 donde 
 
-- $\sigma_1^2 \geq \sigma_2^2 \geq \cdots  \geq \sigma_k^2\geq 0$
 - La calidad de la aproximación está dada por 
 $$||X-X_k||^2_F = ||X||^2_F - 
   (\sigma_1^2+ \sigma_2^2 + \cdots + \sigma_k^2),$$ de forma que cada aproximación 
 es sucesivamente mejor.
+- $\sigma_1^2 \geq \sigma_2^2 \geq \cdots  \geq \sigma_k^2\geq 0$
+- Los vectores $(u_i,v_i)$ son un par de vectores propios izquierdo y derechos para $X$ con valor singular $\sigma_i$.
 - $v_1,\ldots, v_k$ son vectores ortogonales de norma 1
 - $u_1,\ldots, u_k$ son vectores ortogonales de norma 1
-- Los vectores $(u_i,v_i)$ son un par de vectores propios izquierdo y derechos para $X$ con
-  valor singular $\sigma_i$.</div>\EndKnitrBlock{comentario}
+</div>\EndKnitrBlock{comentario}
 
 **Observaciones**:
 
@@ -963,7 +963,7 @@ numéricos (por ejemplo, basados en iteraciones).
 
 
 2. Un resultado interesante (que faltaría por demostrar) es que si tomamos la aproximación de 
-rango $p$ (cuando $p<n$), obtenemos que
+rango $p$ (cuando $p\leq n$), obtenemos que
 $$X= \sigma_1 u_1v_1^t + \sigma_2 u_2v_2^t + \ldots \sigma_p u_pv_p^t$$
 es decir, la aproximación es exacta. Esto es un fraseo del 
 **teorema de descomposición en valores singulares**, que normalmente se expresa
@@ -1178,7 +1178,7 @@ ggplot(datos, aes(x=x_1, y=x_2)) + geom_point() +
  geom_hline(yintercept = 0, colour='red')
 ```
 
-<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-43-1.png" width="672" />
+<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-44-1.png" width="672" />
 
 Hacemos descomposición en valores singulares y graficamos 
 
@@ -1210,7 +1210,7 @@ ggplot(datos) + geom_point(aes(x=x_1, y=x_2)) +
   coord_equal()
 ```
 
-<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-45-1.png" width="672" />
+<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-46-1.png" width="672" />
 
 
 - El primer vector es el "que pasa más cercano a los puntos", en el sentido de que la distancia
@@ -1264,7 +1264,7 @@ ggplot(datos) + geom_point(aes(x=x_1, y=x_2, colour=selec, size=selec)) +
   coord_equal()
 ```
 
-<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-47-1.png" width="672" />
+<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-48-1.png" width="672" />
 
 \BeginKnitrBlock{comentario}<div class="comentario">Las aproximaciones de la descomposión en valores singulares mediante matrices de rango 1 puede
 entenderse como la búsqueda sucesiva de subespacios de dimensión baja, donde al proyectar los datos perdemos
@@ -1391,7 +1391,7 @@ qplot(svd_parcial$u[,2])
 ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
 ```
 
-<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-55-1.png" width="672" />
+<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-56-1.png" width="672" />
 
 ```r
 qplot(svd_parcial$v[,2])#
@@ -1401,7 +1401,7 @@ qplot(svd_parcial$v[,2])#
 ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
 ```
 
-<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-55-2.png" width="672" />
+<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-56-2.png" width="672" />
 
 
 
@@ -1412,7 +1412,7 @@ ggplot(muestra, aes(x=v_2, y=v_3, label=etiqueta)) + geom_point(alpha=0.2) +
   geom_text(size=2.5) + xlab('Mainstream vs Independiente') + ylab('Violenta/Acción vs Drama')
 ```
 
-<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-56-1.png" width="672" />
+<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-57-1.png" width="672" />
 
 
 ```r
@@ -1422,7 +1422,7 @@ ggplot(muestra, aes(x=v_3, y=v_4, label=etiqueta)) + geom_point(alpha=0.2) +
   geom_text(size=2.5)  + xlab('Violenta/Acción vs Drama') + ylab('Fantasía/Ciencia Ficción')
 ```
 
-<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-57-1.png" width="672" />
+<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-58-1.png" width="672" />
 
 
 
@@ -1438,7 +1438,7 @@ qplot(svd_parcial$u[,1])
 ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
 ```
 
-<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-58-1.png" width="672" />
+<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-59-1.png" width="672" />
 
 ```r
 qplot(svd_parcial$v[,1])
@@ -1448,7 +1448,7 @@ qplot(svd_parcial$v[,1])
 ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
 ```
 
-<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-58-2.png" width="672" />
+<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-59-2.png" width="672" />
 Esta componente está asociada con el número de evaluaciones que tiene cada
 usuario y que tiene cada persona
 
@@ -1466,7 +1466,7 @@ evals_num_u <- readRDS('cache_obj/evals_num_u.rds')
 qplot(evals_num_u$num_evals, svd_parcial$u[,1])
 ```
 
-<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-60-1.png" width="672" />
+<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-61-1.png" width="672" />
 
 
 ```r
@@ -1482,7 +1482,7 @@ evals_num_p <- readRDS('cache_obj/evals_num_p.rds')
 qplot(evals_num_p$num_evals, svd_parcial$v[,1])
 ```
 
-<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-62-1.png" width="672" />
+<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-63-1.png" width="672" />
 
 Esta dimensión aparece pues la primera aproximación de rango 1 intenta replicar
 los valores "bajos" de pocas evaluaciones tanto en usuarios como en películas.
@@ -1508,7 +1508,7 @@ qplot(as.numeric(X_arr-X_arr_2))
 ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
 ```
 
-<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-63-1.png" width="672" />
+<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-64-1.png" width="672" />
 
 Que podríamos resumir, por ejemplo, con la media de errores absolutos:
 
@@ -1647,7 +1647,7 @@ ggplot(datos_c, aes(x=x_1, y=x_2)) + geom_point() +
  geom_hline(yintercept = 0, colour='red')
 ```
 
-<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-70-1.png" width="672" />
+<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-71-1.png" width="672" />
 
 Y ahora calculamos la descomposición en valores singulares
 
@@ -1683,7 +1683,7 @@ ggplot(datos_c) + geom_point(aes(x=x_1, y=x_2)) +
   coord_equal()
 ```
 
-<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-72-1.png" width="672" />
+<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-73-1.png" width="672" />
 
 Las componentes de las proyecciones de los datos sobre las direcciones principales dan las
 **componentes principales** (nótese que multiplicamos por los valores singulares):
@@ -1713,7 +1713,7 @@ ggplot(comps, aes(x=X1, y=X2)) + geom_point()+
   geom_hline(yintercept = 0, colour='red')
 ```
 
-<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-74-1.png" width="672" />
+<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-75-1.png" width="672" />
 
 Este resultado lo podemos obtener directamente usando la función *princomp*
 
@@ -1740,13 +1740,13 @@ Y verificamos que los resultados son los mismos:
 qplot(scores[,1], comps[,1])
 ```
 
-<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-76-1.png" width="384" />
+<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-77-1.png" width="384" />
 
 ```r
 qplot(scores[,2], -comps[,2])
 ```
 
-<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-76-2.png" width="384" />
+<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-77-2.png" width="384" />
 
 ### Ejemplo: más apropiado hacer svd sin centrar {-}
 
