@@ -874,9 +874,15 @@ Vamos a intentar encontrar dimensiones latentes para los datos del concurso
 de predicción de Netflix (una de las componentes de las soluciones ganadoras
 fue descomposición en valores singulares).
 
+```{r, eval=FALSE}
+#no correr en notas - son unas 50 millones de evaluaciones
+if(FALSE){
+  evals <- read_csv('datos/netflix/muestra_calificaciones_1.csv')
+  evals
+}
+```
+
 ```{r}
-evals <- read_csv('datos/netflix/muestra_calificaciones_1.csv')
-evals
 peliculas_nombres <- read_csv('datos/netflix/peliculas_1.csv')
 peliculas_nombres
 ```
@@ -886,17 +892,28 @@ cómo tratar estos datos: si los rellenamos con 0, la implicación es que un usu
 tiene bajo interés en una película que no ha visto. Hay otras opciones (y quizá un
 método que trate apropiadamente los datos faltantes es mejor).
 
-```{r, message=FALSE, warning=FALSE}
+```{r, message=FALSE, warning=FALSE, eval=FALSE}
+#no correr en notas
 library(Matrix)
 library(methods)
 library(irlba)
-evals <- evals %>% group_by(usuario_id) %>% mutate(calif_centrada = calif - mean(calif))
-evals_mat <- sparseMatrix(i = evals$usuario_id, j=evals$pelicula_id, x = evals$calif)
-svd_parcial <- irlba(evals_mat, 4)
-svd_parcial$d
+if(FALSE){
+  evals <- evals %>% group_by(usuario_id) %>% mutate(calif_centrada = calif - mean(calif))
+  #Usamos matriz rala - de otra manera la matriz es demasiado grande
+  evals_mat <- sparseMatrix(i = evals$usuario_id, j=evals$pelicula_id, x = evals$calif)
+  svd_parcial <- irlba(evals_mat, 4)
+  saveRDS(svd_parcial, file ='cache_obj/svd_netflix.rds')
+}
 ```
 
 ```{r}
+svd_parcial <- readRDS('cache_obj/svd_netflix.rds')
+svd_parcial$d
+```
+
+```{r, eval=FALSE}
+#no correr en notas
+if(FALSE){
 V_peliculas <- data_frame(v_1 = svd_parcial$v[,1], v_2 = svd_parcial$v[,2],
                      v_3 = svd_parcial$v[,3], v_4 = svd_parcial$v[,4],
                      pelicula_id=1:ncol(evals_mat)) %>% 
@@ -904,8 +921,15 @@ V_peliculas <- data_frame(v_1 = svd_parcial$v[,1], v_2 = svd_parcial$v[,2],
 U_usuarios <- data_frame(u_1 = svd_parcial$u[,1], v_2=svd_parcial$u[,2],
                          u_3 = svd_parcial$u[,3], u_4 = svd_parcial$u[,4],
                          usuario_id = 1:nrow(evals_mat))
+saveRDS(V_peliculas, file = 'cache_obj/v_peliculas.rds')
+saveRDS(U_usuarios, file = 'cache_obj/u_usuarios.rds')
+}
 ```
 
+```{r}
+V_peliculas <- readRDS('cache_obj/v_peliculas.rds')
+U_usuarios <- readRDS('cache_obj/u_usuarios.rds')
+```
 
 Veamos primero las componentes 2, 3 y 4. 
 
@@ -943,11 +967,26 @@ Esta componente está asociada con el número de evaluaciones que tiene cada
 usuario y que tiene cada persona
 
 ```{r}
-evals_num_u <- evals %>% group_by(usuario_id) %>% summarise(num_evals = n())
+if(FALSE){
+  evals_num_u <- evals %>% group_by(usuario_id) %>% summarise(num_evals = n())
+  saveRDS(evals_num_u, 'cache_obj/evals_num_u.rds')
+}
+```
+
+```{r}
+evals_num_u <- readRDS('cache_obj/evals_num_u.rds')
 qplot(evals_num_u$num_evals, svd_parcial$u[,1])
 ```
+
 ```{r}
-evals_num_p <- evals %>% group_by(pelicula_id) %>% summarise(num_evals = n(), calif_prom=mean(calif))
+if(FALSE){
+  evals_num_p <- evals %>% group_by(pelicula_id) %>% summarise(num_evals = n(), calif_prom=mean(calif))
+  saveRDS(evals_num_p, 'cache_obj/evals_num_p.rds')
+}
+```
+
+```{r}
+evals_num_p <- readRDS('cache_obj/evals_num_p.rds')
 qplot(evals_num_p$num_evals, svd_parcial$v[,1])
 ```
 
@@ -997,7 +1036,7 @@ un análisis de dos dimensiones
 ```{block2, type='comentario'}
 Podemos medir la calidad de la representación de $X$ ($n\times p$ con $p < n$) 
 de una aproximación $X_k$ de SVD mediante
-$$1-\frac{||X-X_k||_2^F}{||X||_2^F}  = \frac{\sigma_1^2 + \sigma_2^2 + \cdots \sigma_k^2}{sigma_1^2 + \sigma_2^2 + \cdots \sigma_p^2},$$
+$$1-\frac{||X-X_k||_2^F}{||X||_2^F}  = \frac{\sigma_1^2 + \sigma_2^2 + \cdots \sigma_k^2}{|sigma_1^2 + \sigma_2^2 + \cdots \sigma_p^2},$$
 que es un valor entre 0 y 1. Cuanto más cercana a 1 está, mejor es la representación.
 ```
 
@@ -1017,7 +1056,8 @@ Para el problema de Netflix podemos calcular la calidad de representación dada 
 las primeras 4 dimensiones
 
 ```{r}
-norma_X  <- sum(evals$calif^2)
+#norma_X  <- sum(evals$calif^2)
+norma_X <- 738958222
 sum(svd_parcial$d^2)/norma_X
 ```
 
