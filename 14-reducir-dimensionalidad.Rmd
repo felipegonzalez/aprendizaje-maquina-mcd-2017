@@ -624,7 +624,7 @@ Ahora podemos enunciar nuestro teorema:
 ```{block2, type='comentario'}
 **Aproximación de matrices mediante valores singulares**
   
-Sea $X$ una matriz $n\times p$, y supongamos que $p<n$. Entonces, para cada $k \leq p$, 
+Sea $X$ una matriz $n\times p$, y supongamos que $p\leq n$. Entonces, para cada $k \leq p$, 
   la mejor aproximación de rango $k$ a la  matriz $X$ se puede escribir como
 una suma $X_k$ de $k$ matrices de rango 1:
 $$X_k =  \sigma_1 u_1v_1^t + \sigma_2 u_2v_2^t + \ldots \sigma_k u_kv_k^t,$$
@@ -680,7 +680,7 @@ v <- svd_gasto$v
 rownames(v) <- colnames(X_arr)
 v
 ```
-y los vectores $u_1,u_2,u_3$, que son los scores de los estados en cada dimensión
+y los vectores $u_1,u_2,u_3$, que son los scores de los rubros en cada dimensión
 
 ```{r}
 dim(svd_gasto$u)
@@ -768,34 +768,54 @@ valores singulares.
 Ver el ejemplo anterior para ver cómo los cálculos son iguales.
 
 ```{block2, type='comentario'}
+**Descomposición en valores singulares**
+  
 Sea $X$ una matriz de $n\times p$ con $p\leq n$. Entonces existe una factorización
 $$X=U\Sigma V^t,$$
-  
-- Las columnas de U y V son vectores ortogonales unitarios.
 
-- $\Sigma$ es una matriz diagonal con valores no-negativos (valores singulares)
+- $\Sigma$ es una matriz diagonal con valores no-negativos (valores singulares).
+Los valores singulares de $\Sigma$ estan ordenados en orden decreciente.
+    
+- Las columnas de U y V son vectores ortogonales unitarios. La i-ésima columna
+$u_i$ de $V$ y la í-esima columna $v_i$ de $V$ son pares de vectores propios $(u_i, v_i)$ izquierdo y derecho de $X$  con valor singular $\sigma_i = \Sigma_{i,i}$
 
-- Los valores singulares de $\Sigma$ estan ordenados en orden decreciente.
 ```
 
-Una vez que tenemos esta descomposición, podemos extraer la aproximación que
-nos sea útil.
+- Una vez que tenemos esta descomposición, podemos extraer la aproximación que
+nos sea útil: una aproximación  $X_k$ de orden $k$ se escribe como
+$$X_k = U_k\Sigma_k V_k^t$$
+donde $U_k$ contiene las primeras $k$ columnas de $U$, $V_k$ las primeras $k$
+columnas de $V$, y $\Sigma_k$ es la submatriz cuadrada $k\times k$ de los primeros
+$k$ renglones y columnas de $\Sigma$ :
 
 ```{r, out.width = 500}
 knitr::include_graphics("imagenes/svd.png")
 ```
 
 
+- Frecuenta el teorema de aproximación óptima (teorema de Ekhart-Young) 
+se deriva de la descomposición en valores singulares, que se demuestra antes
+usando técnicas de álgebra lineal.
+
+
+
 ## Interpretación geométrica
 
 La descomposición en valores singulares también se puede interpretar geométricamente.
-Notamos antes de ver un ejemplo que la componente de la proyección de los datos sobre el vector $v_1$ está
-dada por
-$$Xv_1 = \sigma_1 u_1,$$
+Para ver cómo funciona, primero observamos que:
 
-de forma que la proyección de no de los datos, digamos el $j$-ésimo, es
+```{block2, type = 'comentario'}
+Los vectores $v_1,v_2, \ldots, v_p$ están en el espacio de variables o columnas
+(son de dimensión $p$). La componente de la proyección 
+(ver [proyeccción de vectores](https://en.wikipedia.org/wiki/Vector_projection) )
+de la matriz de datos sobre una de estas dimensiones está dada por
+$$Xv_j,$$
+que son iguales a los scores de los casos
+$$\sigma_j u_j$$. 
+```
 
-$$\sigma_1 u_{1,j} v_1$$
+Por ejemplo, la projeccion del rengón $x_i$ de la matriz $X$ es
+$(x_i^tv_j) v_j$ ($x_i^tv_j$ es un escalar, la componente de la proyección).
 
 Consideremos unos datos simulados
 
@@ -867,12 +887,23 @@ ggplot(datos) + geom_point(aes(x=x_1, y=x_2, colour=selec, size=selec)) +
 ```
 
 ```{block2, type='comentario'}
-Las aproximaciones de la descomposión en valores singulares mediante matrices de rango 1 puede
+- Las aproximaciones de la descomposión en valores singulares mediante matrices de rango 1 puede
 entenderse como la búsqueda sucesiva de subespacios de dimensión baja, donde al proyectar los datos perdemos
 poca información. 
+- Las proyecciones sucesivas se hacen sobre vectores ortogonales, y en este sentido
+la DVS separa la información en partes que no tienen contenido común (desde el punto
+ de vista lineal).
+```
 
-Estas proyecciones en dimensiones bajas pueden utlizarse para entender patrones en los datos,
-y como entrada para otro análisis posterior.
+Finalmente, muchas veces graficamos las proyecciones en el nuevo espacio creado
+por las dimensiones de la DVS.
+
+```{r}
+proyecciones <- data_frame(dim_1 = d[1]*u[,1], dim_2 = d[2]*u[,2],
+                          selec = datos$selec) 
+ggplot(proyecciones, aes(x = dim_1, y = dim_2, size=selec, colour=selec)) + 
+  geom_point() 
+  
 ```
 
 
