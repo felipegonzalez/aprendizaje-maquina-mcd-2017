@@ -1284,6 +1284,8 @@ fue descomposición en valores singulares).
 
 ```r
 #no correr en notas - son unas 50 millones de evaluaciones
+# puedes bajar los datos y reproducir desde datos originales bajando el archivo
+# https://s3.amazonaws.com/netflix-am2017/muestra_calificaciones_1.csv
 if(FALSE){
   evals <- read_csv('datos/netflix/muestra_calificaciones_1.csv')
   evals
@@ -1621,13 +1623,135 @@ a una matriz de datos centrada por columna. Esta operación convierte el problem
 de aproximación de matrices de rango bajo en uno de aproximaciones que buscan
 explicar la mayoría de la *covarianza* de las variables de la matriz de datos $X$. 
 
+
 Consideremos entonces una matriz de datos $X$ de tamaño $n\times p$. Definimos
 la **matrix centrada** por columna $\tilde{X}$ , que se calcula como
 $$\tilde{X}_{i,j} = X_{i,j} - \mu_j$$
 donde $\mu_j = \frac{1}{n} \sum_j X_{i,j}$.
 
 
+- La primera diferencia entre svd y svd con columnas centradas (componentes principales) 
+es que en svd las proyecciones se hacen pasando por el origen, pero en componentes principales se
+hacen a partir del centroide de los datos
+
+### Ejemplo {-}
+
+Veamos primero el último ejemplo simulado que hicimos anterioremnte. Primero centramos
+los datos por columna:
 
 
+```r
+datos_c <- scale(datos %>% select(-selec), scale = FALSE) %>% as.data.frame
+ggplot(datos_c, aes(x=x_1, y=x_2)) + geom_point() +
+  geom_vline(xintercept = 0, colour='red') +
+ geom_hline(yintercept = 0, colour='red')
+```
+
+<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-70-1.png" width="672" />
+
+Y ahora calculamos la descomposición en valores singulares
+
+
+```r
+svd_x <- svd(datos_c)
+v <- svd_x$v %>% t %>% as.data.frame() 
+u <- svd_x$u %>% data.frame
+colnames(v) <- c('x_1','x_2')
+colnames(u) <- c('x_1','x_2')
+d <- svd_x$d
+v
+```
+
+```
+##        x_1       x_2
+## 1 0.507328  0.861753
+## 2 0.861753 -0.507328
+```
+
+Notemos que los resultados son similares, pero no son los mismos.
+
+Graficamos ahora los dos vectores $v_1$ y $v_2$, que en este contexto
+se llaman *direcciones principales*
+
+
+```r
+ggplot(datos_c) + geom_point(aes(x=x_1, y=x_2)) +
+  geom_vline(xintercept = 0, colour='red') +
+ geom_hline(yintercept = 0, colour='red') + 
+  geom_segment(data = v, aes(xend= 5*x_1, yend=5*x_2, x=0, y=0), col='red', size=1.1,
+               arrow = arrow(length = unit(0.3,"cm")))  +
+  coord_equal()
+```
+
+<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-72-1.png" width="672" />
+
+Las componentes de las proyecciones de los datos sobre las direcciones principales dan las
+**componentes principales** (nótese que multiplicamos por los valores singulares):
+
+
+```r
+head(svd_x$u %*% diag(svd_x$d))
+```
+
+```
+##            [,1]       [,2]
+## [1,]  0.3230641  0.9257829
+## [2,]  0.4070429  1.5360770
+## [3,] -1.2788977 -0.2762829
+## [4,]  0.8910247  0.4071926
+## [5,] -4.4466993 -0.5743111
+## [6,] -1.2267878  0.3470759
+```
+
+Que podemos graficar
+
+
+```r
+comps <- svd_x$u %*% diag(svd_x$d) %>% data.frame
+ggplot(comps, aes(x=X1, y=X2)) + geom_point()+
+  geom_vline(xintercept = 0, colour='red') +
+  geom_hline(yintercept = 0, colour='red')
+```
+
+<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-74-1.png" width="672" />
+
+Este resultado lo podemos obtener directamente usando la función *princomp*
+
+
+```r
+comp_principales <- princomp(datos %>% select(-selec))
+scores <- comp_principales$scores
+head(scores)
+```
+
+```
+##          Comp.1     Comp.2
+## [1,]  0.3230641 -0.9257829
+## [2,]  0.4070429 -1.5360770
+## [3,] -1.2788977  0.2762829
+## [4,]  0.8910247 -0.4071926
+## [5,] -4.4466993  0.5743111
+## [6,] -1.2267878 -0.3470759
+```
+
+Y verificamos que los resultados son los mismos:
+
+```r
+qplot(scores[,1], comps[,1])
+```
+
+<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-76-1.png" width="384" />
+
+```r
+qplot(scores[,2], -comps[,2])
+```
+
+<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-76-2.png" width="384" />
+
+### Ejemplo: más apropiado hacer svd sin centrar {-}
+
+### Ejemplo: más apropiado hacer svd centrando (componentes principales) {-}
+
+### Interpretación de componentes principales
 
 
