@@ -857,6 +857,14 @@ ggplot(datos) + geom_point(aes(x=x_1, y=x_2, colour=selec, size=selec)) +
   coord_equal()
 ```
 
+```{block2, type='comentario'}
+Las aproximaciones de la descomposión en valores singulares mediante matrices de rango 1 puede
+entenderse como la búsqueda sucesiva de subespacios de dimensión baja, donde al proyectar los datos perdemos
+poca información. 
+
+Estas proyecciones en dimensiones bajas pueden utlizarse para entender patrones en los datos,
+y como entrada para otro análisis posterior.
+```
 
 
 
@@ -948,6 +956,95 @@ los valores "bajos" de pocas evaluaciones tanto en usuarios como en películas.
 En realidad es una distorsión producida por cómo hemos tratado los datos ("imputando"
 cero cuando no existe una evaluación).
 
+### Calidad de representación de SVD.
+
+Podemos hacer varios cálculos para entender qué tan buena es nuestra aproximación de
+rango bajo $X_k$. Por ejemplo, podríamos calcular las diferencias de $X-X_k$ y presentarlas
+de distinta forma.
+
+### Ejemplo{-}
+En el ejemplo de rubros de gasto, podríamos mostrar las diferencias en billones (us)
+de dólares, donde vemos que la aproximación es bastante buena
+
+```{r}
+qplot(as.numeric(X_arr-X_arr_2))
+```
+
+Que podríamos resumir, por ejemplo, con la media de errores absolutos:
+
+```{r}
+mean(abs(as.numeric(X_arr-X_arr_2)))
+```
+
+Otra opción es usar la norma Frobenius, calculando para la apoximación de rango 1
+
+
+```{r}
+1 - (sum(X_arr^2) - sum(svd_gasto$d[1]^2))/sum(X_arr^2)
+```
+
+Lo que indica que capturamos 99.8\% de la información, y para la de rango 2:
+d
+```{r}
+1-(sum(X_arr^2) - sum(svd_gasto$d[1:2]^2))/sum(X_arr^2)
+```
+
+Lo que indica que estos datos (en 3 variables), podemos entenderlos mediante
+un análisis de dos dimensiones
+
+---
+
+```{block2, type='comentario'}
+Podemos medir la calidad de la representación de $X$ ($n\times p$ con $p < n$) 
+de una aproximación $X_k$ de SVD mediante
+$$1-\frac{||X-X_k||_2^F}{||X||_2^F}  = \frac{\sigma_1^2 + \sigma_2^2 + \cdots \sigma_k^2}{sigma_1^2 + \sigma_2^2 + \cdots \sigma_p^2},$$
+que es un valor entre 0 y 1. Cuanto más cercana a 1 está, mejor es la representación.
+```
+
+**Observaciones**: Dependiendo de nuestro objetivo, nos interesa alcanzar distintos
+niveles de calidad de representación. Por ejemplo, algunas reglas de dedo:
+
+- Si queremos usar los datos para un proceso posterior, o dar una descripción 
+casi completa de los datos, quizá buscamos calidad $>0.9$ o mayor.
+
+- Si nos interesa extraer los patrones más importantes, podemos considerar valores de calidad
+mucho más chicos, entendiendo que hay una buena parte de la información que no se explican
+por nuestra aproximación.
+
+
+#### Ejemplo {-}
+Para el problema de Netflix podemos calcular la calidad de representación dada por
+las primeras 4 dimensiones
+
+```{r}
+norma_X  <- sum(evals$calif^2)
+sum(svd_parcial$d^2)/norma_X
+```
+
+Lo que indica que todavía hay mucha información por explorar en los datos de netflix. La
+contribución a este porcentaje de cada dimensión
+
+```{r}
+(svd_parcial$d[1]^2)/norma_X
+(svd_parcial$d[2]^2)/norma_X
+(svd_parcial$d[3]^2)/norma_X
+(svd_parcial$d[3]^2)/norma_X
+```
 
 ## Componentes principales
+
+Componentes principales es la descomposición en valores singulares aplicada
+a una matriz de datos centrada por columna. Esta operación convierte el problema
+de aproximación de matrices de rango bajo en uno de aproximaciones que buscan
+explicar la mayoría de la *covarianza* de las variables de la matriz de datos $X$. 
+
+Consideremos entonces una matriz de datos $X$ de tamaño $n\times p$. Definimos
+la **matrix centrada** por columna $\tilde{X}$ , que se calcula como
+$$\tilde{X}_{i,j} = X_{i,j} - \mu_j$$
+donde $\mu_j = \frac{1}{n} \sum_j X_{i,j}$.
+
+
+
+
+
 
