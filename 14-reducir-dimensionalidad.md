@@ -936,7 +936,7 @@ Ahora podemos enunciar nuestro teorema:
 
 \BeginKnitrBlock{comentario}<div class="comentario">**Aproximación de matrices mediante valores singulares**
   
-Sea $X$ una matriz $n\times p$, y supongamos que $p<n$. Entonces, para cada $k \leq p$, 
+Sea $X$ una matriz $n\times p$, y supongamos que $p\leq n$. Entonces, para cada $k \leq p$, 
   la mejor aproximación de rango $k$ a la  matriz $X$ se puede escribir como
 una suma $X_k$ de $k$ matrices de rango 1:
 $$X_k =  \sigma_1 u_1v_1^t + \sigma_2 u_2v_2^t + \ldots \sigma_k u_kv_k^t,$$
@@ -1005,7 +1005,7 @@ v
 ## 1950 -0.5423269 -0.7499672  0.37872247
 ## 1960 -0.8158342  0.5777831 -0.02410854
 ```
-y los vectores $u_1,u_2,u_3$, que son los scores de los estados en cada dimensión
+y los vectores $u_1,u_2,u_3$, que son los scores de los rubros en cada dimensión
 
 
 ```r
@@ -1134,17 +1134,24 @@ valores singulares.
 
 Ver el ejemplo anterior para ver cómo los cálculos son iguales.
 
-\BeginKnitrBlock{comentario}<div class="comentario">Sea $X$ una matriz de $n\times p$ con $p\leq n$. Entonces existe una factorización
-$$X=U\Sigma V^t,$$
+\BeginKnitrBlock{comentario}<div class="comentario">**Descomposición en valores singulares**
   
-- Las columnas de U y V son vectores ortogonales unitarios.
+Sea $X$ una matriz de $n\times p$ con $p\leq n$. Entonces existe una factorización
+$$X=U\Sigma V^t,$$
 
-- $\Sigma$ es una matriz diagonal con valores no-negativos (valores singulares)
+- $\Sigma$ es una matriz diagonal con valores no-negativos (valores singulares).
+Los valores singulares de $\Sigma$ estan ordenados en orden decreciente.
+    
+- Las columnas de U y V son vectores ortogonales unitarios. La i-ésima columna
+$u_i$ de $V$ y la í-esima columna $v_i$ de $V$ son pares de vectores propios $(u_i, v_i)$ izquierdo y derecho de $X$  con valor singular $\sigma_i = \Sigma_{i,i}$
+</div>\EndKnitrBlock{comentario}
 
-- Los valores singulares de $\Sigma$ estan ordenados en orden decreciente.</div>\EndKnitrBlock{comentario}
-
-Una vez que tenemos esta descomposición, podemos extraer la aproximación que
-nos sea útil.
+- Una vez que tenemos esta descomposición, podemos extraer la aproximación que
+nos sea útil: una aproximación  $X_k$ de orden $k$ se escribe como
+$$X_k = U_k\Sigma_k V_k^t$$
+donde $U_k$ contiene las primeras $k$ columnas de $U$, $V_k$ las primeras $k$
+columnas de $V$, y $\Sigma_k$ es la submatriz cuadrada $k\times k$ de los primeros
+$k$ renglones y columnas de $\Sigma$ :
 
 
 ```r
@@ -1154,16 +1161,27 @@ knitr::include_graphics("imagenes/svd.png")
 <img src="imagenes/svd.png" width="500" />
 
 
+- Frecuenta el teorema de aproximación óptima (teorema de Ekhart-Young) 
+se deriva de la descomposición en valores singulares, que se demuestra antes
+usando técnicas de álgebra lineal.
+
+
+
 ## Interpretación geométrica
 
 La descomposición en valores singulares también se puede interpretar geométricamente.
-Notamos antes de ver un ejemplo que la componente de la proyección de los datos sobre el vector $v_1$ está
-dada por
-$$Xv_1 = \sigma_1 u_1,$$
+Para ver cómo funciona, primero observamos que:
 
-de forma que la proyección de no de los datos, digamos el $j$-ésimo, es
+\BeginKnitrBlock{comentario}<div class="comentario">Los vectores $v_1,v_2, \ldots, v_p$ están en el espacio de variables o columnas
+(son de dimensión $p$). La componente de la proyección 
+(ver [proyeccción de vectores](https://en.wikipedia.org/wiki/Vector_projection) )
+de la matriz de datos sobre una de estas dimensiones está dada por
+$$Xv_j,$$
+que son iguales a los scores de los casos
+$$\sigma_j u_j$$. </div>\EndKnitrBlock{comentario}
 
-$$\sigma_1 u_{1,j} v_1$$
+Por ejemplo, la projeccion del rengón $x_i$ de la matriz $X$ es
+$(x_i^tv_j) v_j$ ($x_i^tv_j$ es un escalar, la componente de la proyección).
 
 Consideremos unos datos simulados
 
@@ -1178,7 +1196,7 @@ ggplot(datos, aes(x=x_1, y=x_2)) + geom_point() +
  geom_hline(yintercept = 0, colour='red')
 ```
 
-<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-44-1.png" width="672" />
+<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-45-1.png" width="672" />
 
 Hacemos descomposición en valores singulares y graficamos 
 
@@ -1210,7 +1228,7 @@ ggplot(datos) + geom_point(aes(x=x_1, y=x_2)) +
   coord_equal()
 ```
 
-<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-46-1.png" width="672" />
+<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-47-1.png" width="672" />
 
 
 - El primer vector es el "que pasa más cercano a los puntos", en el sentido de que la distancia
@@ -1264,14 +1282,31 @@ ggplot(datos) + geom_point(aes(x=x_1, y=x_2, colour=selec, size=selec)) +
   coord_equal()
 ```
 
-<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-48-1.png" width="672" />
+<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-49-1.png" width="672" />
 
-\BeginKnitrBlock{comentario}<div class="comentario">Las aproximaciones de la descomposión en valores singulares mediante matrices de rango 1 puede
+\BeginKnitrBlock{comentario}<div class="comentario">- Las aproximaciones de la descomposión en valores singulares mediante matrices de rango 1 puede
 entenderse como la búsqueda sucesiva de subespacios de dimensión baja, donde al proyectar los datos perdemos
 poca información. 
+- Las proyecciones sucesivas se hacen sobre vectores ortogonales, y en este sentido
+la DVS separa la información en partes que no tienen contenido común (desde el punto
+ de vista lineal).</div>\EndKnitrBlock{comentario}
 
-Estas proyecciones en dimensiones bajas pueden utlizarse para entender patrones en los datos,
-y como entrada para otro análisis posterior.</div>\EndKnitrBlock{comentario}
+Finalmente, muchas veces graficamos las proyecciones en el nuevo espacio creado
+por las dimensiones de la DVS.
+
+
+```r
+proyecciones <- data_frame(dim_1 = d[1]*u[,1], dim_2 = d[2]*u[,2],
+                          selec = datos$selec) 
+ggplot(proyecciones, aes(x = dim_1, y = dim_2, size=selec, colour=selec)) + 
+  geom_point() 
+```
+
+```
+## Warning: Using size for a discrete variable is not advised.
+```
+
+<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-51-1.png" width="672" />
 
 
 
@@ -1391,7 +1426,7 @@ qplot(svd_parcial$u[,2])
 ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
 ```
 
-<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-56-1.png" width="672" />
+<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-58-1.png" width="672" />
 
 ```r
 qplot(svd_parcial$v[,2])#
@@ -1401,7 +1436,7 @@ qplot(svd_parcial$v[,2])#
 ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
 ```
 
-<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-56-2.png" width="672" />
+<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-58-2.png" width="672" />
 
 
 
@@ -1412,7 +1447,7 @@ ggplot(muestra, aes(x=v_2, y=v_3, label=etiqueta)) + geom_point(alpha=0.2) +
   geom_text(size=2.5) + xlab('Mainstream vs Independiente') + ylab('Violenta/Acción vs Drama')
 ```
 
-<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-57-1.png" width="672" />
+<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-59-1.png" width="672" />
 
 
 ```r
@@ -1422,7 +1457,7 @@ ggplot(muestra, aes(x=v_3, y=v_4, label=etiqueta)) + geom_point(alpha=0.2) +
   geom_text(size=2.5)  + xlab('Violenta/Acción vs Drama') + ylab('Fantasía/Ciencia Ficción')
 ```
 
-<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-58-1.png" width="672" />
+<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-60-1.png" width="672" />
 
 
 
@@ -1438,7 +1473,7 @@ qplot(svd_parcial$u[,1])
 ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
 ```
 
-<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-59-1.png" width="672" />
+<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-61-1.png" width="672" />
 
 ```r
 qplot(svd_parcial$v[,1])
@@ -1448,7 +1483,7 @@ qplot(svd_parcial$v[,1])
 ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
 ```
 
-<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-59-2.png" width="672" />
+<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-61-2.png" width="672" />
 Esta componente está asociada con el número de evaluaciones que tiene cada
 usuario y que tiene cada persona
 
@@ -1466,7 +1501,7 @@ evals_num_u <- readRDS('cache_obj/evals_num_u.rds')
 qplot(evals_num_u$num_evals, svd_parcial$u[,1])
 ```
 
-<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-61-1.png" width="672" />
+<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-63-1.png" width="672" />
 
 
 ```r
@@ -1482,7 +1517,7 @@ evals_num_p <- readRDS('cache_obj/evals_num_p.rds')
 qplot(evals_num_p$num_evals, svd_parcial$v[,1])
 ```
 
-<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-63-1.png" width="672" />
+<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-65-1.png" width="672" />
 
 Esta dimensión aparece pues la primera aproximación de rango 1 intenta replicar
 los valores "bajos" de pocas evaluaciones tanto en usuarios como en películas.
@@ -1508,7 +1543,7 @@ qplot(as.numeric(X_arr-X_arr_2))
 ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
 ```
 
-<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-64-1.png" width="672" />
+<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-66-1.png" width="672" />
 
 Que podríamos resumir, por ejemplo, con la media de errores absolutos:
 
@@ -1647,7 +1682,7 @@ ggplot(datos_c, aes(x=x_1, y=x_2)) + geom_point() +
  geom_hline(yintercept = 0, colour='red')
 ```
 
-<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-71-1.png" width="672" />
+<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-73-1.png" width="672" />
 
 Y ahora calculamos la descomposición en valores singulares
 
@@ -1683,7 +1718,7 @@ ggplot(datos_c) + geom_point(aes(x=x_1, y=x_2)) +
   coord_equal()
 ```
 
-<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-73-1.png" width="672" />
+<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-75-1.png" width="672" />
 
 Las componentes de las proyecciones de los datos sobre las direcciones principales dan las
 **componentes principales** (nótese que multiplicamos por los valores singulares):
@@ -1713,7 +1748,7 @@ ggplot(comps, aes(x=X1, y=X2)) + geom_point()+
   geom_hline(yintercept = 0, colour='red')
 ```
 
-<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-75-1.png" width="672" />
+<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-77-1.png" width="672" />
 
 Este resultado lo podemos obtener directamente usando la función *princomp*
 
@@ -1740,13 +1775,13 @@ Y verificamos que los resultados son los mismos:
 qplot(scores[,1], comps[,1])
 ```
 
-<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-77-1.png" width="384" />
+<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-79-1.png" width="384" />
 
 ```r
 qplot(scores[,2], -comps[,2])
 ```
 
-<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-77-2.png" width="384" />
+<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-79-2.png" width="384" />
 
 ### Ejemplo: más apropiado hacer svd sin centrar {-}
 
