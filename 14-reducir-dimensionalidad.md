@@ -1586,7 +1586,7 @@ un análisis de dos dimensiones
 
 \BeginKnitrBlock{comentario}<div class="comentario">Podemos medir la calidad de la representación de $X$ ($n\times p$ con $p < n$) 
 de una aproximación $X_k$ de SVD mediante
-$$1-\frac{||X-X_k||_2^F}{||X||_2^F}  = \frac{\sigma_1^2 + \sigma_2^2 + \cdots \sigma_k^2}{|sigma_1^2 + \sigma_2^2 + \cdots \sigma_p^2},$$
+$$1-\frac{||X-X_k||_2^F}{||X||_2^F}  = \frac{\sigma_1^2 + \sigma_2^2 + \cdots \sigma_k^2}{\sigma_1^2 + \sigma_2^2 + \cdots \sigma_p^2},$$
 que es un valor entre 0 y 1. Cuanto más cercana a 1 está, mejor es la representación.</div>\EndKnitrBlock{comentario}
 
 **Observaciones**: Dependiendo de nuestro objetivo, nos interesa alcanzar distintos
@@ -1665,9 +1665,8 @@ $$\tilde{X}_{i,j} = X_{i,j} - \mu_j$$
 donde $\mu_j = \frac{1}{n} \sum_j X_{i,j}$.
 
 
-- La primera diferencia entre svd y svd con columnas centradas (componentes principales) 
-es que en svd las proyecciones se hacen pasando por el origen, pero en componentes principales se
-hacen a partir del centroide de los datos
+- La diferencia en construcción entre svd y svd con columnas centradas (componentes principales) 
+es que en svd las proyecciones se hacen pasando por el origen, pero en componentes principales se hacen a partir del centroide de los datos
 
 ### Ejemplo {-}
 
@@ -1783,10 +1782,130 @@ qplot(scores[,2], -comps[,2])
 
 <img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-79-2.png" width="384" />
 
+---
+
+### Varianza y Covarianza en componentes principales.
+
+Cuando centramos por columna, la svd es un tipo de análisis de la matriz
+de varianzas y covarianzas de la matriz $X$, dada por
+
+$$C = \frac{1}{n} \tilde{X}^t \tilde{X}$$
+(Nota: asegúrate de que entiendes por qué esta es la matriz de varianzas y covarianzas
+de $X$). 
+
+Y nótese que las proyecciones $\tilde{X}v_j = \sigma_j u_j = d_j$ satisfacen que
+
+1. La media de las proyecciones d_j es igual a cero
+
+Pues $$\sigma_j \sum_k {u_{j,k}} = \sum_k \sum_i (\tilde{X}_{k,i})v_{j,i} =
+\sum_i v_{j,i}\sum_k (\tilde{X}_{k,i}) = 0,$$
+pues las columnas de $\tilde{X}$ tienen media cero.
+
+2- $\sigma_j^2$ es la varianza de la proyección $d_j$, pues
+$$Var(d_j) = \sigma_j^2 \sum_k (u_{j,k} - 0)^2 = \sigma_j^2,$$
+pues el vector $u_j$ tienen norma 1.
+
+3. La ortogonalidad de los vectores $u_j$ se interpreta ahora en términos
+de covarianza:
+$$Cov(d_i,d_j) = \frac{1}{n}\sum_{k=1}^n (d_{i,k}-0)(d_{j,k}-0) =
+\frac{1}{n}\sum_{k=1}^n \sigma_j\sigma_i u_{i,k}u_{j,k} = 0$$
+
+
+Esto implica, de acuerdo a lo que vimos antes en SVD, que en componentes
+principales 
+
+Buscamos sucesivamente direcciones para proyectar *que tienen
+varianza máxima* (ver ejemplo anterior), y que sean no correlacionadas de forma
+que no compartan información lineal entre ellas.
+
+Adicionalmente, vimos que podíamos escribir
+$$||\tilde{X}||^2_F =  \sum_{j=1}^p \sigma_{j}$$
+Y el lado izquierdo es en este caso una suma de varianzas:
+$$\sum_{j=1}^p Var(X_j) =  \sum_{j=1}^p \sigma_{j}.$$
+El lado izquierdo se llama *Varianza total* de la matriz $X$. Componentes principales particiona la varianza total de la matriz $X$ en 
+componentes 
+
+## ¿Centrar o no centrar por columna?
+
+Típicamente, antes de aplicar SVD hacemos algunos pasos de procesamiento
+de las variables. En componentes principales, este paso de procesamiento
+es centrar la tabla por columnas. Conviene hacer esto cuando:
+
+1. Centramos si las medias de las columnas no tienen información importante - es mejor eliminar esta parte de variación desde el principio para no 
+lidiar con esta información en 
+las dimensiones que obtengamos. En otro caso, quizá es mejor no centrar.
+
+2. Centramos si nos interesa más tener una interpretación en términos de varianzas y covarianzas que hacer una aproximación de los datos originales.
+
+Sin embargo, también es importante notar que muchas veces **los resultados de ambos
+análisis son similares** en cuanto a interpretación y en cuanto a usos posteriores
+de las dimensiones obtenidas.
+
+### Ejemplo: resultados similares{-}
+
+En el ejemplo de gasto en rubros que vimos arriba, los pesos $v_j$ son muy similares:
+
+
+```r
+comps_1 <- princomp(USPersonalExpenditure[,c(1,3,5)])
+svd_1 <- svd(USPersonalExpenditure[,c(1,3,5)])
+comps_1$loadings[,]
+```
+
+```
+##          Comp.1     Comp.2      Comp.3
+## 1940 -0.2099702 -0.2938755  0.93249650
+## 1950 -0.5623341 -0.7439168 -0.36106546
+## 1960 -0.7998081  0.6001875  0.00905589
+```
+
+```r
+svd_1$v
+```
+
+```
+##            [,1]       [,2]        [,3]
+## [1,] -0.2007388 -0.3220495 -0.92519623
+## [2,] -0.5423269 -0.7499672  0.37872247
+## [3,] -0.8158342  0.5777831 -0.02410854
+```
+
+
+```r
+comps_1$scores
+```
+
+```
+##                        Comp.1     Comp.2      Comp.3
+## Food and Tobacco    -68.38962 -0.8783065  0.06424607
+## Household Operation -16.25334  0.9562769 -0.16502902
+## Medical and Health   16.13276  2.2900370  0.07312028
+## Personal Care        33.29512 -1.0003211  0.23036177
+## Private Education    35.21507 -1.3676863 -0.20269910
+```
+
+```r
+svd_1$u %*% diag(svd_1$d)
+```
+
+```
+##             [,1]       [,2]        [,3]
+## [1,] -107.593494 -1.6959766 -0.06011861
+## [2,]  -55.526778  1.5630078  0.15457655
+## [3,]  -23.188704  3.7722060 -0.09723774
+## [4,]   -5.942974  0.9476773 -0.16452015
+## [5,]   -4.014277  0.6433704  0.27845344
+```
+
+Llegaríamos a conclusiones similares si interpretamos cualquiera de los dos análisis
+(verifica por ejemplo el ordenamiento de rubros y años en cada dimensión).
+
 ### Ejemplo: más apropiado hacer svd sin centrar {-}
+
+
+
 
 ### Ejemplo: más apropiado hacer svd centrando (componentes principales) {-}
 
-### Interpretación de componentes principales
 
 

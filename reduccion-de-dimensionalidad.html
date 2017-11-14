@@ -25,7 +25,7 @@
 <meta name="author" content="Felipe González">
 
 
-<meta name="date" content="2017-11-13">
+<meta name="date" content="2017-11-14">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -358,9 +358,12 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul></li>
 <li class="chapter" data-level="14.7" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#componentes-principales"><i class="fa fa-check"></i><b>14.7</b> Componentes principales</a><ul>
 <li class="chapter" data-level="" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#ejemplo-57"><i class="fa fa-check"></i>Ejemplo</a></li>
+<li class="chapter" data-level="14.7.1" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#varianza-y-covarianza-en-componentes-principales."><i class="fa fa-check"></i><b>14.7.1</b> Varianza y Covarianza en componentes principales.</a></li>
+</ul></li>
+<li class="chapter" data-level="14.8" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#centrar-o-no-centrar-por-columna"><i class="fa fa-check"></i><b>14.8</b> ¿Centrar o no centrar por columna?</a><ul>
+<li class="chapter" data-level="" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#ejemplo-resultados-similares"><i class="fa fa-check"></i>Ejemplo: resultados similares</a></li>
 <li class="chapter" data-level="" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#ejemplo-mas-apropiado-hacer-svd-sin-centrar"><i class="fa fa-check"></i>Ejemplo: más apropiado hacer svd sin centrar</a></li>
 <li class="chapter" data-level="" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#ejemplo-mas-apropiado-hacer-svd-centrando-componentes-principales"><i class="fa fa-check"></i>Ejemplo: más apropiado hacer svd centrando (componentes principales)</a></li>
-<li class="chapter" data-level="14.7.1" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#interpretacion-de-componentes-principales"><i class="fa fa-check"></i><b>14.7.1</b> Interpretación de componentes principales</a></li>
 </ul></li>
 </ul></li>
 <li class="divider"></li>
@@ -1215,7 +1218,7 @@ muestra &lt;-<span class="st"> </span>pel_graf <span class="op">%&gt;%</span><sp
 <hr />
 
 <div class="comentario">
-Podemos medir la calidad de la representación de <span class="math inline">\(X\)</span> (<span class="math inline">\(n\times p\)</span> con <span class="math inline">\(p &lt; n\)</span>) de una aproximación <span class="math inline">\(X_k\)</span> de SVD mediante <span class="math display">\[1-\frac{||X-X_k||_2^F}{||X||_2^F}  = \frac{\sigma_1^2 + \sigma_2^2 + \cdots \sigma_k^2}{|sigma_1^2 + \sigma_2^2 + \cdots \sigma_p^2},\]</span> que es un valor entre 0 y 1. Cuanto más cercana a 1 está, mejor es la representación.
+Podemos medir la calidad de la representación de <span class="math inline">\(X\)</span> (<span class="math inline">\(n\times p\)</span> con <span class="math inline">\(p &lt; n\)</span>) de una aproximación <span class="math inline">\(X_k\)</span> de SVD mediante <span class="math display">\[1-\frac{||X-X_k||_2^F}{||X||_2^F}  = \frac{\sigma_1^2 + \sigma_2^2 + \cdots \sigma_k^2}{\sigma_1^2 + \sigma_2^2 + \cdots \sigma_p^2},\]</span> que es un valor entre 0 y 1. Cuanto más cercana a 1 está, mejor es la representación.
 </div>
 
 <p><strong>Observaciones</strong>: Dependiendo de nuestro objetivo, nos interesa alcanzar distintos niveles de calidad de representación. Por ejemplo, algunas reglas de dedo:</p>
@@ -1247,7 +1250,7 @@ norma_X &lt;-<span class="st"> </span><span class="dv">738958222</span>
 <p>Componentes principales es la descomposición en valores singulares aplicada a una matriz de datos centrada por columna. Esta operación convierte el problema de aproximación de matrices de rango bajo en uno de aproximaciones que buscan explicar la mayoría de la <em>covarianza</em> de las variables de la matriz de datos <span class="math inline">\(X\)</span>.</p>
 <p>Consideremos entonces una matriz de datos <span class="math inline">\(X\)</span> de tamaño <span class="math inline">\(n\times p\)</span>. Definimos la <strong>matrix centrada</strong> por columna <span class="math inline">\(\tilde{X}\)</span> , que se calcula como <span class="math display">\[\tilde{X}_{i,j} = X_{i,j} - \mu_j\]</span> donde <span class="math inline">\(\mu_j = \frac{1}{n} \sum_j X_{i,j}\)</span>.</p>
 <ul>
-<li>La primera diferencia entre svd y svd con columnas centradas (componentes principales) es que en svd las proyecciones se hacen pasando por el origen, pero en componentes principales se hacen a partir del centroide de los datos</li>
+<li>La diferencia en construcción entre svd y svd con columnas centradas (componentes principales) es que en svd las proyecciones se hacen pasando por el origen, pero en componentes principales se hacen a partir del centroide de los datos</li>
 </ul>
 <div id="ejemplo-57" class="section level3 unnumbered">
 <h3>Ejemplo</h3>
@@ -1308,15 +1311,72 @@ scores &lt;-<span class="st"> </span>comp_principales<span class="op">$</span>sc
 <p><img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-79-1.png" width="384" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">qplot</span>(scores[,<span class="dv">2</span>], <span class="op">-</span>comps[,<span class="dv">2</span>])</code></pre></div>
 <p><img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-79-2.png" width="384" /></p>
+<hr />
+</div>
+<div id="varianza-y-covarianza-en-componentes-principales." class="section level3">
+<h3><span class="header-section-number">14.7.1</span> Varianza y Covarianza en componentes principales.</h3>
+<p>Cuando centramos por columna, la svd es un tipo de análisis de la matriz de varianzas y covarianzas de la matriz <span class="math inline">\(X\)</span>, dada por</p>
+<p><span class="math display">\[C = \frac{1}{n} \tilde{X}^t \tilde{X}\]</span> (Nota: asegúrate de que entiendes por qué esta es la matriz de varianzas y covarianzas de <span class="math inline">\(X\)</span>).</p>
+<p>Y nótese que las proyecciones <span class="math inline">\(\tilde{X}v_j = \sigma_j u_j = d_j\)</span> satisfacen que</p>
+<ol style="list-style-type: decimal">
+<li>La media de las proyecciones d_j es igual a cero</li>
+</ol>
+<p>Pues <span class="math display">\[\sigma_j \sum_k {u_{j,k}} = \sum_k \sum_i (\tilde{X}_{k,i})v_{j,i} =
+\sum_i v_{j,i}\sum_k (\tilde{X}_{k,i}) = 0,\]</span> pues las columnas de <span class="math inline">\(\tilde{X}\)</span> tienen media cero.</p>
+<p>2- <span class="math inline">\(\sigma_j^2\)</span> es la varianza de la proyección <span class="math inline">\(d_j\)</span>, pues <span class="math display">\[Var(d_j) = \sigma_j^2 \sum_k (u_{j,k} - 0)^2 = \sigma_j^2,\]</span> pues el vector <span class="math inline">\(u_j\)</span> tienen norma 1.</p>
+<ol start="3" style="list-style-type: decimal">
+<li>La ortogonalidad de los vectores <span class="math inline">\(u_j\)</span> se interpreta ahora en términos de covarianza: <span class="math display">\[Cov(d_i,d_j) = \frac{1}{n}\sum_{k=1}^n (d_{i,k}-0)(d_{j,k}-0) =
+\frac{1}{n}\sum_{k=1}^n \sigma_j\sigma_i u_{i,k}u_{j,k} = 0\]</span></li>
+</ol>
+<p>Esto implica, de acuerdo a lo que vimos antes en SVD, que en componentes principales</p>
+<p>Buscamos sucesivamente direcciones para proyectar <em>que tienen varianza máxima</em> (ver ejemplo anterior), y que sean no correlacionadas de forma que no compartan información lineal entre ellas.</p>
+<p>Adicionalmente, vimos que podíamos escribir <span class="math display">\[||\tilde{X}||^2_F =  \sum_{j=1}^p \sigma_{j}\]</span> Y el lado izquierdo es en este caso una suma de varianzas: <span class="math display">\[\sum_{j=1}^p Var(X_j) =  \sum_{j=1}^p \sigma_{j}.\]</span> El lado izquierdo se llama <em>Varianza total</em> de la matriz <span class="math inline">\(X\)</span>. Componentes principales particiona la varianza total de la matriz <span class="math inline">\(X\)</span> en componentes</p>
+</div>
+</div>
+<div id="centrar-o-no-centrar-por-columna" class="section level2">
+<h2><span class="header-section-number">14.8</span> ¿Centrar o no centrar por columna?</h2>
+<p>Típicamente, antes de aplicar SVD hacemos algunos pasos de procesamiento de las variables. En componentes principales, este paso de procesamiento es centrar la tabla por columnas. Conviene hacer esto cuando:</p>
+<ol style="list-style-type: decimal">
+<li><p>Centramos si las medias de las columnas no tienen información importante - es mejor eliminar esta parte de variación desde el principio para no lidiar con esta información en las dimensiones que obtengamos. En otro caso, quizá es mejor no centrar.</p></li>
+<li><p>Centramos si nos interesa más tener una interpretación en términos de varianzas y covarianzas que hacer una aproximación de los datos originales.</p></li>
+</ol>
+<p>Sin embargo, también es importante notar que muchas veces <strong>los resultados de ambos análisis son similares</strong> en cuanto a interpretación y en cuanto a usos posteriores de las dimensiones obtenidas.</p>
+<div id="ejemplo-resultados-similares" class="section level3 unnumbered">
+<h3>Ejemplo: resultados similares</h3>
+<p>En el ejemplo de gasto en rubros que vimos arriba, los pesos <span class="math inline">\(v_j\)</span> son muy similares:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">comps_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">princomp</span>(USPersonalExpenditure[,<span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">3</span>,<span class="dv">5</span>)])
+svd_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">svd</span>(USPersonalExpenditure[,<span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">3</span>,<span class="dv">5</span>)])
+comps_<span class="dv">1</span><span class="op">$</span>loadings[,]</code></pre></div>
+<pre><code>##          Comp.1     Comp.2      Comp.3
+## 1940 -0.2099702 -0.2938755  0.93249650
+## 1950 -0.5623341 -0.7439168 -0.36106546
+## 1960 -0.7998081  0.6001875  0.00905589</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">svd_<span class="dv">1</span><span class="op">$</span>v</code></pre></div>
+<pre><code>##            [,1]       [,2]        [,3]
+## [1,] -0.2007388 -0.3220495 -0.92519623
+## [2,] -0.5423269 -0.7499672  0.37872247
+## [3,] -0.8158342  0.5777831 -0.02410854</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">comps_<span class="dv">1</span><span class="op">$</span>scores</code></pre></div>
+<pre><code>##                        Comp.1     Comp.2      Comp.3
+## Food and Tobacco    -68.38962 -0.8783065  0.06424607
+## Household Operation -16.25334  0.9562769 -0.16502902
+## Medical and Health   16.13276  2.2900370  0.07312028
+## Personal Care        33.29512 -1.0003211  0.23036177
+## Private Education    35.21507 -1.3676863 -0.20269910</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">svd_<span class="dv">1</span><span class="op">$</span>u <span class="op">%*%</span><span class="st"> </span><span class="kw">diag</span>(svd_<span class="dv">1</span><span class="op">$</span>d)</code></pre></div>
+<pre><code>##             [,1]       [,2]        [,3]
+## [1,] -107.593494 -1.6959766 -0.06011861
+## [2,]  -55.526778  1.5630078  0.15457655
+## [3,]  -23.188704  3.7722060 -0.09723774
+## [4,]   -5.942974  0.9476773 -0.16452015
+## [5,]   -4.014277  0.6433704  0.27845344</code></pre>
+<p>Llegaríamos a conclusiones similares si interpretamos cualquiera de los dos análisis (verifica por ejemplo el ordenamiento de rubros y años en cada dimensión).</p>
 </div>
 <div id="ejemplo-mas-apropiado-hacer-svd-sin-centrar" class="section level3 unnumbered">
 <h3>Ejemplo: más apropiado hacer svd sin centrar</h3>
 </div>
 <div id="ejemplo-mas-apropiado-hacer-svd-centrando-componentes-principales" class="section level3 unnumbered">
 <h3>Ejemplo: más apropiado hacer svd centrando (componentes principales)</h3>
-</div>
-<div id="interpretacion-de-componentes-principales" class="section level3">
-<h3><span class="header-section-number">14.7.1</span> Interpretación de componentes principales</h3>
 
 <div id="refs" class="references">
 <div>
