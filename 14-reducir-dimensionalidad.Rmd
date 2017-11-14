@@ -1078,7 +1078,7 @@ un análisis de dos dimensiones
 ```{block2, type='comentario'}
 Podemos medir la calidad de la representación de $X$ ($n\times p$ con $p < n$) 
 de una aproximación $X_k$ de SVD mediante
-$$1-\frac{||X-X_k||_2^F}{||X||_2^F}  = \frac{\sigma_1^2 + \sigma_2^2 + \cdots \sigma_k^2}{|sigma_1^2 + \sigma_2^2 + \cdots \sigma_p^2},$$
+$$1-\frac{||X-X_k||_2^F}{||X||_2^F}  = \frac{\sigma_1^2 + \sigma_2^2 + \cdots \sigma_k^2}{\sigma_1^2 + \sigma_2^2 + \cdots \sigma_p^2},$$
 que es un valor entre 0 y 1. Cuanto más cercana a 1 está, mejor es la representación.
 ```
 
@@ -1241,14 +1241,47 @@ $$\sum_{j=1}^p Var(X_j) =  \sum_{j=1}^p \sigma_{j}.$$
 El lado izquierdo se llama *Varianza total* de la matriz $X$. Componentes principales particiona la varianza total de la matriz $X$ en 
 componentes 
 
+## ¿Centrar o no centrar por columna?
 
+Típicamente, antes de aplicar SVD hacemos algunos pasos de procesamiento
+de las variables. En componentes principales, este paso de procesamiento
+es centrar la tabla por columnas. Conviene hacer esto cuando:
 
+1. Centramos si las medias de las columnas no tienen información importante - es mejor eliminar esta parte de variación desde el principio para no 
+lidiar con esta información en 
+las dimensiones que obtengamos. En otro caso, quizá es mejor no centrar.
 
+2. Centramos si nos interesa más tener una interpretación en términos de varianzas y covarianzas que hacer una aproximación de los datos originales.
+
+Sin embargo, también es importante notar que muchas veces **los resultados de ambos
+análisis son similares** en cuanto a interpretación y en cuanto a usos posteriores
+de las dimensiones obtenidas.
+
+### Ejemplo: resultados similares{-}
+
+En el ejemplo de gasto en rubros que vimos arriba, los pesos $v_j$ son muy similares:
+
+```{r}
+comps_1 <- princomp(USPersonalExpenditure[,c(1,3,5)])
+svd_1 <- svd(USPersonalExpenditure[,c(1,3,5)])
+comps_1$loadings[,]
+svd_1$v
+```
+
+```{r}
+comps_1$scores
+svd_1$u %*% diag(svd_1$d)
+```
+
+Llegaríamos a conclusiones similares si interpretamos cualquiera de los dos análisis
+(verifica por ejemplo el ordenamiento de rubros y años en cada dimensión).
 
 ### Ejemplo: más apropiado hacer svd sin centrar {-}
 
+
+
+
 ### Ejemplo: más apropiado hacer svd centrando (componentes principales) {-}
 
-### Interpretación de componentes principales
 
 
