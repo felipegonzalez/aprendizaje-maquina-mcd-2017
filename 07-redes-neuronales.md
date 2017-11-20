@@ -1179,9 +1179,9 @@ library(keras)
 ```
 
 ```
-## The following object is masked from 'package:igraph':
+## The following objects are masked from 'package:igraph':
 ## 
-##     normalize
+##     %<-%, normalize
 ```
 Escalamos y preparamos los datos:
 
@@ -1264,13 +1264,13 @@ score
 
 ```
 ## $loss
-## [1] 0.4390325
+## [1] 0.4353766
 ## 
 ## $acc
-## [1] 0.7891566
+## [1] 0.7861446
 ## 
 ## $binary_crossentropy
-## [1] 0.4344915
+## [1] 0.4310948
 ```
 
 ```r
@@ -1281,8 +1281,8 @@ tab_confusion
 ```
 ##    y_valid
 ##       0   1
-##   0 194  41
-##   1  29  68
+##   0 194  42
+##   1  29  67
 ```
 
 ```r
@@ -1292,8 +1292,8 @@ prop.table(tab_confusion, 2)
 ```
 ##    y_valid
 ##             0         1
-##   0 0.8699552 0.3761468
-##   1 0.1300448 0.6238532
+##   0 0.8699552 0.3853211
+##   1 0.1300448 0.6146789
 ```
 
 Es importante monitorear las curvas de aprendizaje (entrenamiento y

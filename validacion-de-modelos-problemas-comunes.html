@@ -7,7 +7,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Aprendizaje de máquina</title>
   <meta name="description" content="Notas y material para el curso de aprendizaje de máquina 2017 (ITAM)">
-  <meta name="generator" content="bookdown 0.5.9 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown 0.5.10 and GitBook 2.6.7">
 
   <meta property="og:title" content="Aprendizaje de máquina" />
   <meta property="og:type" content="book" />
@@ -25,7 +25,7 @@
 <meta name="author" content="Felipe González">
 
 
-<meta name="date" content="2017-11-14">
+<meta name="date" content="2017-11-20">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -355,15 +355,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="14.6" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#svd-para-peliculas-de-netflix"><i class="fa fa-check"></i><b>14.6</b> SVD para películas de netflix</a><ul>
 <li class="chapter" data-level="14.6.1" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#calidad-de-representacion-de-svd."><i class="fa fa-check"></i><b>14.6.1</b> Calidad de representación de SVD.</a></li>
 <li class="chapter" data-level="" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#ejemplo-55"><i class="fa fa-check"></i>Ejemplo</a></li>
-</ul></li>
-<li class="chapter" data-level="14.7" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#componentes-principales"><i class="fa fa-check"></i><b>14.7</b> Componentes principales</a><ul>
-<li class="chapter" data-level="" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#ejemplo-57"><i class="fa fa-check"></i>Ejemplo</a></li>
-<li class="chapter" data-level="14.7.1" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#varianza-y-covarianza-en-componentes-principales."><i class="fa fa-check"></i><b>14.7.1</b> Varianza y Covarianza en componentes principales.</a></li>
-</ul></li>
-<li class="chapter" data-level="14.8" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#centrar-o-no-centrar-por-columna"><i class="fa fa-check"></i><b>14.8</b> ¿Centrar o no centrar por columna?</a><ul>
-<li class="chapter" data-level="" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#ejemplo-resultados-similares"><i class="fa fa-check"></i>Ejemplo: resultados similares</a></li>
-<li class="chapter" data-level="" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#ejemplo-mas-apropiado-hacer-svd-sin-centrar"><i class="fa fa-check"></i>Ejemplo: más apropiado hacer svd sin centrar</a></li>
-<li class="chapter" data-level="" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#ejemplo-mas-apropiado-hacer-svd-centrando-componentes-principales"><i class="fa fa-check"></i>Ejemplo: más apropiado hacer svd centrando (componentes principales)</a></li>
+<li class="chapter" data-level="" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#tarea-para-27-de-noviembre"><i class="fa fa-check"></i>Tarea (para 27 de Noviembre)</a></li>
 </ul></li>
 </ul></li>
 <li class="divider"></li>
@@ -446,7 +438,7 @@ ajustar_evaluar &lt;-<span class="st"> </span><span class="cf">function</span>(d
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">errores &lt;-<span class="st"> </span><span class="kw">simular_datos</span>(<span class="dv">500</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">separar</span>(<span class="dt">prop=</span> <span class="kw">c</span>(<span class="fl">0.4</span>,<span class="fl">0.4</span>,<span class="fl">0.2</span>)) <span class="op">%&gt;%</span><span class="st"> </span>ajustar_evaluar
 errores</code></pre></div>
 <pre><code>## error_valida error_prueba 
-##     2.285886     3.447571</code></pre>
+##     1.850630     4.935614</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">reps_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">map</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">50</span>, simular_datos, <span class="dt">n =</span> <span class="dv">500</span>) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">        </span><span class="kw">map</span>(separar, <span class="dt">prop=</span> <span class="kw">c</span>(<span class="fl">0.6</span>,<span class="fl">0.2</span>,<span class="fl">0.2</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">        </span><span class="kw">map</span>(ajustar_evaluar) <span class="op">%&gt;%</span>
@@ -516,7 +508,7 @@ gr_reps_<span class="dv">2</span> &lt;-<span class="st"> </span>reps_<span class
 }
 <span class="kw">seleccion_ajuste</span>()</code></pre></div>
 <pre><code>## error_valida error_prueba 
-##        0.040        0.512</code></pre>
+##         0.06         0.51</code></pre>
 <p>El resultado es catastrófico otra vez:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">errores_selec &lt;-<span class="st"> </span><span class="kw">map</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">30</span>, seleccion_ajuste) <span class="op">%&gt;%</span><span class="st"> </span>transpose <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">map</span>(unlist) <span class="op">%&gt;%</span><span class="st"> </span>as.data.frame
 <span class="kw">ggplot</span>(errores_selec, <span class="kw">aes</span>(<span class="dt">x=</span>error_prueba, <span class="dt">y=</span>error_valida)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span><span class="kw">geom_abline</span>(<span class="dt">colour=</span><span class="st">&#39;red&#39;</span>) <span class="op">+</span>

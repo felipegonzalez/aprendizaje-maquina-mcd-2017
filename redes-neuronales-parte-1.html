@@ -7,7 +7,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Aprendizaje de máquina</title>
   <meta name="description" content="Notas y material para el curso de aprendizaje de máquina 2017 (ITAM)">
-  <meta name="generator" content="bookdown 0.5.9 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown 0.5.10 and GitBook 2.6.7">
 
   <meta property="og:title" content="Aprendizaje de máquina" />
   <meta property="og:type" content="book" />
@@ -25,7 +25,7 @@
 <meta name="author" content="Felipe González">
 
 
-<meta name="date" content="2017-11-14">
+<meta name="date" content="2017-11-20">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -355,15 +355,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="14.6" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#svd-para-peliculas-de-netflix"><i class="fa fa-check"></i><b>14.6</b> SVD para películas de netflix</a><ul>
 <li class="chapter" data-level="14.6.1" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#calidad-de-representacion-de-svd."><i class="fa fa-check"></i><b>14.6.1</b> Calidad de representación de SVD.</a></li>
 <li class="chapter" data-level="" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#ejemplo-55"><i class="fa fa-check"></i>Ejemplo</a></li>
-</ul></li>
-<li class="chapter" data-level="14.7" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#componentes-principales"><i class="fa fa-check"></i><b>14.7</b> Componentes principales</a><ul>
-<li class="chapter" data-level="" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#ejemplo-57"><i class="fa fa-check"></i>Ejemplo</a></li>
-<li class="chapter" data-level="14.7.1" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#varianza-y-covarianza-en-componentes-principales."><i class="fa fa-check"></i><b>14.7.1</b> Varianza y Covarianza en componentes principales.</a></li>
-</ul></li>
-<li class="chapter" data-level="14.8" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#centrar-o-no-centrar-por-columna"><i class="fa fa-check"></i><b>14.8</b> ¿Centrar o no centrar por columna?</a><ul>
-<li class="chapter" data-level="" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#ejemplo-resultados-similares"><i class="fa fa-check"></i>Ejemplo: resultados similares</a></li>
-<li class="chapter" data-level="" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#ejemplo-mas-apropiado-hacer-svd-sin-centrar"><i class="fa fa-check"></i>Ejemplo: más apropiado hacer svd sin centrar</a></li>
-<li class="chapter" data-level="" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#ejemplo-mas-apropiado-hacer-svd-centrando-componentes-principales"><i class="fa fa-check"></i>Ejemplo: más apropiado hacer svd centrando (componentes principales)</a></li>
+<li class="chapter" data-level="" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#tarea-para-27-de-noviembre"><i class="fa fa-check"></i>Tarea (para 27 de Noviembre)</a></li>
 </ul></li>
 </ul></li>
 <li class="divider"></li>
@@ -975,9 +967,9 @@ Nótese que back-propagation consiste principalmente de mutliplicaciones de matr
 <span class="kw">library</span>(keras)</code></pre></div>
 <pre><code>## 
 ## Attaching package: &#39;keras&#39;</code></pre>
-<pre><code>## The following object is masked from &#39;package:igraph&#39;:
+<pre><code>## The following objects are masked from &#39;package:igraph&#39;:
 ## 
-##     normalize</code></pre>
+##     %&lt;-%, normalize</code></pre>
 <p>Escalamos y preparamos los datos:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(readr)
 <span class="kw">library</span>(tidyr)
@@ -1030,24 +1022,24 @@ modelo_tc <span class="op">%&gt;%</span><span class="st"> </span>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">score &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">evaluate</span>(x_valid_s, y_valid)
 score</code></pre></div>
 <pre><code>## $loss
-## [1] 0.4390325
+## [1] 0.4353766
 ## 
 ## $acc
-## [1] 0.7891566
+## [1] 0.7861446
 ## 
 ## $binary_crossentropy
-## [1] 0.4344915</code></pre>
+## [1] 0.4310948</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tab_confusion &lt;-<span class="st"> </span><span class="kw">table</span>(modelo_tc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">predict_classes</span>(x_valid_s),y_valid) 
 tab_confusion</code></pre></div>
 <pre><code>##    y_valid
 ##       0   1
-##   0 194  41
-##   1  29  68</code></pre>
+##   0 194  42
+##   1  29  67</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">prop.table</span>(tab_confusion, <span class="dv">2</span>)</code></pre></div>
 <pre><code>##    y_valid
 ##             0         1
-##   0 0.8699552 0.3761468
-##   1 0.1300448 0.6238532</code></pre>
+##   0 0.8699552 0.3853211
+##   1 0.1300448 0.6146789</code></pre>
 <p>Es importante monitorear las curvas de aprendizaje (entrenamiento y validación) para diagnosticar mejoras:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df_iteraciones &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(iteraciones)
 <span class="kw">ggplot</span>(df_iteraciones, <span class="kw">aes</span>(<span class="dt">x=</span>epoch, <span class="dt">y=</span>value, <span class="dt">colour=</span>data, <span class="dt">group=</span>data)) <span class="op">+</span><span class="st"> </span>

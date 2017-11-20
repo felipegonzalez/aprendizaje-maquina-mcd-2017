@@ -7,7 +7,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Aprendizaje de máquina</title>
   <meta name="description" content="Notas y material para el curso de aprendizaje de máquina 2017 (ITAM)">
-  <meta name="generator" content="bookdown 0.5.9 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown 0.5.10 and GitBook 2.6.7">
 
   <meta property="og:title" content="Aprendizaje de máquina" />
   <meta property="og:type" content="book" />
@@ -25,7 +25,7 @@
 <meta name="author" content="Felipe González">
 
 
-<meta name="date" content="2017-11-14">
+<meta name="date" content="2017-11-20">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -355,15 +355,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="14.6" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#svd-para-peliculas-de-netflix"><i class="fa fa-check"></i><b>14.6</b> SVD para películas de netflix</a><ul>
 <li class="chapter" data-level="14.6.1" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#calidad-de-representacion-de-svd."><i class="fa fa-check"></i><b>14.6.1</b> Calidad de representación de SVD.</a></li>
 <li class="chapter" data-level="" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#ejemplo-55"><i class="fa fa-check"></i>Ejemplo</a></li>
-</ul></li>
-<li class="chapter" data-level="14.7" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#componentes-principales"><i class="fa fa-check"></i><b>14.7</b> Componentes principales</a><ul>
-<li class="chapter" data-level="" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#ejemplo-57"><i class="fa fa-check"></i>Ejemplo</a></li>
-<li class="chapter" data-level="14.7.1" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#varianza-y-covarianza-en-componentes-principales."><i class="fa fa-check"></i><b>14.7.1</b> Varianza y Covarianza en componentes principales.</a></li>
-</ul></li>
-<li class="chapter" data-level="14.8" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#centrar-o-no-centrar-por-columna"><i class="fa fa-check"></i><b>14.8</b> ¿Centrar o no centrar por columna?</a><ul>
-<li class="chapter" data-level="" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#ejemplo-resultados-similares"><i class="fa fa-check"></i>Ejemplo: resultados similares</a></li>
-<li class="chapter" data-level="" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#ejemplo-mas-apropiado-hacer-svd-sin-centrar"><i class="fa fa-check"></i>Ejemplo: más apropiado hacer svd sin centrar</a></li>
-<li class="chapter" data-level="" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#ejemplo-mas-apropiado-hacer-svd-centrando-componentes-principales"><i class="fa fa-check"></i>Ejemplo: más apropiado hacer svd centrando (componentes principales)</a></li>
+<li class="chapter" data-level="" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#tarea-para-27-de-noviembre"><i class="fa fa-check"></i>Tarea (para 27 de Noviembre)</a></li>
 </ul></li>
 </ul></li>
 <li class="divider"></li>
@@ -1244,139 +1236,12 @@ norma_X &lt;-<span class="st"> </span><span class="dv">738958222</span>
 <pre><code>## [1] 0.02353302</code></pre>
 </div>
 </div>
-</div>
-<div id="componentes-principales" class="section level2">
-<h2><span class="header-section-number">14.7</span> Componentes principales</h2>
-<p>Componentes principales es la descomposición en valores singulares aplicada a una matriz de datos centrada por columna. Esta operación convierte el problema de aproximación de matrices de rango bajo en uno de aproximaciones que buscan explicar la mayoría de la <em>covarianza</em> de las variables de la matriz de datos <span class="math inline">\(X\)</span>.</p>
-<p>Consideremos entonces una matriz de datos <span class="math inline">\(X\)</span> de tamaño <span class="math inline">\(n\times p\)</span>. Definimos la <strong>matrix centrada</strong> por columna <span class="math inline">\(\tilde{X}\)</span> , que se calcula como <span class="math display">\[\tilde{X}_{i,j} = X_{i,j} - \mu_j\]</span> donde <span class="math inline">\(\mu_j = \frac{1}{n} \sum_j X_{i,j}\)</span>.</p>
-<ul>
-<li>La diferencia en construcción entre svd y svd con columnas centradas (componentes principales) es que en svd las proyecciones se hacen pasando por el origen, pero en componentes principales se hacen a partir del centroide de los datos</li>
-</ul>
-<div id="ejemplo-57" class="section level3 unnumbered">
-<h3>Ejemplo</h3>
-<p>Veamos primero el último ejemplo simulado que hicimos anterioremnte. Primero centramos los datos por columna:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">datos_c &lt;-<span class="st"> </span><span class="kw">scale</span>(datos <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="op">-</span>selec), <span class="dt">scale =</span> <span class="ot">FALSE</span>) <span class="op">%&gt;%</span><span class="st"> </span>as.data.frame
-<span class="kw">ggplot</span>(datos_c, <span class="kw">aes</span>(<span class="dt">x=</span>x_<span class="dv">1</span>, <span class="dt">y=</span>x_<span class="dv">2</span>)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>() <span class="op">+</span>
-<span class="st">  </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> <span class="dv">0</span>, <span class="dt">colour=</span><span class="st">&#39;red&#39;</span>) <span class="op">+</span>
-<span class="st"> </span><span class="kw">geom_hline</span>(<span class="dt">yintercept =</span> <span class="dv">0</span>, <span class="dt">colour=</span><span class="st">&#39;red&#39;</span>)</code></pre></div>
-<p><img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-73-1.png" width="672" /></p>
-<p>Y ahora calculamos la descomposición en valores singulares</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">svd_x &lt;-<span class="st"> </span><span class="kw">svd</span>(datos_c)
-v &lt;-<span class="st"> </span>svd_x<span class="op">$</span>v <span class="op">%&gt;%</span><span class="st"> </span>t <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">as.data.frame</span>() 
-u &lt;-<span class="st"> </span>svd_x<span class="op">$</span>u <span class="op">%&gt;%</span><span class="st"> </span>data.frame
-<span class="kw">colnames</span>(v) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;x_1&#39;</span>,<span class="st">&#39;x_2&#39;</span>)
-<span class="kw">colnames</span>(u) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;x_1&#39;</span>,<span class="st">&#39;x_2&#39;</span>)
-d &lt;-<span class="st"> </span>svd_x<span class="op">$</span>d
-v</code></pre></div>
-<pre><code>##        x_1       x_2
-## 1 0.507328  0.861753
-## 2 0.861753 -0.507328</code></pre>
-<p>Notemos que los resultados son similares, pero no son los mismos.</p>
-<p>Graficamos ahora los dos vectores <span class="math inline">\(v_1\)</span> y <span class="math inline">\(v_2\)</span>, que en este contexto se llaman <em>direcciones principales</em></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(datos_c) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">x=</span>x_<span class="dv">1</span>, <span class="dt">y=</span>x_<span class="dv">2</span>)) <span class="op">+</span>
-<span class="st">  </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> <span class="dv">0</span>, <span class="dt">colour=</span><span class="st">&#39;red&#39;</span>) <span class="op">+</span>
-<span class="st"> </span><span class="kw">geom_hline</span>(<span class="dt">yintercept =</span> <span class="dv">0</span>, <span class="dt">colour=</span><span class="st">&#39;red&#39;</span>) <span class="op">+</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">geom_segment</span>(<span class="dt">data =</span> v, <span class="kw">aes</span>(<span class="dt">xend=</span> <span class="dv">5</span><span class="op">*</span>x_<span class="dv">1</span>, <span class="dt">yend=</span><span class="dv">5</span><span class="op">*</span>x_<span class="dv">2</span>, <span class="dt">x=</span><span class="dv">0</span>, <span class="dt">y=</span><span class="dv">0</span>), <span class="dt">col=</span><span class="st">&#39;red&#39;</span>, <span class="dt">size=</span><span class="fl">1.1</span>,
-               <span class="dt">arrow =</span> <span class="kw">arrow</span>(<span class="dt">length =</span> <span class="kw">unit</span>(<span class="fl">0.3</span>,<span class="st">&quot;cm&quot;</span>)))  <span class="op">+</span>
-<span class="st">  </span><span class="kw">coord_equal</span>()</code></pre></div>
-<p><img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-75-1.png" width="672" /></p>
-<p>Las componentes de las proyecciones de los datos sobre las direcciones principales dan las <strong>componentes principales</strong> (nótese que multiplicamos por los valores singulares):</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(svd_x<span class="op">$</span>u <span class="op">%*%</span><span class="st"> </span><span class="kw">diag</span>(svd_x<span class="op">$</span>d))</code></pre></div>
-<pre><code>##            [,1]       [,2]
-## [1,]  0.3230641  0.9257829
-## [2,]  0.4070429  1.5360770
-## [3,] -1.2788977 -0.2762829
-## [4,]  0.8910247  0.4071926
-## [5,] -4.4466993 -0.5743111
-## [6,] -1.2267878  0.3470759</code></pre>
-<p>Que podemos graficar</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">comps &lt;-<span class="st"> </span>svd_x<span class="op">$</span>u <span class="op">%*%</span><span class="st"> </span><span class="kw">diag</span>(svd_x<span class="op">$</span>d) <span class="op">%&gt;%</span><span class="st"> </span>data.frame
-<span class="kw">ggplot</span>(comps, <span class="kw">aes</span>(<span class="dt">x=</span>X1, <span class="dt">y=</span>X2)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>()<span class="op">+</span>
-<span class="st">  </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> <span class="dv">0</span>, <span class="dt">colour=</span><span class="st">&#39;red&#39;</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">yintercept =</span> <span class="dv">0</span>, <span class="dt">colour=</span><span class="st">&#39;red&#39;</span>)</code></pre></div>
-<p><img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-77-1.png" width="672" /></p>
-<p>Este resultado lo podemos obtener directamente usando la función <em>princomp</em></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">comp_principales &lt;-<span class="st"> </span><span class="kw">princomp</span>(datos <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="op">-</span>selec))
-scores &lt;-<span class="st"> </span>comp_principales<span class="op">$</span>scores
-<span class="kw">head</span>(scores)</code></pre></div>
-<pre><code>##          Comp.1     Comp.2
-## [1,]  0.3230641 -0.9257829
-## [2,]  0.4070429 -1.5360770
-## [3,] -1.2788977  0.2762829
-## [4,]  0.8910247 -0.4071926
-## [5,] -4.4466993  0.5743111
-## [6,] -1.2267878 -0.3470759</code></pre>
-<p>Y verificamos que los resultados son los mismos:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">qplot</span>(scores[,<span class="dv">1</span>], comps[,<span class="dv">1</span>])</code></pre></div>
-<p><img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-79-1.png" width="384" /></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">qplot</span>(scores[,<span class="dv">2</span>], <span class="op">-</span>comps[,<span class="dv">2</span>])</code></pre></div>
-<p><img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-79-2.png" width="384" /></p>
-<hr />
-</div>
-<div id="varianza-y-covarianza-en-componentes-principales." class="section level3">
-<h3><span class="header-section-number">14.7.1</span> Varianza y Covarianza en componentes principales.</h3>
-<p>Cuando centramos por columna, la svd es un tipo de análisis de la matriz de varianzas y covarianzas de la matriz <span class="math inline">\(X\)</span>, dada por</p>
-<p><span class="math display">\[C = \frac{1}{n} \tilde{X}^t \tilde{X}\]</span> (Nota: asegúrate de que entiendes por qué esta es la matriz de varianzas y covarianzas de <span class="math inline">\(X\)</span>).</p>
-<p>Y nótese que las proyecciones <span class="math inline">\(\tilde{X}v_j = \sigma_j u_j = d_j\)</span> satisfacen que</p>
+<div id="tarea-para-27-de-noviembre" class="section level3 unnumbered">
+<h3>Tarea (para 27 de Noviembre)</h3>
 <ol style="list-style-type: decimal">
-<li>La media de las proyecciones d_j es igual a cero</li>
+<li><p>Validación: lee este <a href="http://www.fast.ai/2017/11/13/validation-sets/">blogpost</a>, acerca de la construcción apropiada de conjuntos de validación y prueba.</p></li>
+<li><p>Reducción de dimensionalidad: ve <em>script/tarea_12_dimensionalidad.Rmd</em></p></li>
 </ol>
-<p>Pues <span class="math display">\[\sigma_j \sum_k {u_{j,k}} = \sum_k \sum_i (\tilde{X}_{k,i})v_{j,i} =
-\sum_i v_{j,i}\sum_k (\tilde{X}_{k,i}) = 0,\]</span> pues las columnas de <span class="math inline">\(\tilde{X}\)</span> tienen media cero.</p>
-<p>2- <span class="math inline">\(\sigma_j^2\)</span> es la varianza de la proyección <span class="math inline">\(d_j\)</span>, pues <span class="math display">\[Var(d_j) = \sigma_j^2 \sum_k (u_{j,k} - 0)^2 = \sigma_j^2,\]</span> pues el vector <span class="math inline">\(u_j\)</span> tienen norma 1.</p>
-<ol start="3" style="list-style-type: decimal">
-<li>La ortogonalidad de los vectores <span class="math inline">\(u_j\)</span> se interpreta ahora en términos de covarianza: <span class="math display">\[Cov(d_i,d_j) = \frac{1}{n}\sum_{k=1}^n (d_{i,k}-0)(d_{j,k}-0) =
-\frac{1}{n}\sum_{k=1}^n \sigma_j\sigma_i u_{i,k}u_{j,k} = 0\]</span></li>
-</ol>
-<p>Esto implica, de acuerdo a lo que vimos antes en SVD, que en componentes principales</p>
-<p>Buscamos sucesivamente direcciones para proyectar <em>que tienen varianza máxima</em> (ver ejemplo anterior), y que sean no correlacionadas de forma que no compartan información lineal entre ellas.</p>
-<p>Adicionalmente, vimos que podíamos escribir <span class="math display">\[||\tilde{X}||^2_F =  \sum_{j=1}^p \sigma_{j}\]</span> Y el lado izquierdo es en este caso una suma de varianzas: <span class="math display">\[\sum_{j=1}^p Var(X_j) =  \sum_{j=1}^p \sigma_{j}.\]</span> El lado izquierdo se llama <em>Varianza total</em> de la matriz <span class="math inline">\(X\)</span>. Componentes principales particiona la varianza total de la matriz <span class="math inline">\(X\)</span> en componentes</p>
-</div>
-</div>
-<div id="centrar-o-no-centrar-por-columna" class="section level2">
-<h2><span class="header-section-number">14.8</span> ¿Centrar o no centrar por columna?</h2>
-<p>Típicamente, antes de aplicar SVD hacemos algunos pasos de procesamiento de las variables. En componentes principales, este paso de procesamiento es centrar la tabla por columnas. Conviene hacer esto cuando:</p>
-<ol style="list-style-type: decimal">
-<li><p>Centramos si las medias de las columnas no tienen información importante - es mejor eliminar esta parte de variación desde el principio para no lidiar con esta información en las dimensiones que obtengamos. En otro caso, quizá es mejor no centrar.</p></li>
-<li><p>Centramos si nos interesa más tener una interpretación en términos de varianzas y covarianzas que hacer una aproximación de los datos originales.</p></li>
-</ol>
-<p>Sin embargo, también es importante notar que muchas veces <strong>los resultados de ambos análisis son similares</strong> en cuanto a interpretación y en cuanto a usos posteriores de las dimensiones obtenidas.</p>
-<div id="ejemplo-resultados-similares" class="section level3 unnumbered">
-<h3>Ejemplo: resultados similares</h3>
-<p>En el ejemplo de gasto en rubros que vimos arriba, los pesos <span class="math inline">\(v_j\)</span> son muy similares:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">comps_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">princomp</span>(USPersonalExpenditure[,<span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">3</span>,<span class="dv">5</span>)])
-svd_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">svd</span>(USPersonalExpenditure[,<span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">3</span>,<span class="dv">5</span>)])
-comps_<span class="dv">1</span><span class="op">$</span>loadings[,]</code></pre></div>
-<pre><code>##          Comp.1     Comp.2      Comp.3
-## 1940 -0.2099702 -0.2938755  0.93249650
-## 1950 -0.5623341 -0.7439168 -0.36106546
-## 1960 -0.7998081  0.6001875  0.00905589</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">svd_<span class="dv">1</span><span class="op">$</span>v</code></pre></div>
-<pre><code>##            [,1]       [,2]        [,3]
-## [1,] -0.2007388 -0.3220495 -0.92519623
-## [2,] -0.5423269 -0.7499672  0.37872247
-## [3,] -0.8158342  0.5777831 -0.02410854</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">comps_<span class="dv">1</span><span class="op">$</span>scores</code></pre></div>
-<pre><code>##                        Comp.1     Comp.2      Comp.3
-## Food and Tobacco    -68.38962 -0.8783065  0.06424607
-## Household Operation -16.25334  0.9562769 -0.16502902
-## Medical and Health   16.13276  2.2900370  0.07312028
-## Personal Care        33.29512 -1.0003211  0.23036177
-## Private Education    35.21507 -1.3676863 -0.20269910</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">svd_<span class="dv">1</span><span class="op">$</span>u <span class="op">%*%</span><span class="st"> </span><span class="kw">diag</span>(svd_<span class="dv">1</span><span class="op">$</span>d)</code></pre></div>
-<pre><code>##             [,1]       [,2]        [,3]
-## [1,] -107.593494 -1.6959766 -0.06011861
-## [2,]  -55.526778  1.5630078  0.15457655
-## [3,]  -23.188704  3.7722060 -0.09723774
-## [4,]   -5.942974  0.9476773 -0.16452015
-## [5,]   -4.014277  0.6433704  0.27845344</code></pre>
-<p>Llegaríamos a conclusiones similares si interpretamos cualquiera de los dos análisis (verifica por ejemplo el ordenamiento de rubros y años en cada dimensión).</p>
-</div>
-<div id="ejemplo-mas-apropiado-hacer-svd-sin-centrar" class="section level3 unnumbered">
-<h3>Ejemplo: más apropiado hacer svd sin centrar</h3>
-</div>
-<div id="ejemplo-mas-apropiado-hacer-svd-centrando-componentes-principales" class="section level3 unnumbered">
-<h3>Ejemplo: más apropiado hacer svd centrando (componentes principales)</h3>
 
 <div id="refs" class="references">
 <div>
