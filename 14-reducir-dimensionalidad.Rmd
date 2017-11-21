@@ -1352,104 +1352,27 @@ mean(svd_w$u[,1])
 sd(svd_w$u[,1])
 ```
 
-*Observación* La primera componente de svd está haciendo el trabaja de restar la media.
+*Observación* La primera componente de svd está haciendo el trabajo de ajustar la media.
 Como no nos interesa este hecho, podemos mejor centrar desde el principio y trabajar
 con las componentes principales.
+
+## Ejemplo: donde no centrar funciona bien  {-}
+
+Considera el ejemplo de la tarea con la tabla de gastos en distintas categorías
+de alimentos según el decil de ingreso del hogar. ¿Por qué en este ejemplo centrar
+por columna no es tan buena idea?
+
+
+### Otros tipos de centrado
+
+Es posible hacer doble centrado, por ejemplo (por renglón y por columna). Discute por qué
+el doble centrado puede ser una buena idea para los datos del tipo de Netflix.
 
 ### Reescalando variables
 
 
-Este resultado muestra que las componentes que más varianza explican están asociadas
-a las medidades de free.sulfur.dioxide y total.sulfur.dioxide. La siguiente está asociada
-con el contenido de residual.sugar.
-
-Sin embargo, esto no es muy interesante. El problema es que las unidades de
-las columnas son distintas, y las escalas varían mucho:
-
-```{r}
-apply(vinos,2,mean)
-```
-
-Podemos escalar esta matriz para obtener resultados más interesantes (pues no nos
-interesa explicar que las unidades de sulfur.dioxide son distintas!). Podemos
-reescalar a mano o usar el parámetro (cor=TRUE)
-
-```{r}
-comp_vinos <- princomp(vinos, cor = TRUE)
-round(comp_vinos$loadings[,1:3],2)
-```
 
 
-
-
-
-
-
-
-
-
-Vemos que la primera variable tiene pesos negativos grandes para *potato* y
-*rancid*, y pesos más chicos el resto. Esta es una
-dimensión que indica qué tanto dominan estos dos sabores juntos
-
-La segunda componente mide más bien qué tanto dominan sabores agradables
-(potato y buttery, vs painty y rancid)
-
-Esto indica que una muestra, por ejemplo, puede tener tanto notas buenas
-como malas (más intensas) y otras ni buenas ni malas (deshabridas)
-
-Podemos graficar las muestras:
-  ```{r}
-plot(componentes_papas$scores[,1:2])
-biplot(componentes_papas)
-```
-
-Si hacemos svd
-
-```{r}
-mat_fries <- fries %>% ungroup %>% select(-subject, -treatment)
-svd_papas <- svd(mat_fries)
-v <- svd_papas$v[,1:2]
-rownames(v) <- colnames(mat_fries)
-v
-```
-
-La primera componente captura un patrón que depende de la media de cada variable
-
-```{r}
-medias <- fries %>% gather(variable, valor, buttery:rancid) %>%
-  group_by(variable) %>% summarise(media = mean(valor))
-plot(medias$media, v[,1])
-```
-
-Y vemos que esta no es una dimensión interesante para estos datos, pues
-para estas muestra naturalmente el sabor *potato* es más dominante que
-el sabor *grassy*, por ejemplo. La segunda dimensión sin embargo,
-es más interesante, y opone los sabores buenos a los malos. Así que tampoco
-es una mala solución, pero se puede argumentar como arriba que la segunda es preferible
-
-Para ver por qué difieren, consideramos svd con solo dos variables y 
-consideremos la primera dimensión donde se proyectan los datos:
-  
-  ```{r}
-svd_1 <- svd(fries %>% ungroup %>% select(buttery, rancid))
-ggplot(fries, aes(x=buttery, y= rancid)) + geom_point() + coord_equal() +
-  geom_segment(aes(x=0,y=0, xend=-10*svd_1$v[1,1], yend=-10*svd_1$v[2,1]))
-```
-En el caso centrado, sin embargo, la componente mide la variación
-en buttery:
-  
-  ```{r}
-centradas <- fries %>% ungroup %>% select(buttery, rancid)
-centradas <- scale(centradas, center=TRUE, scale=FALSE) %>% data.frame
-svd_1 <- svd(centradas)
-ggplot(centradas, aes(x=buttery, y= rancid)) + geom_point() + coord_equal() +
-  geom_segment(aes(x=0,y=0, xend=5*svd_1$v[1,1], yend=5*svd_1$v[2,1]))
-```
-
-
-
-### Ejemplo: más apropiado hacer svd centrando (componentes principales) {-}
 
 
 
