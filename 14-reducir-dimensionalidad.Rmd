@@ -1362,6 +1362,30 @@ Considera el ejemplo de la tarea con la tabla de gastos en distintas categorías
 de alimentos según el decil de ingreso del hogar. ¿Por qué en este ejemplo centrar
 por columna no es tan buena idea?
 
+```{r}
+deciles <- read_csv('./datos/enigh_deciles.csv') %>% as.data.frame
+deciles %>% arrange(desc(d1))
+deciles <- deciles %>% column_to_rownames(var  = 'X1')
+comp_enigh <- princomp(deciles)
+```
+
+Veamos las primeras dos componente, cuyas direcciones principales son:
+```{r}
+comp_enigh$loadings[,1:2]
+```
+
+```{r}
+comp_enigh$scores[,1:2]
+```
+
+
+Notamos que la primera componentese refiere al consumo relativamente alto de
+las categorías de consumo alto, especialmente por los deciles altos (Cereales, Carnes, Leche y derivados, etc.), no es tan fácil de interpetar.
+
+*Observación*: Quizá una solución más natural es hacer el análisis de componentes principales usando la transpuesta de esta matriz (usa la función *prcomp*), donde tiene más sentido
+centrar por categoría de alimento, y pensar que las observaciones son los distintos
+deciles (que en realidad son agrupaciones de observaciones).
+
 
 ### Otros tipos de centrado
 
@@ -1370,14 +1394,37 @@ el doble centrado puede ser una buena idea para los datos del tipo de Netflix.
 
 ### Reescalando variables
 
+Cuando las columnas tienen distintas unidades (especialmente si las escalas son
+muy diferentes), conviene reescalar la matriz antes de hacer el análisis centrado
+o no centrado. De otra forma, parte del análisis intenta absorber la diferencia en 
+unidades, lo cual generalmente no es de interés
 
+ - En componentes principales, podemos estandarizar las columnas.
+ - En el análisis no centrado, podemos poner las variables en escala 0-1, por ejemplo,
+ o dividir entre la media (si son variables positivas).
 
+### Ejemplo {-}
 
+```{r}
+comp <- princomp(attenu %>% select(-station, -event))
+comp$loadings[,1]
+```
 
+Y vemos que la dirección de la primera componente es justamente en la dirección de 
+la variable *dist* (es decir, la primera componente es *dist*). Esto es porque 
+la escala de *dist* es más amplia:
 
+```{r}
+apply(attenu %>% select(-station), 2, mean)
+```
 
+Esto lo corregimos estandarizando las columnas, o equivalentemente, usando
+*cor = TRUE* como opción en *princomp*
 
-
+```{r}
+comp <- princomp(attenu %>% select(-station, -event), cor  = TRUE)
+comp$loadings[,1]
+```
 
 ### Tarea (para 27 de Noviembre) {-}
 
