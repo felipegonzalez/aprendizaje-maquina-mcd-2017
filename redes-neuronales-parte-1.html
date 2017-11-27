@@ -25,7 +25,7 @@
 <meta name="author" content="Felipe González">
 
 
-<meta name="date" content="2017-11-25">
+<meta name="date" content="2017-11-27">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -355,6 +355,26 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="14.6" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#svd-para-peliculas-de-netflix"><i class="fa fa-check"></i><b>14.6</b> SVD para películas de netflix</a><ul>
 <li class="chapter" data-level="14.6.1" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#calidad-de-representacion-de-svd."><i class="fa fa-check"></i><b>14.6.1</b> Calidad de representación de SVD.</a></li>
 <li class="chapter" data-level="" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#ejemplo-55"><i class="fa fa-check"></i>Ejemplo</a></li>
+</ul></li>
+<li class="chapter" data-level="14.7" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#componentes-principales"><i class="fa fa-check"></i><b>14.7</b> Componentes principales</a><ul>
+<li class="chapter" data-level="" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#ejemplo-57"><i class="fa fa-check"></i>Ejemplo</a></li>
+<li class="chapter" data-level="14.7.1" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#varianza-en-componentes-principales."><i class="fa fa-check"></i><b>14.7.1</b> Varianza en componentes principales.</a></li>
+</ul></li>
+<li class="chapter" data-level="14.8" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#centrar-o-no-centrar-por-columna"><i class="fa fa-check"></i><b>14.8</b> ¿Centrar o no centrar por columna?</a><ul>
+<li class="chapter" data-level="" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#ejemplo-resultados-similares"><i class="fa fa-check"></i>Ejemplo: resultados similares</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#ejemplos-donde-es-buena-idea-centrar"><i class="fa fa-check"></i>Ejemplos: donde es buena idea centrar</a></li>
+<li class="chapter" data-level="" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#ejemplo-donde-no-centrar-funciona-bien"><i class="fa fa-check"></i>Ejemplo: donde no centrar funciona bien</a><ul>
+<li class="chapter" data-level="14.8.1" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#otros-tipos-de-centrado"><i class="fa fa-check"></i><b>14.8.1</b> Otros tipos de centrado</a></li>
+<li class="chapter" data-level="14.8.2" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#reescalando-variables"><i class="fa fa-check"></i><b>14.8.2</b> Reescalando variables</a></li>
+<li class="chapter" data-level="" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#ejemplo-58"><i class="fa fa-check"></i>Ejemplo</a></li>
+</ul></li>
+<li class="chapter" data-level="14.9" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#otros-metodos-t-sne"><i class="fa fa-check"></i><b>14.9</b> Otros métodos: t-SNE</a><ul>
+<li class="chapter" data-level="" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#ejemplo-59"><i class="fa fa-check"></i>Ejemplo</a></li>
+<li class="chapter" data-level="14.9.1" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#sne"><i class="fa fa-check"></i><b>14.9.1</b> SNE</a></li>
+<li class="chapter" data-level="14.9.2" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#minimizacion-para-sne"><i class="fa fa-check"></i><b>14.9.2</b> Minimización para SNE</a></li>
+<li class="chapter" data-level="" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#ejemplo-60"><i class="fa fa-check"></i>Ejemplo</a></li>
+<li class="chapter" data-level="14.9.3" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#perplexity"><i class="fa fa-check"></i><b>14.9.3</b> Perplexity</a></li>
 <li class="chapter" data-level="" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#tarea-para-27-de-noviembre"><i class="fa fa-check"></i>Tarea (para 27 de Noviembre)</a></li>
 </ul></li>
 </ul></li>
@@ -1022,24 +1042,24 @@ modelo_tc <span class="op">%&gt;%</span><span class="st"> </span>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">score &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">evaluate</span>(x_valid_s, y_valid)
 score</code></pre></div>
 <pre><code>## $loss
-## [1] 0.4342438
+## [1] 0.4343024
 ## 
 ## $acc
-## [1] 0.7921687
+## [1] 0.8042169
 ## 
 ## $binary_crossentropy
-## [1] 0.4303586</code></pre>
+## [1] 0.4302374</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tab_confusion &lt;-<span class="st"> </span><span class="kw">table</span>(modelo_tc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">predict_classes</span>(x_valid_s),y_valid) 
 tab_confusion</code></pre></div>
 <pre><code>##    y_valid
 ##       0   1
-##   0 194  40
-##   1  29  69</code></pre>
+##   0 197  39
+##   1  26  70</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">prop.table</span>(tab_confusion, <span class="dv">2</span>)</code></pre></div>
 <pre><code>##    y_valid
 ##             0         1
-##   0 0.8699552 0.3669725
-##   1 0.1300448 0.6330275</code></pre>
+##   0 0.8834081 0.3577982
+##   1 0.1165919 0.6422018</code></pre>
 <p>Es importante monitorear las curvas de aprendizaje (entrenamiento y validación) para diagnosticar mejoras:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df_iteraciones &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(iteraciones)
 <span class="kw">ggplot</span>(df_iteraciones, <span class="kw">aes</span>(<span class="dt">x=</span>epoch, <span class="dt">y=</span>value, <span class="dt">colour=</span>data, <span class="dt">group=</span>data)) <span class="op">+</span><span class="st"> </span>

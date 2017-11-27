@@ -212,7 +212,7 @@ sería
 
 $$X_1 = \sigma uv^t$$
 donde consideramos a $u$ y $v$ como vectores columna. El producto es
-de una matriz de $n\times 1$ contra una de $1\times p$, lo cual da una matriz de $n\timesp$.
+de una matriz de $n\times 1$ contra una de $1\times p$, lo cual da una matriz de $n\times p$.
 
 
 Podemos calcular como:
@@ -1172,16 +1172,23 @@ usando técnicas de álgebra lineal.
 La descomposición en valores singulares también se puede interpretar geométricamente.
 Para ver cómo funciona, primero observamos que:
 
-\BeginKnitrBlock{comentario}<div class="comentario">Los vectores $v_1,v_2, \ldots, v_p$ están en el espacio de variables o columnas
+\BeginKnitrBlock{comentario}<div class="comentario">**Proyecciones**
+
+Los vectores $v_1,v_2, \ldots, v_p$ están en el espacio de variables o columnas
 (son de dimensión $p$). La componente de la proyección 
-(ver [proyeccción de vectores](https://en.wikipedia.org/wiki/Vector_projection) )
+(ver [proyección de vectores](https://en.wikipedia.org/wiki/Vector_projection) )
 de la matriz de datos sobre una de estas dimensiones está dada por
 $$Xv_j,$$
-que son iguales a los scores de los casos
-$$\sigma_j u_j$$. </div>\EndKnitrBlock{comentario}
+que son iguales a los scores de los casos escalados por $\sigma$:
+$$\sigma_j u_j$$. 
+
+Las proyecciones $d_j = \sigma_j u_j$
+  son las variables que normalmente se usan para hacer análisis posterior,
+aunque cuando la escala de las proyecciones no es importante,
+también se pueden usar simplemente las $u_j$.</div>\EndKnitrBlock{comentario}
 
 Por ejemplo, la projeccion del rengón $x_i$ de la matriz $X$ es
-$(x_i^tv_j) v_j$ ($x_i^tv_j$ es un escalar, la componente de la proyección).
+$(x_i^tv_j) v_j$ (nótese que $x_i^tv_j$ es un escalar, la componente de la proyección).
 
 Consideremos unos datos simulados
 
@@ -1207,23 +1214,29 @@ u <- svd_x$u %>% data.frame
 colnames(v) <- c('x_1','x_2')
 colnames(u) <- c('x_1','x_2')
 d <- svd_x$d
+#Nota: podemos mover signos para hacer las gráficas y la interpetación
+# más simples
+v[,1] <- - v[,1]
+u[,1] <- - u[,1]
 v
 ```
 
 ```
-##          x_1        x_2
-## 1 -0.6726219 -0.7399864
-## 2 -0.7399864  0.6726219
+##         x_1        x_2
+## 1 0.6726219 -0.7399864
+## 2 0.7399864  0.6726219
 ```
 
-Graficamos ahora los dos vectores $v_1$ y $v_2$
+Graficamos ahora los dos vectores $v_1$ y $v_2$, escalándolos
+para ver mejor cómo quedan en relación a los datos (esto no es necesario
+hacerlo):
 
 
 ```r
 ggplot(datos) + geom_point(aes(x=x_1, y=x_2)) +
   geom_vline(xintercept = 0, colour='red') +
  geom_hline(yintercept = 0, colour='red') + 
-  geom_segment(data = v, aes(xend= -5*x_1, yend=-5*x_2, x=0, y=0), col='red', size=1.1,
+  geom_segment(data = v, aes(xend= 4*x_1, yend=4*x_2, x=0, y=0), col='red', size=1.1,
                arrow = arrow(length = unit(0.3,"cm")))  +
   coord_equal()
 ```
@@ -1244,14 +1257,13 @@ Por ejemplo, seleccionemos el primer punto y obtengamos sus proyecciones:
 
 
 ```r
-proy_1 <- (d[1])*u[1,1]*v[1,] #v_1 por el score en la dimensión 1 u[1,1]
-proy_2 <- (d[2])*u[1,2]*v[2,] #v_2 por el score en la dimensión 1 u[1,1]
+proy_1 <- (d[1])*u[1,1]*v[,1] #v_1 por el score en la dimensión 1 u[1,1]
+proy_2 <- (d[2])*u[1,2]*v[,2] #v_2 por el score en la dimensión 1 u[1,1]
 proy_2 + proy_1
 ```
 
 ```
-##        x_1      x_2
-## 2 3.030313 1.883698
+## [1] 3.030313 1.883698
 ```
 
 ```r
@@ -1292,7 +1304,8 @@ la DVS separa la información en partes que no tienen contenido común (desde el
  de vista lineal).</div>\EndKnitrBlock{comentario}
 
 Finalmente, muchas veces graficamos las proyecciones en el nuevo espacio creado
-por las dimensiones de la DVS.
+por las dimensiones de la DVS (nótese la escala distinta de
+los ejes).
 
 
 ```r
@@ -1441,10 +1454,11 @@ qplot(svd_parcial$v[,2])#
 
 
 ```r
+library(ggrepel)
 pel_graf <- V_peliculas %>% mutate(dist_0 = sqrt(v_2^2 + v_3^2)) 
 muestra <- pel_graf %>% mutate(etiqueta = ifelse(dist_0 > 0.08, name, ''))
 ggplot(muestra, aes(x=v_2, y=v_3, label=etiqueta)) + geom_point(alpha=0.2) + 
-  geom_text(size=2.5) + xlab('Mainstream vs Independiente') + ylab('Violenta/Acción vs Drama')
+  geom_text_repel(size=2.5) + xlab('Mainstream vs Independiente') + ylab('Violenta/Acción vs Drama')
 ```
 
 <img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-59-1.png" width="672" />
@@ -1454,7 +1468,7 @@ ggplot(muestra, aes(x=v_2, y=v_3, label=etiqueta)) + geom_point(alpha=0.2) +
 pel_graf <- V_peliculas %>% mutate(dist_0 = sqrt(v_3^2 + v_4^2)) 
 muestra <- pel_graf %>% mutate(etiqueta = ifelse(dist_0 > 0.08, name, ''))
 ggplot(muestra, aes(x=v_3, y=v_4, label=etiqueta)) + geom_point(alpha=0.2) + 
-  geom_text(size=2.5)  + xlab('Violenta/Acción vs Drama') + ylab('Fantasía/Ciencia Ficción')
+  geom_text_repel(size=2.5)  + xlab('Violenta/Acción vs Drama') + ylab('Fantasía/Ciencia Ficción')
 ```
 
 <img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-60-1.png" width="672" />
@@ -1586,7 +1600,7 @@ un análisis de dos dimensiones
 
 \BeginKnitrBlock{comentario}<div class="comentario">Podemos medir la calidad de la representación de $X$ ($n\times p$ con $p < n$) 
 de una aproximación $X_k$ de SVD mediante
-$$1-\frac{||X-X_k||_2^F}{||X||_2^F}  = \frac{\sigma_1^2 + \sigma_2^2 + \cdots \sigma_k^2}{\sigma_1^2 + \sigma_2^2 + \cdots \sigma_p^2},$$
+$$1-\frac{||X-X_k||_F^2}{||X||_F^2}  = \frac{\sigma_1^2 + \sigma_2^2 + \cdots \sigma_k^2}{\sigma_1^2 + \sigma_2^2 + \cdots \sigma_p^2},$$
 que es un valor entre 0 y 1. Cuanto más cercana a 1 está, mejor es la representación.</div>\EndKnitrBlock{comentario}
 
 **Observaciones**: Dependiendo de nuestro objetivo, nos interesa alcanzar distintos
@@ -1596,7 +1610,7 @@ niveles de calidad de representación. Por ejemplo, algunas reglas de dedo:
 casi completa de los datos, quizá buscamos calidad $>0.9$ o mayor.
 
 - Si nos interesa extraer los patrones más importantes, podemos considerar valores de calidad
-mucho más chicos, entendiendo que hay una buena parte de la información que no se explican
+mucho más chicos, entendiendo que hay una buena parte de la información que no se explica
 por nuestra aproximación.
 
 
@@ -1649,6 +1663,870 @@ contribución a este porcentaje de cada dimensión
 
 ```
 ## [1] 0.02353302
+```
+
+
+
+
+## Componentes principales
+
+Componentes principales es la descomposición en valores singulares aplicada
+a una matriz de datos centrada por columna. Esta operación convierte el problema
+de aproximación de matrices de rango bajo en uno de aproximaciones que buscan
+explicar la mayoría de la *varianza* (incluyendo covarianza) 
+de las variables de la matriz de datos $X$. 
+
+
+Consideremos entonces una matriz de datos $X$ de tamaño $n\times p$. Definimos
+la **matrix centrada** por columna $\tilde{X}$ , que se calcula como
+$$\tilde{X}_{i,j} = X_{i,j} - \mu_j$$
+  donde $\mu_j = \frac{1}{n} \sum_j X_{i,j}$.
+
+
+- La diferencia en construcción entre svd y svd con columnas centradas (componentes principales)
+es que en svd las proyecciones se hacen pasando por el origen, pero en componentes principales se hacen a partir del centroide de los datos
+
+### Ejemplo {-}
+
+Veamos primero el último ejemplo simulado que hicimos anterioremnte. Primero centramos
+los datos por columna:
+  
+
+```r
+datos_c <- scale(datos %>% select(-selec), scale = FALSE) %>% as.data.frame
+ggplot(datos_c, aes(x=x_1, y=x_2)) + geom_point() +
+  geom_vline(xintercept = 0, colour='red') +
+  geom_hline(yintercept = 0, colour='red')
+```
+
+<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-73-1.png" width="672" />
+
+Y ahora calculamos la descomposición en valores singulares
+
+
+```r
+svd_x <- svd(datos_c)
+v <- svd_x$v %>% t %>% as.data.frame() 
+u <- svd_x$u %>% data.frame
+colnames(v) <- c('x_1','x_2')
+colnames(u) <- c('x_1','x_2')
+d <- svd_x$d
+v
+```
+
+```
+##        x_1       x_2
+## 1 0.507328  0.861753
+## 2 0.861753 -0.507328
+```
+
+Notemos que los resultados son similares, pero no son los mismos.
+
+Graficamos ahora los dos vectores $v_1$ y $v_2$, que en este contexto
+se llaman *direcciones principales*
+  
+
+```r
+ggplot(datos_c) + geom_point(aes(x=x_1, y=x_2)) +
+  geom_vline(xintercept = 0, colour='red') +
+  geom_hline(yintercept = 0, colour='red') + 
+  geom_segment(data = v, aes(xend= 5*x_1, yend=5*x_2, x=0, y=0), col='red', size=1.1,
+               arrow = arrow(length = unit(0.3,"cm")))  +
+  coord_equal()
+```
+
+<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-75-1.png" width="672" />
+
+Las componentes de las proyecciones de los datos sobre las direcciones principales dan las
+**componentes principales** (nótese que multiplicamos por los valores singulares):
+  
+
+```r
+head(svd_x$u %*% diag(svd_x$d))
+```
+
+```
+##            [,1]       [,2]
+## [1,]  0.3230641  0.9257829
+## [2,]  0.4070429  1.5360770
+## [3,] -1.2788977 -0.2762829
+## [4,]  0.8910247  0.4071926
+## [5,] -4.4466993 -0.5743111
+## [6,] -1.2267878  0.3470759
+```
+
+Que podemos graficar
+
+
+```r
+comps <- svd_x$u %*% diag(svd_x$d) %>% data.frame
+ggplot(comps, aes(x=X1, y=X2)) + geom_point()+
+  geom_vline(xintercept = 0, colour='red') +
+  geom_hline(yintercept = 0, colour='red')
+```
+
+<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-77-1.png" width="672" />
+
+Este resultado lo podemos obtener directamente usando la función *princomp*
+  
+
+```r
+comp_principales <- princomp(datos %>% select(-selec))
+scores <- comp_principales$scores
+head(scores)
+```
+
+```
+##          Comp.1     Comp.2
+## [1,]  0.3230641 -0.9257829
+## [2,]  0.4070429 -1.5360770
+## [3,] -1.2788977  0.2762829
+## [4,]  0.8910247 -0.4071926
+## [5,] -4.4466993  0.5743111
+## [6,] -1.2267878 -0.3470759
+```
+
+Y verificamos que los resultados son los mismos:
+
+```r
+qplot(scores[,1], comps[,1])
+```
+
+<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-79-1.png" width="384" />
+
+```r
+qplot(scores[,2], -comps[,2])
+```
+
+<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-79-2.png" width="384" />
+
+---
+  
+### Varianza en componentes principales.
+  
+  Cuando centramos por columna, la svd es un tipo de análisis de la matriz
+de varianzas y covarianzas de la matriz $X$, dada por
+
+$$C = \frac{1}{n} \tilde{X}^t \tilde{X}$$
+  (Nota: asegúrate de que entiendes por qué esta es la matriz de varianzas y covarianzas
+   de $X$). 
+
+\BeginKnitrBlock{comentario}<div class="comentario">Nótese que las proyecciones (que se llaman **componentes principales**) 
+$\tilde{X}v_j = \sigma_j u_j = d_j$ satisfacen que
+
+1. La media de las proyecciones $d_j$ es igual a cero
+
+Pues $$\sigma_j \sum_k {u_{j,k}} = \sum_k \sum_i (\tilde{X}_{k,i})v_{j,i} =
+  \sum_i v_{j,i}\sum_k (\tilde{X}_{k,i}) = 0,$$
+  pues las columnas de $\tilde{X}$ tienen media cero.
+
+2- $\sigma_j^2$ es la varianza de la proyección $d_j$, pues
+$$Var(d_j) = \sigma_j^2 \sum_k (u_{j,k} - 0)^2 = \sigma_j^2,$$
+  y el vector $u_j$ tienen norma 1.
+
+3. La ortogonalidad de los vectores $u_j$ se interpreta ahora en términos
+de covarianza:
+  $$Cov(d_i,d_j) = \frac{1}{n}\sum_{k=1}^n (d_{i,k}-0)(d_{j,k}-0) =
+  \frac{1}{n}\sum_{k=1}^n \sigma_j\sigma_i u_{i,k}u_{j,k} = 0$$</div>\EndKnitrBlock{comentario}
+  
+
+Así que 
+  
+\BeginKnitrBlock{comentario}<div class="comentario">  Buscamos sucesivamente direcciones para proyectar *que tienen
+varianza máxima* (ver ejemplo anterior), y que sean no correlacionadas de forma
+que no compartan información lineal entre ellas.</div>\EndKnitrBlock{comentario}
+
+Adicionalmente, vimos que podíamos escribir
+$$||\tilde{X}||^2_F =  \sum_{j=1}^p \sigma_{j}^2$$
+  Y el lado izquierdo es en este caso una suma de varianzas:
+  $$\sum_{j=1}^p Var(X_j) =  \sum_{j=1}^p \sigma_{j}^2.$$
+  El lado izquierdo se llama *Varianza total* de la matriz $X$. Componentes principales particiona la varianza total de la matriz $X$ en 
+componentes .
+
+## ¿Centrar o no centrar por columna?
+
+Típicamente, antes de aplicar SVD hacemos algunos pasos de procesamiento
+de las variables. En componentes principales, este paso de procesamiento
+es centrar la tabla por columnas. Conviene hacer esto cuando:
+  
+1. Centramos si las medias de las columnas no tienen información importante o interesante
+para nuestros propósitos - es mejor eliminar esta parte de variación desde el principio para no 
+lidiar con esta información en 
+las dimensiones que obtengamos. En otro caso, quizá es mejor no centrar.
+
+2. Centramos si nos interesa más tener una interpretación en términos de varianzas y covarianzas que hacer una aproximación de los datos originales.
+
+Sin embargo, también es importante notar que muchas veces **los resultados de ambos
+análisis son similares** en cuanto a interpretación y en cuanto a usos posteriores
+de las dimensiones obtenidas.
+
+### Ejemplo: resultados similares{-}
+
+En el ejemplo de gasto en rubros que vimos arriba, los pesos $v_j$ son muy similares:
+  
+
+```r
+comps_1 <- princomp(USPersonalExpenditure[,c(1,3,5)])
+svd_1 <- svd(USPersonalExpenditure[,c(1,3,5)])
+comps_1$loadings[,]
+```
+
+```
+##          Comp.1     Comp.2      Comp.3
+## 1940 -0.2099702 -0.2938755  0.93249650
+## 1950 -0.5623341 -0.7439168 -0.36106546
+## 1960 -0.7998081  0.6001875  0.00905589
+```
+
+```r
+svd_1$v
+```
+
+```
+##            [,1]       [,2]        [,3]
+## [1,] -0.2007388 -0.3220495 -0.92519623
+## [2,] -0.5423269 -0.7499672  0.37872247
+## [3,] -0.8158342  0.5777831 -0.02410854
+```
+
+
+```r
+comps_1$scores
+```
+
+```
+##                        Comp.1     Comp.2      Comp.3
+## Food and Tobacco    -68.38962 -0.8783065  0.06424607
+## Household Operation -16.25334  0.9562769 -0.16502902
+## Medical and Health   16.13276  2.2900370  0.07312028
+## Personal Care        33.29512 -1.0003211  0.23036177
+## Private Education    35.21507 -1.3676863 -0.20269910
+```
+
+```r
+svd_1$u %*% diag(svd_1$d)
+```
+
+```
+##             [,1]       [,2]        [,3]
+## [1,] -107.593494 -1.6959766 -0.06011861
+## [2,]  -55.526778  1.5630078  0.15457655
+## [3,]  -23.188704  3.7722060 -0.09723774
+## [4,]   -5.942974  0.9476773 -0.16452015
+## [5,]   -4.014277  0.6433704  0.27845344
+```
+
+Llegaríamos a conclusiones similares si interpretamos cualquiera de los dos análisis
+(verifica por ejemplo el ordenamiento de rubros y años en cada dimensión).
+
+## Ejemplos: donde es buena idea centrar  {-}
+
+En algunos casos, cuando las unidades de las columnas son muy distintas,
+conviene reescalar para eliminar las unidades. El procedimiento usual
+es estandarizando (restar media y dividir entre desviación estándar). 
+
+Por ejemplo, si hacemos componentes principales con los siguientes datos:
+  
+
+```r
+whisky <- read_csv('./datos/whiskies.csv')
+head(whisky)
+```
+
+```
+## # A tibble: 6 x 17
+##   RowID  Distillery  Body Sweetness Smoky Medicinal Tobacco Honey Spicy
+##   <chr>       <chr> <int>     <int> <int>     <int>   <int> <int> <int>
+## 1    01   Aberfeldy     2         2     2         0       0     2     1
+## 2    02    Aberlour     3         3     1         0       0     4     3
+## 3    03      AnCnoc     1         3     2         0       0     2     0
+## 4    04      Ardbeg     4         1     4         4       0     0     2
+## 5    05     Ardmore     2         2     2         0       0     1     1
+## 6    06 ArranIsleOf     2         3     1         1       0     1     1
+## # ... with 8 more variables: Winey <int>, Nutty <int>, Malty <int>,
+## #   Fruity <int>, Floral <int>, Postcode <chr>, Latitude <int>,
+## #   Longitude <int>
+```
+
+
+```r
+whisky_sabor <- whisky %>% select(Body:Floral)
+comp_w <- princomp(whisky_sabor)
+```
+
+Veamos los pesos de las primeras cuatro dimensiones
+
+```r
+round(comp_w$loadings[,1:4],2)
+```
+
+```
+##           Comp.1 Comp.2 Comp.3 Comp.4
+## Body        0.36  -0.49  -0.03   0.07
+## Sweetness  -0.20  -0.05   0.26   0.37
+## Smoky       0.48  -0.07  -0.22  -0.09
+## Medicinal   0.58   0.16  -0.04  -0.08
+## Tobacco     0.09   0.02   0.00   0.03
+## Honey      -0.22  -0.42  -0.11  -0.03
+## Spicy       0.06  -0.18  -0.70   0.17
+## Winey      -0.04  -0.64   0.23   0.23
+## Nutty      -0.05  -0.26   0.18  -0.85
+## Malty      -0.13  -0.10  -0.11  -0.07
+## Fruity     -0.20  -0.12  -0.40  -0.09
+## Floral     -0.38   0.13  -0.34  -0.15
+```
+
+La primera componente separa whisky afrutado/floral/dulce de los whishies ahumados
+con sabor medicinal. La segunda componente separa whiskies con más cuerpo, características
+de vino y miel de otros más ligeros. Las siguientes componentes parece oponer
+*Spicy* contra *Fruity* y *Floral*, y la tercera principalmente contiene la medición de *Nutty*.
+
+Según vimos arriba, podemos ver que porcentaje de la varianza explica cada componente
+
+
+```r
+summary(comp_w)
+```
+
+```
+## Importance of components:
+##                           Comp.1    Comp.2     Comp.3     Comp.4
+## Standard deviation     1.5268531 1.2197972 0.86033607 0.79922719
+## Proportion of Variance 0.3011098 0.1921789 0.09560193 0.08250322
+## Cumulative Proportion  0.3011098 0.4932887 0.58889059 0.67139381
+##                            Comp.5    Comp.6     Comp.7     Comp.8
+## Standard deviation     0.74822104 0.6811330 0.62887454 0.59593956
+## Proportion of Variance 0.07230864 0.0599231 0.05108089 0.04587064
+## Cumulative Proportion  0.74370245 0.8036256 0.85470644 0.90057708
+##                            Comp.9    Comp.10    Comp.11     Comp.12
+## Standard deviation     0.52041611 0.49757158 0.42174644 0.271073661
+## Proportion of Variance 0.03498097 0.03197728 0.02297382 0.009490848
+## Cumulative Proportion  0.93555805 0.96753533 0.99050915 1.000000000
+```
+
+Y vemos que las primeras dos componentes explican casi el 50\% de la varianza. Las
+siguientes componentes aportan relativamente pooca varianza comparada con la primera
+
+Podemos graficar los whiskies en estas dos dimensiones:
+
+
+```r
+library(ggrepel)
+scores_w <- comp_w$scores %>% data.frame
+scores_w$Distillery <- whisky$Distillery
+ggplot(scores_w, aes(x=Comp.1, y= -Comp.2, label=Distillery)) + 
+  geom_vline(xintercept=0, colour = 'red') +
+  geom_hline(yintercept=0, colour = 'red') +
+  geom_point()+
+  geom_text_repel(size=2.5, segment.alpha = 0.3, force = 0.1, seed=202) +
+  xlab('Fruity/Floral vs. Smoky/Medicional') +
+  ylab('Winey/Body and Honey')
+```
+
+<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-88-1.png" width="672" />
+
+
+¿Que pasa si usamos svd sin centrar? Vemos que la primera componente simplemente
+captura los distintos niveles promedio de las variables.  Esta componente *no es muy
+interesante*, pues por las características del whisky es normal que Medicinal o Tabaco
+tengo una media baja, comparado con dulzor, Smoky, etc. Adicionalmente,
+el vector $u$ asociado a esta dimensión tiene poca variación:
+
+
+```r
+svd_w <- svd(whisky_sabor)
+svd_w$v[,1:2]
+```
+
+```
+##              [,1]        [,2]
+##  [1,] -0.39539241 -0.38286900
+##  [2,] -0.42475240  0.19108176
+##  [3,] -0.28564145 -0.48775482
+##  [4,] -0.09556061 -0.57453247
+##  [5,] -0.02078706 -0.09187451
+##  [6,] -0.24191199  0.20518808
+##  [7,] -0.26485793 -0.07103866
+##  [8,] -0.19488910  0.01930294
+##  [9,] -0.27858538  0.03430020
+## [10,] -0.33669488  0.11644937
+## [11,] -0.34001725  0.18933847
+## [12,] -0.31441595  0.37730436
+```
+
+```r
+plot(svd_w$v[,1], apply(whisky_sabor, 2, mean))
+```
+
+<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-89-1.png" width="672" />
+
+```r
+mean(svd_w$u[,1])
+```
+
+```
+## [1] -0.1063501
+```
+
+```r
+sd(svd_w$u[,1])
+```
+
+```
+## [1] 0.01792508
+```
+
+*Observación* La primera componente de svd está haciendo el trabajo de ajustar la media.
+Como no nos interesa este hecho, podemos mejor centrar desde el principio y trabajar
+con las componentes principales. ¿Cómo se ven las siguientes dos dimensiones
+del análisis no centrado?
+
+## Ejemplo: donde no centrar funciona bien  {-}
+
+Considera el ejemplo de la tarea con la tabla de gastos en distintas categorías
+de alimentos según el decil de ingreso del hogar. ¿Por qué en este ejemplo centrar
+por columna no es tan buena idea?
+
+
+```r
+deciles <- read_csv('./datos/enigh_deciles.csv') %>% as.data.frame
+```
+
+```
+## Warning: Missing column names filled in: 'X1' [1]
+```
+
+```r
+deciles %>% arrange(desc(d1))
+```
+
+```
+##                                  X1      d1      d2      d3      d4
+## 1                          CEREALES 1330728 1869247 2254304 2331371
+## 2                            CARNES 1072718 1754012 2131706 2514365
+## 3  VERDURAS, LEGUMBRES, LEGUMINOSAS  973984 1279986 1478179 1590063
+## 4             LECHE Y SUS DERIVADOS  585910  895216 1242102 1395102
+## 5          OTROS ALIMENTOS DIVERSOS  290038  448629  689605  781629
+## 6                             HUEVO  255321  360471  421613  442603
+## 7                            FRUTAS  192462  283549  337608  468187
+## 8                   AZUCAR Y MIELES  167042  212941  200200  191048
+## 9                  ACEITES Y GRASAS  135823  190052  179945  183546
+## 10              PESCADOS Y MARISCOS  110398  187546  213830  236001
+## 11                       TUBERCULOS  107231  158078  190705  201664
+## 12             CAFE, TE Y CHOCOLATE   71945  120338  108609   97139
+## 13              ESPECIAS Y ADEREZOS   57580   80636   91758  108561
+##         d5      d6      d7     dd8      d9     d10
+## 1  2576134 2593607 2839141 2770198 2740160 2710885
+## 2  2965671 3228132 3708675 3943535 4183472 4724145
+## 3  1668224 1725576 1783611 1808792 1827177 1982693
+## 4  1582291 1783207 1966252 2123150 2360369 3091577
+## 5  1031991 1115892 1451119 1540150 2282137 2713540
+## 6   405520  404737  451280  418855  398713  365472
+## 7   517938  571262  704867  765013  882037 1384251
+## 8   202397  190093  157009  173545  164273  163299
+## 9   193544  197424  188956  180809  182252  208958
+## 10  286507  297299  333812  437266  496656  865432
+## 11  229090  214818  214251  224368  221747  228002
+## 12  124502  128589  109801  126464  143134  225452
+## 13  116499  134123  155394  152145  167650  182256
+```
+
+```r
+deciles <- deciles %>% column_to_rownames(var  = 'X1')
+comp_enigh <- princomp(deciles)
+```
+
+Veamos las primeras dos componente, cuyas direcciones principales son:
+
+```r
+comp_enigh$loadings[,1:2]
+```
+
+```
+##         Comp.1      Comp.2
+## d1  -0.1224572 -0.29709420
+## d2  -0.1858230 -0.35463967
+## d3  -0.2324626 -0.34856083
+## d4  -0.2610938 -0.29531199
+## d5  -0.3010861 -0.23322242
+## d6  -0.3221099 -0.16749474
+## d7  -0.3650886 -0.07154327
+## dd8 -0.3783732  0.02514659
+## d9  -0.4019500  0.30553359
+## d10 -0.4425357  0.62905737
+```
+
+
+```r
+comp_enigh$scores[,1:2]
+```
+
+```
+##                                      Comp.1      Comp.2
+## CEREALES                         -4548094.6 -1191716.24
+## CARNES                           -7068531.1   392100.57
+## PESCADOS Y MARISCOS               1880143.9   290076.15
+## LECHE Y SUS DERIVADOS            -2688171.0   541441.01
+## HUEVO                             1882277.7  -346789.97
+## ACEITES Y GRASAS                  2525107.6  -157761.37
+## TUBERCULOS                        2460994.3  -134899.61
+## VERDURAS, LEGUMBRES, LEGUMINOSAS -2029622.4  -715856.37
+## FRUTAS                             960953.6   445884.20
+## AZUCAR Y MIELES                   2551904.3  -217378.43
+## CAFE, TE Y CHOCOLATE              2685873.3   -33326.41
+## ESPECIAS Y ADEREZOS               2679471.1   -33837.02
+## OTROS ALIMENTOS DIVERSOS         -1292306.9  1162063.49
+```
+
+
+Notamos que la primera componentese refiere al consumo relativamente alto de
+las categorías de consumo alto, especialmente por los deciles altos (Cereales, Carnes, Leche y derivados, etc.), no es tan fácil de interpetar.
+
+*Observación*: Quizá una solución más natural es hacer el análisis de componentes principales usando la transpuesta de esta matriz (usa la función *prcomp*), donde tiene más sentido
+centrar por categoría de alimento, y pensar que las observaciones son los distintos
+deciles (que en realidad son agrupaciones de observaciones).
+
+
+### Otros tipos de centrado
+
+Es posible hacer doble centrado, por ejemplo (por renglón y por columna). Discute por qué
+el doble centrado puede ser una buena idea para los datos del tipo de Netflix.
+
+### Reescalando variables
+
+Cuando las columnas tienen distintas unidades (especialmente si las escalas son
+muy diferentes), conviene reescalar la matriz antes de hacer el análisis centrado
+o no centrado. De otra forma, parte del análisis intenta absorber la diferencia en 
+unidades, lo cual generalmente no es de interés
+
+ - En componentes principales, podemos estandarizar las columnas.
+ - En el análisis no centrado, podemos poner las variables en escala 0-1, por ejemplo,
+ o dividir entre la media (si son variables positivas).
+
+### Ejemplo {-}
+
+
+```r
+comp <- princomp(attenu %>% select(-station, -event))
+comp$loadings[,1]
+```
+
+```
+##          mag         dist        accel 
+## -0.005746131 -0.999982853  0.001129688
+```
+
+Y vemos que la dirección de la primera componente es justamente en la dirección de 
+la variable *dist* (es decir, la primera componente es *dist*). Esto es porque 
+la escala de *dist* es más amplia:
+
+
+```r
+apply(attenu %>% select(-station), 2, mean)
+```
+
+```
+##      event        mag       dist      accel 
+## 14.7417582  6.0840659 45.6032967  0.1542198
+```
+
+Esto lo corregimos estandarizando las columnas, o equivalentemente, usando
+*cor = TRUE* como opción en *princomp*
+
+
+```r
+comp <- princomp(attenu %>% select(-station, -event), cor  = TRUE)
+comp$loadings[,1]
+```
+
+```
+##        mag       dist      accel 
+## -0.5071375 -0.7156080  0.4803298
+```
+
+
+## Otros métodos: t-SNE
+
+Existen otros métodos para reducir dimensionalidad, como MDS (multidimensional
+scaling, que se concentra en preservar distancias entre casos), o
+métodos de *embeddings* basados en redes neuronales (usar datos en capas
+ocultas con un número relativamente chico de unidades, cuando queremos
+que nuestra representación esté asociada a una variable respuesta). 
+
+Aquí mostramos una de estas técnicas:  [t-SNE](http://jmlr.org/papers/volume9/vandermaaten08a/vandermaaten08a.pdf),
+*t-Stochastic Neighbor Embedding*.
+
+Como motivación a esta técnica, observemos primero que
+los métodos como componentes principales buscan obtener una representación que mantenga lejos casos que son muy diferentes (pues buscamos aproximar los datos, o encontrar direcciones de máxima varianza). Sin embargo, en algunos
+casos los que más nos puede interesar es una representación que **mantenga
+casos similares cercanos**, aún cuando perdamos información acerca de distancia de casos muy distintos.
+
+
+### Ejemplo {-}
+
+Consideremos los siguientes datos:
+
+
+```r
+x_1 <- c(rnorm(100, 0, 0.5), -20, -25, 20, 22)
+x_2 <- c(rnorm(50, 1, 0.2), rnorm(50, -1, 0.1), 5, -10, -1, 1)
+color <- as.character(c(rep(1, 50), rep(2, 50), rep(3, 4)))
+dat_ej <- data_frame(x_1, x_2, color)
+ggplot(dat_ej, aes(x = x_1, y = x_2, colour = color)) + geom_point()
+```
+
+<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-96-1.png" width="480" />
+
+Notamos que la primera dimensión de svd va en dirección del eje 1, 
+donde hay más dispersión en los datos alrededor del origen. 
+
+
+```r
+svd(dat_ej[,1:2])$v
+```
+
+```
+##             [,1]        [,2]
+## [1,] -0.99640133  0.08476078
+## [2,] -0.08476078 -0.99640133
+```
+
+Los datos proyectados, sin embargo, oculta la estructura de grupos que hay
+en los puntos cercanos al origen, pues la proyección es
+
+
+```r
+qplot(svd(dat_ej[,1:2])$u[,1], fill = dat_ej$color) + xlab('u')
+```
+
+```
+## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+```
+
+<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-98-1.png" width="384" />
+
+
+Aunque es posible considerar las siguientes aproximaciones, en un problema
+de dimensión alta esto puede querer decir que nos costará más trabajo encontrar la estructura de casos similares usando estas técnicas lineales.
+
+En t-SNE construimos una medida de similitud entre puntos que busca concentrarse en puntos similares. Por ejemplo, la estructura de clusters
+de estos datos podemos recuperarla en una dimensión:
+
+
+```r
+library(tsne)
+sne_ejemplo <- tsne(as.matrix(dat_ej[,1:2]), k = 1, perplexity=100)
+qplot(sne_ejemplo, fill = dat_ej$color) + xlab('u')
+```
+
+<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-99-1.png" width="384" />
+
+
+### SNE
+
+t-SNE es una adaptación de SNE (Stochastic Neighbor Embedding). Veamos
+primero las ideas básicas de esta técnica:
+
+Para controlar las distancias que nos interesa preservar, primero
+introducimos una medida de similitud entre dos casos (renglones)
+$x^{(i)}, x^{(j)}$:
+
+\begin{equation}
+p_{j|i} = \frac{1}{P_i}\exp\left(- ||x_j - x_i ||^2 / 2\sigma_i^2 \right)
+(\#eq:similitud)
+\end{equation}
+
+
+donde $P_i$ es una constante de normalización tal que $\sum_j {p_{j|i}} = 1$.
+Por el momento pensemos que la $\sigma_i$ está fija en algún valor arbitrario.
+
+- Notamos que $p_{j|i}$ toma valores cercanos a 1 cuando 
+$x_i$ y $x_j$ están cercanos (su distancia es chica), y rápidamente
+decae a 0 cuando $x_i$ y $x_j$ se empiezan a alejar.
+- Cuando la $\sigma$ es chica, si $x_i$ y $x_j$ están aunque sea un poco
+separados, $p_{j|i}\approx 0$. Si $\sigma$ es grande, entonces esta
+cantidad decae más lentamente cuando los puntos se alejan
+- Podemos pensar que tenemos una campana gaussiana centrada en $x_i$, y
+la $p_{j|i}$ está dada por la densidad mostrada arriba evaluada en $x_j$
+
+Ahora pensemos que buscamos convertir estos dos puntos a un nuevo
+espacio de dimensión menor. Denotamos por $y_j$ y $y_i$ a los puntos
+correpondientes en el nuevo espacio. Definimos análogamente :
+
+$$q_{j|i} = \frac{1}{Q_i}\exp\left(- ||y_j - y_i ||^2  \right)$$
+
+**¿Cómo encontramos los valores $y_j$?** La idea es intentar aproximar las similitudes derivadas:
+
+$$ p_{j|i} \approx q_{j|i},$$
+
+Pensemos que $i$ está fija (que corresponden a los puntos $x^{(i)}$ y
+$y^{(i)}$). Lo que queremos hacer es **aproximar la estructura local** alrededor de $x^{(i)}$ mediante los puntos $y$. Y esto queremos hacerlo
+para cada caso $i$ en los datos.
+
+ Nótese que estas similitudes son sensibles cuando los
+puntos están relativamente cerca, pero se hacen rápidamente cero cuando
+las distancias son más grandes. Esto permite que al intentar hacer la 
+aproximación realmente nos concentremos en la estructura local alrededor de cada punto $x^{(i)}$
+
+- Nótese que usamos $\sigma=1$ en la definición de las $q_{j|i}$, pues esto depende de la escala de la nueva representación (que vamos a encontrar).
+- Dependiendo de la $\sigma_i$, podemos afinar el método para definir qué
+tan local es la estructura que queremos aproximar.
+
+
+### Minimización para SNE
+
+En SNE, el objetivo a minimizar es la divergencia de
+Kullback-Liebler, que es una especie de 
+distancia entre distribuciones de probabilidad. Buscamos
+resolver
+
+$$\min_{y^{1}, y^{2}, \ldots, y^{(n)}} \sum_{i,j} p_{j|i} \log \frac{p_{j|i}}{q_{j|i}}$$
+
+Existen muchas maneras de entender esta cantidad. Por lo pronto,
+notemos que 
+
+- Si $p_{j|i} = q_{1|j}$, entonces esta cantidad es 0 
+(pues el logaritmo de 1 es cero). 
+- Para cada $i$,  $\sum_{j} p_{j|i} \log \frac{p_{j|i}}{q_{j|i}}\geq 0$. Demuestra usando cálculo.
+- Y **más importante**:  $p_{j|i} \log \frac{p_{j|i}}{q_{j|i}}$ es muy grande
+cuando obtenemos una $q_{j|i}$ chica para una $p_{j|i}$ grande (representar lejos puntos cercanos), pero no aumenta
+tanto si obtenemos una $q_{j|i}$ grande para una $p_{j|i}$ chica. Puedes
+usar cálculo para convencerte de esto también, por ejemplo, derivando
+con respecto a las $x$ la cantidad $\sum_i p_i \log p_i/x_i -\sum_i x_i$
+ (donde $q_i = x_i/\sum_i x_i$, $\sum_i x_i$ es la constante de normalización). 
+
+Finalmente, la **divergencia se minimiza usando descenso en gradiente**.
+
+t-SNE se basa en las mismas ideas, con algunas mejoras (ver [paper](http://jmlr.org/papers/volume9/vandermaaten08a/vandermaaten08a.pdf)): 
+
+- Utiliza una
+versión simétrica de la distancia de Kullback-Liebler (que simplifica
+el cálculo del gradiente para obtener un algoritmo más rápido), y utiliza
+una distribución t en el espacio de baja dimensión en lugar de una guassiana. Esto último mejora el desempeño del algoritmo en dimensiones altas.
+
+
+### Ejemplo {-}
+Uno de los ejemplos clásicos es con imágenes de dígitos
+
+
+```r
+set.seed(288022)
+zip_train <- read_csv('datos/zip-train.csv')
+muestra_dig <- zip_train %>% sample_n(500)
+tsne_digitos <- tsne(muestra_dig[,2:257], max_iter=500)
+```
+
+
+```r
+dat_tsne <- data.frame(tsne_digitos)
+dat_tsne$digito <- as.character(muestra_dig$X1)
+ggplot(dat_tsne, aes(x=X1, y=X2, colour=digito, label=digito)) + geom_text()
+```
+
+<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-101-1.png" width="672" />
+
+Comparemos con componentes principales, que no logra separar muy
+bien los distintos dígitos:
+
+```r
+comps <- princomp(muestra_dig[,-1])
+dat_comps_tsne <- data.frame(comps$scores[,1:2])
+dat_comps_tsne$digito <- as.character(muestra_dig$X1)
+ggplot(dat_comps_tsne, aes(x=Comp.1, y=Comp.2, colour=digito, label=digito)) + geom_text()
+```
+
+<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-102-1.png" width="672" />
+
+y vemos, por ejemplo, que la primera componente está separando
+principalmente ceros de unos. La primera dirección principal es:
+
+
+```r
+image(matrix(comps$loadings[,1], 16,16))
+```
+
+<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-103-1.png" width="384" />
+
+
+### Perplexity
+
+El único parámetro que resta discutir es $\sigma_i$ en 
+\@ref(eq:similitud). La primera idea es que distintas regiones
+(vecindades de $x^{(i)}$) pueden requerir distintas $\sigma_i$. Este
+valor se escoge de forma que todos los puntos tengan aproximadamente un
+número fijo (aproximado) de vecinos, a través de un valor que se llama 
+*perplexity*. De esta forma, $\sigma_i$ en regiones donde hay densidad
+alta de datos es más chica, y $sigma_i$ en regiones donde hay menos densidad
+es más grande (para mantener el número de vecinos aproximadamente similar).
+
+Antes de ver más detalles, veamos el ejemplo de los dígitos cambiando
+el valor de perplejidad:
+
+
+```r
+tsne_digitos <- tsne(muestra_dig[,2:257], perplexity = 5,
+                     max_iter=500)
+dat_tsne <- data.frame(tsne_digitos)
+dat_tsne$digito <- as.character(muestra_dig$X1)
+ggplot(dat_tsne, aes(x=X1, y=X2, colour=digito, label=digito)) + geom_text()
+```
+
+<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-104-1.png" width="672" />
+
+
+```r
+tsne_digitos <- tsne(muestra_dig[,2:257], perplexity = 100,
+                     max_iter=500)
+dat_tsne <- data.frame(tsne_digitos)
+dat_tsne$digito <- as.character(muestra_dig$X1)
+ggplot(dat_tsne, aes(x=X1, y=X2, colour=digito, label=digito)) + geom_text()
+```
+
+<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-105-1.png" width="672" />
+
+
+**Notas** (opcional):
+si $P$ es el valor de perplejidad escogido,  el valor de $\sigma_i$ 
+escoge de manera que las $p_{j|i}$ obtenidas satisfagan
+$2^{-\sum_{j} p_{j|i}\log_2 p_{j|i}}\approx P$. El valor de la izquierda en
+esta ecuación se puede interpretar como una medida suave del número
+de puntos donde se concentra la masa de probabilidad. Por ejemplo:
+
+
+```r
+perp <- function(x){2^sum(-x*log2(x))}
+p <- c(0.01, 0.01, 0.01, 0.02, 0.95)
+sum(p)
+```
+
+```
+## [1] 1
+```
+
+```r
+perp(p)
+```
+
+```
+## [1] 1.303593
+```
+
+```r
+p <- c(0.01, 0.18, 0.01, 0.4, 0.4 )
+perp(p)
+```
+
+```
+## [1] 3.107441
+```
+
+```r
+p <- c(rep(1,20), rep(20,20))
+perp(p/sum(p))
+```
+
+```
+## [1] 24.21994
 ```
 
 

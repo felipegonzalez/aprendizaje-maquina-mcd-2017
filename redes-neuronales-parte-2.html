@@ -25,7 +25,7 @@
 <meta name="author" content="Felipe González">
 
 
-<meta name="date" content="2017-11-25">
+<meta name="date" content="2017-11-27">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -355,6 +355,26 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="14.6" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#svd-para-peliculas-de-netflix"><i class="fa fa-check"></i><b>14.6</b> SVD para películas de netflix</a><ul>
 <li class="chapter" data-level="14.6.1" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#calidad-de-representacion-de-svd."><i class="fa fa-check"></i><b>14.6.1</b> Calidad de representación de SVD.</a></li>
 <li class="chapter" data-level="" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#ejemplo-55"><i class="fa fa-check"></i>Ejemplo</a></li>
+</ul></li>
+<li class="chapter" data-level="14.7" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#componentes-principales"><i class="fa fa-check"></i><b>14.7</b> Componentes principales</a><ul>
+<li class="chapter" data-level="" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#ejemplo-57"><i class="fa fa-check"></i>Ejemplo</a></li>
+<li class="chapter" data-level="14.7.1" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#varianza-en-componentes-principales."><i class="fa fa-check"></i><b>14.7.1</b> Varianza en componentes principales.</a></li>
+</ul></li>
+<li class="chapter" data-level="14.8" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#centrar-o-no-centrar-por-columna"><i class="fa fa-check"></i><b>14.8</b> ¿Centrar o no centrar por columna?</a><ul>
+<li class="chapter" data-level="" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#ejemplo-resultados-similares"><i class="fa fa-check"></i>Ejemplo: resultados similares</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#ejemplos-donde-es-buena-idea-centrar"><i class="fa fa-check"></i>Ejemplos: donde es buena idea centrar</a></li>
+<li class="chapter" data-level="" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#ejemplo-donde-no-centrar-funciona-bien"><i class="fa fa-check"></i>Ejemplo: donde no centrar funciona bien</a><ul>
+<li class="chapter" data-level="14.8.1" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#otros-tipos-de-centrado"><i class="fa fa-check"></i><b>14.8.1</b> Otros tipos de centrado</a></li>
+<li class="chapter" data-level="14.8.2" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#reescalando-variables"><i class="fa fa-check"></i><b>14.8.2</b> Reescalando variables</a></li>
+<li class="chapter" data-level="" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#ejemplo-58"><i class="fa fa-check"></i>Ejemplo</a></li>
+</ul></li>
+<li class="chapter" data-level="14.9" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#otros-metodos-t-sne"><i class="fa fa-check"></i><b>14.9</b> Otros métodos: t-SNE</a><ul>
+<li class="chapter" data-level="" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#ejemplo-59"><i class="fa fa-check"></i>Ejemplo</a></li>
+<li class="chapter" data-level="14.9.1" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#sne"><i class="fa fa-check"></i><b>14.9.1</b> SNE</a></li>
+<li class="chapter" data-level="14.9.2" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#minimizacion-para-sne"><i class="fa fa-check"></i><b>14.9.2</b> Minimización para SNE</a></li>
+<li class="chapter" data-level="" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#ejemplo-60"><i class="fa fa-check"></i>Ejemplo</a></li>
+<li class="chapter" data-level="14.9.3" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#perplexity"><i class="fa fa-check"></i><b>14.9.3</b> Perplexity</a></li>
 <li class="chapter" data-level="" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#tarea-para-27-de-noviembre"><i class="fa fa-check"></i>Tarea (para 27 de Noviembre)</a></li>
 </ul></li>
 </ul></li>
@@ -740,12 +760,12 @@ history &lt;-<span class="st"> </span>modelo <span class="op">%&gt;%</span><span
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">get_weights</span>(modelo)</code></pre></div>
 <pre><code>## [[1]]
 ##            [,1]
-## [1,] -0.6466779
-## [2,]  0.1065883
-## [3,]  0.3586173
+## [1,] -0.6405863
+## [2,]  0.2702631
+## [3,]  0.2664350
 ## 
 ## [[2]]
-## [1] 1.644622</code></pre>
+## [1] 1.695378</code></pre>
 <p>Y verificamos que concuerda con la salida de <em>glm</em>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mod_logistico &lt;-<span class="st"> </span><span class="kw">glm</span>(g <span class="op">~</span><span class="st"> </span>x_<span class="dv">1</span> <span class="op">+</span><span class="st"> </span>x_<span class="dv">2</span><span class="op">+</span><span class="st"> </span>x_<span class="dv">3</span>, <span class="dt">data =</span> dat_ent, <span class="dt">family =</span> <span class="st">&#39;binomial&#39;</span>) 
 <span class="kw">coef</span>(mod_logistico)</code></pre></div>
@@ -810,13 +830,13 @@ history &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><s
 score &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">evaluate</span>(x_test, y_test)
 score</code></pre></div>
 <pre><code>## $loss
-## [1] 0.2900091
+## [1] 0.2840683
 ## 
 ## $acc
-## [1] 0.9307424
+## [1] 0.9322372
 ## 
 ## $categorical_crossentropy
-## [1] 0.2889606</code></pre>
+## [1] 0.2830205</code></pre>
 <p>Podemos también intentar con el ejemplo de spam:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(readr)
 <span class="kw">library</span>(tidyr)
@@ -852,13 +872,13 @@ tab_confusion &lt;-<span class="st"> </span><span class="kw">table</span>(modelo
 tab_confusion</code></pre></div>
 <pre><code>##    y_valid
 ##       0   1
-##   0 877  44
-##   1  50 563</code></pre>
+##   0 881  44
+##   1  46 563</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">prop.table</span>(tab_confusion, <span class="dv">2</span>)</code></pre></div>
 <pre><code>##    y_valid
 ##              0          1
-##   0 0.94606257 0.07248764
-##   1 0.05393743 0.92751236</code></pre>
+##   0 0.95037756 0.07248764
+##   1 0.04962244 0.92751236</code></pre>
 </div>
 </div>
 <div id="activaciones-relu" class="section level2">
@@ -910,13 +930,13 @@ history &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><s
 score &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">evaluate</span>(x_test, y_test)
 score</code></pre></div>
 <pre><code>## $loss
-## [1] 0.3119896
+## [1] 0.2879386
 ## 
 ## $acc
-## [1] 0.939711
+## [1] 0.9427005
 ## 
 ## $categorical_crossentropy
-## [1] 0.229207</code></pre>
+## [1] 0.2107109</code></pre>
 </div>
 </div>
 <div id="dropout-para-regularizacion" class="section level2">
@@ -1007,36 +1027,36 @@ hist_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">as
 <p><img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-46-1.png" width="480" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">get_weights</span>(modelo_dropout)[[<span class="dv">3</span>]]</code></pre></div>
 <pre><code>##             [,1]
-##  [1,] -1.5286120
-##  [2,] -1.4296764
-##  [3,] -1.7047622
-##  [4,] -1.7019216
-##  [5,]  1.0162318
-##  [6,] -1.2732092
-##  [7,]  1.0612855
-##  [8,] -1.8543842
-##  [9,] -1.2536905
-## [10,]  1.1860446
-## [11,] -1.6684390
-## [12,] -1.7774581
-## [13,] -1.2680331
-## [14,] -1.4192146
-## [15,]  1.0504066
-## [16,] -1.1704386
-## [17,] -1.3389199
-## [18,]  1.1061847
-## [19,]  1.0213583
-## [20,]  0.8268744
-## [21,]  0.5797330
-## [22,] -0.1369413
-## [23,] -1.3378206
-## [24,] -0.1436960
-## [25,]  1.4317368
-## [26,]  1.3124506
-## [27,]  1.1395184
-## [28,]  0.5375360
-## [29,]  1.2115690
-## [30,] -1.2363238</code></pre>
+##  [1,] -1.0155498
+##  [2,]  0.5525572
+##  [3,] -1.7988870
+##  [4,]  1.0443698
+##  [5,] -1.2144151
+##  [6,] -1.2917241
+##  [7,]  1.1376710
+##  [8,]  1.2602668
+##  [9,] -1.4958497
+## [10,] -1.7305298
+## [11,] -1.6818476
+## [12,]  1.2730157
+## [13,] -1.2751539
+## [14,]  1.1812005
+## [15,] -1.2058953
+## [16,] -1.4331394
+## [17,]  0.1189813
+## [18,] -1.4988631
+## [19,]  1.0179895
+## [20,] -1.1627803
+## [21,]  1.0738837
+## [22,] -1.5575128
+## [23,]  1.2459335
+## [24,] -1.2576978
+## [25,]  0.7472541
+## [26,] -1.2722948
+## [27,] -1.2058088
+## [28,]  0.2201061
+## [29,]  1.2052293
+## [30,] -1.4044311</code></pre>
 <p>¿Cuáles de estas unidades tienen peso positivo y negativo en la capa final?</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pesos_capa_f &lt;-<span class="st"> </span><span class="kw">get_weights</span>(modelo_dropout)[[<span class="dv">3</span>]]
 <span class="kw">graf_pesos</span>(pesos[, pesos_capa_f <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.5</span>], <span class="dt">mostrar_facets =</span> <span class="ot">TRUE</span>)</code></pre></div>
@@ -1079,13 +1099,13 @@ history &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><s
 score &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">evaluate</span>(x_test, y_test)
 score</code></pre></div>
 <pre><code>## $loss
-## [1] 0.2311734
+## [1] 0.2360705
 ## 
 ## $acc
-## [1] 0.9506726
+## [1] 0.9511709
 ## 
 ## $categorical_crossentropy
-## [1] 0.227006</code></pre>
+## [1] 0.2319337</code></pre>
 
 </div>
 </div>
