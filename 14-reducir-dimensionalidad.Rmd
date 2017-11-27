@@ -1086,7 +1086,7 @@ un análisis de dos dimensiones
 ```{block2, type='comentario'}
 Podemos medir la calidad de la representación de $X$ ($n\times p$ con $p < n$) 
 de una aproximación $X_k$ de SVD mediante
-$$1-\frac{||X-X_k||_2^F}{||X||_2^F}  = \frac{\sigma_1^2 + \sigma_2^2 + \cdots \sigma_k^2}{\sigma_1^2 + \sigma_2^2 + \cdots \sigma_p^2},$$
+$$1-\frac{||X-X_k||_F^2}{||X||_F^2}  = \frac{\sigma_1^2 + \sigma_2^2 + \cdots \sigma_k^2}{\sigma_1^2 + \sigma_2^2 + \cdots \sigma_p^2},$$
 que es un valor entre 0 y 1. Cuanto más cercana a 1 está, mejor es la representación.
 ```
 
@@ -1097,7 +1097,7 @@ niveles de calidad de representación. Por ejemplo, algunas reglas de dedo:
 casi completa de los datos, quizá buscamos calidad $>0.9$ o mayor.
 
 - Si nos interesa extraer los patrones más importantes, podemos considerar valores de calidad
-mucho más chicos, entendiendo que hay una buena parte de la información que no se explican
+mucho más chicos, entendiendo que hay una buena parte de la información que no se explica
 por nuestra aproximación.
 
 
