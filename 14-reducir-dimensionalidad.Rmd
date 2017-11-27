@@ -1476,14 +1476,14 @@ Notamos que la primera dimensión de svd va en dirección del eje 1,
 donde hay más dispersión en los datos alrededor del origen. 
 
 ```{r}
-svd(dat_ej)$v
+svd(dat_ej[,1:2])$v
 ```
 
 Los datos proyectados, sin embargo, oculta la estructura de grupos que hay
 en los puntos cercanos al origen, pues la proyección es
 
 ```{r, fig.width=4, fig.asp=0.7}
-qplot(svd(dat_ej[,1:2])$u[,1], fill = dat_ej$color)
+qplot(svd(dat_ej[,1:2])$u[,1], fill = dat_ej$color) + xlab('u')
 ```
 
 
@@ -1493,10 +1493,10 @@ de dimensión alta esto puede querer decir que nos costará más trabajo encontr
 En t-SNE construimos una medida de similitud entre puntos que busca concentrarse en puntos similares. Por ejemplo, la estructura de clusters
 de estos datos podemos recuperarla en una dimensión:
 
-```{r, message=FALSE, warning=FALSE}
+```{r, message=FALSE, warning=FALSE, fig.width=4, fig.asp=0.7}
 library(tsne)
 sne_ejemplo <- tsne(as.matrix(dat_ej[,1:2]), k = 1, perplexity=100)
-qplot(sne_ejemplo, fill = dat_ej$color)
+qplot(sne_ejemplo, fill = dat_ej$color) + xlab('u')
 ```
 
 
@@ -1509,7 +1509,10 @@ Para controlar las distancias que nos interesa preservar, primero
 introducimos una medida de similitud entre dos casos (renglones)
 $x^{(i)}, x^{(j)}$:
 
-$$p_{j|i} = \frac{1}{P_i}\exp\left(- ||x_j - x_i ||^2 / 2\sigma_i^2 \right)$$
+\begin{equation}
+p_{j|i} = \frac{1}{P_i}\exp\left(- ||x_j - x_i ||^2 / 2\sigma_i^2 \right)
+(\#eq:similitud)
+\end{equation}
 
 
 donde $P_i$ es una constante de normalización tal que $\sum_j {p_{j|i}} = 1$.
@@ -1615,7 +1618,52 @@ image(matrix(comps$loadings[,1], 16,16))
 
 ### Perplexity
 
+El único parámetro que resta discutir es $\sigma_i$ en 
+\@ref(eq:similitud). La primera idea es que distintas regiones
+(vecindades de $x^{(i)}$) pueden requerir distintas $\sigma_i$. Este
+valor se escoge de forma que todos los puntos tengan aproximadamente un
+número fijo (aproximado) de vecinos, a través de un valor que se llama 
+*perplexity*. De esta forma, $\sigma_i$ en regiones donde hay densidad
+alta de datos es más chica, y $sigma_i$ en regiones donde hay menos densidad
+es más grande (para mantener el número de vecinos aproximadamente similar).
 
+Antes de ver más detalles, veamos el ejemplo de los dígitos cambiando
+el valor de perplejidad:
+
+```{r, message=FALSE}
+tsne_digitos <- tsne(muestra_dig[,2:257], perplexity = 5,
+                     max_iter=500)
+dat_tsne <- data.frame(tsne_digitos)
+dat_tsne$digito <- as.character(muestra_dig$X1)
+ggplot(dat_tsne, aes(x=X1, y=X2, colour=digito, label=digito)) + geom_text()
+```
+
+```{r, message=FALSE}
+tsne_digitos <- tsne(muestra_dig[,2:257], perplexity = 100,
+                     max_iter=500)
+dat_tsne <- data.frame(tsne_digitos)
+dat_tsne$digito <- as.character(muestra_dig$X1)
+ggplot(dat_tsne, aes(x=X1, y=X2, colour=digito, label=digito)) + geom_text()
+```
+
+
+**Notas** (opcional):
+si $P$ es el valor de perplejidad escogido,  el valor de $\sigma_i$ 
+escoge de manera que las $p_{j|i}$ obtenidas satisfagan
+$2^{-\sum_{j} p_{j|i}\log_2 p_{j|i}}\approx P$. El valor de la izquierda en
+esta ecuación se puede interpretar como una medida suave del número
+de puntos donde se concentra la masa de probabilidad. Por ejemplo:
+
+```{r}
+perp <- function(x){2^sum(-x*log2(x))}
+p <- c(0.01, 0.01, 0.01, 0.02, 0.95)
+sum(p)
+perp(p)
+p <- c(0.01, 0.18, 0.01, 0.4, 0.4 )
+perp(p)
+p <- c(rep(1,20), rep(20,20))
+perp(p/sum(p))
+```
 
 
 
