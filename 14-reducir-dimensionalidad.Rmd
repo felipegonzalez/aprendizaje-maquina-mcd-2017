@@ -989,18 +989,19 @@ qplot(svd_parcial$v[,2])#
 ```
 
 
-```{r}
+```{r, warning=FALSE, message=FALSE}
+library(ggrepel)
 pel_graf <- V_peliculas %>% mutate(dist_0 = sqrt(v_2^2 + v_3^2)) 
 muestra <- pel_graf %>% mutate(etiqueta = ifelse(dist_0 > 0.08, name, ''))
 ggplot(muestra, aes(x=v_2, y=v_3, label=etiqueta)) + geom_point(alpha=0.2) + 
-  geom_text(size=2.5) + xlab('Mainstream vs Independiente') + ylab('Violenta/Acción vs Drama')
+  geom_text_repel(size=2.5) + xlab('Mainstream vs Independiente') + ylab('Violenta/Acción vs Drama')
 ```
 
 ```{r}
 pel_graf <- V_peliculas %>% mutate(dist_0 = sqrt(v_3^2 + v_4^2)) 
 muestra <- pel_graf %>% mutate(etiqueta = ifelse(dist_0 > 0.08, name, ''))
 ggplot(muestra, aes(x=v_3, y=v_4, label=etiqueta)) + geom_point(alpha=0.2) + 
-  geom_text(size=2.5)  + xlab('Violenta/Acción vs Drama') + ylab('Fantasía/Ciencia Ficción')
+  geom_text_repel(size=2.5)  + xlab('Violenta/Acción vs Drama') + ylab('Fantasía/Ciencia Ficción')
 ```
 
 
