@@ -1309,7 +1309,7 @@ es estandarizando (restar media y dividir entre desviación estándar).
 Por ejemplo, si hacemos componentes principales con los siguientes datos:
   
 ```{r, message=FALSE}
-whisky <- read_csv('./datos/whiskies.csv.txt')
+whisky <- read_csv('./datos/whiskies.csv')
 head(whisky)
 ```
 
