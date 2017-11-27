@@ -1308,7 +1308,7 @@ es estandarizando (restar media y dividir entre desviación estándar).
 
 Por ejemplo, si hacemos componentes principales con los siguientes datos:
   
-```{r}
+```{r, message=FALSE}
 whisky <- read_csv('./datos/whiskies.csv.txt')
 head(whisky)
 ```
@@ -1369,7 +1369,8 @@ sd(svd_w$u[,1])
 
 *Observación* La primera componente de svd está haciendo el trabajo de ajustar la media.
 Como no nos interesa este hecho, podemos mejor centrar desde el principio y trabajar
-con las componentes principales.
+con las componentes principales. ¿Cómo se ven las siguientes dos dimensiones
+del análisis no centrado?
 
 ## Ejemplo: donde no centrar funciona bien  {-}
 
@@ -1377,7 +1378,7 @@ Considera el ejemplo de la tarea con la tabla de gastos en distintas categorías
 de alimentos según el decil de ingreso del hogar. ¿Por qué en este ejemplo centrar
 por columna no es tan buena idea?
 
-```{r}
+```{r, message=FALSE}
 deciles <- read_csv('./datos/enigh_deciles.csv') %>% as.data.frame
 deciles %>% arrange(desc(d1))
 deciles <- deciles %>% column_to_rownames(var  = 'X1')
@@ -1440,6 +1441,151 @@ Esto lo corregimos estandarizando las columnas, o equivalentemente, usando
 comp <- princomp(attenu %>% select(-station, -event), cor  = TRUE)
 comp$loadings[,1]
 ```
+
+
+## Otros métodos: t-SNE
+
+Existen otros métodos para reducir dimensionalidad, como MDS (multidimensional
+scaling, que se concentra en preservar distancias entre casos), o
+métodos de *embeddings* basados en redes neuronales (usar datos en capas
+ocultas con un número relativamente chico de unidades, cuando queremos
+que nuestra representación esté asociada a una variable respuesta). 
+
+Aquí mostramos una de estas técnicas:  [t-SNE](http://jmlr.org/papers/volume9/vandermaaten08a/vandermaaten08a.pdf),
+*t-Stochastic Neighbor Embedding*.
+
+Como motivación a esta técnica, observemos primero que
+los métodos como componentes principales buscan obtener una representación que mantenga lejos casos que son muy diferentes (pues buscamos aproximar los datos, o encontrar direcciones de máxima varianza). Sin embargo, en algunos
+casos los que más nos puede interesar es una representación que **mantenga
+casos similares cercanos**, aún cuando perdamos información acerca de distancia de casos muy distintos.
+
+
+### Ejemplo {-}
+
+Consideremos los siguientes datos:
+
+```{r, fig.width=5, fig.asp=0.7}
+x_1 <- c(rnorm(100, 0, 0.5), -20, -25, 20, 22)
+x_2 <- c(rnorm(50, 1, 0.2), rnorm(50, -1, 0.1), 5, -10, -1, 1)
+color <- as.character(c(rep(1, 50), rep(2, 50), rep(3, 4)))
+dat_ej <- data_frame(x_1, x_2, color)
+ggplot(dat_ej, aes(x = x_1, y = x_2, colour = color)) + geom_point()
+```
+
+Notamos que la primera dimensión de svd va en dirección del eje 1, 
+donde hay más dispersión en los datos alrededor del origen. 
+
+```{r}
+svd(dat_ej)$v
+```
+
+Los datos proyectados, sin embargo, oculta la estructura de grupos que hay
+en los puntos cercanos al origen, pues la proyección es
+
+```{r, fig.width=4, fig.asp=0.7}
+qplot(svd(dat_ej[,1:2])$u[,1], fill = dat_ej$color)
+```
+
+
+Aunque es posible considerar las siguientes aproximaciones, en un problema
+de dimensión alta esto puede querer decir que nos costará más trabajo encontrar la estructura de casos similares usando estas técnicas lineales.
+
+En t-SNE construimos una medida de similitud entre puntos que busca concentrarse en puntos similares. Por ejemplo, la estructura de clusters
+de estos datos podemos recuperarla en una dimensión:
+
+```{r, message=FALSE, warning=FALSE}
+library(tsne)
+sne_ejemplo <- tsne(as.matrix(dat_ej[,1:2]), k = 1, perplexity=100)
+qplot(sne_ejemplo, fill = dat_ej$color)
+```
+
+
+### SNE
+
+t-SNE es una adaptación de SNE (Stochastic Neighbor Embedding). Veamos
+primero las ideas básicas de esta técnica:
+
+Para controlar las distancias que nos interesa preservar, primero
+introducimos una medida de similitud entre dos casos (renglones)
+$x^{(i)}, x^{(j)}$:
+
+$$p_{j|i} = \frac{1}{P_i}\exp\left(- ||x_j - x_i ||^2 / 2\sigma_i^2 \right)$$
+
+
+donde $P_i$ es una constante de normalización tal que $\sum_j {p_{j|i}} = 1$.
+Por el momento pensemos que la $\sigma_i$ está fija en algún valor arbitrario.
+
+- Notamos que $p_{j|i}$ toma valores cercanos a 1 cuando 
+$x_i$ y $x_j$ están cercanos (su distancia es chica), y rápidamente
+decae a 0 cuando $x_i$ y $x_j$ se empiezan a alejar.
+- Cuando la $\sigma$ es chica, si $x_i$ y $x_j$ están aunque sea un poco
+separados, $p_{j|i}\approx 0$. Si $\sigma$ es grande, entonces esta
+cantidad decae más lentamente cuando los puntos se alejan
+- Podemos pensar que tenemos una campana gaussiana centrada en $x_i$, y
+la $p_{j|i}$ está dada por la densidad mostrada arriba evaluada en $x_j$
+
+Ahora pensemos que buscamos convertir estos dos puntos a un nuevo
+espacio de dimensión menor. Denotamos por $y_j$ y $y_i$ a los puntos
+correpondientes en el nuevo espacio. Definimos análogamente :
+
+$$q_{j|i} = \frac{1}{Q_i}\exp\left(- ||y_j - y_i ||^2  \right)$$
+
+**¿Cómo encontramos los valores $y_j$?** La idea es intentar aproximar las similitudes derivadas:
+
+$$ p_{j|i} \approx q_{j|i},$$
+
+Pensemos que $i$ está fija (que corresponden a los puntos $x^{(i)}$ y
+$y^{(i)}$). Lo que queremos hacer es **aproximar la estructura local** alrededor de $x^{(i)}$ mediante los puntos $y$. Y esto queremos hacerlo
+para cada caso $i$ en los datos.
+
+ Nótese que estas similitudes son sensibles cuando los
+puntos están relativamente cerca, pero se hacen rápidamente cero cuando
+las distancias son más grandes. Esto permite que al intentar hacer la 
+aproximación realmente nos concentremos en la estructura local alrededor de cada punto $x^{(i)}$
+
+- Nótese que usamos $\sigma=1$ en la definición de las $q_{j|i}$, pues esto depende de la escala de la nueva representación (que vamos a encontrar).
+- Dependiendo de la $\sigma_i$, podemos afinar el método para definir qué
+tan local es la estructura que queremos aproximar.
+
+
+### Minimización para SNE
+
+En SNE, el objetivo a minimizar es la divergencia de
+Kullback-Liebler, que es una especie de 
+distancia entre distribuciones de probabilidad. Buscamos
+resolver
+
+$$\min_{y^{1}, y^{2}, \ldots, y^{(n)}} \sum_{i,j} p_{j|i} \log \frac{p_{j|i}}{q_{j|i}}$$
+
+Existen muchas maneras de entender esta cantidad. Por lo pronto,
+notemos que 
+
+- Si $p_{j|i} = q_{1|j}$, entonces esta cantidad es 0 
+(pues el logaritmo de 1 es cero). 
+- Para cada $i$,  $\sum_{j} p_{j|i} \log \frac{p_{j|i}}{q_{j|i}}\geq 0$. Demuestra usando cálculo.
+- Y **más importante**:  $p_{j|i} \log \frac{p_{j|i}}{q_{j|i}}$ es muy grande
+cuando obtenemos una $q_{j|i}$ chica para una $p_{j|i}$ grande (representar lejos puntos cercanos), pero no aumenta
+tanto si obtenemos una $q_{j|i}$ grande para una $p_{j|i}$ chica. Puedes
+usar cálculo para convencerte de esto también, por ejemplo, derivando
+con respecto a las $x$ la cantidad $\sum_i p_i \log p_i/x_i -\sum_i x_i$
+ (donde $q_i = x_i/\sum_i x_i$, $\sum_i x_i$ es la constante de normalización). 
+
+Finalmente, la **divergencia se minimiza usando descenso en gradiente**.
+
+t-SNE se basa en las mismas ideas, con algunas mejoras (ver [paper](http://jmlr.org/papers/volume9/vandermaaten08a/vandermaaten08a.pdf)): 
+
+- Utiliza una
+versión simétrica de la distancia de Kullback-Liebler (que simplifica
+el cálculo del gradiente para obtener un algoritmo más rápido), y utiliza
+una distribución t en el espacio de baja dimensión en lugar de una guassiana. Esto último mejora el desempeño del algoritmo en dimensiones altas.
+
+
+### Ejemplo {-}
+
+
+
+
+
 
 ### Tarea (para 27 de Noviembre) {-}
 
