@@ -1581,7 +1581,39 @@ una distribución t en el espacio de baja dimensión en lugar de una guassiana. 
 
 
 ### Ejemplo {-}
+Uno de los ejemplos clásicos es con imágenes de dígitos
 
+```{r, message=FALSE, warning=FALSE}
+set.seed(288022)
+zip_train <- read_csv('datos/zip-train.csv')
+muestra_dig <- zip_train %>% sample_n(500)
+tsne_digitos <- tsne(muestra_dig[,2:257], max_iter=500)
+```
+
+```{r}
+dat_tsne <- data.frame(tsne_digitos)
+dat_tsne$digito <- as.character(muestra_dig$X1)
+ggplot(dat_tsne, aes(x=X1, y=X2, colour=digito, label=digito)) + geom_text()
+```
+
+Comparemos con componentes principales, que no logra separar muy
+bien los distintos dígitos:
+```{r}
+comps <- princomp(muestra_dig[,-1])
+dat_comps_tsne <- data.frame(comps$scores[,1:2])
+dat_comps_tsne$digito <- as.character(muestra_dig$X1)
+ggplot(dat_comps_tsne, aes(x=Comp.1, y=Comp.2, colour=digito, label=digito)) + geom_text()
+```
+
+y vemos, por ejemplo, que la primera componente está separando
+principalmente ceros de unos. La primera dirección principal es:
+
+```{r, fig.width=4, fig.asp=0.7}
+image(matrix(comps$loadings[,1], 16,16))
+```
+
+
+### Perplexity
 
 
 
