@@ -805,13 +805,20 @@ La descomposición en valores singulares también se puede interpretar geométri
 Para ver cómo funciona, primero observamos que:
 
 ```{block2, type = 'comentario'}
+**Proyecciones**
+
 Los vectores $v_1,v_2, \ldots, v_p$ están en el espacio de variables o columnas
 (son de dimensión $p$). La componente de la proyección 
 (ver [proyección de vectores](https://en.wikipedia.org/wiki/Vector_projection) )
 de la matriz de datos sobre una de estas dimensiones está dada por
 $$Xv_j,$$
-que son iguales a los scores de los casos
+que son iguales a los scores de los casos escalados por $\sigma$:
 $$\sigma_j u_j$$. 
+
+Las proyecciones $d_j = \sigma_j u_j$
+  son las variables que normalmente se usan para hacer análisis posterior,
+aunque cuando la escala de las proyecciones no es importante,
+también se pueden usar simplemente las $u_j$.
 ```
 
 Por ejemplo, la projeccion del rengón $x_i$ de la matriz $X$ es
@@ -1251,9 +1258,9 @@ que no compartan información lineal entre ellas.
 ```
 
 Adicionalmente, vimos que podíamos escribir
-$$||\tilde{X}||^2_F =  \sum_{j=1}^p \sigma_{j}$$
+$$||\tilde{X}||^2_F =  \sum_{j=1}^p \sigma_{j}^2$$
   Y el lado izquierdo es en este caso una suma de varianzas:
-  $$\sum_{j=1}^p Var(X_j) =  \sum_{j=1}^p \sigma_{j}.$$
+  $$\sum_{j=1}^p Var(X_j) =  \sum_{j=1}^p \sigma_{j}^2.$$
   El lado izquierdo se llama *Varianza total* de la matriz $X$. Componentes principales particiona la varianza total de la matriz $X$ en 
 componentes .
 
