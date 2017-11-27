@@ -140,7 +140,7 @@ sería
 
 $$X_1 = \sigma uv^t$$
 donde consideramos a $u$ y $v$ como vectores columna. El producto es
-de una matriz de $n\times 1$ contra una de $1\times p$, lo cual da una matriz de $n\timesp$.
+de una matriz de $n\times 1$ contra una de $1\times p$, lo cual da una matriz de $n\times p$.
 
 
 Podemos calcular como:
@@ -807,7 +807,7 @@ Para ver cómo funciona, primero observamos que:
 ```{block2, type = 'comentario'}
 Los vectores $v_1,v_2, \ldots, v_p$ están en el espacio de variables o columnas
 (son de dimensión $p$). La componente de la proyección 
-(ver [proyeccción de vectores](https://en.wikipedia.org/wiki/Vector_projection) )
+(ver [proyección de vectores](https://en.wikipedia.org/wiki/Vector_projection) )
 de la matriz de datos sobre una de estas dimensiones está dada por
 $$Xv_j,$$
 que son iguales a los scores de los casos
@@ -815,7 +815,7 @@ $$\sigma_j u_j$$.
 ```
 
 Por ejemplo, la projeccion del rengón $x_i$ de la matriz $X$ es
-$(x_i^tv_j) v_j$ ($x_i^tv_j$ es un escalar, la componente de la proyección).
+$(x_i^tv_j) v_j$ (nótese que $x_i^tv_j$ es un escalar, la componente de la proyección).
 
 Consideremos unos datos simulados
 
@@ -837,16 +837,22 @@ u <- svd_x$u %>% data.frame
 colnames(v) <- c('x_1','x_2')
 colnames(u) <- c('x_1','x_2')
 d <- svd_x$d
+#Nota: podemos mover signos para hacer las gráficas y la interpetación
+# más simples
+v[,1] <- - v[,1]
+u[,1] <- - u[,1]
 v
 ```
 
-Graficamos ahora los dos vectores $v_1$ y $v_2$
+Graficamos ahora los dos vectores $v_1$ y $v_2$, escalándolos
+para ver mejor cómo quedan en relación a los datos (esto no es necesario
+hacerlo):
 
 ```{r}
 ggplot(datos) + geom_point(aes(x=x_1, y=x_2)) +
   geom_vline(xintercept = 0, colour='red') +
  geom_hline(yintercept = 0, colour='red') + 
-  geom_segment(data = v, aes(xend= -5*x_1, yend=-5*x_2, x=0, y=0), col='red', size=1.1,
+  geom_segment(data = v, aes(xend= 4*x_1, yend=4*x_2, x=0, y=0), col='red', size=1.1,
                arrow = arrow(length = unit(0.3,"cm")))  +
   coord_equal()
 ```
@@ -864,8 +870,8 @@ aproximación a los datos (en este caso, exacta).
 Por ejemplo, seleccionemos el primer punto y obtengamos sus proyecciones:
 
 ```{r}
-proy_1 <- (d[1])*u[1,1]*v[1,] #v_1 por el score en la dimensión 1 u[1,1]
-proy_2 <- (d[2])*u[1,2]*v[2,] #v_2 por el score en la dimensión 1 u[1,1]
+proy_1 <- (d[1])*u[1,1]*v[,1] #v_1 por el score en la dimensión 1 u[1,1]
+proy_2 <- (d[2])*u[1,2]*v[,2] #v_2 por el score en la dimensión 1 u[1,1]
 proy_2 + proy_1
 datos[1,]
 ```
@@ -896,7 +902,8 @@ la DVS separa la información en partes que no tienen contenido común (desde el
 ```
 
 Finalmente, muchas veces graficamos las proyecciones en el nuevo espacio creado
-por las dimensiones de la DVS.
+por las dimensiones de la DVS (nótese la escala distinta de
+los ejes).
 
 ```{r}
 proyecciones <- data_frame(dim_1 = d[1]*u[,1], dim_2 = d[2]*u[,2],
