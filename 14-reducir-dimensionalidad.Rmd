@@ -1449,7 +1449,7 @@ el doble centrado puede ser una buena idea para los datos del tipo de Netflix.
 Cuando las columnas tienen distintas unidades (especialmente si las escalas son
 muy diferentes), conviene reescalar la matriz antes de hacer el análisis centrado
 o no centrado. De otra forma, parte del análisis intenta absorber la diferencia en 
-unidades, lo cual generalmente no es de interés
+unidades, lo cual generalmente no es de interés.
 
  - En componentes principales, podemos estandarizar las columnas.
  - En el análisis no centrado, podemos poner las variables en escala 0-1, por ejemplo,
@@ -1709,3 +1709,27 @@ perp(p/sum(p))
 de la construcción apropiada de conjuntos de validación y prueba.
 
 2. Reducción de dimensionalidad: ve *script/tarea_12_dimensionalidad.Rmd*
+
+### Tarea (para 4 de diciembre)
+
+Prepara con tu equipo una descripción corta (1-2 párrafos describiendo
+objetivo, datos y métodos) de lo que piensan hacer como trabajo final.
+ 
+Las condiciones para el examen final son:
+
+- La presentación final será de unos 7 minutos
+máximo (se penalizará pasarse del tiempo). Pueden usar un documento
+de html, pdf o diapositivas para presentar.
+
+- En caso de ser necesario, les pediré a los equipos el documento presentado
+con posibles preguntas adicionales.
+
+- La calificación se hará en tres dimensiones: complejidad y tratamiento de datos (datos complejos y bien procesados dan más puntos), ejecución
+de los modelos (correcta selección de parámetros, validación), y 
+presentación (explicaciones claras de puntos importantes).
+
+- Sugerencias: escoger un método o variación de métodos que no hayamos visto en clase, y aplicarlo a unos cuantos ejemplos de datos. También es posible concentrarse en un conjunto de datos y aplicar algunos métodos para obtener
+las mejores predicciones posibles. Recuerden que es mejor hacer un proyecto relativamente limitado con explicaciones y resultados claros que un proyecto
+demasiado complejo que no puedan explicar razonablemente bien en el tiempo
+que tienen.
+
