@@ -1281,6 +1281,12 @@ Sin embargo, también es importante notar que muchas veces **los resultados de a
 análisis son similares** en cuanto a interpretación y en cuanto a usos posteriores
 de las dimensiones obtenidas.
 
+
+Pueden ver análisis detallado en [este artículo](https://www.researchgate.net/publication/255644479_On_Relationships_Between_Uncentred_And_Column-Centred_Principal_Component_Analysis), que
+hace comparaciones a lo largo de varios conjuntos de datos.
+
+
+
 ### Ejemplo: resultados similares{-}
 
 En el ejemplo de gasto en rubros que vimos arriba, los pesos $v_j$ son muy similares:
@@ -1301,10 +1307,6 @@ Llegaríamos a conclusiones similares si interpretamos cualquiera de los dos an�
 (verifica por ejemplo el ordenamiento de rubros y años en cada dimensión).
 
 ## Ejemplos: donde es buena idea centrar  {-}
-
-En algunos casos, cuando las unidades de las columnas son muy distintas,
-conviene reescalar para eliminar las unidades. El procedimiento usual
-es estandarizando (restar media y dividir entre desviación estándar). 
 
 Por ejemplo, si hacemos componentes principales con los siguientes datos:
   
@@ -1376,7 +1378,11 @@ del análisis no centrado?
 
 Considera el ejemplo de la tarea con la tabla de gastos en distintas categorías
 de alimentos según el decil de ingreso del hogar. ¿Por qué en este ejemplo centrar
-por columna no es tan buena idea?
+por columna no es tan buena idea? Si hacemos el centrado, quitamos
+información importante de la tabla, que es que los distintos deciles
+tienen distintos niveles de gasto. 
+
+Veamos como lucen los dos análisis. Para componentes principales:
 
 ```{r, message=FALSE}
 deciles <- read_csv('./datos/enigh_deciles.csv') %>% as.data.frame
@@ -1390,13 +1396,43 @@ Veamos las primeras dos componente, cuyas direcciones principales son:
 comp_enigh$loadings[,1:2]
 ```
 
+Y los scores son:
+
 ```{r}
 comp_enigh$scores[,1:2]
 ```
 
+Y la tabla de rango 1 es
+```{r}
+tab_1 <- tcrossprod(comp_enigh$scores[,1], comp_enigh$loadings[,1])
+colnames(tab_1) <- colnames(deciles)
+tab_1 <- tab_1 %>% data.frame %>% mutate(categoria = rownames(deciles)) %>%
+  gather(decil, gasto, d1:d10)
+tab_1$categoria <- reorder(tab_1$categoria, tab_1$gasto, mean)
+ggplot(tab_1, aes(x=categoria, y=gasto, colour=decil, group=decil)) +
+  geom_line() + coord_flip()
+```
 
-Notamos que la primera componentese refiere al consumo relativamente alto de
-las categorías de consumo alto, especialmente por los deciles altos (Cereales, Carnes, Leche y derivados, etc.), no es tan fácil de interpetar.
+Que podemos comparar con el análisis no centrado:
+
+```{r}
+svd_enigh <- svd(deciles)
+tab_1 <- tcrossprod(svd_enigh$u[,1], svd_enigh$v[,1])
+colnames(tab_1) <- colnames(deciles)
+tab_1 <- tab_1 %>% data.frame %>% mutate(categoria = rownames(deciles)) %>%
+  gather(decil, gasto, d1:d10)
+tab_1$categoria <- reorder(tab_1$categoria, tab_1$gasto, mean)
+ggplot(tab_1, aes(x=categoria, y=gasto, colour=decil, group=decil)) +
+  geom_line() + coord_flip()
+```
+
+
+Y aunque los resultados son similares,
+puede ser más simple entender la primera dimensión del svd no centrado
+que guarda los efectos de los distintos niveles de gasto de
+los deciles. En el caso del análisis centrado, tenemos una primera componente
+que sólo se entiende bien sabiendo los niveles promedio de gasto
+a lo largo de las categorías.
 
 *Observación*: Quizá una solución más natural es hacer el análisis de componentes principales usando la transpuesta de esta matriz (usa la función *prcomp*), donde tiene más sentido
 centrar por categoría de alimento, y pensar que las observaciones son los distintos
