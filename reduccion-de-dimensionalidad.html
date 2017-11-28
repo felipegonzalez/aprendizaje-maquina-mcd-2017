@@ -25,7 +25,7 @@
 <meta name="author" content="Felipe González">
 
 
-<meta name="date" content="2017-11-27">
+<meta name="date" content="2017-11-28">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -376,6 +376,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#ejemplo-60"><i class="fa fa-check"></i>Ejemplo</a></li>
 <li class="chapter" data-level="14.9.3" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#perplexity"><i class="fa fa-check"></i><b>14.9.3</b> Perplexity</a></li>
 <li class="chapter" data-level="" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#tarea-para-27-de-noviembre"><i class="fa fa-check"></i>Tarea (para 27 de Noviembre)</a></li>
+<li class="chapter" data-level="14.9.4" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#tarea-para-4-de-diciembre"><i class="fa fa-check"></i><b>14.9.4</b> Tarea (para 4 de diciembre)</a></li>
 </ul></li>
 </ul></li>
 <li class="divider"></li>
@@ -1367,6 +1368,7 @@ Buscamos sucesivamente direcciones para proyectar <em>que tienen varianza máxim
 <li><p>Centramos si nos interesa más tener una interpretación en términos de varianzas y covarianzas que hacer una aproximación de los datos originales.</p></li>
 </ol>
 <p>Sin embargo, también es importante notar que muchas veces <strong>los resultados de ambos análisis son similares</strong> en cuanto a interpretación y en cuanto a usos posteriores de las dimensiones obtenidas.</p>
+<p>Pueden ver análisis detallado en <a href="https://www.researchgate.net/publication/255644479_On_Relationships_Between_Uncentred_And_Column-Centred_Principal_Component_Analysis">este artículo</a>, que hace comparaciones a lo largo de varios conjuntos de datos.</p>
 <div id="ejemplo-resultados-similares" class="section level3 unnumbered">
 <h3>Ejemplo: resultados similares</h3>
 <p>En el ejemplo de gasto en rubros que vimos arriba, los pesos <span class="math inline">\(v_j\)</span> son muy similares:</p>
@@ -1401,7 +1403,6 @@ comps_<span class="dv">1</span><span class="op">$</span>loadings[,]</code></pre>
 </div>
 <div id="ejemplos-donde-es-buena-idea-centrar" class="section level2 unnumbered">
 <h2>Ejemplos: donde es buena idea centrar</h2>
-<p>En algunos casos, cuando las unidades de las columnas son muy distintas, conviene reescalar para eliminar las unidades. El procedimiento usual es estandarizando (restar media y dividir entre desviación estándar).</p>
 <p>Por ejemplo, si hacemos componentes principales con los siguientes datos:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">whisky &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&#39;./datos/whiskies.csv&#39;</span>)
 <span class="kw">head</span>(whisky)</code></pre></div>
@@ -1489,7 +1490,8 @@ svd_w<span class="op">$</span>v[,<span class="dv">1</span><span class="op">:</sp
 </div>
 <div id="ejemplo-donde-no-centrar-funciona-bien" class="section level2 unnumbered">
 <h2>Ejemplo: donde no centrar funciona bien</h2>
-<p>Considera el ejemplo de la tarea con la tabla de gastos en distintas categorías de alimentos según el decil de ingreso del hogar. ¿Por qué en este ejemplo centrar por columna no es tan buena idea?</p>
+<p>Considera el ejemplo de la tarea con la tabla de gastos en distintas categorías de alimentos según el decil de ingreso del hogar. ¿Por qué en este ejemplo centrar por columna no es tan buena idea? Si hacemos el centrado, quitamos información importante de la tabla, que es que los distintos deciles tienen distintos niveles de gasto.</p>
+<p>Veamos como lucen los dos análisis. Para componentes principales:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">deciles &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&#39;./datos/enigh_deciles.csv&#39;</span>) <span class="op">%&gt;%</span><span class="st"> </span>as.data.frame</code></pre></div>
 <pre><code>## Warning: Missing column names filled in: &#39;X1&#39; [1]</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">deciles <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">arrange</span>(<span class="kw">desc</span>(d1))</code></pre></div>
@@ -1536,6 +1538,7 @@ comp_enigh &lt;-<span class="st"> </span><span class="kw">princomp</span>(decile
 ## dd8 -0.3783732  0.02514659
 ## d9  -0.4019500  0.30553359
 ## d10 -0.4425357  0.62905737</code></pre>
+<p>Y los scores son:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">comp_enigh<span class="op">$</span>scores[,<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>]</code></pre></div>
 <pre><code>##                                      Comp.1      Comp.2
 ## CEREALES                         -4548094.6 -1191716.24
@@ -1551,7 +1554,26 @@ comp_enigh &lt;-<span class="st"> </span><span class="kw">princomp</span>(decile
 ## CAFE, TE Y CHOCOLATE              2685873.3   -33326.41
 ## ESPECIAS Y ADEREZOS               2679471.1   -33837.02
 ## OTROS ALIMENTOS DIVERSOS         -1292306.9  1162063.49</code></pre>
-<p>Notamos que la primera componentese refiere al consumo relativamente alto de las categorías de consumo alto, especialmente por los deciles altos (Cereales, Carnes, Leche y derivados, etc.), no es tan fácil de interpetar.</p>
+<p>Y la tabla de rango 1 es</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tab_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">tcrossprod</span>(comp_enigh<span class="op">$</span>scores[,<span class="dv">1</span>], comp_enigh<span class="op">$</span>loadings[,<span class="dv">1</span>])
+<span class="kw">colnames</span>(tab_<span class="dv">1</span>) &lt;-<span class="st"> </span><span class="kw">colnames</span>(deciles)
+tab_<span class="dv">1</span> &lt;-<span class="st"> </span>tab_<span class="dv">1</span> <span class="op">%&gt;%</span><span class="st"> </span>data.frame <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">categoria =</span> <span class="kw">rownames</span>(deciles)) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">gather</span>(decil, gasto, d1<span class="op">:</span>d10)
+tab_<span class="dv">1</span><span class="op">$</span>categoria &lt;-<span class="st"> </span><span class="kw">reorder</span>(tab_<span class="dv">1</span><span class="op">$</span>categoria, tab_<span class="dv">1</span><span class="op">$</span>gasto, mean)
+<span class="kw">ggplot</span>(tab_<span class="dv">1</span>, <span class="kw">aes</span>(<span class="dt">x=</span>categoria, <span class="dt">y=</span>gasto, <span class="dt">colour=</span>decil, <span class="dt">group=</span>decil)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span><span class="kw">coord_flip</span>()</code></pre></div>
+<p><img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-93-1.png" width="672" /></p>
+<p>Que podemos comparar con el análisis no centrado:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">svd_enigh &lt;-<span class="st"> </span><span class="kw">svd</span>(deciles)
+tab_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">tcrossprod</span>(svd_enigh<span class="op">$</span>u[,<span class="dv">1</span>], svd_enigh<span class="op">$</span>v[,<span class="dv">1</span>])
+<span class="kw">colnames</span>(tab_<span class="dv">1</span>) &lt;-<span class="st"> </span><span class="kw">colnames</span>(deciles)
+tab_<span class="dv">1</span> &lt;-<span class="st"> </span>tab_<span class="dv">1</span> <span class="op">%&gt;%</span><span class="st"> </span>data.frame <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">categoria =</span> <span class="kw">rownames</span>(deciles)) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">gather</span>(decil, gasto, d1<span class="op">:</span>d10)
+tab_<span class="dv">1</span><span class="op">$</span>categoria &lt;-<span class="st"> </span><span class="kw">reorder</span>(tab_<span class="dv">1</span><span class="op">$</span>categoria, tab_<span class="dv">1</span><span class="op">$</span>gasto, mean)
+<span class="kw">ggplot</span>(tab_<span class="dv">1</span>, <span class="kw">aes</span>(<span class="dt">x=</span>categoria, <span class="dt">y=</span>gasto, <span class="dt">colour=</span>decil, <span class="dt">group=</span>decil)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span><span class="kw">coord_flip</span>()</code></pre></div>
+<p><img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-94-1.png" width="672" /></p>
+<p>Y aunque los resultados son similares, puede ser más simple entender la primera dimensión del svd no centrado que guarda los efectos de los distintos niveles de gasto de los deciles. En el caso del análisis centrado, tenemos una primera componente que sólo se entiende bien sabiendo los niveles promedio de gasto a lo largo de las categorías.</p>
 <p><em>Observación</em>: Quizá una solución más natural es hacer el análisis de componentes principales usando la transpuesta de esta matriz (usa la función <em>prcomp</em>), donde tiene más sentido centrar por categoría de alimento, y pensar que las observaciones son los distintos deciles (que en realidad son agrupaciones de observaciones).</p>
 <div id="otros-tipos-de-centrado" class="section level3">
 <h3><span class="header-section-number">14.8.1</span> Otros tipos de centrado</h3>
@@ -1559,7 +1581,7 @@ comp_enigh &lt;-<span class="st"> </span><span class="kw">princomp</span>(decile
 </div>
 <div id="reescalando-variables" class="section level3">
 <h3><span class="header-section-number">14.8.2</span> Reescalando variables</h3>
-<p>Cuando las columnas tienen distintas unidades (especialmente si las escalas son muy diferentes), conviene reescalar la matriz antes de hacer el análisis centrado o no centrado. De otra forma, parte del análisis intenta absorber la diferencia en unidades, lo cual generalmente no es de interés</p>
+<p>Cuando las columnas tienen distintas unidades (especialmente si las escalas son muy diferentes), conviene reescalar la matriz antes de hacer el análisis centrado o no centrado. De otra forma, parte del análisis intenta absorber la diferencia en unidades, lo cual generalmente no es de interés.</p>
 <ul>
 <li>En componentes principales, podemos estandarizar las columnas.</li>
 <li>En el análisis no centrado, podemos poner las variables en escala 0-1, por ejemplo, o dividir entre la media (si son variables positivas).</li>
@@ -1595,7 +1617,7 @@ x_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">c</sp
 color &lt;-<span class="st"> </span><span class="kw">as.character</span>(<span class="kw">c</span>(<span class="kw">rep</span>(<span class="dv">1</span>, <span class="dv">50</span>), <span class="kw">rep</span>(<span class="dv">2</span>, <span class="dv">50</span>), <span class="kw">rep</span>(<span class="dv">3</span>, <span class="dv">4</span>)))
 dat_ej &lt;-<span class="st"> </span><span class="kw">data_frame</span>(x_<span class="dv">1</span>, x_<span class="dv">2</span>, color)
 <span class="kw">ggplot</span>(dat_ej, <span class="kw">aes</span>(<span class="dt">x =</span> x_<span class="dv">1</span>, <span class="dt">y =</span> x_<span class="dv">2</span>, <span class="dt">colour =</span> color)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>()</code></pre></div>
-<p><img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-96-1.png" width="480" /></p>
+<p><img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-98-1.png" width="480" /></p>
 <p>Notamos que la primera dimensión de svd va en dirección del eje 1, donde hay más dispersión en los datos alrededor del origen.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">svd</span>(dat_ej[,<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>])<span class="op">$</span>v</code></pre></div>
 <pre><code>##             [,1]        [,2]
@@ -1604,13 +1626,13 @@ dat_ej &lt;-<span class="st"> </span><span class="kw">data_frame</span>(x_<span 
 <p>Los datos proyectados, sin embargo, oculta la estructura de grupos que hay en los puntos cercanos al origen, pues la proyección es</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">qplot</span>(<span class="kw">svd</span>(dat_ej[,<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>])<span class="op">$</span>u[,<span class="dv">1</span>], <span class="dt">fill =</span> dat_ej<span class="op">$</span>color) <span class="op">+</span><span class="st"> </span><span class="kw">xlab</span>(<span class="st">&#39;u&#39;</span>)</code></pre></div>
 <pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
-<p><img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-98-1.png" width="384" /></p>
+<p><img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-100-1.png" width="384" /></p>
 <p>Aunque es posible considerar las siguientes aproximaciones, en un problema de dimensión alta esto puede querer decir que nos costará más trabajo encontrar la estructura de casos similares usando estas técnicas lineales.</p>
 <p>En t-SNE construimos una medida de similitud entre puntos que busca concentrarse en puntos similares. Por ejemplo, la estructura de clusters de estos datos podemos recuperarla en una dimensión:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(tsne)
 sne_ejemplo &lt;-<span class="st"> </span><span class="kw">tsne</span>(<span class="kw">as.matrix</span>(dat_ej[,<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>]), <span class="dt">k =</span> <span class="dv">1</span>, <span class="dt">perplexity=</span><span class="dv">100</span>)
 <span class="kw">qplot</span>(sne_ejemplo, <span class="dt">fill =</span> dat_ej<span class="op">$</span>color) <span class="op">+</span><span class="st"> </span><span class="kw">xlab</span>(<span class="st">&#39;u&#39;</span>)</code></pre></div>
-<p><img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-99-1.png" width="384" /></p>
+<p><img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-101-1.png" width="384" /></p>
 </div>
 <div id="sne" class="section level3">
 <h3><span class="header-section-number">14.9.1</span> SNE</h3>
@@ -1663,16 +1685,16 @@ tsne_digitos &lt;-<span class="st"> </span><span class="kw">tsne</span>(muestra_
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dat_tsne &lt;-<span class="st"> </span><span class="kw">data.frame</span>(tsne_digitos)
 dat_tsne<span class="op">$</span>digito &lt;-<span class="st"> </span><span class="kw">as.character</span>(muestra_dig<span class="op">$</span>X1)
 <span class="kw">ggplot</span>(dat_tsne, <span class="kw">aes</span>(<span class="dt">x=</span>X1, <span class="dt">y=</span>X2, <span class="dt">colour=</span>digito, <span class="dt">label=</span>digito)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_text</span>()</code></pre></div>
-<p><img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-101-1.png" width="672" /></p>
+<p><img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-103-1.png" width="672" /></p>
 <p>Comparemos con componentes principales, que no logra separar muy bien los distintos dígitos:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">comps &lt;-<span class="st"> </span><span class="kw">princomp</span>(muestra_dig[,<span class="op">-</span><span class="dv">1</span>])
 dat_comps_tsne &lt;-<span class="st"> </span><span class="kw">data.frame</span>(comps<span class="op">$</span>scores[,<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>])
 dat_comps_tsne<span class="op">$</span>digito &lt;-<span class="st"> </span><span class="kw">as.character</span>(muestra_dig<span class="op">$</span>X1)
 <span class="kw">ggplot</span>(dat_comps_tsne, <span class="kw">aes</span>(<span class="dt">x=</span>Comp.<span class="dv">1</span>, <span class="dt">y=</span>Comp.<span class="dv">2</span>, <span class="dt">colour=</span>digito, <span class="dt">label=</span>digito)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_text</span>()</code></pre></div>
-<p><img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-102-1.png" width="672" /></p>
+<p><img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-104-1.png" width="672" /></p>
 <p>y vemos, por ejemplo, que la primera componente está separando principalmente ceros de unos. La primera dirección principal es:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">image</span>(<span class="kw">matrix</span>(comps<span class="op">$</span>loadings[,<span class="dv">1</span>], <span class="dv">16</span>,<span class="dv">16</span>))</code></pre></div>
-<p><img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-103-1.png" width="384" /></p>
+<p><img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-105-1.png" width="384" /></p>
 </div>
 <div id="perplexity" class="section level3">
 <h3><span class="header-section-number">14.9.3</span> Perplexity</h3>
@@ -1683,13 +1705,13 @@ dat_comps_tsne<span class="op">$</span>digito &lt;-<span class="st"> </span><spa
 dat_tsne &lt;-<span class="st"> </span><span class="kw">data.frame</span>(tsne_digitos)
 dat_tsne<span class="op">$</span>digito &lt;-<span class="st"> </span><span class="kw">as.character</span>(muestra_dig<span class="op">$</span>X1)
 <span class="kw">ggplot</span>(dat_tsne, <span class="kw">aes</span>(<span class="dt">x=</span>X1, <span class="dt">y=</span>X2, <span class="dt">colour=</span>digito, <span class="dt">label=</span>digito)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_text</span>()</code></pre></div>
-<p><img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-104-1.png" width="672" /></p>
+<p><img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-106-1.png" width="672" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tsne_digitos &lt;-<span class="st"> </span><span class="kw">tsne</span>(muestra_dig[,<span class="dv">2</span><span class="op">:</span><span class="dv">257</span>], <span class="dt">perplexity =</span> <span class="dv">100</span>,
                      <span class="dt">max_iter=</span><span class="dv">500</span>)
 dat_tsne &lt;-<span class="st"> </span><span class="kw">data.frame</span>(tsne_digitos)
 dat_tsne<span class="op">$</span>digito &lt;-<span class="st"> </span><span class="kw">as.character</span>(muestra_dig<span class="op">$</span>X1)
 <span class="kw">ggplot</span>(dat_tsne, <span class="kw">aes</span>(<span class="dt">x=</span>X1, <span class="dt">y=</span>X2, <span class="dt">colour=</span>digito, <span class="dt">label=</span>digito)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_text</span>()</code></pre></div>
-<p><img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-105-1.png" width="672" /></p>
+<p><img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-107-1.png" width="672" /></p>
 <p><strong>Notas</strong> (opcional): si <span class="math inline">\(P\)</span> es el valor de perplejidad escogido, el valor de <span class="math inline">\(\sigma_i\)</span> escoge de manera que las <span class="math inline">\(p_{j|i}\)</span> obtenidas satisfagan <span class="math inline">\(2^{-\sum_{j} p_{j|i}\log_2 p_{j|i}}\approx P\)</span>. El valor de la izquierda en esta ecuación se puede interpretar como una medida suave del número de puntos donde se concentra la masa de probabilidad. Por ejemplo:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">perp &lt;-<span class="st"> </span><span class="cf">function</span>(x){<span class="dv">2</span><span class="op">^</span><span class="kw">sum</span>(<span class="op">-</span>x<span class="op">*</span><span class="kw">log2</span>(x))}
 p &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">0.01</span>, <span class="fl">0.01</span>, <span class="fl">0.01</span>, <span class="fl">0.02</span>, <span class="fl">0.95</span>)
@@ -1710,6 +1732,17 @@ p &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">0.01<
 <li><p>Validación: lee este <a href="http://www.fast.ai/2017/11/13/validation-sets/">blogpost</a>, acerca de la construcción apropiada de conjuntos de validación y prueba.</p></li>
 <li><p>Reducción de dimensionalidad: ve <em>script/tarea_12_dimensionalidad.Rmd</em></p></li>
 </ol>
+</div>
+<div id="tarea-para-4-de-diciembre" class="section level3">
+<h3><span class="header-section-number">14.9.4</span> Tarea (para 4 de diciembre)</h3>
+<p>Prepara con tu equipo una descripción corta (1-2 párrafos describiendo objetivo, datos y métodos) de lo que piensan hacer como trabajo final.</p>
+<p>Las condiciones para el examen final son:</p>
+<ul>
+<li><p>La presentación final será de unos 7 minutos máximo (se penalizará pasarse del tiempo). Pueden usar un documento de html, pdf o diapositivas para presentar.</p></li>
+<li><p>En caso de ser necesario, les pediré a los equipos el documento presentado con posibles preguntas adicionales.</p></li>
+<li><p>La calificación se hará en tres dimensiones: complejidad y tratamiento de datos (datos complejos y bien procesados dan más puntos), ejecución de los modelos (correcta selección de parámetros, validación), y presentación (explicaciones claras de puntos importantes).</p></li>
+<li><p>Sugerencias: escoger un método o variación de métodos que no hayamos visto en clase, y aplicarlo a unos cuantos ejemplos de datos. También es posible concentrarse en un conjunto de datos y aplicar algunos métodos para obtener las mejores predicciones posibles. Recuerden que es mejor hacer un proyecto relativamente limitado con explicaciones y resultados claros que un proyecto demasiado complejo que no puedan explicar razonablemente bien en el tiempo que tienen.</p></li>
+</ul>
 
 <div id="refs" class="references">
 <div>

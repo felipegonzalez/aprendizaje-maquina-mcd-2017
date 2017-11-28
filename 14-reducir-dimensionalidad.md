@@ -1860,6 +1860,12 @@ Sin embargo, también es importante notar que muchas veces **los resultados de a
 análisis son similares** en cuanto a interpretación y en cuanto a usos posteriores
 de las dimensiones obtenidas.
 
+
+Pueden ver análisis detallado en [este artículo](https://www.researchgate.net/publication/255644479_On_Relationships_Between_Uncentred_And_Column-Centred_Principal_Component_Analysis), que
+hace comparaciones a lo largo de varios conjuntos de datos.
+
+
+
 ### Ejemplo: resultados similares{-}
 
 En el ejemplo de gasto en rubros que vimos arriba, los pesos $v_j$ son muy similares:
@@ -1920,10 +1926,6 @@ Llegaríamos a conclusiones similares si interpretamos cualquiera de los dos an�
 (verifica por ejemplo el ordenamiento de rubros y años en cada dimensión).
 
 ## Ejemplos: donde es buena idea centrar  {-}
-
-En algunos casos, cuando las unidades de las columnas son muy distintas,
-conviene reescalar para eliminar las unidades. El procedimiento usual
-es estandarizando (restar media y dividir entre desviación estándar). 
 
 Por ejemplo, si hacemos componentes principales con los siguientes datos:
   
@@ -2085,7 +2087,11 @@ del análisis no centrado?
 
 Considera el ejemplo de la tarea con la tabla de gastos en distintas categorías
 de alimentos según el decil de ingreso del hogar. ¿Por qué en este ejemplo centrar
-por columna no es tan buena idea?
+por columna no es tan buena idea? Si hacemos el centrado, quitamos
+información importante de la tabla, que es que los distintos deciles
+tienen distintos niveles de gasto. 
+
+Veamos como lucen los dos análisis. Para componentes principales:
 
 
 ```r
@@ -2156,6 +2162,8 @@ comp_enigh$loadings[,1:2]
 ## d10 -0.4425357  0.62905737
 ```
 
+Y los scores son:
+
 
 ```r
 comp_enigh$scores[,1:2]
@@ -2178,9 +2186,43 @@ comp_enigh$scores[,1:2]
 ## OTROS ALIMENTOS DIVERSOS         -1292306.9  1162063.49
 ```
 
+Y la tabla de rango 1 es
 
-Notamos que la primera componentese refiere al consumo relativamente alto de
-las categorías de consumo alto, especialmente por los deciles altos (Cereales, Carnes, Leche y derivados, etc.), no es tan fácil de interpetar.
+```r
+tab_1 <- tcrossprod(comp_enigh$scores[,1], comp_enigh$loadings[,1])
+colnames(tab_1) <- colnames(deciles)
+tab_1 <- tab_1 %>% data.frame %>% mutate(categoria = rownames(deciles)) %>%
+  gather(decil, gasto, d1:d10)
+tab_1$categoria <- reorder(tab_1$categoria, tab_1$gasto, mean)
+ggplot(tab_1, aes(x=categoria, y=gasto, colour=decil, group=decil)) +
+  geom_line() + coord_flip()
+```
+
+<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-93-1.png" width="672" />
+
+Que podemos comparar con el análisis no centrado:
+
+
+```r
+svd_enigh <- svd(deciles)
+tab_1 <- tcrossprod(svd_enigh$u[,1], svd_enigh$v[,1])
+colnames(tab_1) <- colnames(deciles)
+tab_1 <- tab_1 %>% data.frame %>% mutate(categoria = rownames(deciles)) %>%
+  gather(decil, gasto, d1:d10)
+tab_1$categoria <- reorder(tab_1$categoria, tab_1$gasto, mean)
+ggplot(tab_1, aes(x=categoria, y=gasto, colour=decil, group=decil)) +
+  geom_line() + coord_flip()
+```
+
+<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-94-1.png" width="672" />
+
+
+Y aunque los resultados son similares,
+puede ser más simple entender la primera dimensión del svd no centrado
+que guarda los efectos de los distintos niveles de gasto de
+los deciles. En el caso del análisis centrado, tenemos una primera componente
+que sólo se entiende bien sabiendo los niveles promedio de gasto
+a lo largo de las categorías.
 
 *Observación*: Quizá una solución más natural es hacer el análisis de componentes principales usando la transpuesta de esta matriz (usa la función *prcomp*), donde tiene más sentido
 centrar por categoría de alimento, y pensar que las observaciones son los distintos
@@ -2197,7 +2239,7 @@ el doble centrado puede ser una buena idea para los datos del tipo de Netflix.
 Cuando las columnas tienen distintas unidades (especialmente si las escalas son
 muy diferentes), conviene reescalar la matriz antes de hacer el análisis centrado
 o no centrado. De otra forma, parte del análisis intenta absorber la diferencia en 
-unidades, lo cual generalmente no es de interés
+unidades, lo cual generalmente no es de interés.
 
  - En componentes principales, podemos estandarizar las columnas.
  - En el análisis no centrado, podemos poner las variables en escala 0-1, por ejemplo,
@@ -2275,7 +2317,7 @@ dat_ej <- data_frame(x_1, x_2, color)
 ggplot(dat_ej, aes(x = x_1, y = x_2, colour = color)) + geom_point()
 ```
 
-<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-96-1.png" width="480" />
+<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-98-1.png" width="480" />
 
 Notamos que la primera dimensión de svd va en dirección del eje 1, 
 donde hay más dispersión en los datos alrededor del origen. 
@@ -2303,7 +2345,7 @@ qplot(svd(dat_ej[,1:2])$u[,1], fill = dat_ej$color) + xlab('u')
 ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
 ```
 
-<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-98-1.png" width="384" />
+<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-100-1.png" width="384" />
 
 
 Aunque es posible considerar las siguientes aproximaciones, en un problema
@@ -2319,7 +2361,7 @@ sne_ejemplo <- tsne(as.matrix(dat_ej[,1:2]), k = 1, perplexity=100)
 qplot(sne_ejemplo, fill = dat_ej$color) + xlab('u')
 ```
 
-<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-99-1.png" width="384" />
+<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-101-1.png" width="384" />
 
 
 ### SNE
@@ -2423,7 +2465,7 @@ dat_tsne$digito <- as.character(muestra_dig$X1)
 ggplot(dat_tsne, aes(x=X1, y=X2, colour=digito, label=digito)) + geom_text()
 ```
 
-<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-101-1.png" width="672" />
+<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-103-1.png" width="672" />
 
 Comparemos con componentes principales, que no logra separar muy
 bien los distintos dígitos:
@@ -2435,7 +2477,7 @@ dat_comps_tsne$digito <- as.character(muestra_dig$X1)
 ggplot(dat_comps_tsne, aes(x=Comp.1, y=Comp.2, colour=digito, label=digito)) + geom_text()
 ```
 
-<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-102-1.png" width="672" />
+<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-104-1.png" width="672" />
 
 y vemos, por ejemplo, que la primera componente está separando
 principalmente ceros de unos. La primera dirección principal es:
@@ -2445,7 +2487,7 @@ principalmente ceros de unos. La primera dirección principal es:
 image(matrix(comps$loadings[,1], 16,16))
 ```
 
-<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-103-1.png" width="384" />
+<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-105-1.png" width="384" />
 
 
 ### Perplexity
@@ -2471,7 +2513,7 @@ dat_tsne$digito <- as.character(muestra_dig$X1)
 ggplot(dat_tsne, aes(x=X1, y=X2, colour=digito, label=digito)) + geom_text()
 ```
 
-<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-104-1.png" width="672" />
+<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-106-1.png" width="672" />
 
 
 ```r
@@ -2482,7 +2524,7 @@ dat_tsne$digito <- as.character(muestra_dig$X1)
 ggplot(dat_tsne, aes(x=X1, y=X2, colour=digito, label=digito)) + geom_text()
 ```
 
-<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-105-1.png" width="672" />
+<img src="14-reducir-dimensionalidad_files/figure-html/unnamed-chunk-107-1.png" width="672" />
 
 
 **Notas** (opcional):
@@ -2537,3 +2579,27 @@ perp(p/sum(p))
 de la construcción apropiada de conjuntos de validación y prueba.
 
 2. Reducción de dimensionalidad: ve *script/tarea_12_dimensionalidad.Rmd*
+
+### Tarea (para 4 de diciembre)
+
+Prepara con tu equipo una descripción corta (1-2 párrafos describiendo
+objetivo, datos y métodos) de lo que piensan hacer como trabajo final.
+ 
+Las condiciones para el examen final son:
+
+- La presentación final será de unos 7 minutos
+máximo (se penalizará pasarse del tiempo). Pueden usar un documento
+de html, pdf o diapositivas para presentar.
+
+- En caso de ser necesario, les pediré a los equipos el documento presentado
+con posibles preguntas adicionales.
+
+- La calificación se hará en tres dimensiones: complejidad y tratamiento de datos (datos complejos y bien procesados dan más puntos), ejecución
+de los modelos (correcta selección de parámetros, validación), y 
+presentación (explicaciones claras de puntos importantes).
+
+- Sugerencias: escoger un método o variación de métodos que no hayamos visto en clase, y aplicarlo a unos cuantos ejemplos de datos. También es posible concentrarse en un conjunto de datos y aplicar algunos métodos para obtener
+las mejores predicciones posibles. Recuerden que es mejor hacer un proyecto relativamente limitado con explicaciones y resultados claros que un proyecto
+demasiado complejo que no puedan explicar razonablemente bien en el tiempo
+que tienen.
+
