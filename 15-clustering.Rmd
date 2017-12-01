@@ -142,34 +142,18 @@ buscaremos resolver
 
 $$\min_{C_1,\ldots, C_K} \sum_{k=1}^K W(C_k)$$ 
 
-En general, este problema es imposible de resolver por enumeración, pues aún para un conjunto de datos chico con $K$ chica, el espacio de posibles particiones es inmenso.
+Una medida usual es la siguiente:
 
-Sin embargo, escogiendo medidaas $W$ particulares es posible construir algoritmos con desempeño razonable. 
-
-
-En primer lugar, suponemos que $W(C)$ está dado por
-
-$$W(C_k) =\frac{1}{|C_k|}\sum_{i,j\in C_k} ||x_i-x_j||^2,$$
-
-es decir, la medida de variación dentro de los clusters es el promedio de distancias
-euclideanas al cuadrado dentro del cluster. El problema
-
-$$\min_{C_1,\ldots, C_K} \sum_{k=1}^K \frac{1}{|C_k|}\sum_{i,j\in C_k} ||x_i-x_j||^2$$ 
-
-todavía es demasiado difícil. Sin embargo, se puede demostrar que este
-problema es equivalente a minimizar
 
 $$W(C_k)=2\sum_{i\in C_k} ||x_i-\bar{x}_k||^2,$$
 
 donde $\bar{x}_k=\frac{1}{|C_k|}\sum_{i\in C_k} x_i$ es el centroide del grupo $C_k$.
-Esto se puede demostrar usando que
+Este problema es demasiado grande para resolver por fuerza bruta (por ejemplo,
+enlistando todas las posibles agrupaciones). 
 
-$$\sum_{i\in C_k} ||x_i-\bar{x}_k||^2 = \sum_{i\in
-C_k} (x_i-\frac{1}{n}\sum_m x_m)^t
-(x_i-\frac{1}{n}\sum_l x_l) = $$
-
-y ahora notamos que si los $C_1,\ldots C_K$ están dados, entonces
-tenemos que
+Sin embargo, podemos desarrollar una heurística notando que si los
+clusters $C_1,\ldots C_K$ están dados, entonces
+podemos calcular los centroides están dados por:
 $$\bar{x}_k = argmin_{m} \sum_{i\in C_k} ||x_i-m||^2,$$
 
 (pues tenemos el teorema: el centroide es el punto con distancia euclideana cuadrada promedio más baja a los elementos del grupo). Podemos entonces cambiar nuestro
@@ -177,13 +161,13 @@ problema original por el problema ampliado
 
 $$min_{C_1,\ldots, C_K, m_1,\ldots, m_k} \sum_{k=1}^K \sum_{i\in C_k} ||x_i-m_k||^2$$ 
 
-Vemos entonces que
+Vemos entonces que podemos proceder iterando dos pasos relativamente fáciles:
 
 1. Si tenemos la asignación $C_1,\ldots C_K$, entonces podemos
-encontrar las $m_1,\ldots, m_k$ calculando los centroides $m_k = \bar{x}_k$.
+encontrar las $m_1,\ldots, m_k$ **calculando los centroides** $m_k = \bar{x}_k$.
 2. Si tenemos los centroides $m_k$ fijos podemos resolver
 $$min_{C_1,\ldots C_K} \sum_k \sum_{i\in C_j} ||x_i - m_k||^2$$
-asignando cada punto a la $m_k$ más cercana.
+**asignando cada punto a la $m_k$ más cercana**.
 
 Esto sugiere el siguiente algoritmo:
 
