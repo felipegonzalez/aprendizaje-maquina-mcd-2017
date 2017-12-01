@@ -144,7 +144,10 @@ $$\min_{C_1,\ldots, C_K} \sum_{k=1}^K W(C_k)$$
 
 En general, este problema es imposible de resolver por enumeración, pues aún para un conjunto de datos chico con $K$ chica, el espacio de posibles particiones es inmenso.
 
-Sin embargo, escogiendo medidaas $W$ particulares es posible construir algoritmos con desempeño razonable. En primer lugar, suponemos que $W(C)$ está dado por
+Sin embargo, escogiendo medidaas $W$ particulares es posible construir algoritmos con desempeño razonable. 
+
+
+En primer lugar, suponemos que $W(C)$ está dado por
 
 $$W(C_k) =\frac{1}{|C_k|}\sum_{i,j\in C_k} ||x_i-x_j||^2,$$
 
@@ -153,13 +156,17 @@ euclideanas al cuadrado dentro del cluster. El problema
 
 $$\min_{C_1,\ldots, C_K} \sum_{k=1}^K \frac{1}{|C_k|}\sum_{i,j\in C_k} ||x_i-x_j||^2$$ 
 
-todavía es demasiado difícil. Sin embargo, se puede demostrar (usando pitágoras) que
+todavía es demasiado difícil. Sin embargo, se puede demostrar que este
+problema es equivalente a minimizar
 
 $$W(C_k)=2\sum_{i\in C_k} ||x_i-\bar{x}_k||^2,$$
 
 donde $\bar{x}_k=\frac{1}{|C_k|}\sum_{i\in C_k} x_i$ es el centroide del grupo $C_k$.
+Esto se puede demostrar usando que
 
-
+$$\sum_{i\in C_k} ||x_i-\bar{x}_k||^2 = \sum_{i\in
+C_k} (x_i-\frac{1}{n}\sum_m x_m)^t
+(x_i-\frac{1}{n}\sum_l x_l) = $$
 
 y ahora notamos que si los $C_1,\ldots C_K$ están dados, entonces
 tenemos que
@@ -207,7 +214,7 @@ Describiremos iteraciones para $k=5$ para el conjunto de datos:
 ```{r}
 quakes_1 <- quakes[, c('lat','long')]
 quakes_1$id <- 1:nrow(quakes_1)
-ggplot(quakes_1, aes(x=lat, y=long)) + geom_point()
+ggplot(quakes_1, aes(x=long, y=lat)) + geom_point()
 ```
 
 
@@ -226,8 +233,8 @@ centros <- sample_n(quakes_1, K) %>% mutate(k = 1:K) %>% select(-id)
 centros
 #centros_2 <- centros_1 %>% gather(var, value_c, lat:long) %>% select(-id)
 #quakes_2 <- quakes_1 %>% gather(var, value, lat:long)
-ggplot(quakes_1, aes(x=lat, y=long)) + geom_point() +
-  geom_point(data = centros_1, aes(x=lat, y=long), size=7, colour='red')
+ggplot(quakes_1, aes(x=long, y=lat)) + geom_point() +
+  geom_point(data = centros_1, aes(x=long, y=lat), size=7, colour='red')
 ```
 
 Agrupamos:
@@ -246,7 +253,7 @@ agrupar <- function(datos, centros){
   dat
 }
 agrup <- agrupar(quakes_1, centros_1)
-ggplot(agrup, aes(x=lat, y=long, colour=factor(k))) + geom_point()
+ggplot(agrup, aes(x=long, y=lat, colour=factor(k))) + geom_point()
 ```
 
 Recalculamos centros:
@@ -258,8 +265,8 @@ recalcular_centros <- function(datos_agrup){
     spread(variable, valor)
 }
 centros <- recalcular_centros(agrup)
-ggplot(quakes.1, aes(x=lat, y=long)) + geom_point() +
-  geom_point(data = centros, aes(x=lat, y=long), size=7, colour='red')
+ggplot(quakes.1, aes(x=long, y=lat)) + geom_point() +
+  geom_point(data = centros, aes(x=long, y=lat), size=7, colour='red')
 ```
 
 Agrupamos:
@@ -271,7 +278,7 @@ agrup <- agrup.1 %>% group_by(id, k) %>%
   mutate(min.dist = min(dist)) %>%
   filter(min.dist == dist) %>%
   left_join(quakes.1)
-ggplot(agrup, aes(x=lat, y=long, colour=factor(k))) + geom_point()
+ggplot(agrup, aes(x=long, y=lat, colour=factor(k))) + geom_point()
 ```
 
 
@@ -280,8 +287,8 @@ Recalculamos centros:
 centros.1 <- agrup %>% group_by(k) %>%
   summarise(lat=mean(lat), long=mean(long))
 centros.2 <- centros.1 %>% gather(var, value.c, lat:long) 
-ggplot(quakes.1, aes(x=lat, y=long)) + geom_point() +
-  geom_point(data = centros.1, aes(x=lat, y=long), size=7, colour='red')
+ggplot(quakes.1, aes(x=long, y=lat)) + geom_point() +
+  geom_point(data = centros.1, aes(x=long, y=lat), size=7, colour='red')
 ```
 
 Agrupamos:
@@ -293,7 +300,7 @@ agrup <- agrup.1 %>% group_by(id, k) %>%
   mutate(min.dist = min(dist)) %>%
   filter(min.dist == dist) %>%
   left_join(quakes.1)
-ggplot(agrup, aes(x=lat, y=long, colour=factor(k))) + geom_point()
+ggplot(agrup, aes(x=long, y=lat, colour=factor(k))) + geom_point()
 ```
 
 ### Usando la funcion k-means
@@ -303,7 +310,7 @@ k_medias <- kmeans(quakes.1[, c('lat','long')], centers = 5, nstart=30) # escoge
 str(k_medias)
 grupo <- k_medias$cluster
 quakes.1$grupo <- grupo
-ggplot(quakes.1, aes(x=lat, y=long, colour=factor(grupo))) + geom_point()
+ggplot(quakes.1, aes(x=long, y=lat, colour=factor(grupo))) + geom_point()
 ```
 
 
