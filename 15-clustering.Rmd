@@ -1,0 +1,404 @@
+# Análisis de conglomerados (clustering)
+
+## Introducción
+
+```{r setup, echo=FALSE, include=FALSE}
+options(digits=2)
+library(ggplot2)
+library(tidyverse)
+cbPalette <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", 
+  	"#CC79A7", '#000000' ,'#CCCC99')
+cbbPalette <- c("#000000", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+col.fill <-  scale_fill_manual(values=cbPalette)
+col.ptos <-   scale_colour_manual(values=cbPalette)
+```
+
+Mediante clustering (o análisis de conglomerados) buscamos 
+aprender agrupaciones de casos, de manera que casos dentro de un grupo (*cluster*, 
+o conglomerado) estén 
+cercanos entre ellos, mientras que puntos en distintos clusters están a 
+distancia más grande - todo esto de acuerdo a alguna medida de distancia.
+Entonces podemos:
+
+- Descubrir estructuras interesantes de agrupamiento en los datos que nos
+ayuden a entenderlos.
+- Resumir grupos (que pueden ser grandes), por casos representativos y/o promedio.
+Así la tarea de entender los casos (que pueden ser miles, por ejemplo) se reduce a entender
+los grupos (que pueden ser decenas o cientos, por ejemplo).
+-  Usar grupos como insumo para otras tareas (por ejemplo, distintos modelos
+predictivos según cluster, distintas estrategias de tratamiento según cluster,
+etc.)
+
+
+### Dificultades en segmentación/clustering.
+
+Como la idea conceptual de clustering es más o menos clara,
+vamos a empezar apuntando dificultades que se comunmente se encuentran.
+
+#### Ejemplo: grupos bien definidos en dimensión baja {-}
+
+Generalmente, cuando empezamos a discutir clustering consideramos unos datos como sigue:
+
+```{r, fig.width=5, fig.asp=0.7}
+ggplot(filter(iris, Species %in% c('setosa','versicolor')), aes(x=Sepal.Length, y=Petal.Width)) + geom_point()
+```
+
+Donde es más o menos claro por donde debería ir la segmentación, por ejemplo:
+
+```{r}
+ggplot(filter(iris, Species %in% c('setosa','versicolor')), aes(x=Sepal.Length, y=Petal.Width, colour=Species)) + geom_point()
+```
+
+#### Ejemplo: grupos no tan bien definidos {-}
+
+Sin embargo, podríamos encontrarnos 
+
+```{r}
+ggplot(airquality, aes(x=Ozone, y=Wind)) + geom_point()
+```
+
+donde no hay clusters bien definidos. Aquí veremos que el tipo de algoritmo, 
+decisiones de configuración y variación muestral pueden afectar los resultados
+considerablemente.
+
+#### Ejemplo: grupos en dimensión alta {-}
+
+
+o en dimensión más alta (100 variables, 10 casos) observamos cosas como la siguiente:
+```{r}
+mat_1 <- rbind(matrix(rnorm(10*50), ncol=50))
+mat_1[1:10,1] <- mat_1[1:10,1] + 10
+dist(mat_1, method = 'euclidean')
+```
+
+donde todos los puntos están a más o menos la misma distancia, aún cuando
+existe una estructura de grupos natural.
+
+En dimensión baja, la situación se ve muy diferente:
+```{r}
+mat_1 <- rbind(matrix(rnorm(10*2), ncol=2))
+mat_1[1:5,1] <- mat_1[1:5,1] + 10
+dist(mat_1, method = 'euclidean')
+ggplot(data.frame(mat_1), aes(x=X1, y=X2)) + geom_point()
+```
+
+Y cualquier técnica razonable que usemos lograría encontrar estos grupos.
+
+
+---
+
+
+```{block2, type='comentario'}
+Clustering generalmente funciona bien 
+**en problemas dimensión baja con clusters razonablemente bien definidos**.
+En otros casos, como:
+  
+- Dimensión alta con muchas variables ruidosas o no discriminatorias
+
+- Clusters no bien definidos
+
+El resultado puede depender mucho del algoritmo y criterio del analista.
+```
+
+## Enfoques: combinatorio y basado en modelos.
+
+Los enfoques basados en modelos (por ejemplo,
+modelos de mezclas) se basan en la introducción de variables latentes que explican
+diferencias en las distribuciones de las variables observadas.
+
+En estas notas veremos métodos *combinatorios*, que trabajan directamente sobre los
+datos (sin modelos), intentanto segmentar en grupos a través de los cuales **minimizamos alguna medida
+objetivo**.  En este contexto, el problema de segmentación/clustering se plantea como sigue:
+
+- Suponemos que buscamos $K$ grupos.
+- Una asignación $C$ es una función que asigna a cada observación $x_i$ un grupo $C(i)\in \{1,\ldots, k\}$. 
+- Tenemos una distancia o disimilitud $d(x,y)$ entre puntos.
+
+Buscamos entonces encontrar una solución $C^*(i)$ que minimice
+
+$$W(C) = \sum_{k=1}^K \sum_{C(i)=k, C(j)=k} d(x_i, x_j),$$
+
+es decir, buscamos que las distancias dentro de cada grupo $k$ sean lo más chicas
+posibles. Esta es una manera de definir la dispersión **dentro de grupos** (Within).
+
+- Resolver este problema enumerando todas las posibles asignaciones $C$ no es factible,
+pues el número de posibles asignaciones es típicamente gigantesco aún para un conjunto
+de datos muy chico.
+
+- La idea entonces es buscar heurísticas que den soluciones razonables 
+a este problema de minimización..
+
+
+## K-medias
+
+
+Este es posiblemente el algoritmo más popular de segmentación, y se escala razonablemente
+bien a problemas medianos-grandes.
+
+En k-medias, un buen agrupamiento es uno en el que la variación dentro de los grupos
+es chica. En primer lugar fijamos el número $K$ de grupos que buscamos. Supongamos entonces que $C_1\cup\cdots\cup C_K$ es una partición de los
+datos, y sea $W(C_k)$ nuestra medida de variación dentro de los clusters. Entonces
+buscaremos resolver
+
+$$\min_{C_1,\ldots, C_K} \sum_{k=1}^K W(C_k)$$ 
+
+En general, este problema es imposible de resolver por enumeración, pues aún para un conjunto de datos chico con $K$ chica, el espacio de posibles particiones es inmenso.
+
+Sin embargo, escogiendo medidaas $W$ particulares es posible construir algoritmos con desempeño razonable. En primer lugar, suponemos que $W(C)$ está dado por
+
+$$W(C_k) =\frac{1}{|C_k|}\sum_{i,j\in C_k} ||x_i-x_j||^2,$$
+
+es decir, la medida de variación dentro de los clusters es el promedio de distancias
+euclideanas al cuadrado dentro del cluster. El problema
+
+$$\min_{C_1,\ldots, C_K} \sum_{k=1}^K \frac{1}{|C_k|}\sum_{i,j\in C_k} ||x_i-x_j||^2$$ 
+
+todavía es demasiado difícil. Sin embargo, se puede demostrar (usando pitágoras) que
+
+$$W(C_k)=2\sum_{i\in C_k} ||x_i-\bar{x}_k||^2,$$
+
+donde $\bar{x}_k=\frac{1}{|C_k|}\sum_{i\in C_k} x_i$ es el centroide del grupo $C_k$.
+
+
+
+y ahora notamos que si los $C_1,\ldots C_K$ están dados, entonces
+tenemos que
+$$\bar{x}_k = argmin_{m} \sum_{i\in C_k} ||x_i-m||^2,$$
+
+(pues tenemos el teorema: el centroide es el punto con distancia euclideana cuadrada promedio más baja a los elementos del grupo). Podemos entonces cambiar nuestro
+problema original por el problema ampliado
+
+$$min_{C_1,\ldots, C_K, m_1,\ldots, m_k} \sum_{k=1}^K \sum_{i\in C_k} ||x_i-m_k||^2$$ 
+
+Vemos entonces que
+
+1. Si tenemos la asignación $C_1,\ldots C_K$, entonces podemos
+encontrar las $m_1,\ldots, m_k$ calculando los centroides $m_k = \bar{x}_k$.
+2. Si tenemos los centroides $m_k$ fijos podemos resolver
+$$min_{C_1,\ldots C_K} \sum_k \sum_{i\in C_j} ||x_i - m_k||^2$$
+asignando cada punto a la $m_k$ más cercana.
+
+Esto sugiere el siguiente algoritmo:
+
+### Algoritmo de k-medias 
+
+En el paso $s=1,2,\ldots$:
+
+1. (cálculo de centroides) Dada una asignación a clusters, encontramos nuevos centros promediando en cada cluster :
+$$m_k = \frac{1}{|C_k|}\sum_{i\in C_k} x_i.$$
+2. Dadas las medias $m_k$  (que pensamos fijas),
+encontramos una nueva asignación $C_k$ a clusters que minimice
+$$ 2\sum_{k=1}^K \sum_{i\in C_k} ||x_i - m_k||^2,$$
+y esto se hace asignando cada observación al centroide $m_k$ que esté más cercano.
+
+Nos detenemos cuando los centroides se quedan casi fijos de una iteración a la siguiente.
+###
+
+**Observaciones**:
+
+ - El algoritmo se puede arrancar con centroides escogidos al azar (puntos de datos escogidos al azar, por ejemplo).
+ - Este algoritmo converge, pero no tiene garantía de obtener un mínimo global. Conviene correr varias veces, para distintos arranques aleatorios, y escoger
+ la solución con función objetivo más chica. Cuando no es posible correrlo múltiples veces, puede ser que la solución obtenida esté muy lejos de una óptima.
+ 
+ 
+### Ejemplo {#ejemplo}
+Describiremos iteraciones para $k=5$ para el conjunto de datos:
+
+```{r}
+quakes_1 <- quakes[, c('lat','long')]
+quakes_1$id <- 1:nrow(quakes_1)
+ggplot(quakes_1, aes(x=lat, y=long)) + geom_point()
+```
+
+
+```{r, include=FALSE, eval=FALSE}
+#quakes_2 <- quakes_1 %>% mutate(lat_km = 111*lat) %>%
+#             mutate(long_km = -111*cos(lat*pi/180)*long)
+#ggplot(quakes_1, aes(x=-long_km, y=lat_km)) + geom_point() 
+#ggplot(quakes_1, aes(x=long, y=lat)) + geom_point() 
+```
+
+Seleccionamos muestra de datos al azar (centroides)
+```{r}
+set.seed(251122)
+K <- 5
+centros <- sample_n(quakes_1, K) %>% mutate(k = 1:K) %>% select(-id)
+centros
+#centros_2 <- centros_1 %>% gather(var, value_c, lat:long) %>% select(-id)
+#quakes_2 <- quakes_1 %>% gather(var, value, lat:long)
+ggplot(quakes_1, aes(x=lat, y=long)) + geom_point() +
+  geom_point(data = centros_1, aes(x=lat, y=long), size=7, colour='red')
+```
+
+Agrupamos:
+```{r}
+agrupar <- function(datos, centros){
+  datos_larga <- datos %>% gather(variable, valor, -id)
+  centros_larga <- centros %>% gather(variable, valor_m, -k)
+  dat <- full_join(datos_larga, centros_larga) %>%
+          mutate(dif_cuad = (valor-valor_m)^2) %>%
+          group_by(id, k) %>%
+          summarise(dist_cuad = sum(dif_cuad)) %>%
+          group_by(id) %>%
+          arrange(id, k) %>%
+          summarise(k = which.min(dist_cuad))
+  dat <- dat %>% left_join(datos)
+  dat
+}
+agrup <- agrupar(quakes_1, centros_1)
+ggplot(agrup, aes(x=lat, y=long, colour=factor(k))) + geom_point()
+```
+
+Recalculamos centros:
+```{r}
+recalcular_centros <- function(datos_agrup){
+  datos_agrup %>% gather(variable, valor, -id, -k) %>%
+    group_by(k, variable) %>%
+    summarise(valor = mean(valor)) %>%
+    spread(variable, valor)
+}
+centros <- recalcular_centros(agrup)
+ggplot(quakes.1, aes(x=lat, y=long)) + geom_point() +
+  geom_point(data = centros, aes(x=lat, y=long), size=7, colour='red')
+```
+
+Agrupamos:
+```{r}
+agrup.1 <- left_join(quakes.2, centros.2)
+agrup <- agrup.1 %>% group_by(id, k) %>%
+  summarise(dist=sum((value-value.c)^2)) %>% 
+  group_by(id) %>%
+  mutate(min.dist = min(dist)) %>%
+  filter(min.dist == dist) %>%
+  left_join(quakes.1)
+ggplot(agrup, aes(x=lat, y=long, colour=factor(k))) + geom_point()
+```
+
+
+Recalculamos centros:
+```{r}
+centros.1 <- agrup %>% group_by(k) %>%
+  summarise(lat=mean(lat), long=mean(long))
+centros.2 <- centros.1 %>% gather(var, value.c, lat:long) 
+ggplot(quakes.1, aes(x=lat, y=long)) + geom_point() +
+  geom_point(data = centros.1, aes(x=lat, y=long), size=7, colour='red')
+```
+
+Agrupamos:
+```{r}
+agrup.1 <- left_join(quakes.2, centros.2)
+agrup <- agrup.1 %>% group_by(id, k) %>%
+  summarise(dist=sum((value-value.c)^2)) %>% 
+  group_by(id) %>%
+  mutate(min.dist = min(dist)) %>%
+  filter(min.dist == dist) %>%
+  left_join(quakes.1)
+ggplot(agrup, aes(x=lat, y=long, colour=factor(k))) + geom_point()
+```
+
+### Usando la funcion k-means
+```{r}
+set.seed(2800)
+k_medias <- kmeans(quakes.1[, c('lat','long')], centers = 5, nstart=30) # escoger varios comienzos aleatorios=
+str(k_medias)
+grupo <- k_medias$cluster
+quakes.1$grupo <- grupo
+ggplot(quakes.1, aes(x=lat, y=long, colour=factor(grupo))) + geom_point()
+```
+
+
+### ¿Cuándo usar o no usar k-medias? Estructura "esférica"
+
+En algunos casos se dice que k-medias no tiene supuestos, otros dicen que tienen supuestos
+de clusters esféricos, etc.
+
+ k-medias es un algoritmo, no es un modelo. Así que en realidad no tiene supuestos en el sentido típico.
+**Lo importante es entender la cantidad que estamos minimizando**. Si lo que realmente queremos
+hacer es minimizar esta cantidad, entonces k-medias nos devuelve una solución razonable.
+
+Pero hay veces que no queremos minimizar esta cantidad. Un ejemplo clásico es el siguiente
+
+
+```{r}
+theta <- runif(200,0,2*pi)
+r <- c(runif(100,0,0.3), runif(100,0.8,1))
+df <- data.frame(x=r*cos(theta), y=r*sin(theta))
+df$grupo <- kmeans(df, centers=2, nstart=20)$cluster
+ggplot(df, aes(x=x, y=y, colour=factor(grupo))) + geom_point()
+```
+
+¿Por qué falla kmedias? Porque la estructura de grupos que estábamos buscando
+**no** es una donde los clusters están definidos por distancia baja a su centro.
+Aquí realmente queremos otra cosa más complicada, como clusters definidos por
+cantidades invariantes (en este caso, distancia al origen)
+
+Sin embargo, si lo que nos interesa es distancia baja a un centroide, entonces
+está solución es razonable para k=2
+
+
+```{r}
+theta <- runif(200,0,2*pi)
+r <- c(runif(100,0,0.3), runif(100,0.8,1))
+df <- data.frame(x=r*cos(theta), y=r*sin(theta))
+df$grupo <- kmeans(df, centers=5, nstart=20)$cluster
+ggplot(df, aes(x=x, y=y, colour=factor(grupo))) + geom_point()
+```
+
+Como ejemplo, pensemos que el espacio es un espacio de "gustos por películas". Aún cuando
+podría ser muy interesante descubrir esta estructura concéntrica, el grupo exterior contiene
+personas con gustos diametralmente opuestos!
+
+
+
+### ¿Cuándo usar o no usar k-medias? Existencia o no de grupos "naturales"
+
+Otro punto que se discute usualmente es si hay o no grupos naturales, que se
+refiere a grupos bien compactos y diferenciados entre sí, como en el ejemplo inicial
+
+```{r}
+ggplot(filter(iris, Species %in% c('setosa','versicolor')), aes(x=Sepal.Length, y=Petal.Width)) + geom_point()
+```
+
+Pero es común, por ejemplo, encontrar cosas como siguen:
+
+```{r}
+set.seed(90902)
+df <- data.frame(x = rnorm(500,0,1), y = rnorm(500,0,1))
+df$grupo <- kmeans(df, centers=5, nstart=20)$cluster
+ggplot(df, aes(x=x, y=y, colour=factor(grupo))) + geom_point()
+```
+
+Nótese que k-means logró encontrar una buena solución, y esta solución puede
+ser muy útil para nuestros fines (agrupa puntos "similares"). Sin embargo, en esta situación debemos reconocer que los tamaños, las posiciones,
+y el número de grupos es fundamentalmente arbitrario, y una "buena" solución depende de 
+nuestros fines.
+
+Si corremos otra vez el algoritmo, vemos que los grupos encontrados son similares:
+```{r}
+df$grupo <- kmeans(df, centers=5, nstart=20)$cluster
+ggplot(df, aes(x=x, y=y, colour=factor(grupo))) + geom_point()
+```
+
+Sin embargo, si tomamos otra muestra distinta
+
+```{r}
+set.seed(909021)
+df <- data.frame(x = rnorm(500,0,1), y = rnorm(500,0,1))
+df$grupo <- kmeans(df, centers=5, nstart=20)$cluster
+ggplot(df, aes(x=x, y=y, colour=factor(grupo))) + geom_point()
+```
+
+La solución es bastante diferente. Esta diferencia no se debe al comienzo aleatorio
+del algoritmo. Se debe más bien a que los grupos se están definiendo por variación muestral,
+y pequeñas diferencias en las muestras.
+
+**En esta situación, debemos aceptar que la "responsabilidad"" de escoger la solución
+final está en nuestras manos, y no del algoritmo, y entender que hay arbitrariedad considerable en los segmentos encontrado sus tamaños**. Esto no le quita necesariamente utilidad a la segmentación resultante, pero hay que recordar que los grupos que encontramos
+son en ciertos aspectos arbitrarios.
+
+
+
+
+
+
+
