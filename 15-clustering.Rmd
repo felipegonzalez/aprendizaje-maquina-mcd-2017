@@ -176,7 +176,7 @@ encontrar centroide, etc.
 
 Esto sugiere el siguiente algoritmo:
 
-### Algoritmo de k-medias 
+### Algoritmo de k-medias {-}
 
 ```{block2, type='comentario'}
 **K-means**
@@ -202,7 +202,7 @@ $$m_k = \frac{1}{|C_k|}\sum_{i\in C_k} x_i.$$
  la solución con función objetivo más chica. Cuando no es posible correrlo múltiples veces, puede ser que la solución obtenida esté muy lejos de una óptima.
   - Hay distintas maneras de implementar este algoritmo, algunas más eficientes que otras.
  
-### Ejemplo {#ejemplo}
+### Ejemplo {-}
 Describiremos iteraciones para $k=5$ para el conjunto de datos, con una implementación
 simple:
 
@@ -304,7 +304,7 @@ los grupos que obtuvimos? ¿Qué defectos potenciales le ves a este agrupamiento
 
 
 
-### Usando la funcion k-means
+### Usando la funcion k-means {-}
 
 La función $k-means$ de R automáticamente produce varias corridas con
 distintos inicios aleatorios y selecciona la que produzca el mínimo 
@@ -333,7 +333,10 @@ nos da el valor de \@ref(eq:kmedias-original) para la solución obtenida.
 usado por defecto en R es el de Hartigan-Wong, que es más eficiente que la implementación simple que vimos arriba.
 
 
-### Selección de número de clusters.
+## Selección de número de clusters.
+
+
+### Variación dentro de clusters para distintas soluciones {-}
 
 Podemos medir la calidad de la segmentación según el mínimo alcanzado 
 de la función objetivo: la suma de cuadrados dentro
@@ -363,26 +366,223 @@ considerable en la solución. En este caso particular, un buen lugar para
 cortar es el codo (en 3 clusters), pues añadir un cluster más no mejora
 la solución considerablemente.
 
-A veces el punto de corte no es tan claro, pero la gráfica sigue siendo útil
+A veces el punto de corte no es tan claro, aunque vemos que en nuestro
+ejemplo de terremotos la estructura más clara es la de 2 grupos:
+
 ```{r}
 set.seed(2800)
 df <- quakes_1[, c('lat','long')]
-ajustes.km <- lapply(1:20, function(k){
+ajustes_km <- lapply(1:20, function(k){
   kmedias <- kmeans(df, centers = k, nstart = 20)    
   kmedias
 })
-tot.within <- sapply(ajustes.km, function(aj){ aj$tot.withinss})
-qplot(1:length(tot.within), tot.within, geom='line') + geom_point()
+tot_within <- sapply(ajustes_km, function(aj){ aj$tot.withinss})
+qplot(1:length(tot_within), tot_within, geom='line') + geom_point(size=3)
 ```
 
 Las soluciones son
 ```{r}
-grupos.df <- lapply(ajustes.km[1:8], function(aj){ 
-  data.frame(num=max(aj$cluster), cluster= aj$cluster, id= 1:length(aj$cluster))}) %>% rbind_all
-grupo.df.2 <- left_join(grupos.df, quakes_1)
-ggplot(grupo.df.2, aes(x=lat, y=long, colour=factor(cluster))) + facet_wrap(~num) +
+grupos_df <- lapply(ajustes_km[1:8], function(aj){ 
+  data_frame(num = max(aj$cluster), cluster = aj$cluster,
+             id= 1:length(aj$cluster))}) %>% rbind_all
+grupo_df_2 <- left_join(grupos_df, quakes_1)
+ggplot(grupo_df_2, aes(x=lat, y=long, colour=factor(cluster))) + facet_wrap(~num) +
   geom_point()
 ```
+
+```{block2, type='comentario'}
+La gráfica de codo con la función objetivo es una manera de guiar la
+selección de número de clusters, aún cuando no siempre da respuestas muy claras.
+En cualquier caso, rara vez seleccionamos el número de clusters usando
+solamente el criterio de la gráfica de la función objetivo.
+```
+
+
+### Criterios específicos
+
+Más frecuentemente, la selección de número de grupos se hace tomando en
+cuenta el uso posterior que se va a hacer de los clusters. Por ejemplo:
+
+- En segmentación de clientes/usuarios, casi siempre queremos un grupo
+no muy grande de grupos (2-10, máximo decenas), pues puede ser difícil diseñar productos o estrategias particulares si tenemos muchos segmentos.Lo mismo sucede en 
+aplicaciones científicas, por ejemplo clasificar objetos como
+estrellas, galaxias, etc.
+
+- Existen algunas aplicaciones de clustering donde buscamos muchos grupos, por
+ejemplo, para agrupar objetos (noticias, tweets, por ejemplo) en grupos
+muy compactos (de alta similitud), y así detectar duplicados o relaciones
+entre fuentes de noticias, usuarios de twitter, etc. Hay más opciones además
+de algoritmos clásicos como k-means para este tipo de problemas
+
+La estrategia típica es entonces producir varias agrupaciones, y compararlas
+según sus virtudes para uso posterior.
+
+
+#### Ejemplo {-}
+Consideremos segmentar personas según sus actitudes hacia las responsabilidades
+que tiene o no el gobierno en cuanto al bienestar de las personas. 
+
+European Social Survey (ESS) data from the 2008 (fourth) round in the United Kingdom. The data are from a questionnaire on "what the responsibilities of governments should or should not be". 
+gvjbevn
+Job for everyone, governments' responsibility (0-10).
+gvhlthc
+Health care for the sick, governments' responsibility (0-10).
+gvslvol
+Standard of living for the old, governments' responsibility (0-10).
+gvslvue
+Standard of living for the unemployed, governments' responsibility (0-10).
+gvcldcr
+Child care services for working parents, governments' responsibility (0-10).
+gvpdlwk
+Paid leave from work to care for sick family, governments' responsibility (0-10).
+sbprvpv
+Social benefits/services prevent widespread poverty (1-5).
+sbeqsoc
+Social benefits/services lead to a more equal society (1-5).
+sbcwkfm
+Social benefits/services make it easier to combine work and family (1-5).
+
+```{r}
+load('datos/ess4_gb.Rdata')
+dat <- ess4.gb %>% select(idno, gvjbevn:sbcwkfm)
+nombres <- data_frame(var = c("gvjbevn", "gvhlthc", "gvslvol", "gvslvue", "gvcldcr", "gvpdlwk", 
+"sbprvpv", "sbeqsoc", "sbcwkfm"),
+nombre = c('trabajo_a_todos','cuidados_salud_enfermos','garantizar_nivel_mayores','garantizar_nivel_desempleados','ayuda_padres_trabajadores','ausencia_cuidar_enfermos','beneficios_pobreza','beneficios_igualdad','beneficios_fam_trabajo'))
+```
+
+En este caso particular tenemos unas variables que están en escala 1-5 y otras 1-10. Esta variabilidad
+distinta sólo es escala de las respuestas, así que normalizamos dividiendo cada pregunta por
+su máximo (dividir entre 10 las preguntas en escala de 1 a 10 y entre 5 las de 1 a 5):
+
+
+
+```{r}
+dat.2 <- dat %>% gather(var, valor, gvjbevn:sbcwkfm) %>% 
+  left_join(nombres) %>%
+  select(-var) %>%
+  group_by(nombre) %>%
+  mutate(valor.esc = valor/max(valor, na.rm=T)) %>%
+  select(-valor) %>%
+  spread(nombre, valor.esc)
+dat.3 <- filter(dat.2, apply(dat.2, 1, function(x){!any(is.na(x))}))
+dat.na <- filter(ess4.gb, apply(dat.2, 1, function(x){!any(is.na(x))}))
+
+ajustes.km <- lapply(1:10, function(k){
+  kmedias <- kmeans(dat.3[,-1], centers = k, nstart = 20, iter.max=40)    
+  kmedias
+})
+tot.within <- sapply(ajustes.km, function(aj){ aj$tot.withinss})
+qplot(1:length(tot.within), tot.within, geom='line') + geom_point()
+
+```
+
+En esta gráfica no vemos un codo claro. Veamos primero la solución de
+dos grupos:
+
+```{r}
+sol.cl <- ajustes.km[[2]]
+table(sol.cl$cluster)
+```
+
+Todos los grupos tienen tamaño razonable. No queremos tener grupos muy chicos, **pues entonces es difícil caracterizarlos o entenderlos**: si hay 15 personas en un grupo, cualquier resumen de este grupo estaría sujeto a variación muestral alta.
+
+Consideramos las variables originales:
+
+```{r}
+cluster.df <- data.frame(idno = dat.3$idno, cluster = sol.cl$cluster)
+dat.4 <- dat.3 %>% gather(variable, valor, ausencia_cuidar_enfermos:trabajo_a_todos) %>%
+  left_join(cluster.df)
+resumen.1 <- dat.4 %>% group_by(cluster, variable) %>%
+  summarise(media = mean(valor), ee = sd(valor)/sqrt(length(valor)))
+
+
+## adicionalmente, invertimos las 3 preguntas en escala de 1 a 5, pues 1 representa mayor acuerdo. 
+filtro <- resumen.1$variable %in% c('beneficios_fam_trabajo','beneficios_igualdad','beneficios_pobreza')
+resumen.1$media[filtro] <- 1-resumen.1$media[filtro]
+```
+
+```{r}
+resumen.1$variable <- reorder(resumen.1$variable, resumen.1$media, mean)
+ggplot(resumen.1, aes(x=variable, y=media, ymin=media-ee, ymax=media+ee,
+                      colour=factor(cluster), group=cluster)) + geom_point() +
+  coord_flip() + geom_line() + geom_linerange()
+```
+
+Y notamos dos grupos claros que esperábamos ver desde el principio. Esta
+puede ser una solución aceptable (por ejemplo, si vamos a usar los grupos
+en otro modelo, como parte de diseños de estrategias de comunicación, etc.)
+
+
+Intentemos ahora con 5 grupos:
+
+```{r}
+sol.cl <- ajustes.km[[5]]
+table(sol.cl$cluster)
+```
+
+Todos los grupos tienen tamaño razonable. No queremos tener grupos muy chicos, **pues entonces es difícil caracterizarlos o entenderlos**: si hay 15 personas en un grupo, cualquier resumen de este grupo estaría sujeto a variación muestral alta.
+
+Consideramos las variables originales:
+
+```{r}
+cluster.df <- data.frame(idno = dat.3$idno, cluster = sol.cl$cluster)
+dat.4 <- dat.3 %>% gather(variable, valor, ausencia_cuidar_enfermos:trabajo_a_todos) %>%
+  left_join(cluster.df)
+resumen.1 <- dat.4 %>% group_by(cluster, variable) %>%
+  summarise(media = mean(valor), ee = sd(valor)/sqrt(length(valor)))
+
+
+## adicionalmente, invertimos las 3 preguntas en escala de 1 a 5, pues 1 representa mayor acuerdo. 
+filtro <- resumen.1$variable %in% c('beneficios_fam_trabajo','beneficios_igualdad','beneficios_pobreza')
+resumen.1$media[filtro] <- 1-resumen.1$media[filtro]
+```
+
+```{r}
+resumen.1$variable <- reorder(resumen.1$variable, resumen.1$media, mean)
+ggplot(resumen.1, aes(x=variable, y=media, ymin=media-ee, ymax=media+ee,
+                      colour=factor(cluster), group=cluster)) + geom_point() +
+  coord_flip() + geom_line() + geom_linerange()
+```
+
+
+
+
+
+
+Y es especialmente útil perfilar los grupos, es decir, mostrar las diferencias en cada variable en lugar de los promedios simples:
+
+```{r}
+resumen.2 <- resumen.1 %>% group_by(variable) %>%
+  mutate(perfil = media -mean(media))
+
+ggplot(resumen.2, aes(x=variable, y=perfil, 
+                      colour=factor(cluster), group=cluster)) + geom_point() +
+  coord_flip() + geom_line() 
+ggplot(resumen.2, aes(x=variable, y=perfil, 
+                      colour=factor(cluster), group=cluster)) + geom_point() +
+  coord_flip() + geom_line() + facet_wrap(~cluster) + geom_hline(yintercept=0, colour='gray')
+```
+
+¿Cómo les llamarías a cada uno de estos grupos?
+
+```{r}
+tab <- table(ess4.gb$stratval)
+names(tab[tab > 50])
+tab.1 <- data.frame(round(100*prop.table(table(dat.na$stratval, sol.cl$cluster),margin=2),2))
+tab.2 <- tab.1 %>% group_by(Var1) %>%
+  mutate(perfil = Freq/mean(Freq))
+tab.3 <- tab.2 %>% select(-Freq) %>%spread(Var2, perfil) %>% arrange(`5`) %>% data.frame
+tab.3[tab.3$Var1 %in% names(tab[tab > 50]),]
+```
+
+
+
+
+
+
+
+
+
 
 
 
@@ -406,7 +606,7 @@ df$grupo <- kmeans(df, centers=2, nstart=20)$cluster
 ggplot(df, aes(x=x, y=y, colour=factor(grupo))) + geom_point()
 ```
 
-¿Por qué falla kmedias? Porque la estructura de grupos que estábamos buscando
+¿Por qué falla k-medias? Porque la estructura de grupos que estábamos buscando
 **no** es una donde los clusters están definidos por distancia baja a su centro.
 Aquí realmente queremos otra cosa más complicada, como clusters definidos por
 cantidades invariantes (en este caso, distancia al origen)
@@ -502,121 +702,6 @@ ocurre en la segmentación por actitudes/ideología: no hay "buenos" y "malos" o
 
 
 ### Caracterización y descripción de grupos
-
-Lo primero que tenemos que hacer para entender una segmentación dada es 
-caracterizar a los grupos en cuanto a las variables que usamos para segmentar.
-
-European Social Survey (ESS) data from the 2008 (fourth) round in the United Kingdom. The data are from a questionnaire on "what the responsibilities of governments should or should not be". 
-gvjbevn
-Job for everyone, governments' responsibility (0-10).
-gvhlthc
-Health care for the sick, governments' responsibility (0-10).
-gvslvol
-Standard of living for the old, governments' responsibility (0-10).
-gvslvue
-Standard of living for the unemployed, governments' responsibility (0-10).
-gvcldcr
-Child care services for working parents, governments' responsibility (0-10).
-gvpdlwk
-Paid leave from work to care for sick family, governments' responsibility (0-10).
-sbprvpv
-Social benefits/services prevent widespread poverty (1-5).
-sbeqsoc
-Social benefits/services lead to a more equal society (1-5).
-sbcwkfm
-Social benefits/services make it easier to combine work and family (1-5).
-
-```{r}
-load('datos/ess4_gb.Rdata')
-dat <- ess4.gb %>% dplyr::select(idno, gvjbevn:sbcwkfm)
-nombres <- data.frame(var = c("gvjbevn", "gvhlthc", "gvslvol", "gvslvue", "gvcldcr", "gvpdlwk", 
-"sbprvpv", "sbeqsoc", "sbcwkfm"),
-nombre = c('trabajo_a_todos','cuidados_salud_enfermos','garantizar_nivel_mayores','garantizar_nivel_desempleados','ayuda_padres_trabajadores','ausencia_cuidar_enfermos','beneficios_pobreza','beneficios_igualdad','beneficios_fam_trabajo'))
-```
-
-En este caso particular tenemos unas variables que están en escala 1-5 y otras 1-10. Esta variabilidad
-distinta sólo es escala de las respuestas, así que normalizamos dividiendo cada pregunta por
-su máximo (dividir entre 10 las preguntas en escala de 1 a 10 y entre 5 las de 1 a 5):
-
-
-
-```{r}
-dat.2 <- dat %>% gather(var, valor, gvjbevn:sbcwkfm) %>% left_join(nombres) %>%
-  dplyr::select(-var) %>%
-  group_by(nombre) %>%
-  mutate(valor.esc = valor/max(valor, na.rm=T)) %>%
-  dplyr::select(-valor) %>%
-  spread(nombre, valor.esc)
-dat.3 <- filter(dat.2, apply(dat.2, 1, function(x){!any(is.na(x))}))
-dat.na <- filter(ess4.gb, apply(dat.2, 1, function(x){!any(is.na(x))}))
-
-ajustes.km <- lapply(1:10, function(k){
-  kmedias <- kmeans(dat.3[,-1], centers = k, nstart = 20, iter.max=40)    
-  kmedias
-})
-tot.within <- sapply(ajustes.km, function(aj){ aj$tot.withinss})
-qplot(1:length(tot.within), tot.within, geom='line') + geom_point()
-
-```
-
-Veamos la solución de 5 grupos:
-```{r}
-sol.cl <- ajustes.km[[5]]
-table(sol.cl$cluster)
-```
-
-Todos los grupos tienen tamaño razonable. No queremos tener grupos muy chicos, **pues entonces es difícil caracterizarlos o entenderlos**: si hay 15 personas en un grupo, cualquier resumen de este grupo estaría sujeto a variación muestral alta.
-
-Consideramos las variables originales:
-
-```{r}
-cluster.df <- data.frame(idno = dat.3$idno, cluster = sol.cl$cluster)
-dat.4 <- dat.3 %>% gather(variable, valor, ausencia_cuidar_enfermos:trabajo_a_todos) %>%
-  left_join(cluster.df)
-resumen.1 <- dat.4 %>% group_by(cluster, variable) %>%
-  summarise(media = mean(valor), ee = sd(valor)/sqrt(length(valor)))
-
-
-## adicionalmente, invertimos las 3 preguntas en escala de 1 a 5, pues 1 representa mayor acuerdo. 
-filtro <- resumen.1$variable %in% c('beneficios_fam_trabajo','beneficios_igualdad','beneficios_pobreza')
-resumen.1$media[filtro] <- 1-resumen.1$media[filtro]
-```
-
-```{r}
-resumen.1$variable <- reorder(resumen.1$variable, resumen.1$media, mean)
-ggplot(resumen.1, aes(x=variable, y=media, ymin=media-ee, ymax=media+ee,
-                      colour=factor(cluster), group=cluster)) + geom_point() +
-  coord_flip() + geom_line() + geom_linerange()
-```
-
-
-Y es especialmente útil perfilar los grupos, es decir, mostrar las diferencias en cada variable en lugar de los promedios simples:
-
-```{r}
-resumen.2 <- resumen.1 %>% group_by(variable) %>%
-  mutate(perfil = media -mean(media))
-
-ggplot(resumen.2, aes(x=variable, y=perfil, 
-                      colour=factor(cluster), group=cluster)) + geom_point() +
-  coord_flip() + geom_line() 
-ggplot(resumen.2, aes(x=variable, y=perfil, 
-                      colour=factor(cluster), group=cluster)) + geom_point() +
-  coord_flip() + geom_line() + facet_wrap(~cluster) + geom_hline(yintercept=0, colour='gray')
-```
-
-```{r}
-tab <- table(ess4.gb$stratval)
-names(tab[tab > 50])
-tab.1 <- data.frame(round(100*prop.table(table(dat.na$stratval, sol.cl$cluster),margin=2),2))
-tab.2 <- tab.1 %>% group_by(Var1) %>%
-  mutate(perfil = Freq/mean(Freq))
-tab.3 <- tab.2 %>% select(-Freq) %>%spread(Var2, perfil) %>% arrange(`5`) %>% data.frame
-tab.3[tab.3$Var1 %in% names(tab[tab > 50]),]
-```
-
-
-
-
 
 
 
