@@ -41,115 +41,26 @@ Para variables numéricas, una elección usual es la distancia euclideana
 o la distancia euclideana para las variables estandarizadas.
 
 
-### Dificultades en segmentación/clustering.
+### Ejemplo {-}
 
-Aunque la idea conceptual de clustering es más o menos clara,
-en la práctica es una tarea difícil.
-Vamos a empezar apuntando dificultades que se comunmente se encuentran:
+Consideramos las ocurrencias de temblores cerca de Fiji 
+(The data set give the locations of 1000 seismic events of MB > 4.0. The events occurred in a cube near Fiji since 1964.)
 
-- No existen grupos naturales
-- En dimensiones altas (digamos > 30) muchas veces todos los puntos
-están a distancias similares entre ellos, especialmente cuando hay variables 
-que aportan la separación entre grupos.
-- Dificultades en la selección de medida de distancia (o disimilitud).
-
-
-
-#### Ejemplo: grupos bien definidos en dimensión baja {-}
-
-Generalmente, cuando empezamos a discutir clustering consideramos unos datos como sigue:
-
-```{r, fig.width=5, fig.asp=0.7}
-ggplot(filter(iris, Species %in% c('setosa','versicolor')), aes(x=Sepal.Length, y=Petal.Width)) + geom_point()
+```{r, fig.width=4.5, fig.asp=0.7}
+quakes_1 <- quakes[, c('lat','long')]
+quakes_1$id <- 1:nrow(quakes_1)
+ggplot(quakes_1, aes(x=long, y=lat)) + geom_point()
 ```
 
-Donde es más o menos claro por donde debería ir la segmentación, por ejemplo:
-
-```{r}
-ggplot(filter(iris, Species %in% c('setosa','versicolor')), aes(x=Sepal.Length, y=Petal.Width, colour=Species)) + geom_point()
-```
-
-En este caso la medida de distancia es la euclideana, las dos variables
-están dadas en centímetros, y tienen escalas similares. 
-
-#### Ejemplo: grupos no tan bien definidos {-}
-
-Sin embargo, podríamos encontrarnos 
-
-```{r}
-ggplot(airquality, aes(x=Ozone, y=Wind)) + geom_point()
-```
-
-donde no hay clusters bien definidos. Aquí veremos que el tipo de algoritmo, 
-decisiones de configuración y variación muestral pueden afectar los resultados
-considerablemente.
-
-Adicionalmente, no está claro cómo deberíamos comparar las distintas escalas de
-datos. En este caso, podríamos normalizar, pero el problema de que no parece 
-haber clusters naturales persiste:
-
-```{r}
-airquality_s <- airquality %>% filter(!is.na(Ozone), !is.na(Wind)) %>%
-                mutate(Ozone_s = (Ozone - mean(Ozone))/sd(Ozone),
-                                      Wind_s  = (Wind - mean(Wind))/sd(Wind))
-ggplot(airquality_s, aes(x=Ozone_s, y=Wind_s)) + geom_point()
-```
-
-#### Ejemplo: grupos en dimensión alta {-}
-
-
-En dimensión más alta (50 variables, 10 casos) observamos cosas como la siguiente:
-```{r}
-mat_1 <- rbind(matrix(rnorm(10*50), ncol=50))
-mat_1[1:10,1] <- mat_1[1:10,1] + 10
-dist(mat_1, method = 'euclidean')
-```
-
-donde todos los puntos están a más o menos la misma distancia, aún cuando
-existe una estructura de grupos natural.
-
-En dimensión baja, la situación se ve muy diferente:
-```{r}
-mat_1 <- rbind(matrix(rnorm(10*2), ncol=2))
-mat_1[1:5,1] <- mat_1[1:5,1] + 10
-dist(mat_1, method = 'euclidean')
-ggplot(data.frame(mat_1), aes(x=X1, y=X2)) + geom_point()
-```
-
-Y cualquier técnica razonable que usemos lograría encontrar estos grupos.
-
-#### Ejemplo: dificultades en la selección de métrica {-}
-
-Muchas veces no hay una métrica natural para el problema. En este caso,
-muchas veces escogemos distancia euclideana (con variables estandarizadas o no,
-dependiendo de sus escalas). 
-
-- La inclusión de variables categóricas plantea distintas alternativas que dan
-resultados distintos.
-
-- En dimensión alta, incluso con variables numéricas, no siempre es claro que peso 
-debería tener cada variable.
+¿Podemos separar en grupos estos datos? Podemos pensar en varias maneras
+de hacer esto. Un enfoque simple que nos puede dar una 
+agrupación interesante es pensar
+en agrupar de manera que obtengamos grupos relativamente **compactos** 
+(en estos datos, ¿qué otras cosas se te ocurren? ¿qué otros patrones
+interesantes sería interesante agrupar?).
 
 
 
----
-
-
-```{block2, type='comentario'}
-Los métodos básicos de clustering generalmente producen una solución
-bien definida
-**en problemas dimensión baja con clusters razonablemente bien definidos, donde
-hay una métrica de distancia natural**.
-En otros casos, como:
-  
-- Dimensión alta con muchas variables ruidosas o que no aportan en la definición
-de los clusters.
-- Clusters no bien definidos.
-- Dificultad en escoger una métrica única apropiada para el problema.
-
-El resultado puede depender mucho del algoritmo, el criterio del analista, 
-y la muestra de entrenamiento.
-```
 
 ## Enfoques: combinatorio y basado en modelos.
 
@@ -171,8 +82,8 @@ Buscamos entonces encontrar una solución $C^*(i)$ que minimice
 
 $$W(C) = \sum_{k=1}^K W(C_k),$$
 
-es decir, buscamos que las distancias dentro de cada grupo $k$ sean lo más chicas
-posibles. Esta es una manera de definir la dispersión **dentro de grupos** (Within).
+es decir, buscamos que las distancias **dentro de cada grupo** (within groups) $k$ sean lo más chicas
+posibles. .
 
 - Resolver este problema enumerando todas las posibles asignaciones $C$ no es factible,
 pues el número de posibles asignaciones es típicamente gigantesco aún para un conjunto
@@ -185,8 +96,9 @@ a este problema de minimización.
 ## K-medias
 
 
-Este es posiblemente el algoritmo más popular de segmentación, y se escala razonablemente
-bien a problemas medianos-grandes. 
+Este es posiblemente el algoritmo (o familia de algoritmos)
+más popular de segmentación, y se escala razonablemente
+bien a problemas relativamente grandes. 
 
 Supongamos que tenemos datos numéricos con escala o unidades similares (si no,
 podemos estandarizar).
@@ -223,23 +135,30 @@ Podemos desarrollar una heurística considerando primero del problema ampliado
 \min_{C_1,\ldots, C_K, m_1,\ldots, m_K} \sum_{k=1}^K \sum_{i\in C_k}||x_i-m_k||^2 
 (\#eq:kmedias-ampliado)
 \end{equation}
+
 cuya solución es la misma que el problema \@ref(eq:kmedias-original). La
-razón es que la función objetivo del \#ref:(eq:kmedias-ampliado) alcanza un mínimo
+razón es que la función objetivo del \@ref(eq:kmedias-ampliado) alcanza un mínimo
 menor o igual al de \@ref(eq:kmedias-original), pero dada cualquier
-solución $C_1^*,C_2^*,\ldots,C_K^*$ de \#ref:(eq:kmedias-original), podemos
+solución $C_1^*,C_2^*,\ldots,C_K^*$ de \@ref(eq:kmedias-ampliado), tenemos
+que para toda $k$, las distancias al cuadrado son mínimas al centroide de los datos:
+$$\sum_{i \in C_k} ||x_i - \bar{x}_k||^2 \leq \sum_{i \in C_k} ||x_i - m_k||^2 $$
+por lo que $C_1^*,C_2^*,\ldots,C_K^*$ también es solución de \@ref(eq:kmedias-original). 
+
+
 minimizar $\min_{m_1,\ldots, m_K} \sum_{k=1}^K \sum_{i\in C_k^*}||x_i-m_k||^2$
 poniendo $m_k=\bar{x}_k$ (el valor promedio minimiza la distancia cuadrada
 de los puntos del grupo).
 
 Ahora desarrollamos la heurística de k-medias. Comenzando con el problema
 ampliado, 
-podemos desarrollar una heurística notando que si 
+notamos que si 
 fijamos puntos centrales iniciales
 $$m_1,\ldots, m_K$$
 podemos minimizar (con centros fijos)
 $$\min_{C_1,\ldots, C_K} \sum_{k=1}^K \sum_{i\in C_k}||x_i-m_k||^2 
 $$
-pues los clusters $C_1,\ldots C_K$ se forman encontrando el punto $m_j$ más cercano.
+asignando cada $x_i$ al cluster $C_k$ con la $m_k$ asociada más
+cercana a $x_i$.
 
 
 Una vez que tenemos clusters dados, podemos ahora minimizar (con clusters fijos)
@@ -250,8 +169,7 @@ cuya solución es
 
 $$m_k = \bar{x}_k = \frac{1}{n_k}\sum_{i\in C_k} x_i,$$
 
-(pues tenemos el teorema: el centroide es el punto con distancia euclideana cuadrada promedio más baja a los elementos del grupo). Podemos entonces cambiar nuestro
-problema original por el problema ampliado. Y ahora podemos repetir: agrupar en clusters,
+Ahora podemos iterar: agrupar en clusters,
 encontrar centroide, etc.
 
 
@@ -261,25 +179,28 @@ Esto sugiere el siguiente algoritmo:
 ### Algoritmo de k-medias 
 
 ```{block2, type='comentario'}
-En el paso $s=1,2,\ldots$:
+**K-means**
+Sea $k$ el número de grupos que buscamos. Escogemos $k$ puntos en los
+datos de entrenamiento al azar.
 
-1. (cálculo de centroides) Dada una asignación a clusters, encontramos nuevos centros promediando en cada cluster :
-$$m_k = \frac{1}{|C_k|}\sum_{i\in C_k} x_i.$$
-2. Dadas las medias $m_k$  (que pensamos fijas),
+En el paso $s=1,2,\ldots$:
+1. Dadas los centros $m_k$  (que pensamos fijas),
 encontramos una nueva asignación $C_k$ a clusters que minimice
 $$ 2\sum_{k=1}^K \sum_{i\in C_k} ||x_i - m_k||^2,$$
-y esto se hace asignando cada observación al centroide $m_k$ que esté más cercano.
+y esto se hace asignando cada observación al centro $m_k$ que esté más cercano.
 
-3.Nos detenemos cuando los centroides se quedan casi fijos de una iteración a la siguiente (y en consecuencia la cantidad a minimizar no decrece más).
+2. (cálculo de centroides) Dada una asignación a clusters, encontramos nuevos centros promediando en cada cluster :
+$$m_k = \frac{1}{|C_k|}\sum_{i\in C_k} x_i.$$
+
+3.Repetimos. Nos detenemos cuando los centroides se quedan casi fijos de una iteración a la siguiente (y en consecuencia la cantidad a minimizar no decrece más).
 ```
 
 **Observaciones**:
 
- - El algoritmo se puede arrancar con centroides escogidos al azar (puntos de datos escogidos al azar, por ejemplo).
- - Hay distintas maneras de implementar este algoritmo, algunas más eficientes que otras.
- - Este algoritmo converge, pero no tiene garantía de obtener un mínimo global. Conviene correr varias veces, para distintos arranques aleatorios, y escoger
+ - Este algoritmo converge (cada paso reduce la función de costo), pero no tiene garantía de obtener un mínimo global. 
+ - Conviene correr varias veces, para distintos arranques aleatorios, y escoger
  la solución con función objetivo más chica. Cuando no es posible correrlo múltiples veces, puede ser que la solución obtenida esté muy lejos de una óptima.
- 
+  - Hay distintas maneras de implementar este algoritmo, algunas más eficientes que otras.
  
 ### Ejemplo {#ejemplo}
 Describiremos iteraciones para $k=5$ para el conjunto de datos, con una implementación
@@ -375,31 +296,94 @@ wss(agrup, centros)
 ggplot(agrup, aes(x=long, y=lat, colour=factor(k))) + geom_point()
 ```
 
+### Ejercicio {-}
+Corre varias veces este ejemplo con distinta semilla. ¿Obtienes mejores
+o peores soluciones que la de arriba? ¿Qué tan "naturales" crees que son
+los grupos que obtuvimos? ¿Qué defectos potenciales le ves a este agrupamiento?
+
+
+
+
 ### Usando la funcion k-means
+
+La función $k-means$ de R automáticamente produce varias corridas con
+distintos inicios aleatorios y selecciona la que produzca el mínimo 
+más bajo.
+
 ```{r}
 set.seed(2800)
-k_medias <- kmeans(quakes_1[, c('long','lat')], centers = 5, nstart=30) # escoger varios comienzos aleatorios=
+k_medias <- kmeans(quakes_1[, c('long','lat')], centers = 5, nstart=30) # escoger varios comienzos aleatorios
 str(k_medias)
 grupo <- k_medias$cluster
 quakes_1$grupo <- grupo
 ggplot(quakes_1, aes(x=long, y=lat, colour=factor(grupo))) + geom_point()
 ```
 
-
 **Observaciones**:
 
 - En la salida la cantidad
 
 ```{r}
-sum(k_medias$withinss)
 k_medias$tot.withinss
 ```
 
-nos da el valor de \@ref(eq:kmedias-original) para la solución obtenido.
+nos da el valor de \@ref(eq:kmedias-original) para la solución obtenida.
 
-- El algoritmo de default para R permite correrlo repetidamente para distintos centroides aleatorios, y nos da la mejor solución. El algoritmo
-usado es el de Hartigan-Wong, que es más eficiente que la implementación
-simple que vimos arriba.
+**Observación**:  El algoritmo
+usado por defecto en R es el de Hartigan-Wong, que es más eficiente que la implementación simple que vimos arriba.
+
+
+### Selección de número de clusters.
+
+Podemos medir la calidad de la segmentación según el mínimo alcanzado 
+de la función objetivo: la suma de cuadrados dentro
+de los clusters (withinss), que nos dice qué tan compactos son. Primero vemos
+un ejemplo simple con tres clusters claros:
+
+```{r}
+set.seed(2800)
+df <- data.frame(x=c(rnorm(100,-50,10), rnorm(100,0,10), rnorm(70,30,2) ))
+qplot(df$x)
+ajustes_km <- lapply(1:20, function(k){
+  kmedias <- kmeans(df, centers = k, nstart = 20)    
+  kmedias
+})
+tot_within <- sapply(ajustes_km, function(aj){ aj$tot.withinss})
+datos_codo <- data_frame(no_clusters = 1:length(tot_within), 
+                         tot_within = tot_within) %>%
+  mutate(sol_3 = no_clusters==3)
+ggplot(datos_codo, aes(x = no_clusters, y = tot_within)) + 
+  geom_line() +
+  geom_point(aes(colour = sol_3), size=3) 
+```
+
+Agregar un cluster adicional hace más complejo nuestro resumen, así
+que incrementamos el número de clusters sólo cuando tenemos una mejora
+considerable en la solución. En este caso particular, un buen lugar para
+cortar es el codo (en 3 clusters), pues añadir un cluster más no mejora
+la solución considerablemente.
+
+A veces el punto de corte no es tan claro, pero la gráfica sigue siendo útil
+```{r}
+set.seed(2800)
+df <- quakes_1[, c('lat','long')]
+ajustes.km <- lapply(1:20, function(k){
+  kmedias <- kmeans(df, centers = k, nstart = 20)    
+  kmedias
+})
+tot.within <- sapply(ajustes.km, function(aj){ aj$tot.withinss})
+qplot(1:length(tot.within), tot.within, geom='line') + geom_point()
+```
+
+Las soluciones son
+```{r}
+grupos.df <- lapply(ajustes.km[1:8], function(aj){ 
+  data.frame(num=max(aj$cluster), cluster= aj$cluster, id= 1:length(aj$cluster))}) %>% rbind_all
+grupo.df.2 <- left_join(grupos.df, quakes_1)
+ggplot(grupo.df.2, aes(x=lat, y=long, colour=factor(cluster))) + facet_wrap(~num) +
+  geom_point()
+```
+
 
 
 ### ¿Cuándo usar o no usar k-medias? Estructura "esférica"
@@ -407,7 +391,7 @@ simple que vimos arriba.
 En algunos casos se dice que k-medias no tiene supuestos, otros dicen que tienen supuestos
 de clusters esféricos, etc.
 
- k-medias es un algoritmo, no es un modelo. Así que en realidad no tiene supuestos en el sentido típico.
+ k-medias es un algoritmo, no es un modelo. Así que en realidad no tiene supuestos en el sentido típico. 
 **Lo importante es entender la cantidad que estamos minimizando**. Si lo que realmente queremos
 hacer es minimizar esta cantidad, entonces k-medias nos devuelve una solución razonable.
 
@@ -515,50 +499,7 @@ definidos de otra manera (por ejemplo algo tan simple como cuantiles!). Algo sim
 ocurre en la segmentación por actitudes/ideología: no hay "buenos" y "malos" o "saludables" y 
 "descuidados", sino continuos a lo largo de estas actitudes.
 
-### Selección de número de clusters.
 
-Podemos medir la calidad de la segmentación según la suma de cuadrados dentro
-de los clusters, que nos dice qué tan compactos son. Primero vemos
-un ejemplo simple
-
-```{r}
-set.seed(2800)
-df <- data.frame(x=c(rnorm(100,-50,10), rnorm(100,0,10), rnorm(70,30,2) ))
-qplot(df$x)
-ajustes.km <- lapply(1:20, function(k){
-  kmedias <- kmeans(df, centers = k, nstart = 20)    
-  kmedias
-})
-tot.within <- sapply(ajustes.km, function(aj){ aj$tot.withinss})
-qplot(1:length(tot.within), tot.within, geom='line') + geom_point()
-```
-
-Agregar un cluster adicional hace más complejo nuestro resumen, así
-que incrementamos el número de clusters sólo cuando tenemos una mejora
-considerable en la solución. En este caso particular, un buen lugar para
-cortar es el codo (en 3 clusters), pues añadir un cluster más no mejora
-la solución considerablemente.
-
-A veces el punto de corte no es tan claro, pero la gráfica sigue siendo útil
-```{r}
-set.seed(2800)
-df <- quakes_1[, c('lat','long')]
-ajustes.km <- lapply(1:20, function(k){
-  kmedias <- kmeans(df, centers = k, nstart = 20)    
-  kmedias
-})
-tot.within <- sapply(ajustes.km, function(aj){ aj$tot.withinss})
-qplot(1:length(tot.within), tot.within, geom='line') + geom_point()
-```
-
-Las soluciones son
-```{r}
-grupos.df <- lapply(ajustes.km[1:8], function(aj){ 
-  data.frame(num=max(aj$cluster), cluster= aj$cluster, id= 1:length(aj$cluster))}) %>% rbind_all
-grupo.df.2 <- left_join(grupos.df, quakes_1)
-ggplot(grupo.df.2, aes(x=lat, y=long, colour=factor(cluster))) + facet_wrap(~num) +
-  geom_point()
-```
 
 ### Caracterización y descripción de grupos
 
@@ -676,4 +617,117 @@ tab.3[tab.3$Var1 %in% names(tab[tab > 50]),]
 
 
 
+
+
+
+
+### Dificultades en segmentación/clustering.
+
+Aunque la idea conceptual de clustering es más o menos clara,
+en la práctica es una tarea difícil.
+Vamos a empezar apuntando dificultades que se comunmente se encuentran:
+
+- No existen grupos naturales
+- En dimensiones altas (digamos > 30) muchas veces todos los puntos
+están a distancias similares entre ellos, especialmente cuando hay variables 
+que aportan la separación entre grupos.
+- Dificultades en la selección de medida de distancia (o disimilitud).
+
+
+
+#### Ejemplo: grupos bien definidos en dimensión baja {-}
+
+Generalmente, cuando empezamos a discutir clustering consideramos unos datos como sigue:
+
+```{r, fig.width=5, fig.asp=0.7}
+ggplot(filter(iris, Species %in% c('setosa','versicolor')), aes(x=Sepal.Length, y=Petal.Width)) + geom_point()
+```
+
+Donde es más o menos claro por donde debería ir la segmentación, por ejemplo:
+
+```{r}
+ggplot(filter(iris, Species %in% c('setosa','versicolor')), aes(x=Sepal.Length, y=Petal.Width, colour=Species)) + geom_point()
+```
+
+En este caso la medida de distancia es la euclideana, las dos variables
+están dadas en centímetros, y tienen escalas similares. 
+
+#### Ejemplo: grupos no tan bien definidos {-}
+
+Sin embargo, podríamos encontrarnos 
+
+```{r}
+ggplot(airquality, aes(x=Ozone, y=Wind)) + geom_point()
+```
+
+donde no hay clusters bien definidos. Aquí veremos que el tipo de algoritmo, 
+decisiones de configuración y variación muestral pueden afectar los resultados
+considerablemente.
+
+Adicionalmente, no está claro cómo deberíamos comparar las distintas escalas de
+datos. En este caso, podríamos normalizar, pero el problema de que no parece 
+haber clusters naturales persiste:
+
+```{r}
+airquality_s <- airquality %>% filter(!is.na(Ozone), !is.na(Wind)) %>%
+                mutate(Ozone_s = (Ozone - mean(Ozone))/sd(Ozone),
+                                      Wind_s  = (Wind - mean(Wind))/sd(Wind))
+ggplot(airquality_s, aes(x=Ozone_s, y=Wind_s)) + geom_point()
+```
+
+#### Ejemplo: grupos en dimensión alta {-}
+
+
+En dimensión más alta (50 variables, 10 casos) observamos cosas como la siguiente:
+```{r}
+mat_1 <- rbind(matrix(rnorm(10*50), ncol=50))
+mat_1[1:10,1] <- mat_1[1:10,1] + 10
+dist(mat_1, method = 'euclidean')
+```
+
+donde todos los puntos están a más o menos la misma distancia, aún cuando
+existe una estructura de grupos natural.
+
+En dimensión baja, la situación se ve muy diferente:
+```{r}
+mat_1 <- rbind(matrix(rnorm(10*2), ncol=2))
+mat_1[1:5,1] <- mat_1[1:5,1] + 10
+dist(mat_1, method = 'euclidean')
+ggplot(data.frame(mat_1), aes(x=X1, y=X2)) + geom_point()
+```
+
+Y cualquier técnica razonable que usemos lograría encontrar estos grupos.
+
+#### Ejemplo: dificultades en la selección de métrica {-}
+
+Muchas veces no hay una métrica natural para el problema. En este caso,
+muchas veces escogemos distancia euclideana (con variables estandarizadas o no,
+dependiendo de sus escalas). 
+
+- La inclusión de variables categóricas plantea distintas alternativas que dan
+resultados distintos.
+
+- En dimensión alta, incluso con variables numéricas, no siempre es claro que peso 
+debería tener cada variable.
+
+
+
+---
+
+
+```{block2, type='comentario'}
+Los métodos básicos de clustering generalmente producen una solución
+bien definida
+**en problemas dimensión baja con clusters razonablemente bien definidos, donde
+hay una métrica de distancia natural**.
+En otros casos, como:
+  
+- Dimensión alta con muchas variables ruidosas o que no aportan en la definición
+de los clusters.
+- Clusters no bien definidos.
+- Dificultad en escoger una métrica única apropiada para el problema.
+
+El resultado puede depender mucho del algoritmo, el criterio del analista, 
+y la muestra de entrenamiento.
+```
 
