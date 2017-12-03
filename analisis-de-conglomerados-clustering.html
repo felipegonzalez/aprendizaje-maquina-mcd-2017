@@ -1,0 +1,1076 @@
+<!DOCTYPE html>
+<html >
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Aprendizaje de máquina</title>
+  <meta name="description" content="Notas y material para el curso de aprendizaje de máquina 2017 (ITAM)">
+  <meta name="generator" content="bookdown 0.5.10 and GitBook 2.6.7">
+
+  <meta property="og:title" content="Aprendizaje de máquina" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="Notas y material para el curso de aprendizaje de máquina 2017 (ITAM)" />
+  <meta name="github-repo" content="felipegonzalez/aprendizaje-maquina-2017" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Aprendizaje de máquina" />
+  
+  <meta name="twitter:description" content="Notas y material para el curso de aprendizaje de máquina 2017 (ITAM)" />
+  
+
+<meta name="author" content="Felipe González">
+
+
+<meta name="date" content="2017-12-03">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  
+  
+<link rel="prev" href="reduccion-de-dimensionalidad.html">
+
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+<link rel="stylesheet" href="toc.css" type="text/css" />
+<link rel="stylesheet" href="font-awesome.min.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Aprendizaje Máquina</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Temario y referencias</a><ul>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#evaluacion"><i class="fa fa-check"></i>Evaluación</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#software-r-y-rstudio"><i class="fa fa-check"></i>Software: R y Rstudio</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#referencias-principales"><i class="fa fa-check"></i>Referencias principales</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#otras-referencias"><i class="fa fa-check"></i>Otras referencias</a></li>
+</ul></li>
+<li class="chapter" data-level="1" data-path="introduccion.html"><a href="introduccion.html"><i class="fa fa-check"></i><b>1</b> Introducción</a><ul>
+<li class="chapter" data-level="1.1" data-path="introduccion.html"><a href="introduccion.html#que-es-aprendizaje-de-maquina-machine-learning"><i class="fa fa-check"></i><b>1.1</b> ¿Qué es aprendizaje de máquina (machine learning)?</a></li>
+<li class="chapter" data-level="1.2" data-path="introduccion.html"><a href="introduccion.html#aprendizaje-supervisado-1"><i class="fa fa-check"></i><b>1.2</b> Aprendizaje Supervisado</a><ul>
+<li class="chapter" data-level="1.2.1" data-path="introduccion.html"><a href="introduccion.html#proceso-generador-de-datos-modelo-teorico"><i class="fa fa-check"></i><b>1.2.1</b> Proceso generador de datos (modelo teórico)</a></li>
+</ul></li>
+<li class="chapter" data-level="1.3" data-path="introduccion.html"><a href="introduccion.html#predicciones"><i class="fa fa-check"></i><b>1.3</b> Predicciones</a></li>
+<li class="chapter" data-level="1.4" data-path="introduccion.html"><a href="introduccion.html#cuantificacion-de-error-o-precision"><i class="fa fa-check"></i><b>1.4</b> Cuantificación de error o precisión</a></li>
+<li class="chapter" data-level="1.5" data-path="introduccion.html"><a href="introduccion.html#aprendizaje"><i class="fa fa-check"></i><b>1.5</b> Tarea de aprendizaje supervisado</a><ul>
+<li class="chapter" data-level="1.5.1" data-path="introduccion.html"><a href="introduccion.html#observaciones"><i class="fa fa-check"></i><b>1.5.1</b> Observaciones</a></li>
+</ul></li>
+<li class="chapter" data-level="1.6" data-path="introduccion.html"><a href="introduccion.html#por-que-tenemos-errores"><i class="fa fa-check"></i><b>1.6</b> ¿Por qué tenemos errores?</a></li>
+<li class="chapter" data-level="1.7" data-path="introduccion.html"><a href="introduccion.html#como-estimar-f"><i class="fa fa-check"></i><b>1.7</b> ¿Cómo estimar f?</a></li>
+<li class="chapter" data-level="1.8" data-path="introduccion.html"><a href="introduccion.html#resumen"><i class="fa fa-check"></i><b>1.8</b> Resumen</a></li>
+<li class="chapter" data-level="1.9" data-path="introduccion.html"><a href="introduccion.html#tarea"><i class="fa fa-check"></i><b>1.9</b> Tarea</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="regresion.html"><a href="regresion.html"><i class="fa fa-check"></i><b>2</b> Regresión lineal</a><ul>
+<li class="chapter" data-level="2.1" data-path="introduccion.html"><a href="introduccion.html#introduccion"><i class="fa fa-check"></i><b>2.1</b> Introducción</a></li>
+<li class="chapter" data-level="2.2" data-path="regresion.html"><a href="regresion.html#aprendizaje-de-coeficientes-ajuste"><i class="fa fa-check"></i><b>2.2</b> Aprendizaje de coeficientes (ajuste)</a></li>
+<li class="chapter" data-level="2.3" data-path="regresion.html"><a href="regresion.html#descenso-en-gradiente"><i class="fa fa-check"></i><b>2.3</b> Descenso en gradiente</a><ul>
+<li class="chapter" data-level="2.3.1" data-path="regresion.html"><a href="regresion.html#seleccion-de-tamano-de-paso-eta"><i class="fa fa-check"></i><b>2.3.1</b> Selección de tamaño de paso <span class="math inline">\(\eta\)</span></a></li>
+<li class="chapter" data-level="2.3.2" data-path="regresion.html"><a href="regresion.html#funciones-de-varias-variables"><i class="fa fa-check"></i><b>2.3.2</b> Funciones de varias variables</a></li>
+</ul></li>
+<li class="chapter" data-level="2.4" data-path="regresion.html"><a href="regresion.html#descenso-en-gradiente-para-regresion-lineal"><i class="fa fa-check"></i><b>2.4</b> Descenso en gradiente para regresión lineal</a></li>
+<li class="chapter" data-level="2.5" data-path="regresion.html"><a href="regresion.html#normalizacion-de-entradas"><i class="fa fa-check"></i><b>2.5</b> Normalización de entradas</a></li>
+<li class="chapter" data-level="2.6" data-path="regresion.html"><a href="regresion.html#interpretacion-de-modelos-lineales"><i class="fa fa-check"></i><b>2.6</b> Interpretación de modelos lineales</a></li>
+<li class="chapter" data-level="2.7" data-path="regresion.html"><a href="regresion.html#solucion-analitica"><i class="fa fa-check"></i><b>2.7</b> Solución analítica</a></li>
+<li class="chapter" data-level="2.8" data-path="regresion.html"><a href="regresion.html#por-que-el-modelo-lineal-funciona-bien-muchas-veces"><i class="fa fa-check"></i><b>2.8</b> ¿Por qué el modelo lineal funciona bien (muchas veces)?</a><ul>
+<li class="chapter" data-level="2.8.1" data-path="regresion.html"><a href="regresion.html#k-vecinos-mas-cercanos"><i class="fa fa-check"></i><b>2.8.1</b> k vecinos más cercanos</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="regresion.html"><a href="regresion.html#tarea-1"><i class="fa fa-check"></i>Tarea</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="logistica.html"><a href="logistica.html"><i class="fa fa-check"></i><b>3</b> Regresión logística</a><ul>
+<li class="chapter" data-level="3.1" data-path="logistica.html"><a href="logistica.html#el-problema-de-clasificacion"><i class="fa fa-check"></i><b>3.1</b> El problema de clasificación</a><ul>
+<li class="chapter" data-level="" data-path="logistica.html"><a href="logistica.html#que-estimar-en-problemas-de-clasificacion"><i class="fa fa-check"></i>¿Qué estimar en problemas de clasificación?</a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="logistica.html"><a href="logistica.html#estimacion-de-probabilidades-de-clase"><i class="fa fa-check"></i><b>3.2</b> Estimación de probabilidades de clase</a><ul>
+<li class="chapter" data-level="" data-path="logistica.html"><a href="logistica.html#ejemplo-10"><i class="fa fa-check"></i>Ejemplo</a></li>
+<li class="chapter" data-level="3.2.1" data-path="logistica.html"><a href="logistica.html#k-vecinos-mas-cercanos-1"><i class="fa fa-check"></i><b>3.2.1</b> k-vecinos más cercanos</a></li>
+<li class="chapter" data-level="" data-path="logistica.html"><a href="logistica.html#ejemplo-12"><i class="fa fa-check"></i>Ejemplo</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="logistica.html"><a href="logistica.html#error-para-modelos-de-clasificacion"><i class="fa fa-check"></i><b>3.3</b> Error para modelos de clasificación</a><ul>
+<li class="chapter" data-level="3.3.1" data-path="logistica.html"><a href="logistica.html#ejercicio-1"><i class="fa fa-check"></i><b>3.3.1</b> Ejercicio</a></li>
+<li class="chapter" data-level="3.3.2" data-path="logistica.html"><a href="logistica.html#error-de-clasificacion-y-funcion-de-perdida-0-1"><i class="fa fa-check"></i><b>3.3.2</b> Error de clasificación y función de pérdida 0-1</a></li>
+<li class="chapter" data-level="3.3.3" data-path="logistica.html"><a href="logistica.html#discusion-relacion-entre-devianza-y-error-de-clasificacion"><i class="fa fa-check"></i><b>3.3.3</b> Discusión: relación entre devianza y error de clasificación</a></li>
+</ul></li>
+<li class="chapter" data-level="3.4" data-path="logistica.html"><a href="logistica.html#regresion-logistica"><i class="fa fa-check"></i><b>3.4</b> Regresión logística</a><ul>
+<li class="chapter" data-level="3.4.1" data-path="logistica.html"><a href="logistica.html#regresion-logistica-simple"><i class="fa fa-check"></i><b>3.4.1</b> Regresión logística simple</a></li>
+<li class="chapter" data-level="3.4.2" data-path="logistica.html"><a href="logistica.html#funcion-logistica"><i class="fa fa-check"></i><b>3.4.2</b> Función logística</a></li>
+<li class="chapter" data-level="3.4.3" data-path="logistica.html"><a href="logistica.html#regresion-logistica-1"><i class="fa fa-check"></i><b>3.4.3</b> Regresión logística</a></li>
+</ul></li>
+<li class="chapter" data-level="3.5" data-path="logistica.html"><a href="logistica.html#aprendizaje-de-coeficientes-para-regresion-logistica-binomial."><i class="fa fa-check"></i><b>3.5</b> Aprendizaje de coeficientes para regresión logística (binomial).</a></li>
+<li class="chapter" data-level="3.6" data-path="logistica.html"><a href="logistica.html#observaciones-adicionales"><i class="fa fa-check"></i><b>3.6</b> Observaciones adicionales</a></li>
+<li class="chapter" data-level="3.7" data-path="logistica.html"><a href="logistica.html#ejercicio-datos-de-diabetes"><i class="fa fa-check"></i><b>3.7</b> Ejercicio: datos de diabetes</a><ul>
+<li class="chapter" data-level="" data-path="logistica.html"><a href="logistica.html#tarea-2"><i class="fa fa-check"></i>Tarea</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="mas-sobre-problemas-de-clasificacion.html"><a href="mas-sobre-problemas-de-clasificacion.html"><i class="fa fa-check"></i><b>4</b> Más sobre problemas de clasificación</a><ul>
+<li class="chapter" data-level="4.1" data-path="mas-sobre-problemas-de-clasificacion.html"><a href="mas-sobre-problemas-de-clasificacion.html#analisis-de-error-para-clasificadores-binarios"><i class="fa fa-check"></i><b>4.1</b> Análisis de error para clasificadores binarios</a><ul>
+<li class="chapter" data-level="4.1.1" data-path="mas-sobre-problemas-de-clasificacion.html"><a href="mas-sobre-problemas-de-clasificacion.html#punto-de-corte-para-un-clasificador-binario"><i class="fa fa-check"></i><b>4.1.1</b> Punto de corte para un clasificador binario</a></li>
+<li class="chapter" data-level="4.1.2" data-path="mas-sobre-problemas-de-clasificacion.html"><a href="mas-sobre-problemas-de-clasificacion.html#espacio-roc-de-clasificadores"><i class="fa fa-check"></i><b>4.1.2</b> Espacio ROC de clasificadores</a></li>
+</ul></li>
+<li class="chapter" data-level="4.2" data-path="mas-sobre-problemas-de-clasificacion.html"><a href="mas-sobre-problemas-de-clasificacion.html#perfil-de-un-clasificador-binario-y-curvas-roc"><i class="fa fa-check"></i><b>4.2</b> Perfil de un clasificador binario y curvas ROC</a></li>
+<li class="chapter" data-level="4.3" data-path="mas-sobre-problemas-de-clasificacion.html"><a href="mas-sobre-problemas-de-clasificacion.html#regresion-logistica-para-problemas-de-mas-de-2-clases"><i class="fa fa-check"></i><b>4.3</b> Regresión logística para problemas de más de 2 clases</a><ul>
+<li class="chapter" data-level="4.3.1" data-path="mas-sobre-problemas-de-clasificacion.html"><a href="mas-sobre-problemas-de-clasificacion.html#regresion-logistica-multinomial"><i class="fa fa-check"></i><b>4.3.1</b> Regresión logística multinomial</a></li>
+<li class="chapter" data-level="4.3.2" data-path="mas-sobre-problemas-de-clasificacion.html"><a href="mas-sobre-problemas-de-clasificacion.html#interpretacion-de-coeficientes"><i class="fa fa-check"></i><b>4.3.2</b> Interpretación de coeficientes</a></li>
+<li class="chapter" data-level="4.3.3" data-path="mas-sobre-problemas-de-clasificacion.html"><a href="mas-sobre-problemas-de-clasificacion.html#ejemplo-clasificacion-de-digitos-con-regresion-multinomial"><i class="fa fa-check"></i><b>4.3.3</b> Ejemplo: Clasificación de dígitos con regresión multinomial</a></li>
+<li class="chapter" data-level="" data-path="mas-sobre-problemas-de-clasificacion.html"><a href="mas-sobre-problemas-de-clasificacion.html#discusion"><i class="fa fa-check"></i>Discusión</a></li>
+</ul></li>
+<li class="chapter" data-level="4.4" data-path="mas-sobre-problemas-de-clasificacion.html"><a href="mas-sobre-problemas-de-clasificacion.html#descenso-en-gradiente-para-regresion-multinomial-logistica"><i class="fa fa-check"></i><b>4.4</b> Descenso en gradiente para regresión multinomial logística</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="regularizacion.html"><a href="regularizacion.html"><i class="fa fa-check"></i><b>5</b> Regularización</a><ul>
+<li class="chapter" data-level="5.1" data-path="regularizacion.html"><a href="regularizacion.html#sesgo-y-varianza-de-predictores"><i class="fa fa-check"></i><b>5.1</b> Sesgo y varianza de predictores</a><ul>
+<li class="chapter" data-level="5.1.1" data-path="regularizacion.html"><a href="regularizacion.html#sesgo-y-varianza-en-modelos-lineales"><i class="fa fa-check"></i><b>5.1.1</b> Sesgo y varianza en modelos lineales</a></li>
+<li class="chapter" data-level="5.1.2" data-path="regularizacion.html"><a href="regularizacion.html#reduciendo-varianza-de-los-coeficientes"><i class="fa fa-check"></i><b>5.1.2</b> Reduciendo varianza de los coeficientes</a></li>
+</ul></li>
+<li class="chapter" data-level="5.2" data-path="regularizacion.html"><a href="regularizacion.html#regularizacion-ridge"><i class="fa fa-check"></i><b>5.2</b> Regularización ridge</a><ul>
+<li class="chapter" data-level="5.2.1" data-path="regularizacion.html"><a href="regularizacion.html#seleccion-de-coeficiente-de-regularizacion"><i class="fa fa-check"></i><b>5.2.1</b> Selección de coeficiente de regularización</a></li>
+</ul></li>
+<li class="chapter" data-level="5.3" data-path="regularizacion.html"><a href="regularizacion.html#entrenamiento-validacion-y-prueba"><i class="fa fa-check"></i><b>5.3</b> Entrenamiento, Validación y Prueba</a><ul>
+<li class="chapter" data-level="5.3.1" data-path="regularizacion.html"><a href="regularizacion.html#validacion-cruzada"><i class="fa fa-check"></i><b>5.3.1</b> Validación cruzada</a></li>
+<li class="chapter" data-level="" data-path="regularizacion.html"><a href="regularizacion.html#ejercicio-5"><i class="fa fa-check"></i>Ejercicio</a></li>
+</ul></li>
+<li class="chapter" data-level="5.4" data-path="regularizacion.html"><a href="regularizacion.html#regularizacion-lasso"><i class="fa fa-check"></i><b>5.4</b> Regularización lasso</a></li>
+<li class="chapter" data-level="5.5" data-path="regularizacion.html"><a href="regularizacion.html#tarea-3"><i class="fa fa-check"></i><b>5.5</b> Tarea</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="extensiones-para-regresion-lineal-y-logistica.html"><a href="extensiones-para-regresion-lineal-y-logistica.html"><i class="fa fa-check"></i><b>6</b> Extensiones para regresión lineal y logística</a><ul>
+<li class="chapter" data-level="6.1" data-path="extensiones-para-regresion-lineal-y-logistica.html"><a href="extensiones-para-regresion-lineal-y-logistica.html#como-hacer-mas-flexible-el-modelo-lineal"><i class="fa fa-check"></i><b>6.1</b> Cómo hacer más flexible el modelo lineal</a></li>
+<li class="chapter" data-level="6.2" data-path="extensiones-para-regresion-lineal-y-logistica.html"><a href="extensiones-para-regresion-lineal-y-logistica.html#transformacion-de-entradas"><i class="fa fa-check"></i><b>6.2</b> Transformación de entradas</a></li>
+<li class="chapter" data-level="6.3" data-path="extensiones-para-regresion-lineal-y-logistica.html"><a href="extensiones-para-regresion-lineal-y-logistica.html#variables-cualitativas"><i class="fa fa-check"></i><b>6.3</b> Variables cualitativas</a></li>
+<li class="chapter" data-level="6.4" data-path="extensiones-para-regresion-lineal-y-logistica.html"><a href="extensiones-para-regresion-lineal-y-logistica.html#interacciones"><i class="fa fa-check"></i><b>6.4</b> Interacciones</a></li>
+<li class="chapter" data-level="6.5" data-path="extensiones-para-regresion-lineal-y-logistica.html"><a href="extensiones-para-regresion-lineal-y-logistica.html#categorizacion-de-variables"><i class="fa fa-check"></i><b>6.5</b> Categorización de variables</a></li>
+<li class="chapter" data-level="6.6" data-path="extensiones-para-regresion-lineal-y-logistica.html"><a href="extensiones-para-regresion-lineal-y-logistica.html#splines"><i class="fa fa-check"></i><b>6.6</b> Splines</a><ul>
+<li class="chapter" data-level="6.6.1" data-path="extensiones-para-regresion-lineal-y-logistica.html"><a href="extensiones-para-regresion-lineal-y-logistica.html#cuando-usar-estas-tecnicas"><i class="fa fa-check"></i><b>6.6.1</b> ¿Cuándo usar estas técnicas?</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html"><i class="fa fa-check"></i><b>7</b> Redes neuronales (parte 1)</a><ul>
+<li class="chapter" data-level="7.1" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#introduccion-a-redes-neuronales"><i class="fa fa-check"></i><b>7.1</b> Introducción a redes neuronales</a><ul>
+<li class="chapter" data-level="" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#como-construyen-entradas-las-redes-neuronales"><i class="fa fa-check"></i>¿Cómo construyen entradas las redes neuronales?</a></li>
+<li class="chapter" data-level="" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#como-ajustar-los-parametros"><i class="fa fa-check"></i>¿Cómo ajustar los parámetros?</a></li>
+</ul></li>
+<li class="chapter" data-level="7.2" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#interacciones-en-redes-neuronales"><i class="fa fa-check"></i><b>7.2</b> Interacciones en redes neuronales</a></li>
+<li class="chapter" data-level="7.3" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#calculo-en-redes-feed-forward."><i class="fa fa-check"></i><b>7.3</b> Cálculo en redes: feed-forward.</a></li>
+<li class="chapter" data-level="" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#notacion-1"><i class="fa fa-check"></i>Notación</a></li>
+<li class="chapter" data-level="7.4" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#feed-forward"><i class="fa fa-check"></i><b>7.4</b> Feed forward</a></li>
+<li class="chapter" data-level="7.5" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#backpropagation-calculo-del-gradiente"><i class="fa fa-check"></i><b>7.5</b> Backpropagation: cálculo del gradiente</a><ul>
+<li class="chapter" data-level="7.5.1" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#calculo-para-un-caso-de-entrenamiento"><i class="fa fa-check"></i><b>7.5.1</b> Cálculo para un caso de entrenamiento</a></li>
+<li class="chapter" data-level="7.5.2" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#algoritmo-de-backpropagation"><i class="fa fa-check"></i><b>7.5.2</b> Algoritmo de backpropagation</a></li>
+</ul></li>
+<li class="chapter" data-level="7.6" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#ajuste-de-parametros-introduccion"><i class="fa fa-check"></i><b>7.6</b> Ajuste de parámetros (introducción)</a><ul>
+<li class="chapter" data-level="7.6.1" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#ejemplo-31"><i class="fa fa-check"></i><b>7.6.1</b> Ejemplo</a></li>
+<li class="chapter" data-level="7.6.2" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#hiperparametros-busqueda-manual"><i class="fa fa-check"></i><b>7.6.2</b> Hiperparámetros: búsqueda manual</a></li>
+<li class="chapter" data-level="7.6.3" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#hiperparametros-busqueda-en-grid"><i class="fa fa-check"></i><b>7.6.3</b> Hiperparámetros: búsqueda en grid</a></li>
+<li class="chapter" data-level="7.6.4" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#hiperparametros-busqueda-aleatoria"><i class="fa fa-check"></i><b>7.6.4</b> Hiperparámetros: búsqueda aleatoria</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#tarea-para-25-de-septiembre"><i class="fa fa-check"></i>Tarea (para 25 de septiembre)</a></li>
+<li class="chapter" data-level="" data-path="redes-neuronales-parte-1.html"><a href="redes-neuronales-parte-1.html#tarea-2-de-octubre"><i class="fa fa-check"></i>Tarea (2 de octubre)</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="redes-neuronales-parte-2.html"><a href="redes-neuronales-parte-2.html"><i class="fa fa-check"></i><b>8</b> Redes neuronales (parte 2)</a><ul>
+<li class="chapter" data-level="8.1" data-path="redes-neuronales-parte-2.html"><a href="redes-neuronales-parte-2.html#descenso-estocastico"><i class="fa fa-check"></i><b>8.1</b> Descenso estocástico</a></li>
+<li class="chapter" data-level="8.2" data-path="redes-neuronales-parte-2.html"><a href="redes-neuronales-parte-2.html#algoritmo-de-descenso-estocastico"><i class="fa fa-check"></i><b>8.2</b> Algoritmo de descenso estocástico</a></li>
+<li class="chapter" data-level="8.3" data-path="redes-neuronales-parte-2.html"><a href="redes-neuronales-parte-2.html#por-que-usar-descenso-estocastico-por-minilotes"><i class="fa fa-check"></i><b>8.3</b> ¿Por qué usar descenso estocástico por minilotes?</a></li>
+<li class="chapter" data-level="8.4" data-path="redes-neuronales-parte-2.html"><a href="redes-neuronales-parte-2.html#escogiendo-la-tasa-de-aprendizaje"><i class="fa fa-check"></i><b>8.4</b> Escogiendo la tasa de aprendizaje</a></li>
+<li class="chapter" data-level="8.5" data-path="redes-neuronales-parte-2.html"><a href="redes-neuronales-parte-2.html#mejoras-al-algoritmo-de-descenso-estocastico."><i class="fa fa-check"></i><b>8.5</b> Mejoras al algoritmo de descenso estocástico.</a><ul>
+<li class="chapter" data-level="8.5.1" data-path="redes-neuronales-parte-2.html"><a href="redes-neuronales-parte-2.html#decaimiento-de-tasa-de-aprendizaje"><i class="fa fa-check"></i><b>8.5.1</b> Decaimiento de tasa de aprendizaje</a></li>
+<li class="chapter" data-level="8.5.2" data-path="redes-neuronales-parte-2.html"><a href="redes-neuronales-parte-2.html#momento"><i class="fa fa-check"></i><b>8.5.2</b> Momento</a></li>
+<li class="chapter" data-level="8.5.3" data-path="redes-neuronales-parte-2.html"><a href="redes-neuronales-parte-2.html#otras-variaciones"><i class="fa fa-check"></i><b>8.5.3</b> Otras variaciones</a></li>
+</ul></li>
+<li class="chapter" data-level="8.6" data-path="redes-neuronales-parte-2.html"><a href="redes-neuronales-parte-2.html#ajuste-de-redes-con-descenso-estocastico"><i class="fa fa-check"></i><b>8.6</b> Ajuste de redes con descenso estocástico</a></li>
+<li class="chapter" data-level="8.7" data-path="redes-neuronales-parte-2.html"><a href="redes-neuronales-parte-2.html#activaciones-relu"><i class="fa fa-check"></i><b>8.7</b> Activaciones relu</a></li>
+<li class="chapter" data-level="8.8" data-path="redes-neuronales-parte-2.html"><a href="redes-neuronales-parte-2.html#dropout-para-regularizacion"><i class="fa fa-check"></i><b>8.8</b> Dropout para regularización</a><ul>
+<li class="chapter" data-level="" data-path="redes-neuronales-parte-2.html"><a href="redes-neuronales-parte-2.html#ejemplo-35"><i class="fa fa-check"></i>Ejemplo</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="redes-convolucionales.html"><a href="redes-convolucionales.html"><i class="fa fa-check"></i><b>9</b> Redes convolucionales</a><ul>
+<li class="chapter" data-level="9.1" data-path="redes-convolucionales.html"><a href="redes-convolucionales.html#filtros-convolucionales"><i class="fa fa-check"></i><b>9.1</b> Filtros convolucionales</a><ul>
+<li class="chapter" data-level="" data-path="redes-convolucionales.html"><a href="redes-convolucionales.html#filtros-en-una-dimension"><i class="fa fa-check"></i>Filtros en una dimensión</a></li>
+<li class="chapter" data-level="" data-path="redes-convolucionales.html"><a href="redes-convolucionales.html#filtros-convolucionales-en-dos-dimensiones"><i class="fa fa-check"></i>Filtros convolucionales en dos dimensiones</a></li>
+</ul></li>
+<li class="chapter" data-level="9.2" data-path="redes-convolucionales.html"><a href="redes-convolucionales.html#filtros-convolucionales-para-redes-neuronales"><i class="fa fa-check"></i><b>9.2</b> Filtros convolucionales para redes neuronales</a></li>
+<li class="chapter" data-level="9.3" data-path="redes-convolucionales.html"><a href="redes-convolucionales.html#capas-de-agregacion-pooling"><i class="fa fa-check"></i><b>9.3</b> Capas de agregación (pooling)</a></li>
+<li class="chapter" data-level="9.4" data-path="redes-convolucionales.html"><a href="redes-convolucionales.html#ejemplo-arquitectura-lenet"><i class="fa fa-check"></i><b>9.4</b> Ejemplo (arquitectura LeNet):</a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="diagnostico-y-mejora-de-modelos.html"><a href="diagnostico-y-mejora-de-modelos.html"><i class="fa fa-check"></i><b>10</b> Diagnóstico y mejora de modelos</a><ul>
+<li class="chapter" data-level="10.1" data-path="diagnostico-y-mejora-de-modelos.html"><a href="diagnostico-y-mejora-de-modelos.html#aspectos-generales"><i class="fa fa-check"></i><b>10.1</b> Aspectos generales</a></li>
+<li class="chapter" data-level="10.2" data-path="diagnostico-y-mejora-de-modelos.html"><a href="diagnostico-y-mejora-de-modelos.html#que-hacer-cuando-el-desempeno-no-es-satisfactorio"><i class="fa fa-check"></i><b>10.2</b> ¿Qué hacer cuando el desempeño no es satisfactorio?</a></li>
+<li class="chapter" data-level="10.3" data-path="diagnostico-y-mejora-de-modelos.html"><a href="diagnostico-y-mejora-de-modelos.html#pipeline-de-procesamiento"><i class="fa fa-check"></i><b>10.3</b> Pipeline de procesamiento</a></li>
+<li class="chapter" data-level="10.4" data-path="diagnostico-y-mejora-de-modelos.html"><a href="diagnostico-y-mejora-de-modelos.html#diagnosticos-sesgo-y-varianza"><i class="fa fa-check"></i><b>10.4</b> Diagnósticos: sesgo y varianza</a></li>
+<li class="chapter" data-level="10.5" data-path="diagnostico-y-mejora-de-modelos.html"><a href="diagnostico-y-mejora-de-modelos.html#refinando-el-pipeline"><i class="fa fa-check"></i><b>10.5</b> Refinando el pipeline</a></li>
+<li class="chapter" data-level="10.6" data-path="diagnostico-y-mejora-de-modelos.html"><a href="diagnostico-y-mejora-de-modelos.html#consiguiendo-mas-datos"><i class="fa fa-check"></i><b>10.6</b> Consiguiendo más datos</a></li>
+<li class="chapter" data-level="10.7" data-path="diagnostico-y-mejora-de-modelos.html"><a href="diagnostico-y-mejora-de-modelos.html#usar-datos-adicionales"><i class="fa fa-check"></i><b>10.7</b> Usar datos adicionales</a></li>
+<li class="chapter" data-level="10.8" data-path="diagnostico-y-mejora-de-modelos.html"><a href="diagnostico-y-mejora-de-modelos.html#examen-de-modelo-y-analisis-de-errores"><i class="fa fa-check"></i><b>10.8</b> Examen de modelo y Análisis de errores</a></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html"><i class="fa fa-check"></i><b>11</b> Métodos basados en árboles</a><ul>
+<li class="chapter" data-level="11.1" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#arboles-para-regresion-y-clasificacion."><i class="fa fa-check"></i><b>11.1</b> Árboles para regresión y clasificación.</a><ul>
+<li class="chapter" data-level="11.1.1" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#arboles-para-clasificacion"><i class="fa fa-check"></i><b>11.1.1</b> Árboles para clasificación</a></li>
+<li class="chapter" data-level="11.1.2" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#tipos-de-particion"><i class="fa fa-check"></i><b>11.1.2</b> Tipos de partición</a></li>
+<li class="chapter" data-level="11.1.3" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#medidas-de-impureza"><i class="fa fa-check"></i><b>11.1.3</b> Medidas de impureza</a></li>
+<li class="chapter" data-level="11.1.4" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#reglas-de-particion-y-tamano-del-arobl"><i class="fa fa-check"></i><b>11.1.4</b> Reglas de partición y tamaño del árobl</a></li>
+<li class="chapter" data-level="11.1.5" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#costo---complejidad-breiman"><i class="fa fa-check"></i><b>11.1.5</b> Costo - Complejidad (Breiman)</a></li>
+<li class="chapter" data-level="11.1.6" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#opcional-predicciones-con-cart"><i class="fa fa-check"></i><b>11.1.6</b> (Opcional) Predicciones con CART</a></li>
+<li class="chapter" data-level="11.1.7" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#arboles-para-regresion"><i class="fa fa-check"></i><b>11.1.7</b> Árboles para regresión</a></li>
+<li class="chapter" data-level="11.1.8" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#variabilidad-en-el-proceso-de-construccion"><i class="fa fa-check"></i><b>11.1.8</b> Variabilidad en el proceso de construcción</a></li>
+<li class="chapter" data-level="11.1.9" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#relaciones-lineales"><i class="fa fa-check"></i><b>11.1.9</b> Relaciones lineales</a></li>
+<li class="chapter" data-level="11.1.10" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#ventajas-y-desventajas-de-arboles"><i class="fa fa-check"></i><b>11.1.10</b> Ventajas y desventajas de árboles</a></li>
+</ul></li>
+<li class="chapter" data-level="11.2" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#bagging-de-arboles"><i class="fa fa-check"></i><b>11.2</b> Bagging de árboles</a><ul>
+<li class="chapter" data-level="11.2.1" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#ejemplo-42"><i class="fa fa-check"></i><b>11.2.1</b> Ejemplo</a></li>
+<li class="chapter" data-level="11.2.2" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#mejorando-bagging"><i class="fa fa-check"></i><b>11.2.2</b> Mejorando bagging</a></li>
+</ul></li>
+<li class="chapter" data-level="11.3" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#bosques-aleatorios"><i class="fa fa-check"></i><b>11.3</b> Bosques aleatorios</a><ul>
+<li class="chapter" data-level="11.3.1" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#sabiduria-de-las-masas"><i class="fa fa-check"></i><b>11.3.1</b> Sabiduría de las masas</a></li>
+<li class="chapter" data-level="11.3.2" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#ejemplo-43"><i class="fa fa-check"></i><b>11.3.2</b> Ejemplo</a></li>
+<li class="chapter" data-level="11.3.3" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#mas-detalles-de-bosques-aleatorios."><i class="fa fa-check"></i><b>11.3.3</b> Más detalles de bosques aleatorios.</a></li>
+<li class="chapter" data-level="11.3.4" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#importancia-de-variables"><i class="fa fa-check"></i><b>11.3.4</b> Importancia de variables</a></li>
+<li class="chapter" data-level="11.3.5" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#ajustando-arboles-aleatorios."><i class="fa fa-check"></i><b>11.3.5</b> Ajustando árboles aleatorios.</a></li>
+<li class="chapter" data-level="11.3.6" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#ventajas-y-desventajas-de-arboles-aleatorios"><i class="fa fa-check"></i><b>11.3.6</b> Ventajas y desventajas de árboles aleatorios</a></li>
+<li class="chapter" data-level="11.3.7" data-path="metodos-basados-en-arboles.html"><a href="metodos-basados-en-arboles.html#tarea-para-23-de-octubre"><i class="fa fa-check"></i><b>11.3.7</b> Tarea (para 23 de octubre)</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html"><i class="fa fa-check"></i><b>12</b> Métodos basados en árboles: boosting</a><ul>
+<li class="chapter" data-level="12.1" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#forward-stagewise-additive-modeling-fsam"><i class="fa fa-check"></i><b>12.1</b> Forward stagewise additive modeling (FSAM)</a></li>
+<li class="chapter" data-level="12.2" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#discusion-1"><i class="fa fa-check"></i><b>12.2</b> Discusión</a></li>
+<li class="chapter" data-level="12.3" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#algoritmo-fsam"><i class="fa fa-check"></i><b>12.3</b> Algoritmo FSAM</a></li>
+<li class="chapter" data-level="12.4" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#fsam-para-clasificacion-binaria."><i class="fa fa-check"></i><b>12.4</b> FSAM para clasificación binaria.</a></li>
+<li class="chapter" data-level="12.5" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#gradient-boosting"><i class="fa fa-check"></i><b>12.5</b> Gradient boosting</a></li>
+<li class="chapter" data-level="12.6" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#algoritmo-de-gradient-boosting"><i class="fa fa-check"></i><b>12.6</b> Algoritmo de gradient boosting</a></li>
+<li class="chapter" data-level="12.7" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#funciones-de-perdida"><i class="fa fa-check"></i><b>12.7</b> Funciones de pérdida</a><ul>
+<li class="chapter" data-level="12.7.1" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#discusion-adaboost-opcional"><i class="fa fa-check"></i><b>12.7.1</b> Discusión: adaboost (opcional)</a></li>
+<li class="chapter" data-level="" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#ejemplo-46"><i class="fa fa-check"></i>Ejemplo</a></li>
+</ul></li>
+<li class="chapter" data-level="12.8" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#modificaciones-de-gradient-boosting"><i class="fa fa-check"></i><b>12.8</b> Modificaciones de Gradient Boosting</a><ul>
+<li class="chapter" data-level="12.8.1" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#tasa-de-aprendizaje-shrinkage"><i class="fa fa-check"></i><b>12.8.1</b> Tasa de aprendizaje (shrinkage)</a></li>
+<li class="chapter" data-level="12.8.2" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#submuestreo-bag.fraction"><i class="fa fa-check"></i><b>12.8.2</b> Submuestreo (bag.fraction)</a></li>
+<li class="chapter" data-level="12.8.3" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#numero-de-arboles-m"><i class="fa fa-check"></i><b>12.8.3</b> Número de árboles M</a></li>
+<li class="chapter" data-level="12.8.4" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#tamano-de-arboles"><i class="fa fa-check"></i><b>12.8.4</b> Tamaño de árboles</a></li>
+<li class="chapter" data-level="12.8.5" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#controlar-numero-de-casos-para-cortes"><i class="fa fa-check"></i><b>12.8.5</b> Controlar número de casos para cortes</a></li>
+<li class="chapter" data-level="" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#ejemplo-47"><i class="fa fa-check"></i>Ejemplo</a></li>
+<li class="chapter" data-level="12.8.6" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#evaluacion-con-validacion-cruzada."><i class="fa fa-check"></i><b>12.8.6</b> Evaluación con validación cruzada.</a></li>
+</ul></li>
+<li class="chapter" data-level="12.9" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#graficas-de-dependencia-parcial"><i class="fa fa-check"></i><b>12.9</b> Gráficas de dependencia parcial</a><ul>
+<li class="chapter" data-level="12.9.1" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#dependencia-parcial"><i class="fa fa-check"></i><b>12.9.1</b> Dependencia parcial</a></li>
+<li class="chapter" data-level="" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#ejemplo-48"><i class="fa fa-check"></i>Ejemplo</a></li>
+<li class="chapter" data-level="12.9.2" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#discusion-2"><i class="fa fa-check"></i><b>12.9.2</b> Discusión</a></li>
+</ul></li>
+<li class="chapter" data-level="12.10" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#xgboost-y-gbm"><i class="fa fa-check"></i><b>12.10</b> xgboost y gbm</a></li>
+<li class="chapter" data-level="" data-path="metodos-basados-en-arboles-boosting.html"><a href="metodos-basados-en-arboles-boosting.html#tarea-5"><i class="fa fa-check"></i>Tarea</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="validacion-de-modelos-problemas-comunes.html"><a href="validacion-de-modelos-problemas-comunes.html"><i class="fa fa-check"></i><b>13</b> Validación de modelos: problemas comunes</a><ul>
+<li class="chapter" data-level="13.1" data-path="validacion-de-modelos-problemas-comunes.html"><a href="validacion-de-modelos-problemas-comunes.html#filtracion-de-datos"><i class="fa fa-check"></i><b>13.1</b> Filtración de datos</a></li>
+<li class="chapter" data-level="13.2" data-path="validacion-de-modelos-problemas-comunes.html"><a href="validacion-de-modelos-problemas-comunes.html#series-de-tiempo"><i class="fa fa-check"></i><b>13.2</b> Series de tiempo</a></li>
+<li class="chapter" data-level="13.3" data-path="validacion-de-modelos-problemas-comunes.html"><a href="validacion-de-modelos-problemas-comunes.html#filtracion-en-el-preprocesamiento"><i class="fa fa-check"></i><b>13.3</b> Filtración en el preprocesamiento</a></li>
+<li class="chapter" data-level="13.4" data-path="validacion-de-modelos-problemas-comunes.html"><a href="validacion-de-modelos-problemas-comunes.html#uso-de-variables-fuera-de-rango-temporal"><i class="fa fa-check"></i><b>13.4</b> Uso de variables fuera de rango temporal</a></li>
+<li class="chapter" data-level="13.5" data-path="validacion-de-modelos-problemas-comunes.html"><a href="validacion-de-modelos-problemas-comunes.html#datos-en-conglomerados-y-muestreo-complejo"><i class="fa fa-check"></i><b>13.5</b> Datos en conglomerados y muestreo complejo</a><ul>
+<li class="chapter" data-level="" data-path="validacion-de-modelos-problemas-comunes.html"><a href="validacion-de-modelos-problemas-comunes.html#ejemplo-50"><i class="fa fa-check"></i>Ejemplo</a></li>
+<li class="chapter" data-level="13.5.1" data-path="validacion-de-modelos-problemas-comunes.html"><a href="validacion-de-modelos-problemas-comunes.html#censura-y-evaluacion-incompleta"><i class="fa fa-check"></i><b>13.5.1</b> Censura y evaluación incompleta</a></li>
+<li class="chapter" data-level="13.5.2" data-path="validacion-de-modelos-problemas-comunes.html"><a href="validacion-de-modelos-problemas-comunes.html#ejemplo-tiendas-cerradas"><i class="fa fa-check"></i><b>13.5.2</b> Ejemplo: tiendas cerradas</a></li>
+</ul></li>
+<li class="chapter" data-level="13.6" data-path="validacion-de-modelos-problemas-comunes.html"><a href="validacion-de-modelos-problemas-comunes.html#muestras-de-validacion-chicas"><i class="fa fa-check"></i><b>13.6</b> Muestras de validación chicas</a><ul>
+<li class="chapter" data-level="" data-path="validacion-de-modelos-problemas-comunes.html"><a href="validacion-de-modelos-problemas-comunes.html#ejercicio-8"><i class="fa fa-check"></i>Ejercicio</a></li>
+</ul></li>
+<li class="chapter" data-level="13.7" data-path="validacion-de-modelos-problemas-comunes.html"><a href="validacion-de-modelos-problemas-comunes.html#otros-ejemplos"><i class="fa fa-check"></i><b>13.7</b> Otros ejemplos</a></li>
+<li class="chapter" data-level="13.8" data-path="validacion-de-modelos-problemas-comunes.html"><a href="validacion-de-modelos-problemas-comunes.html#resumen-1"><i class="fa fa-check"></i><b>13.8</b> Resumen</a></li>
+<li class="chapter" data-level="" data-path="validacion-de-modelos-problemas-comunes.html"><a href="validacion-de-modelos-problemas-comunes.html#tarea-6"><i class="fa fa-check"></i>Tarea</a></li>
+</ul></li>
+<li class="chapter" data-level="14" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html"><i class="fa fa-check"></i><b>14</b> Reducción de dimensionalidad</a><ul>
+<li class="chapter" data-level="14.1" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#descomposicion-aditiva-en-matrices-de-rango-1"><i class="fa fa-check"></i><b>14.1</b> Descomposición aditiva en matrices de rango 1</a><ul>
+<li class="chapter" data-level="14.1.1" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#matrices-de-rango-1"><i class="fa fa-check"></i><b>14.1.1</b> Matrices de rango 1</a></li>
+<li class="chapter" data-level="" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#ejemplo-una-matriz-de-rango-1-de-preferencias"><i class="fa fa-check"></i>Ejemplo: una matriz de rango 1 de preferencias</a></li>
+</ul></li>
+<li class="chapter" data-level="14.2" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#aproximacion-con-matrices-de-rango-1."><i class="fa fa-check"></i><b>14.2</b> Aproximación con matrices de rango 1.</a><ul>
+<li class="chapter" data-level="" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#ejemplo-52"><i class="fa fa-check"></i>Ejemplo</a></li>
+<li class="chapter" data-level="14.2.1" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#suma-de-matrices-de-rango-1."><i class="fa fa-check"></i><b>14.2.1</b> Suma de matrices de rango 1.</a></li>
+<li class="chapter" data-level="" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#ejemplo-peliculas"><i class="fa fa-check"></i>Ejemplo: películas</a></li>
+</ul></li>
+<li class="chapter" data-level="14.3" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#aproximacion-con-matrices-de-rango-bajo"><i class="fa fa-check"></i><b>14.3</b> Aproximación con matrices de rango bajo</a><ul>
+<li class="chapter" data-level="14.3.1" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#discusion-aproximacion-de-rango-1."><i class="fa fa-check"></i><b>14.3.1</b> Discusión: aproximación de rango 1.</a></li>
+<li class="chapter" data-level="14.3.2" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#discusion-aproximaciones-de-rango-mas-alto"><i class="fa fa-check"></i><b>14.3.2</b> Discusión: aproximaciones de rango más alto</a></li>
+<li class="chapter" data-level="" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#ejemplo-54"><i class="fa fa-check"></i>Ejemplo</a></li>
+</ul></li>
+<li class="chapter" data-level="14.4" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#descomposicion-en-valores-singulares-svd-o-dvs"><i class="fa fa-check"></i><b>14.4</b> Descomposición en valores singulares (SVD o DVS)</a></li>
+<li class="chapter" data-level="14.5" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#interpretacion-geometrica"><i class="fa fa-check"></i><b>14.5</b> Interpretación geométrica</a></li>
+<li class="chapter" data-level="14.6" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#svd-para-peliculas-de-netflix"><i class="fa fa-check"></i><b>14.6</b> SVD para películas de netflix</a><ul>
+<li class="chapter" data-level="14.6.1" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#calidad-de-representacion-de-svd."><i class="fa fa-check"></i><b>14.6.1</b> Calidad de representación de SVD.</a></li>
+<li class="chapter" data-level="" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#ejemplo-55"><i class="fa fa-check"></i>Ejemplo</a></li>
+</ul></li>
+<li class="chapter" data-level="14.7" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#componentes-principales"><i class="fa fa-check"></i><b>14.7</b> Componentes principales</a><ul>
+<li class="chapter" data-level="" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#ejemplo-57"><i class="fa fa-check"></i>Ejemplo</a></li>
+<li class="chapter" data-level="14.7.1" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#varianza-en-componentes-principales."><i class="fa fa-check"></i><b>14.7.1</b> Varianza en componentes principales.</a></li>
+</ul></li>
+<li class="chapter" data-level="14.8" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#centrar-o-no-centrar-por-columna"><i class="fa fa-check"></i><b>14.8</b> ¿Centrar o no centrar por columna?</a><ul>
+<li class="chapter" data-level="" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#ejemplo-resultados-similares"><i class="fa fa-check"></i>Ejemplo: resultados similares</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#ejemplos-donde-es-buena-idea-centrar"><i class="fa fa-check"></i>Ejemplos: donde es buena idea centrar</a></li>
+<li class="chapter" data-level="" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#ejemplo-donde-no-centrar-funciona-bien"><i class="fa fa-check"></i>Ejemplo: donde no centrar funciona bien</a><ul>
+<li class="chapter" data-level="14.8.1" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#otros-tipos-de-centrado"><i class="fa fa-check"></i><b>14.8.1</b> Otros tipos de centrado</a></li>
+<li class="chapter" data-level="14.8.2" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#reescalando-variables"><i class="fa fa-check"></i><b>14.8.2</b> Reescalando variables</a></li>
+<li class="chapter" data-level="" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#ejemplo-58"><i class="fa fa-check"></i>Ejemplo</a></li>
+</ul></li>
+<li class="chapter" data-level="14.9" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#otros-metodos-t-sne"><i class="fa fa-check"></i><b>14.9</b> Otros métodos: t-SNE</a><ul>
+<li class="chapter" data-level="" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#ejemplo-59"><i class="fa fa-check"></i>Ejemplo</a></li>
+<li class="chapter" data-level="14.9.1" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#sne"><i class="fa fa-check"></i><b>14.9.1</b> SNE</a></li>
+<li class="chapter" data-level="14.9.2" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#minimizacion-para-sne"><i class="fa fa-check"></i><b>14.9.2</b> Minimización para SNE</a></li>
+<li class="chapter" data-level="" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#ejemplo-60"><i class="fa fa-check"></i>Ejemplo</a></li>
+<li class="chapter" data-level="14.9.3" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#perplexity"><i class="fa fa-check"></i><b>14.9.3</b> Perplexity</a></li>
+<li class="chapter" data-level="" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#tarea-para-27-de-noviembre"><i class="fa fa-check"></i>Tarea (para 27 de Noviembre)</a></li>
+<li class="chapter" data-level="14.9.4" data-path="reduccion-de-dimensionalidad.html"><a href="reduccion-de-dimensionalidad.html#tarea-para-4-de-diciembre"><i class="fa fa-check"></i><b>14.9.4</b> Tarea (para 4 de diciembre)</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="15" data-path="analisis-de-conglomerados-clustering.html"><a href="analisis-de-conglomerados-clustering.html"><i class="fa fa-check"></i><b>15</b> Análisis de conglomerados (clustering)</a><ul>
+<li class="chapter" data-level="15.1" data-path="analisis-de-conglomerados-clustering.html"><a href="analisis-de-conglomerados-clustering.html#introduccion-1"><i class="fa fa-check"></i><b>15.1</b> Introducción</a><ul>
+<li class="chapter" data-level="" data-path="analisis-de-conglomerados-clustering.html"><a href="analisis-de-conglomerados-clustering.html#ejemplo-61"><i class="fa fa-check"></i>Ejemplo</a></li>
+</ul></li>
+<li class="chapter" data-level="15.2" data-path="analisis-de-conglomerados-clustering.html"><a href="analisis-de-conglomerados-clustering.html#enfoques-combinatorio-y-basado-en-modelos."><i class="fa fa-check"></i><b>15.2</b> Enfoques: combinatorio y basado en modelos.</a></li>
+<li class="chapter" data-level="15.3" data-path="analisis-de-conglomerados-clustering.html"><a href="analisis-de-conglomerados-clustering.html#k-medias"><i class="fa fa-check"></i><b>15.3</b> K-medias</a><ul>
+<li class="chapter" data-level="" data-path="analisis-de-conglomerados-clustering.html"><a href="analisis-de-conglomerados-clustering.html#algoritmo-de-k-medias"><i class="fa fa-check"></i>Algoritmo de k-medias</a></li>
+<li class="chapter" data-level="" data-path="analisis-de-conglomerados-clustering.html"><a href="analisis-de-conglomerados-clustering.html#ejemplo-62"><i class="fa fa-check"></i>Ejemplo</a></li>
+<li class="chapter" data-level="" data-path="analisis-de-conglomerados-clustering.html"><a href="analisis-de-conglomerados-clustering.html#ejercicio-9"><i class="fa fa-check"></i>Ejercicio</a></li>
+<li class="chapter" data-level="" data-path="analisis-de-conglomerados-clustering.html"><a href="analisis-de-conglomerados-clustering.html#usando-la-funcion-k-means"><i class="fa fa-check"></i>Usando la funcion k-means</a></li>
+</ul></li>
+<li class="chapter" data-level="15.4" data-path="analisis-de-conglomerados-clustering.html"><a href="analisis-de-conglomerados-clustering.html#seleccion-de-numero-de-clusters."><i class="fa fa-check"></i><b>15.4</b> Selección de número de clusters.</a><ul>
+<li class="chapter" data-level="" data-path="analisis-de-conglomerados-clustering.html"><a href="analisis-de-conglomerados-clustering.html#variacion-dentro-de-clusters-para-distintas-soluciones"><i class="fa fa-check"></i>Variación dentro de clusters para distintas soluciones</a></li>
+<li class="chapter" data-level="15.4.1" data-path="analisis-de-conglomerados-clustering.html"><a href="analisis-de-conglomerados-clustering.html#criterios-especificos"><i class="fa fa-check"></i><b>15.4.1</b> Criterios específicos</a></li>
+<li class="chapter" data-level="15.4.2" data-path="analisis-de-conglomerados-clustering.html"><a href="analisis-de-conglomerados-clustering.html#cuando-usar-o-no-usar-k-medias-estructura-esferica"><i class="fa fa-check"></i><b>15.4.2</b> ¿Cuándo usar o no usar k-medias? Estructura “esférica”</a></li>
+<li class="chapter" data-level="15.4.3" data-path="analisis-de-conglomerados-clustering.html"><a href="analisis-de-conglomerados-clustering.html#cuando-usar-o-no-usar-k-medias-existencia-o-no-de-grupos-naturales"><i class="fa fa-check"></i><b>15.4.3</b> ¿Cuándo usar o no usar k-medias? Existencia o no de grupos “naturales”</a></li>
+<li class="chapter" data-level="15.4.4" data-path="introduccion.html"><a href="introduccion.html#ejemplo"><i class="fa fa-check"></i><b>15.4.4</b> Ejemplo</a></li>
+<li class="chapter" data-level="15.4.5" data-path="analisis-de-conglomerados-clustering.html"><a href="analisis-de-conglomerados-clustering.html#caracterizacion-y-descripcion-de-grupos"><i class="fa fa-check"></i><b>15.4.5</b> Caracterización y descripción de grupos</a></li>
+<li class="chapter" data-level="15.4.6" data-path="analisis-de-conglomerados-clustering.html"><a href="analisis-de-conglomerados-clustering.html#dificultades-en-segmentacionclustering."><i class="fa fa-check"></i><b>15.4.6</b> Dificultades en segmentación/clustering.</a></li>
+</ul></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Publicado con bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Aprendizaje de máquina</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="analisis-de-conglomerados-clustering" class="section level1">
+<h1><span class="header-section-number">Clase 15</span> Análisis de conglomerados (clustering)</h1>
+<div id="introduccion-1" class="section level2">
+<h2><span class="header-section-number">15.1</span> Introducción</h2>
+<p>Mediante clustering (o análisis de conglomerados) buscamos aprender agrupaciones de casos, de manera que casos dentro de un grupo (<em>cluster</em>, o conglomerado) estén cercanos entre ellos, mientras que puntos en distintos clusters están a distancia más grande - todo esto de acuerdo a alguna medida de distancia. Entonces podemos:</p>
+<ul>
+<li>Descubrir estructuras interesantes de agrupamiento en los datos que nos ayuden a entenderlos.</li>
+<li>Resumir grupos (que pueden ser grandes), por casos representativos y/o promedio. Así la tarea de entender los casos (que pueden ser miles, por ejemplo) se reduce a entender los grupos (que pueden ser decenas o cientos, por ejemplo).</li>
+<li>Usar grupos como insumo para otras tareas (por ejemplo, distintos modelos predictivos según cluster, distintas estrategias de tratamiento según cluster, etc.)</li>
+</ul>
+<p>Generalmente el proceso de clustering involucra tres pasos:</p>
+<ul>
+<li>Selección de métrica de distancia entre puntos.</li>
+<li>Aplicación de un algoritmo de clustering.</li>
+<li>Selección de número de clusters.</li>
+</ul>
+<p>Para variables numéricas, una elección usual es la distancia euclideana (cuando las variables tienen las mismas unidades, o escala similar), o la distancia euclideana para las variables estandarizadas.</p>
+<div id="ejemplo-61" class="section level3 unnumbered">
+<h3>Ejemplo</h3>
+<p>Consideramos las ocurrencias de temblores cerca de Fiji (The data set give the locations of 1000 seismic events of MB &gt; 4.0. The events occurred in a cube near Fiji since 1964.)</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">quakes_<span class="dv">1</span> &lt;-<span class="st"> </span>quakes[, <span class="kw">c</span>(<span class="st">&#39;lat&#39;</span>,<span class="st">&#39;long&#39;</span>)]
+quakes_<span class="dv">1</span><span class="op">$</span>id &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(quakes_<span class="dv">1</span>)
+<span class="kw">ggplot</span>(quakes_<span class="dv">1</span>, <span class="kw">aes</span>(<span class="dt">x=</span>long, <span class="dt">y=</span>lat)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>()</code></pre></div>
+<p><img src="15-clustering_files/figure-html/unnamed-chunk-1-1.png" width="432" /></p>
+<p>¿Podemos separar en grupos estos datos? Podemos pensar en varias maneras de hacer esto. Un enfoque simple que nos puede dar una agrupación interesante es pensar en agrupar de manera que obtengamos grupos relativamente <strong>compactos</strong> (en estos datos, ¿qué otras cosas se te ocurren? ¿qué otros patrones interesantes sería interesante agrupar?).</p>
+</div>
+</div>
+<div id="enfoques-combinatorio-y-basado-en-modelos." class="section level2">
+<h2><span class="header-section-number">15.2</span> Enfoques: combinatorio y basado en modelos.</h2>
+<p>Los enfoques basados en modelos (por ejemplo, modelos de mezclas) se basan en la introducción de variables latentes que explican diferencias en las distribuciones de las variables observadas.</p>
+<p>En estas notas veremos métodos <em>combinatorios</em>, que trabajan directamente sobre los datos (sin modelos), intentanto segmentar en grupos a través de los cuales <strong>minimizamos alguna medida objetivo</strong>. En este contexto, el problema de segmentación/clustering se plantea como sigue:</p>
+<ul>
+<li>Suponemos que buscamos <span class="math inline">\(K\)</span> grupos.</li>
+<li>Una asignación <span class="math inline">\(C\)</span> es una función que asigna a cada observación <span class="math inline">\(x_i\)</span> un grupo <span class="math inline">\(C(i)\in \{1,\ldots, k\}\)</span>.</li>
+<li>Tenemos una distancia o disimilitud <span class="math inline">\(d(x,y)\)</span> entre puntos, y una función <span class="math inline">\(W(C_k)\)</span> que mide qué tan disperso es el grupo <span class="math inline">\(C_k\)</span> en términos de la distancia <span class="math inline">\(d\)</span>.</li>
+</ul>
+<p>Buscamos entonces encontrar una solución <span class="math inline">\(C^*(i)\)</span> que minimice</p>
+<p><span class="math display">\[W(C) = \sum_{k=1}^K W(C_k),\]</span></p>
+<p>es decir, buscamos que las distancias <strong>dentro de cada grupo</strong> (within groups) <span class="math inline">\(k\)</span> sean lo más chicas posibles. .</p>
+<ul>
+<li><p>Resolver este problema enumerando todas las posibles asignaciones <span class="math inline">\(C\)</span> no es factible, pues el número de posibles asignaciones es típicamente gigantesco aún para un conjunto de datos muy chico.</p></li>
+<li><p>La idea entonces es buscar heurísticas que den soluciones razonables a este problema de minimización.</p></li>
+</ul>
+</div>
+<div id="k-medias" class="section level2">
+<h2><span class="header-section-number">15.3</span> K-medias</h2>
+<p>Este es posiblemente el algoritmo (o familia de algoritmos) más popular de segmentación, y se escala razonablemente bien a problemas relativamente grandes.</p>
+<p>Supongamos que tenemos datos numéricos con escala o unidades similares (si no, podemos estandarizar).</p>
+<p>En k-medias, un buen agrupamiento es uno en el que la variación dentro de los grupos es chica. En primer lugar fijamos el número <span class="math inline">\(K\)</span> de grupos que buscamos. Supongamos entonces que <span class="math inline">\(C_1\cup\cdots\cup C_K\)</span> es una partición de los datos, y sea <span class="math inline">\(W(C_k)\)</span> nuestra medida de variación dentro de los clusters. Entonces buscaremos resolver</p>
+<p><span class="math display">\[\min_{C_1,\ldots, C_K} \sum_{k=1}^K W(C_k)\]</span></p>
+<p>Una medida usual es la siguiente:</p>
+<p><span class="math display">\[W(C_k)=\sum_{i\in C_k} ||x_i-\bar{x}_k||^2,\]</span></p>
+<p>donde <span class="math inline">\(\bar{x}_k=\frac{1}{|C_k|}\sum_{i\in C_k} x_i\)</span> es el centroide del grupo <span class="math inline">\(C_k\)</span>. Esto mide qué tan compacto es un grupo considerando la suma de distancias a su centroide.</p>
+El problema que queremos resolver es entonces
+<span class="math display" id="eq:kmedias-original">\[\begin{equation}
+\min_{C_1,\ldots, C_K} \sum_{k=1}^K \sum_{i\in C_k} ||x_i-\bar{x}_k||^2
+\tag{15.1}
+\end{equation}\]</span>
+<p>Nótese que grupos más grandes contribuyen más sumandos al objetivo. Este problema es demasiado grande para resolver por fuerza bruta (por ejemplo, enlistando todas las posibles agrupaciones).</p>
+Podemos desarrollar una heurística considerando primero del problema ampliado
+<span class="math display" id="eq:kmedias-ampliado">\[\begin{equation}
+\min_{C_1,\ldots, C_K, m_1,\ldots, m_K} \sum_{k=1}^K \sum_{i\in C_k}||x_i-m_k||^2 
+\tag{15.2}
+\end{equation}\]</span>
+<p>cuya solución es la misma que el problema <a href="analisis-de-conglomerados-clustering.html#eq:kmedias-original">(15.1)</a>. La razón es que la función objetivo del <a href="analisis-de-conglomerados-clustering.html#eq:kmedias-ampliado">(15.2)</a> alcanza un mínimo menor o igual al de <a href="analisis-de-conglomerados-clustering.html#eq:kmedias-original">(15.1)</a>, pero dada cualquier solución <span class="math inline">\(C_1^*,C_2^*,\ldots,C_K^*\)</span> de <a href="analisis-de-conglomerados-clustering.html#eq:kmedias-ampliado">(15.2)</a>, tenemos que para toda <span class="math inline">\(k\)</span>, las distancias al cuadrado son mínimas al centroide de los datos: <span class="math display">\[\sum_{i \in C_k} ||x_i - \bar{x}_k||^2 \leq \sum_{i \in C_k} ||x_i - m_k||^2 \]</span> por lo que <span class="math inline">\(C_1^*,C_2^*,\ldots,C_K^*\)</span> también es solución de <a href="analisis-de-conglomerados-clustering.html#eq:kmedias-original">(15.1)</a>.</p>
+<p>minimizar <span class="math inline">\(\min_{m_1,\ldots, m_K} \sum_{k=1}^K \sum_{i\in C_k^*}||x_i-m_k||^2\)</span> poniendo <span class="math inline">\(m_k=\bar{x}_k\)</span> (el valor promedio minimiza la distancia cuadrada de los puntos del grupo).</p>
+<p>Ahora desarrollamos la heurística de k-medias. Comenzando con el problema ampliado, notamos que si fijamos puntos centrales iniciales <span class="math display">\[m_1,\ldots, m_K\]</span> podemos minimizar (con centros fijos) <span class="math display">\[\min_{C_1,\ldots, C_K} \sum_{k=1}^K \sum_{i\in C_k}||x_i-m_k||^2 
+\]</span> asignando cada <span class="math inline">\(x_i\)</span> al cluster <span class="math inline">\(C_k\)</span> con la <span class="math inline">\(m_k\)</span> asociada más cercana a <span class="math inline">\(x_i\)</span>.</p>
+<p>Una vez que tenemos clusters dados, podemos ahora minimizar (con clusters fijos)</p>
+<p><span class="math display">\[\min_{m_1,\ldots, m_K} \sum_{k=1}^K \sum_{i\in C_k}||x_i-m_k||^2 \]</span></p>
+<p>cuya solución es</p>
+<p><span class="math display">\[m_k = \bar{x}_k = \frac{1}{n_k}\sum_{i\in C_k} x_i,\]</span></p>
+<p>Ahora podemos iterar: agrupar en clusters, encontrar centroide, etc.</p>
+<p>Esto sugiere el siguiente algoritmo:</p>
+<div id="algoritmo-de-k-medias" class="section level3 unnumbered">
+<h3>Algoritmo de k-medias</h3>
+
+<div class="comentario">
+<p><strong>K-means</strong> Sea <span class="math inline">\(k\)</span> el número de grupos que buscamos. Escogemos <span class="math inline">\(k\)</span> puntos en los datos de entrenamiento al azar.</p>
+<p>En el paso <span class="math inline">\(s=1,2,\ldots\)</span>: 1. Dadas los centros <span class="math inline">\(m_k\)</span> (que pensamos fijas), encontramos una nueva asignación <span class="math inline">\(C_k\)</span> a clusters que minimice <span class="math display">\[ 2\sum_{k=1}^K \sum_{i\in C_k} ||x_i - m_k||^2,\]</span> y esto se hace asignando cada observación al centro <span class="math inline">\(m_k\)</span> que esté más cercano.</p>
+<ol start="2" style="list-style-type: decimal">
+<li>(cálculo de centroides) Dada una asignación a clusters, encontramos nuevos centros promediando en cada cluster : <span class="math display">\[m_k = \frac{1}{|C_k|}\sum_{i\in C_k} x_i.\]</span></li>
+</ol>
+3.Repetimos. Nos detenemos cuando los centroides se quedan casi fijos de una iteración a la siguiente (y en consecuencia la cantidad a minimizar no decrece más).
+</div>
+
+<p><strong>Observaciones</strong>:</p>
+<ul>
+<li>Este algoritmo converge (cada paso reduce la función de costo), pero no tiene garantía de obtener un mínimo global.</li>
+<li>Conviene correr varias veces, para distintos arranques aleatorios, y escoger la solución con función objetivo más chica. Cuando no es posible correrlo múltiples veces, puede ser que la solución obtenida esté muy lejos de una óptima.</li>
+<li>Hay distintas maneras de implementar este algoritmo, algunas más eficientes que otras.</li>
+</ul>
+</div>
+<div id="ejemplo-62" class="section level3 unnumbered">
+<h3>Ejemplo</h3>
+<p>Describiremos iteraciones para <span class="math inline">\(k=5\)</span> para el conjunto de datos, con una implementación simple:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">quakes_<span class="dv">1</span> &lt;-<span class="st"> </span>quakes[, <span class="kw">c</span>(<span class="st">&#39;lat&#39;</span>,<span class="st">&#39;long&#39;</span>)]
+quakes_<span class="dv">1</span><span class="op">$</span>id &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(quakes_<span class="dv">1</span>)
+<span class="kw">ggplot</span>(quakes_<span class="dv">1</span>, <span class="kw">aes</span>(<span class="dt">x=</span>long, <span class="dt">y=</span>lat)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>()</code></pre></div>
+<p><img src="15-clustering_files/figure-html/unnamed-chunk-3-1.png" width="432" /></p>
+<p>Seleccionamos muestra de datos al azar (centroides)</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">25112</span>)
+K &lt;-<span class="st"> </span><span class="dv">5</span>
+centros &lt;-<span class="st"> </span><span class="kw">sample_n</span>(quakes_<span class="dv">1</span>, K) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">k =</span> <span class="dv">1</span><span class="op">:</span>K) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="op">-</span>id)
+centros</code></pre></div>
+<pre><code>##   lat long k
+## 1 -24  180 1
+## 2 -16  168 2
+## 3 -18  181 3
+## 4 -28  182 4
+## 5 -15  186 5</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(quakes_<span class="dv">1</span>, <span class="kw">aes</span>(<span class="dt">x=</span>long, <span class="dt">y=</span>lat)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data =</span> centros, <span class="kw">aes</span>(<span class="dt">x=</span>long, <span class="dt">y=</span>lat), <span class="dt">size=</span><span class="dv">7</span>, <span class="dt">colour=</span><span class="st">&#39;red&#39;</span>)</code></pre></div>
+<p><img src="15-clustering_files/figure-html/unnamed-chunk-4-1.png" width="432" /></p>
+<p>Agrupamos:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">agrupar &lt;-<span class="st"> </span><span class="cf">function</span>(datos, centros){
+  datos_larga &lt;-<span class="st"> </span>datos <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">gather</span>(variable, valor, <span class="op">-</span>id)
+  centros_larga &lt;-<span class="st"> </span>centros <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">gather</span>(variable, valor_m, <span class="op">-</span>k)
+  dat &lt;-<span class="st"> </span><span class="kw">full_join</span>(datos_larga, centros_larga) <span class="op">%&gt;%</span>
+<span class="st">          </span><span class="kw">mutate</span>(<span class="dt">dif_cuad =</span> (valor<span class="op">-</span>valor_m)<span class="op">^</span><span class="dv">2</span>) <span class="op">%&gt;%</span>
+<span class="st">          </span><span class="kw">group_by</span>(id, k) <span class="op">%&gt;%</span>
+<span class="st">          </span><span class="kw">summarise</span>(<span class="dt">dist_cuad =</span> <span class="kw">sum</span>(dif_cuad)) <span class="op">%&gt;%</span>
+<span class="st">          </span><span class="kw">group_by</span>(id) <span class="op">%&gt;%</span>
+<span class="st">          </span><span class="kw">arrange</span>(id, k) <span class="op">%&gt;%</span>
+<span class="st">          </span><span class="kw">summarise</span>(<span class="dt">k =</span> <span class="kw">which.min</span>(dist_cuad))
+  dat &lt;-<span class="st"> </span>dat <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">left_join</span>(datos)
+  dat
+}
+agrup &lt;-<span class="st"> </span><span class="kw">agrupar</span>(quakes_<span class="dv">1</span>, centros)</code></pre></div>
+<pre><code>## Joining, by = &quot;variable&quot;</code></pre>
+<pre><code>## Joining, by = &quot;id&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(agrup, <span class="kw">aes</span>(<span class="dt">x=</span>long, <span class="dt">y=</span>lat, <span class="dt">colour=</span><span class="kw">factor</span>(k))) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>()</code></pre></div>
+<p><img src="15-clustering_files/figure-html/unnamed-chunk-5-1.png" width="432" /></p>
+<p>Recalculamos centros:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">recalcular_centros &lt;-<span class="st"> </span><span class="cf">function</span>(datos_agrup){
+  datos_agrup <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">gather</span>(variable, valor, <span class="op">-</span>id, <span class="op">-</span>k) <span class="op">%&gt;%</span>
+<span class="st">    </span><span class="kw">group_by</span>(k, variable) <span class="op">%&gt;%</span>
+<span class="st">    </span><span class="kw">summarise</span>(<span class="dt">valor =</span> <span class="kw">mean</span>(valor)) <span class="op">%&gt;%</span>
+<span class="st">    </span><span class="kw">spread</span>(variable, valor)
+}
+centros &lt;-<span class="st"> </span><span class="kw">recalcular_centros</span>(agrup)
+<span class="kw">ggplot</span>(quakes_<span class="dv">1</span>, <span class="kw">aes</span>(<span class="dt">x=</span>long, <span class="dt">y=</span>lat)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data =</span> centros, <span class="kw">aes</span>(<span class="dt">x=</span>long, <span class="dt">y=</span>lat), <span class="dt">size=</span><span class="dv">7</span>, <span class="dt">colour=</span><span class="st">&#39;red&#39;</span>)</code></pre></div>
+<p><img src="15-clustering_files/figure-html/unnamed-chunk-6-1.png" width="432" /></p>
+<p>Y ahora calculamos distancia dentro de clusters:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">wss &lt;-<span class="st"> </span><span class="cf">function</span>(agrupacion, centros){
+  wss &lt;-<span class="st"> </span>agrupacion <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(k) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">gather</span>(variable, valor,<span class="op">-</span>id, <span class="op">-</span>k) <span class="op">%&gt;%</span>
+<span class="st">    </span><span class="kw">left_join</span>(centros <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">gather</span>(variable, centro, <span class="op">-</span>k)) <span class="op">%&gt;%</span>
+<span class="st">    </span><span class="kw">group_by</span>(k) <span class="op">%&gt;%</span>
+<span class="st">    </span><span class="kw">summarise</span>(<span class="dt">dist_2 =</span> <span class="kw">sum</span>((valor <span class="op">-</span><span class="st"> </span>centro)<span class="op">^</span><span class="dv">2</span>)) 
+  <span class="kw">sum</span>(wss<span class="op">$</span>dist_<span class="dv">2</span>)
+}
+<span class="kw">wss</span>(agrup, centros)</code></pre></div>
+<pre><code>## Joining, by = c(&quot;k&quot;, &quot;variable&quot;)</code></pre>
+<pre><code>## [1] 7967</code></pre>
+<p>Agrupamos:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">agrup &lt;-<span class="st"> </span><span class="kw">agrupar</span>(quakes_<span class="dv">1</span>, centros) </code></pre></div>
+<pre><code>## Joining, by = &quot;variable&quot;</code></pre>
+<pre><code>## Joining, by = &quot;id&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(agrup, <span class="kw">aes</span>(<span class="dt">x=</span>long, <span class="dt">y=</span>lat, <span class="dt">colour=</span><span class="kw">factor</span>(k))) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>()</code></pre></div>
+<p><img src="15-clustering_files/figure-html/unnamed-chunk-8-1.png" width="432" /></p>
+<p>Recalculamos centros:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">centros &lt;-<span class="st"> </span><span class="kw">recalcular_centros</span>(agrup)
+<span class="kw">wss</span>(agrup, centros)</code></pre></div>
+<pre><code>## Joining, by = c(&quot;k&quot;, &quot;variable&quot;)</code></pre>
+<pre><code>## [1] 7794</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(quakes_<span class="dv">1</span>, <span class="kw">aes</span>(<span class="dt">x=</span>long, <span class="dt">y=</span>lat)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data =</span> centros, <span class="kw">aes</span>(<span class="dt">x=</span>long, <span class="dt">y=</span>lat), <span class="dt">size=</span><span class="dv">7</span>, <span class="dt">colour=</span><span class="st">&#39;red&#39;</span>)</code></pre></div>
+<p><img src="15-clustering_files/figure-html/unnamed-chunk-9-1.png" width="432" /></p>
+<p>Una iteración más da</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">agrup &lt;-<span class="st"> </span><span class="kw">agrupar</span>(quakes_<span class="dv">1</span>, centros)</code></pre></div>
+<pre><code>## Joining, by = &quot;variable&quot;</code></pre>
+<pre><code>## Joining, by = &quot;id&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">centros &lt;-<span class="st"> </span><span class="kw">recalcular_centros</span>(agrup)
+<span class="kw">wss</span>(agrup, centros)</code></pre></div>
+<pre><code>## Joining, by = c(&quot;k&quot;, &quot;variable&quot;)</code></pre>
+<pre><code>## [1] 7741</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(agrup, <span class="kw">aes</span>(<span class="dt">x=</span>long, <span class="dt">y=</span>lat, <span class="dt">colour=</span><span class="kw">factor</span>(k))) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>()</code></pre></div>
+<p><img src="15-clustering_files/figure-html/unnamed-chunk-10-1.png" width="480" /></p>
+</div>
+<div id="ejercicio-9" class="section level3 unnumbered">
+<h3>Ejercicio</h3>
+<p>Corre varias veces este ejemplo con distinta semilla. ¿Obtienes mejores o peores soluciones que la de arriba? ¿Qué tan “naturales” crees que son los grupos que obtuvimos? ¿Qué defectos potenciales le ves a este agrupamiento?</p>
+</div>
+<div id="usando-la-funcion-k-means" class="section level3 unnumbered">
+<h3>Usando la funcion k-means</h3>
+<p>La función <span class="math inline">\(k-means\)</span> de R automáticamente produce varias corridas con distintos inicios aleatorios y selecciona la que produzca el mínimo más bajo.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">2800</span>)
+k_medias &lt;-<span class="st"> </span><span class="kw">kmeans</span>(quakes_<span class="dv">1</span>[, <span class="kw">c</span>(<span class="st">&#39;long&#39;</span>,<span class="st">&#39;lat&#39;</span>)], <span class="dt">centers =</span> <span class="dv">5</span>, <span class="dt">nstart=</span><span class="dv">30</span>) <span class="co"># escoger varios comienzos aleatorios</span>
+<span class="kw">str</span>(k_medias)</code></pre></div>
+<pre><code>## List of 9
+##  $ cluster     : int [1:1000] 1 1 1 2 1 2 4 5 5 2 ...
+##  $ centers     : num [1:5, 1:2] 181 184 170 167 181 ...
+##   ..- attr(*, &quot;dimnames&quot;)=List of 2
+##   .. ..$ : chr [1:5] &quot;1&quot; &quot;2&quot; &quot;3&quot; &quot;4&quot; ...
+##   .. ..$ : chr [1:2] &quot;long&quot; &quot;lat&quot;
+##  $ totss       : num 62065
+##  $ withinss    : num [1:5] 1868 2465 314 682 1406
+##  $ tot.withinss: num 6736
+##  $ betweenss   : num 55330
+##  $ size        : int [1:5] 326 353 69 136 116
+##  $ iter        : int 3
+##  $ ifault      : int 0
+##  - attr(*, &quot;class&quot;)= chr &quot;kmeans&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">grupo &lt;-<span class="st"> </span>k_medias<span class="op">$</span>cluster
+quakes_<span class="dv">1</span><span class="op">$</span>grupo &lt;-<span class="st"> </span>grupo
+<span class="kw">ggplot</span>(quakes_<span class="dv">1</span>, <span class="kw">aes</span>(<span class="dt">x=</span>long, <span class="dt">y=</span>lat, <span class="dt">colour=</span><span class="kw">factor</span>(grupo))) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>()</code></pre></div>
+<p><img src="15-clustering_files/figure-html/unnamed-chunk-11-1.png" width="480" /></p>
+<p><strong>Observaciones</strong>:</p>
+<ul>
+<li>En la salida la cantidad</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">k_medias<span class="op">$</span>tot.withinss</code></pre></div>
+<pre><code>## [1] 6736</code></pre>
+<p>nos da el valor de <a href="analisis-de-conglomerados-clustering.html#eq:kmedias-original">(15.1)</a> para la solución obtenida.</p>
+<p><strong>Observación</strong>: El algoritmo usado por defecto en R es el de Hartigan-Wong, que es más eficiente que la implementación simple que vimos arriba.</p>
+</div>
+</div>
+<div id="seleccion-de-numero-de-clusters." class="section level2">
+<h2><span class="header-section-number">15.4</span> Selección de número de clusters.</h2>
+<div id="variacion-dentro-de-clusters-para-distintas-soluciones" class="section level3 unnumbered">
+<h3>Variación dentro de clusters para distintas soluciones</h3>
+<p>Podemos medir la calidad de la segmentación según el mínimo alcanzado de la función objetivo: la suma de cuadrados dentro de los clusters (withinss), que nos dice qué tan compactos son. Primero vemos un ejemplo simple con tres clusters claros:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">2800</span>)
+df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">x=</span><span class="kw">c</span>(<span class="kw">rnorm</span>(<span class="dv">100</span>,<span class="op">-</span><span class="dv">50</span>,<span class="dv">10</span>), <span class="kw">rnorm</span>(<span class="dv">100</span>,<span class="dv">0</span>,<span class="dv">10</span>), <span class="kw">rnorm</span>(<span class="dv">70</span>,<span class="dv">30</span>,<span class="dv">2</span>) ))
+<span class="kw">qplot</span>(df<span class="op">$</span>x)</code></pre></div>
+<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+<p><img src="15-clustering_files/figure-html/unnamed-chunk-13-1.png" width="480" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ajustes_km &lt;-<span class="st"> </span><span class="kw">lapply</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">20</span>, <span class="cf">function</span>(k){
+  kmedias &lt;-<span class="st"> </span><span class="kw">kmeans</span>(df, <span class="dt">centers =</span> k, <span class="dt">nstart =</span> <span class="dv">20</span>)    
+  kmedias
+})
+tot_within &lt;-<span class="st"> </span><span class="kw">sapply</span>(ajustes_km, <span class="cf">function</span>(aj){ aj<span class="op">$</span>tot.withinss})
+datos_codo &lt;-<span class="st"> </span><span class="kw">data_frame</span>(<span class="dt">no_clusters =</span> <span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(tot_within), 
+                         <span class="dt">tot_within =</span> tot_within) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">sol_3 =</span> no_clusters<span class="op">==</span><span class="dv">3</span>)
+<span class="kw">ggplot</span>(datos_codo, <span class="kw">aes</span>(<span class="dt">x =</span> no_clusters, <span class="dt">y =</span> tot_within)) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">colour =</span> sol_<span class="dv">3</span>), <span class="dt">size=</span><span class="dv">3</span>) </code></pre></div>
+<p><img src="15-clustering_files/figure-html/unnamed-chunk-13-2.png" width="480" /></p>
+<p>Agregar un cluster adicional hace más complejo nuestro resumen, así que incrementamos el número de clusters sólo cuando tenemos una mejora considerable en la solución. En este caso particular, un buen lugar para cortar es el codo (en 3 clusters), pues añadir un cluster más no mejora la solución considerablemente.</p>
+<p>A veces el punto de corte no es tan claro, aunque vemos que en nuestro ejemplo de terremotos la estructura más clara es la de 2 grupos:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">2800</span>)
+df &lt;-<span class="st"> </span>quakes_<span class="dv">1</span>[, <span class="kw">c</span>(<span class="st">&#39;lat&#39;</span>,<span class="st">&#39;long&#39;</span>)]
+ajustes_km &lt;-<span class="st"> </span><span class="kw">lapply</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">20</span>, <span class="cf">function</span>(k){
+  kmedias &lt;-<span class="st"> </span><span class="kw">kmeans</span>(df, <span class="dt">centers =</span> k, <span class="dt">nstart =</span> <span class="dv">20</span>)    
+  kmedias
+})
+tot_within &lt;-<span class="st"> </span><span class="kw">sapply</span>(ajustes_km, <span class="cf">function</span>(aj){ aj<span class="op">$</span>tot.withinss})
+<span class="kw">qplot</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(tot_within), tot_within, <span class="dt">geom=</span><span class="st">&#39;line&#39;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>(<span class="dt">size=</span><span class="dv">3</span>)</code></pre></div>
+<p><img src="15-clustering_files/figure-html/unnamed-chunk-14-1.png" width="480" /></p>
+<p>Las soluciones son</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">grupos_df &lt;-<span class="st"> </span><span class="kw">lapply</span>(ajustes_km[<span class="dv">1</span><span class="op">:</span><span class="dv">8</span>], <span class="cf">function</span>(aj){ 
+  <span class="kw">data_frame</span>(<span class="dt">num =</span> <span class="kw">max</span>(aj<span class="op">$</span>cluster), <span class="dt">cluster =</span> aj<span class="op">$</span>cluster,
+             <span class="dt">id=</span> <span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(aj<span class="op">$</span>cluster))}) <span class="op">%&gt;%</span><span class="st"> </span>rbind_all</code></pre></div>
+<pre><code>## Warning: &#39;rbind_all&#39; is deprecated.
+## Use &#39;bind_rows()&#39; instead.
+## See help(&quot;Deprecated&quot;)</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">grupo_df_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">left_join</span>(grupos_df, quakes_<span class="dv">1</span>)</code></pre></div>
+<pre><code>## Joining, by = &quot;id&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(grupo_df_<span class="dv">2</span>, <span class="kw">aes</span>(<span class="dt">x=</span>lat, <span class="dt">y=</span>long, <span class="dt">colour=</span><span class="kw">factor</span>(cluster))) <span class="op">+</span><span class="st"> </span><span class="kw">facet_wrap</span>(<span class="op">~</span>num) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_point</span>()</code></pre></div>
+<p><img src="15-clustering_files/figure-html/unnamed-chunk-15-1.png" width="480" /></p>
+
+<div class="comentario">
+La gráfica de codo con la función objetivo es una manera de guiar la selección de número de clusters, aún cuando no siempre da respuestas muy claras. En cualquier caso, rara vez seleccionamos el número de clusters usando solamente el criterio de la gráfica de la función objetivo.
+</div>
+
+</div>
+<div id="criterios-especificos" class="section level3">
+<h3><span class="header-section-number">15.4.1</span> Criterios específicos</h3>
+<p>Más frecuentemente, la selección de número de grupos se hace tomando en cuenta el uso posterior que se va a hacer de los clusters. Por ejemplo:</p>
+<ul>
+<li><p>En segmentación de clientes/usuarios, casi siempre queremos un grupo no muy grande de grupos (2-10, máximo decenas), pues puede ser difícil diseñar productos o estrategias particulares si tenemos muchos segmentos.Lo mismo sucede en aplicaciones científicas, por ejemplo clasificar objetos como estrellas, galaxias, etc.</p></li>
+<li><p>Existen algunas aplicaciones de clustering donde buscamos muchos grupos, por ejemplo, para agrupar objetos (noticias, tweets, por ejemplo) en grupos muy compactos (de alta similitud), y así detectar duplicados o relaciones entre fuentes de noticias, usuarios de twitter, etc. Hay más opciones además de algoritmos clásicos como k-means para este tipo de problemas</p></li>
+</ul>
+<p>La estrategia típica es entonces producir varias agrupaciones, y compararlas según sus virtudes para uso posterior.</p>
+<div id="ejemplo-63" class="section level4 unnumbered">
+<h4>Ejemplo</h4>
+<p>Consideremos segmentar personas según sus actitudes hacia las responsabilidades que tiene o no el gobierno en cuanto al bienestar de las personas.</p>
+<p>European Social Survey (ESS) data from the 2008 (fourth) round in the United Kingdom. The data are from a questionnaire on “what the responsibilities of governments should or should not be”. gvjbevn Job for everyone, governments’ responsibility (0-10). gvhlthc Health care for the sick, governments’ responsibility (0-10). gvslvol Standard of living for the old, governments’ responsibility (0-10). gvslvue Standard of living for the unemployed, governments’ responsibility (0-10). gvcldcr Child care services for working parents, governments’ responsibility (0-10). gvpdlwk Paid leave from work to care for sick family, governments’ responsibility (0-10). sbprvpv Social benefits/services prevent widespread poverty (1-5). sbeqsoc Social benefits/services lead to a more equal society (1-5). sbcwkfm Social benefits/services make it easier to combine work and family (1-5).</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">load</span>(<span class="st">&#39;datos/ess4_gb.Rdata&#39;</span>)
+dat &lt;-<span class="st"> </span>ess4.gb <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(idno, gvjbevn<span class="op">:</span>sbcwkfm)
+nombres &lt;-<span class="st"> </span><span class="kw">data_frame</span>(<span class="dt">var =</span> <span class="kw">c</span>(<span class="st">&quot;gvjbevn&quot;</span>, <span class="st">&quot;gvhlthc&quot;</span>, <span class="st">&quot;gvslvol&quot;</span>, <span class="st">&quot;gvslvue&quot;</span>, <span class="st">&quot;gvcldcr&quot;</span>, <span class="st">&quot;gvpdlwk&quot;</span>, 
+<span class="st">&quot;sbprvpv&quot;</span>, <span class="st">&quot;sbeqsoc&quot;</span>, <span class="st">&quot;sbcwkfm&quot;</span>),
+<span class="dt">nombre =</span> <span class="kw">c</span>(<span class="st">&#39;trabajo_a_todos&#39;</span>,<span class="st">&#39;cuidados_salud_enfermos&#39;</span>,<span class="st">&#39;garantizar_nivel_mayores&#39;</span>,<span class="st">&#39;garantizar_nivel_desempleados&#39;</span>,<span class="st">&#39;ayuda_padres_trabajadores&#39;</span>,<span class="st">&#39;ausencia_cuidar_enfermos&#39;</span>,<span class="st">&#39;beneficios_pobreza&#39;</span>,<span class="st">&#39;beneficios_igualdad&#39;</span>,<span class="st">&#39;beneficios_fam_trabajo&#39;</span>))</code></pre></div>
+<p>En este caso particular tenemos unas variables que están en escala 1-5 y otras 1-10. Esta variabilidad distinta sólo es escala de las respuestas, así que normalizamos dividiendo cada pregunta por su máximo (dividir entre 10 las preguntas en escala de 1 a 10 y entre 5 las de 1 a 5):</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dat.<span class="dv">2</span> &lt;-<span class="st"> </span>dat <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">gather</span>(var, valor, gvjbevn<span class="op">:</span>sbcwkfm) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">left_join</span>(nombres) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>var) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">group_by</span>(nombre) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">valor.esc =</span> valor<span class="op">/</span><span class="kw">max</span>(valor, <span class="dt">na.rm=</span>T)) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>valor) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">spread</span>(nombre, valor.esc)</code></pre></div>
+<pre><code>## Joining, by = &quot;var&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dat.<span class="dv">3</span> &lt;-<span class="st"> </span><span class="kw">filter</span>(dat.<span class="dv">2</span>, <span class="kw">apply</span>(dat.<span class="dv">2</span>, <span class="dv">1</span>, <span class="cf">function</span>(x){<span class="op">!</span><span class="kw">any</span>(<span class="kw">is.na</span>(x))}))
+dat.na &lt;-<span class="st"> </span><span class="kw">filter</span>(ess4.gb, <span class="kw">apply</span>(dat.<span class="dv">2</span>, <span class="dv">1</span>, <span class="cf">function</span>(x){<span class="op">!</span><span class="kw">any</span>(<span class="kw">is.na</span>(x))}))
+
+ajustes.km &lt;-<span class="st"> </span><span class="kw">lapply</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>, <span class="cf">function</span>(k){
+  kmedias &lt;-<span class="st"> </span><span class="kw">kmeans</span>(dat.<span class="dv">3</span>[,<span class="op">-</span><span class="dv">1</span>], <span class="dt">centers =</span> k, <span class="dt">nstart =</span> <span class="dv">20</span>, <span class="dt">iter.max=</span><span class="dv">40</span>)    
+  kmedias
+})
+tot.within &lt;-<span class="st"> </span><span class="kw">sapply</span>(ajustes.km, <span class="cf">function</span>(aj){ aj<span class="op">$</span>tot.withinss})
+<span class="kw">qplot</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(tot.within), tot.within, <span class="dt">geom=</span><span class="st">&#39;line&#39;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>()</code></pre></div>
+<p><img src="15-clustering_files/figure-html/unnamed-chunk-18-1.png" width="480" /></p>
+<p>En esta gráfica no vemos un codo claro. Veamos primero la solución de dos grupos:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sol.cl &lt;-<span class="st"> </span>ajustes.km[[<span class="dv">2</span>]]
+<span class="kw">table</span>(sol.cl<span class="op">$</span>cluster)</code></pre></div>
+<pre><code>## 
+##    1    2 
+## 1116  992</code></pre>
+<p>Todos los grupos tienen tamaño razonable. No queremos tener grupos muy chicos, <strong>pues entonces es difícil caracterizarlos o entenderlos</strong>: si hay 15 personas en un grupo, cualquier resumen de este grupo estaría sujeto a variación muestral alta.</p>
+<p>Consideramos las variables originales:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cluster.df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">idno =</span> dat.<span class="dv">3</span><span class="op">$</span>idno, <span class="dt">cluster =</span> sol.cl<span class="op">$</span>cluster)
+dat.<span class="dv">4</span> &lt;-<span class="st"> </span>dat.<span class="dv">3</span> <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">gather</span>(variable, valor, ausencia_cuidar_enfermos<span class="op">:</span>trabajo_a_todos) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">left_join</span>(cluster.df)</code></pre></div>
+<pre><code>## Joining, by = &quot;idno&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">resumen.<span class="dv">1</span> &lt;-<span class="st"> </span>dat.<span class="dv">4</span> <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(cluster, variable) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">media =</span> <span class="kw">mean</span>(valor), <span class="dt">ee =</span> <span class="kw">sd</span>(valor)<span class="op">/</span><span class="kw">sqrt</span>(<span class="kw">length</span>(valor)))
+
+
+## adicionalmente, invertimos las 3 preguntas en escala de 1 a 5, pues 1 representa mayor acuerdo. 
+filtro &lt;-<span class="st"> </span>resumen.<span class="dv">1</span><span class="op">$</span>variable <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;beneficios_fam_trabajo&#39;</span>,<span class="st">&#39;beneficios_igualdad&#39;</span>,<span class="st">&#39;beneficios_pobreza&#39;</span>)
+resumen.<span class="dv">1</span><span class="op">$</span>media[filtro] &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">-</span>resumen.<span class="dv">1</span><span class="op">$</span>media[filtro]</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">resumen.<span class="dv">1</span><span class="op">$</span>variable &lt;-<span class="st"> </span><span class="kw">reorder</span>(resumen.<span class="dv">1</span><span class="op">$</span>variable, resumen.<span class="dv">1</span><span class="op">$</span>media, mean)
+<span class="kw">ggplot</span>(resumen.<span class="dv">1</span>, <span class="kw">aes</span>(<span class="dt">x=</span>variable, <span class="dt">y=</span>media, <span class="dt">ymin=</span>media<span class="op">-</span>ee, <span class="dt">ymax=</span>media<span class="op">+</span>ee,
+                      <span class="dt">colour=</span><span class="kw">factor</span>(cluster), <span class="dt">group=</span>cluster)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">coord_flip</span>() <span class="op">+</span><span class="st"> </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span><span class="kw">geom_linerange</span>()</code></pre></div>
+<p><img src="15-clustering_files/figure-html/unnamed-chunk-21-1.png" width="480" /></p>
+<p>Y notamos dos grupos claros que esperábamos ver desde el principio. Esta puede ser una solución aceptable (por ejemplo, si vamos a usar los grupos en otro modelo, como parte de diseños de estrategias de comunicación, etc.)</p>
+<p>Intentemos ahora con 5 grupos:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sol.cl &lt;-<span class="st"> </span>ajustes.km[[<span class="dv">5</span>]]
+<span class="kw">table</span>(sol.cl<span class="op">$</span>cluster)</code></pre></div>
+<pre><code>## 
+##   1   2   3   4   5 
+## 450 417 573 306 362</code></pre>
+<p>Todos los grupos tienen tamaño razonable. No queremos tener grupos muy chicos, <strong>pues entonces es difícil caracterizarlos o entenderlos</strong>: si hay 15 personas en un grupo, cualquier resumen de este grupo estaría sujeto a variación muestral alta.</p>
+<p>Consideramos las variables originales:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cluster.df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">idno =</span> dat.<span class="dv">3</span><span class="op">$</span>idno, <span class="dt">cluster =</span> sol.cl<span class="op">$</span>cluster)
+dat.<span class="dv">4</span> &lt;-<span class="st"> </span>dat.<span class="dv">3</span> <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">gather</span>(variable, valor, ausencia_cuidar_enfermos<span class="op">:</span>trabajo_a_todos) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">left_join</span>(cluster.df)</code></pre></div>
+<pre><code>## Joining, by = &quot;idno&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">resumen.<span class="dv">1</span> &lt;-<span class="st"> </span>dat.<span class="dv">4</span> <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(cluster, variable) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">media =</span> <span class="kw">mean</span>(valor), <span class="dt">ee =</span> <span class="kw">sd</span>(valor)<span class="op">/</span><span class="kw">sqrt</span>(<span class="kw">length</span>(valor)))
+
+
+## adicionalmente, invertimos las 3 preguntas en escala de 1 a 5, pues 1 representa mayor acuerdo. 
+filtro &lt;-<span class="st"> </span>resumen.<span class="dv">1</span><span class="op">$</span>variable <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;beneficios_fam_trabajo&#39;</span>,<span class="st">&#39;beneficios_igualdad&#39;</span>,<span class="st">&#39;beneficios_pobreza&#39;</span>)
+resumen.<span class="dv">1</span><span class="op">$</span>media[filtro] &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">-</span>resumen.<span class="dv">1</span><span class="op">$</span>media[filtro]</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">resumen.<span class="dv">1</span><span class="op">$</span>variable &lt;-<span class="st"> </span><span class="kw">reorder</span>(resumen.<span class="dv">1</span><span class="op">$</span>variable, resumen.<span class="dv">1</span><span class="op">$</span>media, mean)
+<span class="kw">ggplot</span>(resumen.<span class="dv">1</span>, <span class="kw">aes</span>(<span class="dt">x=</span>variable, <span class="dt">y=</span>media, <span class="dt">ymin=</span>media<span class="op">-</span>ee, <span class="dt">ymax=</span>media<span class="op">+</span>ee,
+                      <span class="dt">colour=</span><span class="kw">factor</span>(cluster), <span class="dt">group=</span>cluster)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">coord_flip</span>() <span class="op">+</span><span class="st"> </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span><span class="kw">geom_linerange</span>()</code></pre></div>
+<p><img src="15-clustering_files/figure-html/unnamed-chunk-24-1.png" width="480" /></p>
+<p>Y es especialmente útil perfilar los grupos, es decir, mostrar las diferencias en cada variable en lugar de los promedios simples:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">resumen.<span class="dv">2</span> &lt;-<span class="st"> </span>resumen.<span class="dv">1</span> <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(variable) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">perfil =</span> media <span class="op">-</span><span class="kw">mean</span>(media))
+
+<span class="kw">ggplot</span>(resumen.<span class="dv">2</span>, <span class="kw">aes</span>(<span class="dt">x=</span>variable, <span class="dt">y=</span>perfil, 
+                      <span class="dt">colour=</span><span class="kw">factor</span>(cluster), <span class="dt">group=</span>cluster)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">coord_flip</span>() <span class="op">+</span><span class="st"> </span><span class="kw">geom_line</span>() </code></pre></div>
+<p><img src="15-clustering_files/figure-html/unnamed-chunk-25-1.png" width="480" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(resumen.<span class="dv">2</span>, <span class="kw">aes</span>(<span class="dt">x=</span>variable, <span class="dt">y=</span>perfil, 
+                      <span class="dt">colour=</span><span class="kw">factor</span>(cluster), <span class="dt">group=</span>cluster)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">coord_flip</span>() <span class="op">+</span><span class="st"> </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span><span class="kw">facet_wrap</span>(<span class="op">~</span>cluster) <span class="op">+</span><span class="st"> </span><span class="kw">geom_hline</span>(<span class="dt">yintercept=</span><span class="dv">0</span>, <span class="dt">colour=</span><span class="st">&#39;gray&#39;</span>)</code></pre></div>
+<p><img src="15-clustering_files/figure-html/unnamed-chunk-25-2.png" width="480" /></p>
+<p>¿Cómo les llamarías a cada uno de estos grupos?</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tab &lt;-<span class="st"> </span><span class="kw">table</span>(ess4.gb<span class="op">$</span>stratval)
+<span class="kw">names</span>(tab[tab <span class="op">&gt;</span><span class="st"> </span><span class="dv">50</span>])</code></pre></div>
+<pre><code>##  [1] &quot; Devon and Cornwall&quot;                     
+##  [2] &quot; Avon and Wiltshire  &quot;                   
+##  [3] &quot; Gloucestershire and Gwent   &quot;           
+##  [4] &quot; Oxfordshire and Berkshire  &quot;            
+##  [5] &quot; Hampshire, W Sussex, Isle of Wight  &quot;   
+##  [6] &quot; Kent and E Sussex  &quot;                    
+##  [7] &quot; Rest of the Outer London Boroughs  &quot;    
+##  [8] &quot; Inner London Boroughs  &quot;                
+##  [9] &quot; Essex and Hertfordshire  &quot;              
+## [10] &quot; Suffolk and Norfolk  &quot;                  
+## [11] &quot; Bucks and Beds  &quot;                       
+## [12] &quot; Cambs and Northants  &quot;                  
+## [13] &quot; Warwickshire and Hereford &amp; Worcester  &quot;
+## [14] &quot; West Midlands metropolitan area  &quot;      
+## [15] &quot; Leicestershire and Lincolnshire  &quot;      
+## [16] &quot; Nottinghamshire and Derbyshire  &quot;       
+## [17] &quot; Merseyside  &quot;                           
+## [18] &quot; Greater Manchester  &quot;                   
+## [19] &quot; Lancashire  &quot;                           
+## [20] &quot; South Yorkshire  &quot;                      
+## [21] &quot; West Yorkshire  &quot;                       
+## [22] &quot; North Yorkshire and Humberside  &quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tab.<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="kw">round</span>(<span class="dv">100</span><span class="op">*</span><span class="kw">prop.table</span>(<span class="kw">table</span>(dat.na<span class="op">$</span>stratval, sol.cl<span class="op">$</span>cluster),<span class="dt">margin=</span><span class="dv">2</span>),<span class="dv">2</span>))
+tab.<span class="dv">2</span> &lt;-<span class="st"> </span>tab.<span class="dv">1</span> <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(Var1) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">perfil =</span> Freq<span class="op">/</span><span class="kw">mean</span>(Freq))
+tab.<span class="dv">3</span> &lt;-<span class="st"> </span>tab.<span class="dv">2</span> <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="op">-</span>Freq) <span class="op">%&gt;%</span><span class="kw">spread</span>(Var2, perfil) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">arrange</span>(<span class="st">`</span><span class="dt">5</span><span class="st">`</span>) <span class="op">%&gt;%</span><span class="st"> </span>data.frame
+tab.<span class="dv">3</span>[tab.<span class="dv">3</span><span class="op">$</span>Var1 <span class="op">%in%</span><span class="st"> </span><span class="kw">names</span>(tab[tab <span class="op">&gt;</span><span class="st"> </span><span class="dv">50</span>]),]</code></pre></div>
+<pre><code>##                                        Var1   X1   X2   X3   X4   X5
+## 2                              Lancashire   1.65 1.38 0.59 1.10 0.28
+## 4                          West Yorkshire   2.06 0.56 0.96 0.85 0.56
+## 5                              Merseyside   0.98 1.38 1.31 0.72 0.61
+## 7                      Greater Manchester   1.06 1.14 1.09 1.06 0.66
+## 9       Rest of the Outer London Boroughs   0.95 0.91 1.04 1.39 0.71
+## 11                         Bucks and Beds   1.61 0.43 0.87 1.33 0.75
+## 12             Gloucestershire and Gwent    0.95 0.91 1.41 0.93 0.79
+## 15        West Midlands metropolitan area   0.72 1.72 1.07 0.70 0.79
+## 17     Hampshire, W Sussex, Isle of Wight   0.84 0.96 0.87 1.44 0.88
+## 20                Essex and Hertfordshire   1.10 0.97 0.92 0.98 1.02
+## 21                     Avon and Wiltshire   0.59 1.14 1.24 0.97 1.06
+## 22         Nottinghamshire and Derbyshire   1.04 0.73 1.25 0.90 1.07
+## 23                    Cambs and Northants   0.52 1.04 1.46 0.87 1.11
+## 25                    Suffolk and Norfolk   0.80 1.13 0.82 1.06 1.19
+## 26              Oxfordshire and Berkshire   0.53 0.76 1.73 0.78 1.21
+## 27         North Yorkshire and Humberside   0.85 1.37 0.72 0.83 1.23
+## 29                        South Yorkshire   0.65 1.19 1.09 0.81 1.26
+## 30                  Inner London Boroughs   1.34 0.60 0.87 0.93 1.27
+## 32  Warwickshire and Hereford &amp; Worcester   0.63 0.85 1.11 1.04 1.37
+## 33                       Devon and Cornwall 0.97 1.12 0.97 0.57 1.37
+## 34                      Kent and E Sussex   0.73 0.90 0.94 1.00 1.43
+## 36        Leicestershire and Lincolnshire   0.49 0.79 0.96 1.08 1.67</code></pre>
+</div>
+</div>
+<div id="cuando-usar-o-no-usar-k-medias-estructura-esferica" class="section level3">
+<h3><span class="header-section-number">15.4.2</span> ¿Cuándo usar o no usar k-medias? Estructura “esférica”</h3>
+<p>En algunos casos se dice que k-medias no tiene supuestos, otros dicen que tienen supuestos de clusters esféricos, etc.</p>
+<p>k-medias es un algoritmo, no es un modelo. Así que en realidad no tiene supuestos en el sentido típico. <strong>Lo importante es entender la cantidad que estamos minimizando</strong>. Si lo que realmente queremos hacer es minimizar esta cantidad, entonces k-medias nos devuelve una solución razonable.</p>
+<p>Pero hay veces que no queremos minimizar esta cantidad. Un ejemplo clásico es el siguiente</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">theta &lt;-<span class="st"> </span><span class="kw">runif</span>(<span class="dv">200</span>,<span class="dv">0</span>,<span class="dv">2</span><span class="op">*</span>pi)
+r &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="kw">runif</span>(<span class="dv">100</span>,<span class="dv">0</span>,<span class="fl">0.3</span>), <span class="kw">runif</span>(<span class="dv">100</span>,<span class="fl">0.8</span>,<span class="dv">1</span>))
+df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">x=</span>r<span class="op">*</span><span class="kw">cos</span>(theta), <span class="dt">y=</span>r<span class="op">*</span><span class="kw">sin</span>(theta))
+df<span class="op">$</span>grupo &lt;-<span class="st"> </span><span class="kw">kmeans</span>(df, <span class="dt">centers=</span><span class="dv">2</span>, <span class="dt">nstart=</span><span class="dv">20</span>)<span class="op">$</span>cluster
+<span class="kw">ggplot</span>(df, <span class="kw">aes</span>(<span class="dt">x=</span>x, <span class="dt">y=</span>y, <span class="dt">colour=</span><span class="kw">factor</span>(grupo))) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>()</code></pre></div>
+<p><img src="15-clustering_files/figure-html/unnamed-chunk-27-1.png" width="432" /></p>
+<p>¿Por qué falla k-medias? Porque la estructura de grupos que estábamos buscando <strong>no</strong> es una donde los clusters están definidos por distancia baja a su centro. Aquí realmente queremos otra cosa más complicada, como clusters definidos por cantidades invariantes (en este caso, distancia al origen)</p>
+<p>Sin embargo, si lo que nos interesa es distancia baja a un centroide, entonces está solución es razonable para k=2</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">theta &lt;-<span class="st"> </span><span class="kw">runif</span>(<span class="dv">200</span>,<span class="dv">0</span>,<span class="dv">2</span><span class="op">*</span>pi)
+r &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="kw">runif</span>(<span class="dv">100</span>,<span class="dv">0</span>,<span class="fl">0.3</span>), <span class="kw">runif</span>(<span class="dv">100</span>,<span class="fl">0.8</span>,<span class="dv">1</span>))
+df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">x=</span>r<span class="op">*</span><span class="kw">cos</span>(theta), <span class="dt">y=</span>r<span class="op">*</span><span class="kw">sin</span>(theta))
+df<span class="op">$</span>grupo &lt;-<span class="st"> </span><span class="kw">kmeans</span>(df, <span class="dt">centers=</span><span class="dv">5</span>, <span class="dt">nstart=</span><span class="dv">20</span>)<span class="op">$</span>cluster
+<span class="kw">ggplot</span>(df, <span class="kw">aes</span>(<span class="dt">x=</span>x, <span class="dt">y=</span>y, <span class="dt">colour=</span><span class="kw">factor</span>(grupo))) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>()</code></pre></div>
+<p><img src="15-clustering_files/figure-html/unnamed-chunk-28-1.png" width="432" /></p>
+<p>Como ejemplo, pensemos que el espacio es un espacio de “gustos por películas”. Aún cuando podría ser muy interesante descubrir esta estructura concéntrica, el grupo exterior contiene personas con gustos diametralmente opuestos!</p>
+</div>
+<div id="cuando-usar-o-no-usar-k-medias-existencia-o-no-de-grupos-naturales" class="section level3">
+<h3><span class="header-section-number">15.4.3</span> ¿Cuándo usar o no usar k-medias? Existencia o no de grupos “naturales”</h3>
+<p>Otro punto que se discute usualmente es si hay o no grupos naturales, que se refiere a grupos bien compactos y diferenciados entre sí, como en el ejemplo inicial</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(<span class="kw">filter</span>(iris, Species <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;setosa&#39;</span>,<span class="st">&#39;versicolor&#39;</span>)), <span class="kw">aes</span>(<span class="dt">x=</span>Sepal.Length, <span class="dt">y=</span>Petal.Width)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>()</code></pre></div>
+<p><img src="15-clustering_files/figure-html/unnamed-chunk-29-1.png" width="432" /></p>
+<p>Pero es común, por ejemplo, encontrar cosas como siguen:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">90902</span>)
+df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">x =</span> <span class="kw">rnorm</span>(<span class="dv">500</span>,<span class="dv">0</span>,<span class="dv">1</span>), <span class="dt">y =</span> <span class="kw">rnorm</span>(<span class="dv">500</span>,<span class="dv">0</span>,<span class="dv">1</span>))
+df<span class="op">$</span>grupo &lt;-<span class="st"> </span><span class="kw">kmeans</span>(df, <span class="dt">centers=</span><span class="dv">5</span>, <span class="dt">nstart=</span><span class="dv">20</span>)<span class="op">$</span>cluster
+<span class="kw">ggplot</span>(df, <span class="kw">aes</span>(<span class="dt">x=</span>x, <span class="dt">y=</span>y, <span class="dt">colour=</span><span class="kw">factor</span>(grupo))) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>()</code></pre></div>
+<p><img src="15-clustering_files/figure-html/unnamed-chunk-30-1.png" width="432" /></p>
+<p>Nótese que k-means logró encontrar una buena solución, y esta solución puede ser muy útil para nuestros fines (agrupa puntos “similares”). Sin embargo, en esta situación debemos reconocer que los tamaños, las posiciones, y el número de grupos es fundamentalmente arbitrario, y una “buena” solución depende de nuestros fines.</p>
+<p>Si corremos otra vez el algoritmo, vemos que los grupos encontrados son similares:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df<span class="op">$</span>grupo &lt;-<span class="st"> </span><span class="kw">kmeans</span>(df, <span class="dt">centers=</span><span class="dv">5</span>, <span class="dt">nstart=</span><span class="dv">20</span>)<span class="op">$</span>cluster
+<span class="kw">ggplot</span>(df, <span class="kw">aes</span>(<span class="dt">x=</span>x, <span class="dt">y=</span>y, <span class="dt">colour=</span><span class="kw">factor</span>(grupo))) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>()</code></pre></div>
+<p><img src="15-clustering_files/figure-html/unnamed-chunk-31-1.png" width="432" /></p>
+<p>Sin embargo, si tomamos otra muestra distinta</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">909021</span>)
+df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">x =</span> <span class="kw">rnorm</span>(<span class="dv">500</span>,<span class="dv">0</span>,<span class="dv">1</span>), <span class="dt">y =</span> <span class="kw">rnorm</span>(<span class="dv">500</span>,<span class="dv">0</span>,<span class="dv">1</span>))
+df<span class="op">$</span>grupo &lt;-<span class="st"> </span><span class="kw">kmeans</span>(df, <span class="dt">centers=</span><span class="dv">5</span>, <span class="dt">nstart=</span><span class="dv">20</span>)<span class="op">$</span>cluster
+<span class="kw">ggplot</span>(df, <span class="kw">aes</span>(<span class="dt">x=</span>x, <span class="dt">y=</span>y, <span class="dt">colour=</span><span class="kw">factor</span>(grupo))) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>()</code></pre></div>
+<p><img src="15-clustering_files/figure-html/unnamed-chunk-32-1.png" width="432" /></p>
+<p>La solución es bastante diferente. Esta diferencia no se debe al comienzo aleatorio del algoritmo. Se debe más bien a que los grupos se están definiendo por variación muestral, y pequeñas diferencias en las muestras.</p>
+<p>**En esta situación, debemos entender lo arbitrario de la solución, y considerar si una solución así es útil para nuestros fines. Esto no le quita necesariamente utilidad a la segmentación resultante, pero hay que recordar que los grupos que encontramos son en ciertos aspectos arbitrarios.</p>
+</div>
+<div id="ejemplo" class="section level3">
+<h3><span class="header-section-number">15.4.4</span> Ejemplo</h3>
+<p>También en esta situación puede ser que el criterio para segmentar no es uno apropiado para un algoritmo de segmentación. Por ejemplo, supongamos que un fabricante de zapatos nos pide segmentar a sus clientes en términos de su estatura y su tamaño de pie. Observamos:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">909021</span>)
+x &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">200</span>, <span class="dv">160</span>, <span class="dv">15</span> )
+df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">estatura=</span>x, <span class="dt">pie=</span> <span class="dv">6</span> <span class="op">+</span><span class="st"> </span><span class="dv">2</span><span class="op">*</span>(x<span class="op">-</span><span class="dv">160</span>)<span class="op">/</span><span class="dv">30</span> <span class="op">+</span><span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">200</span>,<span class="dv">0</span>,<span class="fl">0.5</span>))
+<span class="kw">ggplot</span>(df, <span class="kw">aes</span>(<span class="dt">x=</span>estatura, <span class="dt">y=</span>pie)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>()</code></pre></div>
+<p><img src="15-clustering_files/figure-html/unnamed-chunk-33-1.png" width="480" /></p>
+<p>¿Dónde cortamos los grupos? Aunque cualquier algoritmo no supervisado nos va a dar una respuesta, muy posiblemente sería buena idea encontrar puntos de cortes definidos de otra manera (por ejemplo algo tan simple como cuantiles!). Algo similar ocurre en la segmentación por actitudes/ideología: no hay “buenos” y “malos” o “saludables” y “descuidados”, sino continuos a lo largo de estas actitudes.</p>
+</div>
+<div id="caracterizacion-y-descripcion-de-grupos" class="section level3">
+<h3><span class="header-section-number">15.4.5</span> Caracterización y descripción de grupos</h3>
+</div>
+<div id="dificultades-en-segmentacionclustering." class="section level3">
+<h3><span class="header-section-number">15.4.6</span> Dificultades en segmentación/clustering.</h3>
+<p>Aunque la idea conceptual de clustering es más o menos clara, en la práctica es una tarea difícil. Vamos a empezar apuntando dificultades que se comunmente se encuentran:</p>
+<ul>
+<li>No existen grupos naturales</li>
+<li>En dimensiones altas (digamos &gt; 30) muchas veces todos los puntos están a distancias similares entre ellos, especialmente cuando hay variables que aportan la separación entre grupos.</li>
+<li>Dificultades en la selección de medida de distancia (o disimilitud).</li>
+</ul>
+<div id="ejemplo-grupos-bien-definidos-en-dimension-baja" class="section level4 unnumbered">
+<h4>Ejemplo: grupos bien definidos en dimensión baja</h4>
+<p>Generalmente, cuando empezamos a discutir clustering consideramos unos datos como sigue:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(<span class="kw">filter</span>(iris, Species <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;setosa&#39;</span>,<span class="st">&#39;versicolor&#39;</span>)), <span class="kw">aes</span>(<span class="dt">x=</span>Sepal.Length, <span class="dt">y=</span>Petal.Width)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>()</code></pre></div>
+<p><img src="15-clustering_files/figure-html/unnamed-chunk-34-1.png" width="480" /></p>
+<p>Donde es más o menos claro por donde debería ir la segmentación, por ejemplo:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(<span class="kw">filter</span>(iris, Species <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&#39;setosa&#39;</span>,<span class="st">&#39;versicolor&#39;</span>)), <span class="kw">aes</span>(<span class="dt">x=</span>Sepal.Length, <span class="dt">y=</span>Petal.Width, <span class="dt">colour=</span>Species)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>()</code></pre></div>
+<p><img src="15-clustering_files/figure-html/unnamed-chunk-35-1.png" width="480" /></p>
+<p>En este caso la medida de distancia es la euclideana, las dos variables están dadas en centímetros, y tienen escalas similares.</p>
+</div>
+<div id="ejemplo-grupos-no-tan-bien-definidos" class="section level4 unnumbered">
+<h4>Ejemplo: grupos no tan bien definidos</h4>
+<p>Sin embargo, podríamos encontrarnos</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(airquality, <span class="kw">aes</span>(<span class="dt">x=</span>Ozone, <span class="dt">y=</span>Wind)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>()</code></pre></div>
+<pre><code>## Warning: Removed 37 rows containing missing values (geom_point).</code></pre>
+<p><img src="15-clustering_files/figure-html/unnamed-chunk-36-1.png" width="480" /></p>
+<p>donde no hay clusters bien definidos. Aquí veremos que el tipo de algoritmo, decisiones de configuración y variación muestral pueden afectar los resultados considerablemente.</p>
+<p>Adicionalmente, no está claro cómo deberíamos comparar las distintas escalas de datos. En este caso, podríamos normalizar, pero el problema de que no parece haber clusters naturales persiste:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">airquality_s &lt;-<span class="st"> </span>airquality <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">is.na</span>(Ozone), <span class="op">!</span><span class="kw">is.na</span>(Wind)) <span class="op">%&gt;%</span>
+<span class="st">                </span><span class="kw">mutate</span>(<span class="dt">Ozone_s =</span> (Ozone <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(Ozone))<span class="op">/</span><span class="kw">sd</span>(Ozone),
+                                      <span class="dt">Wind_s  =</span> (Wind <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(Wind))<span class="op">/</span><span class="kw">sd</span>(Wind))
+<span class="kw">ggplot</span>(airquality_s, <span class="kw">aes</span>(<span class="dt">x=</span>Ozone_s, <span class="dt">y=</span>Wind_s)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>()</code></pre></div>
+<p><img src="15-clustering_files/figure-html/unnamed-chunk-37-1.png" width="480" /></p>
+</div>
+<div id="ejemplo-grupos-en-dimension-alta" class="section level4 unnumbered">
+<h4>Ejemplo: grupos en dimensión alta</h4>
+<p>En dimensión más alta (50 variables, 10 casos) observamos cosas como la siguiente:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mat_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">rbind</span>(<span class="kw">matrix</span>(<span class="kw">rnorm</span>(<span class="dv">10</span><span class="op">*</span><span class="dv">50</span>), <span class="dt">ncol=</span><span class="dv">50</span>))
+mat_<span class="dv">1</span>[<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>,<span class="dv">1</span>] &lt;-<span class="st"> </span>mat_<span class="dv">1</span>[<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>,<span class="dv">1</span>] <span class="op">+</span><span class="st"> </span><span class="dv">10</span>
+<span class="kw">dist</span>(mat_<span class="dv">1</span>, <span class="dt">method =</span> <span class="st">&#39;euclidean&#39;</span>)</code></pre></div>
+<pre><code>##       1    2    3    4    5    6    7    8    9
+## 2   9.9                                        
+## 3   9.3  9.2                                   
+## 4   9.9 10.0  9.4                              
+## 5   9.3 10.6 10.8  9.1                         
+## 6  10.7 11.7 10.5  9.9 10.4                    
+## 7   8.2 11.8 10.1 11.2 11.1 12.4               
+## 8   9.6 10.0 10.0  9.8  9.6 10.0 11.3          
+## 9   9.9  9.5  9.3  9.9  9.4 10.6 11.1  9.4     
+## 10  8.2 10.1  9.9  9.9 10.0  9.9 10.3 10.8  9.4</code></pre>
+<p>donde todos los puntos están a más o menos la misma distancia, aún cuando existe una estructura de grupos natural.</p>
+<p>En dimensión baja, la situación se ve muy diferente:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mat_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">rbind</span>(<span class="kw">matrix</span>(<span class="kw">rnorm</span>(<span class="dv">10</span><span class="op">*</span><span class="dv">2</span>), <span class="dt">ncol=</span><span class="dv">2</span>))
+mat_<span class="dv">1</span>[<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>,<span class="dv">1</span>] &lt;-<span class="st"> </span>mat_<span class="dv">1</span>[<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>,<span class="dv">1</span>] <span class="op">+</span><span class="st"> </span><span class="dv">10</span>
+<span class="kw">dist</span>(mat_<span class="dv">1</span>, <span class="dt">method =</span> <span class="st">&#39;euclidean&#39;</span>)</code></pre></div>
+<pre><code>##        1     2     3     4     5     6     7     8     9
+## 2   1.43                                                
+## 3   2.42  3.76                                          
+## 4   1.05  1.66  2.31                                    
+## 5   2.19  1.36  4.59  2.86                              
+## 6   9.00  9.12 10.28 10.04  7.88                        
+## 7  11.85 11.95 13.06 12.89 10.69  2.85                  
+## 8   8.23  8.26  9.63  9.26  6.99  0.95  3.69            
+## 9  10.72 10.72 12.09 11.75  9.44  1.83  1.38  2.50      
+## 10 10.86 10.65 12.49 11.85  9.30  2.82  2.70  3.00  1.63</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(<span class="kw">data.frame</span>(mat_<span class="dv">1</span>), <span class="kw">aes</span>(<span class="dt">x=</span>X1, <span class="dt">y=</span>X2)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>()</code></pre></div>
+<p><img src="15-clustering_files/figure-html/unnamed-chunk-39-1.png" width="480" /></p>
+<p>Y cualquier técnica razonable que usemos lograría encontrar estos grupos.</p>
+</div>
+<div id="ejemplo-dificultades-en-la-seleccion-de-metrica" class="section level4 unnumbered">
+<h4>Ejemplo: dificultades en la selección de métrica</h4>
+<p>Muchas veces no hay una métrica natural para el problema. En este caso, muchas veces escogemos distancia euclideana (con variables estandarizadas o no, dependiendo de sus escalas).</p>
+<ul>
+<li><p>La inclusión de variables categóricas plantea distintas alternativas que dan resultados distintos.</p></li>
+<li><p>En dimensión alta, incluso con variables numéricas, no siempre es claro que peso debería tener cada variable.</p></li>
+</ul>
+<hr />
+
+<div class="comentario">
+<p>Los métodos básicos de clustering generalmente producen una solución bien definida <strong>en problemas dimensión baja con clusters razonablemente bien definidos, donde hay una métrica de distancia natural</strong>. En otros casos, como:</p>
+<ul>
+<li>Dimensión alta con muchas variables ruidosas o que no aportan en la definición de los clusters.</li>
+<li>Clusters no bien definidos.</li>
+<li>Dificultad en escoger una métrica única apropiada para el problema.</li>
+</ul>
+El resultado puede depender mucho del algoritmo, el criterio del analista, y la muestra de entrenamiento.
+</div>
+
+
+<div id="refs" class="references">
+<div>
+<p>Bishop, Christopher M. 2006. <em>Pattern Recognition and Machine Learning (Information Science and Statistics)</em>. Secaucus, NJ, USA: Springer-Verlag New York, Inc.</p>
+</div>
+<div>
+<p>Goodfellow, Ian, Yoshua Bengio, and Aaron Courville. 2016. <em>Deep Learning</em>. MIT Press.</p>
+</div>
+<div>
+<p>Hastie, Trevor, Robert Tibshirani, and Jerome Friedman. 2017. <em>The Elements of Statistical Learning</em>. Springer Series in Statistics. Springer New York Inc. <a href="http://web.stanford.edu/~hastie/ElemStatLearn/" class="uri">http://web.stanford.edu/~hastie/ElemStatLearn/</a>.</p>
+</div>
+<div>
+<p>James, Gareth, Daniela Witten, Trevor Hastie, and Robert Tibshirani. 2014. <em>An Introduction to Statistical Learning: With Applications in R</em>. Springer Publishing Company, Incorporated. <a href="http://www-bcf.usc.edu/~gareth/ISL/" class="uri">http://www-bcf.usc.edu/~gareth/ISL/</a>.</p>
+</div>
+<div>
+<p>Ng, Andrew. 2017. “Machine Learning.” <a href="https://www.coursera.org/learn/machine-learning" class="uri">https://www.coursera.org/learn/machine-learning</a>.</p>
+</div>
+<div>
+<p>Srivastava, Nitish, Geoffrey Hinton, Alex Krizhevsky, Ilya Sutskever, and Ruslan Salakhutdinov. 2014. “Dropout: A Simple Way to Prevent Neural Networks from Overfitting.” <em>J. Mach. Learn. Res.</em> 15 (1). JMLR.org: 1929–58. <a href="http://dl.acm.org/citation.cfm?id=2627435.2670313" class="uri">http://dl.acm.org/citation.cfm?id=2627435.2670313</a>.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="reduccion-de-dimensionalidad.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"google": false,
+"weibo": false,
+"instapper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/felipegonzalez/aprendizaje-maquina-2017/edit/master/15-clustering.Rmd",
+"text": "Edit"
+},
+"download": ["aprendizaje-maquina.pdf", "aprendizaje-maquina.epub"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "";
+    if (src === "" || src === "true") src = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:" && /^https?:/.test(src))
+      src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
