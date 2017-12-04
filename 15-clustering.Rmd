@@ -55,7 +55,8 @@ ggplot(quakes_1, aes(x=long, y=lat)) + geom_point()
 ¿Podemos separar en grupos estos datos? Podemos pensar en varias maneras
 de hacer esto. Un enfoque simple que nos puede dar una 
 agrupación interesante es pensar
-en agrupar de manera que obtengamos grupos relativamente **compactos** 
+en agrupar de manera que obtengamos grupos relativamente **compactos** o
+concentrados alrededor de un valor
 (en estos datos, ¿qué otras cosas se te ocurren? ¿qué otros patrones
 interesantes sería interesante agrupar?).
 
@@ -127,7 +128,7 @@ El problema que queremos resolver es entonces
 (\#eq:kmedias-original)
 \end{equation}
 
-Nótese que grupos más grandes contribuyen más sumandos al objetivo. Este problema es demasiado grande para resolver por fuerza bruta (por ejemplo,
+Nótese que cada caso $x_k$ contribuye un sumando a la función objetivo. Este problema es demasiado grande para resolver por fuerza bruta (por ejemplo,
 enlistando todas las posibles agrupaciones). 
 
 Podemos desarrollar una heurística considerando primero del problema ampliado
@@ -144,10 +145,6 @@ que para toda $k$, las distancias al cuadrado son mínimas al centroide de los d
 $$\sum_{i \in C_k} ||x_i - \bar{x}_k||^2 \leq \sum_{i \in C_k} ||x_i - m_k||^2 $$
 por lo que $C_1^*,C_2^*,\ldots,C_K^*$ también es solución de \@ref(eq:kmedias-original). 
 
-
-minimizar $\min_{m_1,\ldots, m_K} \sum_{k=1}^K \sum_{i\in C_k^*}||x_i-m_k||^2$
-poniendo $m_k=\bar{x}_k$ (el valor promedio minimiza la distancia cuadrada
-de los puntos del grupo).
 
 Ahora desarrollamos la heurística de k-medias. Comenzando con el problema
 ampliado, 
@@ -184,6 +181,7 @@ Sea $k$ el número de grupos que buscamos. Escogemos $k$ puntos en los
 datos de entrenamiento al azar.
 
 En el paso $s=1,2,\ldots$:
+  
 1. Dadas los centros $m_k$  (que pensamos fijas),
 encontramos una nueva asignación $C_k$ a clusters que minimice
 $$ 2\sum_{k=1}^K \sum_{i\in C_k} ||x_i - m_k||^2,$$
@@ -215,7 +213,7 @@ ggplot(quakes_1, aes(x=long, y=lat)) + geom_point()
 
 Seleccionamos muestra de datos al azar (centroides)
 ```{r, fig.width=4.5, fig.asp=0.7}
-set.seed(25112)
+set.seed(2512)
 K <- 5
 centros <- sample_n(quakes_1, K) %>% mutate(k = 1:K) %>% select(-id)
 centros
@@ -384,7 +382,7 @@ Las soluciones son
 ```{r}
 grupos_df <- lapply(ajustes_km[1:8], function(aj){ 
   data_frame(num = max(aj$cluster), cluster = aj$cluster,
-             id= 1:length(aj$cluster))}) %>% rbind_all
+             id= 1:length(aj$cluster))}) %>% bind_rows()
 grupo_df_2 <- left_join(grupos_df, quakes_1)
 ggplot(grupo_df_2, aes(x=lat, y=long, colour=factor(cluster))) + facet_wrap(~num) +
   geom_point()
@@ -409,7 +407,7 @@ aplicaciones científicas, por ejemplo clasificar objetos como
 estrellas, galaxias, etc.
 
 - Existen algunas aplicaciones de clustering donde buscamos muchos grupos, por
-ejemplo, para agrupar objetos (noticias, tweets, por ejemplo) en grupos
+ejemplo, para agrupar objetos (noticias, tweets, por ejemplo) en clusters
 muy compactos (de alta similitud), y así detectar duplicados o relaciones
 entre fuentes de noticias, usuarios de twitter, etc. Hay más opciones además
 de algoritmos clásicos como k-means para este tipo de problemas
@@ -448,11 +446,13 @@ dat <- ess4.gb %>% select(idno, gvjbevn:sbcwkfm)
 nombres <- data_frame(var = c("gvjbevn", "gvhlthc", "gvslvol", "gvslvue", "gvcldcr", "gvpdlwk", 
 "sbprvpv", "sbeqsoc", "sbcwkfm"),
 nombre = c('trabajo_a_todos','cuidados_salud_enfermos','garantizar_nivel_mayores','garantizar_nivel_desempleados','ayuda_padres_trabajadores','ausencia_cuidar_enfermos','beneficios_pobreza','beneficios_igualdad','beneficios_fam_trabajo'))
+head(dat)
 ```
 
 En este caso particular tenemos unas variables que están en escala 1-5 y otras 1-10. Esta variabilidad
 distinta sólo es escala de las respuestas, así que normalizamos dividiendo cada pregunta por
-su máximo (dividir entre 10 las preguntas en escala de 1 a 10 y entre 5 las de 1 a 5):
+su máximo (dividir entre 10 las preguntas en escala de 1 a 10 y entre 5 las de 1 a 5.
+ Podríamos también estandarizar):
 
 
 
@@ -586,7 +586,26 @@ tab.3[tab.3$Var1 %in% names(tab[tab > 50]),]
 
 
 
-### ¿Cuándo usar o no usar k-medias? Estructura "esférica"
+
+
+
+## Dificultades en segmentación/clustering.
+
+Aunque la idea conceptual de clustering es más o menos clara,
+en la práctica es una tarea difícil.
+Vamos a empezar apuntando dificultades que se comunmente se encuentran:
+
+- La estructura de grupos naturales que buscamos no es necesariamente de 
+clusters compactos.
+- No existen grupos naturales
+- En dimensiones altas (digamos > 30) muchas veces todos los puntos
+están a distancias similares entre ellos, especialmente cuando hay variables 
+que aportan la separación entre grupos.
+- Dificultades en la selección de medida de distancia (o disimilitud).
+
+
+
+### Estructuras no compactas
 
 En algunos casos se dice que k-medias no tiene supuestos, otros dicen que tienen supuestos
 de clusters esféricos, etc.
@@ -625,11 +644,15 @@ ggplot(df, aes(x=x, y=y, colour=factor(grupo))) + geom_point()
 
 Como ejemplo, pensemos que el espacio es un espacio de "gustos por películas". Aún cuando
 podría ser muy interesante descubrir esta estructura concéntrica, el grupo exterior contiene
-personas con gustos diametralmente opuestos!
+personas con gustos diametralmente opuestos! El problema de hacer dos clusters,
+uno central y otro concéntrico puede ser un poco artificial.
 
 
 
-### ¿Cuándo usar o no usar k-medias? Existencia o no de grupos "naturales"
+
+
+
+### Existencia o no de grupos "naturales"
 
 Otro punto que se discute usualmente es si hay o no grupos naturales, que se
 refiere a grupos bien compactos y diferenciados entre sí, como en el ejemplo inicial
@@ -680,7 +703,7 @@ son en ciertos aspectos arbitrarios.
 
 
 
-### Ejemplo {#ejemplo}
+#### Ejemplo {-}
 También en esta situación puede ser que el criterio para segmentar no es
 uno apropiado para un algoritmo de segmentación.
 Por ejemplo, supongamos que un fabricante de zapatos nos pide segmentar a sus
@@ -701,66 +724,13 @@ ocurre en la segmentación por actitudes/ideología: no hay "buenos" y "malos" o
 
 
 
-### Caracterización y descripción de grupos
 
 
 
 
-### Dificultades en segmentación/clustering.
-
-Aunque la idea conceptual de clustering es más o menos clara,
-en la práctica es una tarea difícil.
-Vamos a empezar apuntando dificultades que se comunmente se encuentran:
-
-- No existen grupos naturales
-- En dimensiones altas (digamos > 30) muchas veces todos los puntos
-están a distancias similares entre ellos, especialmente cuando hay variables 
-que aportan la separación entre grupos.
-- Dificultades en la selección de medida de distancia (o disimilitud).
 
 
-
-#### Ejemplo: grupos bien definidos en dimensión baja {-}
-
-Generalmente, cuando empezamos a discutir clustering consideramos unos datos como sigue:
-
-```{r, fig.width=5, fig.asp=0.7}
-ggplot(filter(iris, Species %in% c('setosa','versicolor')), aes(x=Sepal.Length, y=Petal.Width)) + geom_point()
-```
-
-Donde es más o menos claro por donde debería ir la segmentación, por ejemplo:
-
-```{r}
-ggplot(filter(iris, Species %in% c('setosa','versicolor')), aes(x=Sepal.Length, y=Petal.Width, colour=Species)) + geom_point()
-```
-
-En este caso la medida de distancia es la euclideana, las dos variables
-están dadas en centímetros, y tienen escalas similares. 
-
-#### Ejemplo: grupos no tan bien definidos {-}
-
-Sin embargo, podríamos encontrarnos 
-
-```{r}
-ggplot(airquality, aes(x=Ozone, y=Wind)) + geom_point()
-```
-
-donde no hay clusters bien definidos. Aquí veremos que el tipo de algoritmo, 
-decisiones de configuración y variación muestral pueden afectar los resultados
-considerablemente.
-
-Adicionalmente, no está claro cómo deberíamos comparar las distintas escalas de
-datos. En este caso, podríamos normalizar, pero el problema de que no parece 
-haber clusters naturales persiste:
-
-```{r}
-airquality_s <- airquality %>% filter(!is.na(Ozone), !is.na(Wind)) %>%
-                mutate(Ozone_s = (Ozone - mean(Ozone))/sd(Ozone),
-                                      Wind_s  = (Wind - mean(Wind))/sd(Wind))
-ggplot(airquality_s, aes(x=Ozone_s, y=Wind_s)) + geom_point()
-```
-
-#### Ejemplo: grupos en dimensión alta {-}
+### Grupos en dimensión alta {-}
 
 
 En dimensión más alta (50 variables, 10 casos) observamos cosas como la siguiente:
@@ -781,9 +751,12 @@ dist(mat_1, method = 'euclidean')
 ggplot(data.frame(mat_1), aes(x=X1, y=X2)) + geom_point()
 ```
 
-Y cualquier técnica razonable que usemos lograría encontrar estos grupos.
+Y cualquier técnica razonable que usemos lograría encontrar estos grupos. 
 
-#### Ejemplo: dificultades en la selección de métrica {-}
+- Muchas veces pueden encontrarse mejores soluciones aplicando alguna
+técnica de reducción de dimensionalidad antes de hacer clustering.
+
+### Dificultades en la selección de métrica {-}
 
 Muchas veces no hay una métrica natural para el problema. En este caso,
 muchas veces escogemos distancia euclideana (con variables estandarizadas o no,
@@ -809,6 +782,7 @@ En otros casos, como:
   
 - Dimensión alta con muchas variables ruidosas o que no aportan en la definición
 de los clusters.
+- Estructuras relativamente dispersas que quisiéramos agrupar
 - Clusters no bien definidos.
 - Dificultad en escoger una métrica única apropiada para el problema.
 
