@@ -25,7 +25,7 @@
 <meta name="author" content="Felipe González">
 
 
-<meta name="date" content="2017-12-03">
+<meta name="date" content="2017-12-04">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -393,11 +393,12 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="15.4" data-path="analisis-de-conglomerados-clustering.html"><a href="analisis-de-conglomerados-clustering.html#seleccion-de-numero-de-clusters."><i class="fa fa-check"></i><b>15.4</b> Selección de número de clusters.</a><ul>
 <li class="chapter" data-level="" data-path="analisis-de-conglomerados-clustering.html"><a href="analisis-de-conglomerados-clustering.html#variacion-dentro-de-clusters-para-distintas-soluciones"><i class="fa fa-check"></i>Variación dentro de clusters para distintas soluciones</a></li>
 <li class="chapter" data-level="15.4.1" data-path="analisis-de-conglomerados-clustering.html"><a href="analisis-de-conglomerados-clustering.html#criterios-especificos"><i class="fa fa-check"></i><b>15.4.1</b> Criterios específicos</a></li>
-<li class="chapter" data-level="15.4.2" data-path="analisis-de-conglomerados-clustering.html"><a href="analisis-de-conglomerados-clustering.html#cuando-usar-o-no-usar-k-medias-estructura-esferica"><i class="fa fa-check"></i><b>15.4.2</b> ¿Cuándo usar o no usar k-medias? Estructura “esférica”</a></li>
-<li class="chapter" data-level="15.4.3" data-path="analisis-de-conglomerados-clustering.html"><a href="analisis-de-conglomerados-clustering.html#cuando-usar-o-no-usar-k-medias-existencia-o-no-de-grupos-naturales"><i class="fa fa-check"></i><b>15.4.3</b> ¿Cuándo usar o no usar k-medias? Existencia o no de grupos “naturales”</a></li>
-<li class="chapter" data-level="15.4.4" data-path="introduccion.html"><a href="introduccion.html#ejemplo"><i class="fa fa-check"></i><b>15.4.4</b> Ejemplo</a></li>
-<li class="chapter" data-level="15.4.5" data-path="analisis-de-conglomerados-clustering.html"><a href="analisis-de-conglomerados-clustering.html#caracterizacion-y-descripcion-de-grupos"><i class="fa fa-check"></i><b>15.4.5</b> Caracterización y descripción de grupos</a></li>
-<li class="chapter" data-level="15.4.6" data-path="analisis-de-conglomerados-clustering.html"><a href="analisis-de-conglomerados-clustering.html#dificultades-en-segmentacionclustering."><i class="fa fa-check"></i><b>15.4.6</b> Dificultades en segmentación/clustering.</a></li>
+</ul></li>
+<li class="chapter" data-level="15.5" data-path="analisis-de-conglomerados-clustering.html"><a href="analisis-de-conglomerados-clustering.html#dificultades-en-segmentacionclustering."><i class="fa fa-check"></i><b>15.5</b> Dificultades en segmentación/clustering.</a><ul>
+<li class="chapter" data-level="15.5.1" data-path="analisis-de-conglomerados-clustering.html"><a href="analisis-de-conglomerados-clustering.html#estructuras-no-compactas"><i class="fa fa-check"></i><b>15.5.1</b> Estructuras no compactas</a></li>
+<li class="chapter" data-level="15.5.2" data-path="analisis-de-conglomerados-clustering.html"><a href="analisis-de-conglomerados-clustering.html#existencia-o-no-de-grupos-naturales"><i class="fa fa-check"></i><b>15.5.2</b> Existencia o no de grupos “naturales”</a></li>
+<li class="chapter" data-level="" data-path="analisis-de-conglomerados-clustering.html"><a href="analisis-de-conglomerados-clustering.html#grupos-en-dimension-alta"><i class="fa fa-check"></i>Grupos en dimensión alta</a></li>
+<li class="chapter" data-level="" data-path="analisis-de-conglomerados-clustering.html"><a href="analisis-de-conglomerados-clustering.html#dificultades-en-la-seleccion-de-metrica"><i class="fa fa-check"></i>Dificultades en la selección de métrica</a></li>
 </ul></li>
 </ul></li>
 <li class="divider"></li>
@@ -1064,24 +1065,24 @@ modelo_tc <span class="op">%&gt;%</span><span class="st"> </span>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">score &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">evaluate</span>(x_valid_s, y_valid)
 score</code></pre></div>
 <pre><code>## $loss
-## [1] 0.4376422
+## [1] 0.4369998
 ## 
 ## $acc
-## [1] 0.7951807
+## [1] 0.7981928
 ## 
 ## $binary_crossentropy
-## [1] 0.433207</code></pre>
+## [1] 0.4325639</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tab_confusion &lt;-<span class="st"> </span><span class="kw">table</span>(modelo_tc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">predict_classes</span>(x_valid_s),y_valid) 
 tab_confusion</code></pre></div>
 <pre><code>##    y_valid
 ##       0   1
-##   0 193  38
-##   1  30  71</code></pre>
+##   0 194  38
+##   1  29  71</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">prop.table</span>(tab_confusion, <span class="dv">2</span>)</code></pre></div>
 <pre><code>##    y_valid
 ##             0         1
-##   0 0.8654709 0.3486239
-##   1 0.1345291 0.6513761</code></pre>
+##   0 0.8699552 0.3486239
+##   1 0.1300448 0.6513761</code></pre>
 <p>Es importante monitorear las curvas de aprendizaje (entrenamiento y validación) para diagnosticar mejoras:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df_iteraciones &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(iteraciones)
 <span class="kw">ggplot</span>(df_iteraciones, <span class="kw">aes</span>(<span class="dt">x=</span>epoch, <span class="dt">y=</span>value, <span class="dt">colour=</span>data, <span class="dt">group=</span>data)) <span class="op">+</span><span class="st"> </span>

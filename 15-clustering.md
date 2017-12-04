@@ -48,7 +48,8 @@ ggplot(quakes_1, aes(x=long, y=lat)) + geom_point()
 ¿Podemos separar en grupos estos datos? Podemos pensar en varias maneras
 de hacer esto. Un enfoque simple que nos puede dar una 
 agrupación interesante es pensar
-en agrupar de manera que obtengamos grupos relativamente **compactos** 
+en agrupar de manera que obtengamos grupos relativamente **compactos** o
+concentrados alrededor de un valor
 (en estos datos, ¿qué otras cosas se te ocurren? ¿qué otros patrones
 interesantes sería interesante agrupar?).
 
@@ -120,7 +121,7 @@ El problema que queremos resolver es entonces
 (\#eq:kmedias-original)
 \end{equation}
 
-Nótese que grupos más grandes contribuyen más sumandos al objetivo. Este problema es demasiado grande para resolver por fuerza bruta (por ejemplo,
+Nótese que cada caso $x_k$ contribuye un sumando a la función objetivo. Este problema es demasiado grande para resolver por fuerza bruta (por ejemplo,
 enlistando todas las posibles agrupaciones). 
 
 Podemos desarrollar una heurística considerando primero del problema ampliado
@@ -137,10 +138,6 @@ que para toda $k$, las distancias al cuadrado son mínimas al centroide de los d
 $$\sum_{i \in C_k} ||x_i - \bar{x}_k||^2 \leq \sum_{i \in C_k} ||x_i - m_k||^2 $$
 por lo que $C_1^*,C_2^*,\ldots,C_K^*$ también es solución de \@ref(eq:kmedias-original). 
 
-
-minimizar $\min_{m_1,\ldots, m_K} \sum_{k=1}^K \sum_{i\in C_k^*}||x_i-m_k||^2$
-poniendo $m_k=\bar{x}_k$ (el valor promedio minimiza la distancia cuadrada
-de los puntos del grupo).
 
 Ahora desarrollamos la heurística de k-medias. Comenzando con el problema
 ampliado, 
@@ -176,6 +173,7 @@ Sea $k$ el número de grupos que buscamos. Escogemos $k$ puntos en los
 datos de entrenamiento al azar.
 
 En el paso $s=1,2,\ldots$:
+  
 1. Dadas los centros $m_k$  (que pensamos fijas),
 encontramos una nueva asignación $C_k$ a clusters que minimice
 $$ 2\sum_{k=1}^K \sum_{i\in C_k} ||x_i - m_k||^2,$$
@@ -210,7 +208,7 @@ ggplot(quakes_1, aes(x=long, y=lat)) + geom_point()
 Seleccionamos muestra de datos al azar (centroides)
 
 ```r
-set.seed(25112)
+set.seed(2512)
 K <- 5
 centros <- sample_n(quakes_1, K) %>% mutate(k = 1:K) %>% select(-id)
 centros
@@ -218,11 +216,11 @@ centros
 
 ```
 ##   lat long k
-## 1 -24  180 1
-## 2 -16  168 2
-## 3 -18  181 3
-## 4 -28  182 4
-## 5 -15  186 5
+## 1 -18  181 1
+## 2 -20  181 2
+## 3 -24  180 3
+## 4 -23  185 4
+## 5 -14  172 5
 ```
 
 ```r
@@ -304,7 +302,7 @@ wss(agrup, centros)
 ```
 
 ```
-## [1] 7967
+## [1] 11022
 ```
 
 
@@ -341,7 +339,7 @@ wss(agrup, centros)
 ```
 
 ```
-## [1] 7794
+## [1] 9657
 ```
 
 ```r
@@ -375,7 +373,7 @@ wss(agrup, centros)
 ```
 
 ```
-## [1] 7741
+## [1] 9115
 ```
 
 ```r
@@ -516,16 +514,7 @@ Las soluciones son
 ```r
 grupos_df <- lapply(ajustes_km[1:8], function(aj){ 
   data_frame(num = max(aj$cluster), cluster = aj$cluster,
-             id= 1:length(aj$cluster))}) %>% rbind_all
-```
-
-```
-## Warning: 'rbind_all' is deprecated.
-## Use 'bind_rows()' instead.
-## See help("Deprecated")
-```
-
-```r
+             id= 1:length(aj$cluster))}) %>% bind_rows()
 grupo_df_2 <- left_join(grupos_df, quakes_1)
 ```
 
@@ -557,7 +546,7 @@ aplicaciones científicas, por ejemplo clasificar objetos como
 estrellas, galaxias, etc.
 
 - Existen algunas aplicaciones de clustering donde buscamos muchos grupos, por
-ejemplo, para agrupar objetos (noticias, tweets, por ejemplo) en grupos
+ejemplo, para agrupar objetos (noticias, tweets, por ejemplo) en clusters
 muy compactos (de alta similitud), y así detectar duplicados o relaciones
 entre fuentes de noticias, usuarios de twitter, etc. Hay más opciones además
 de algoritmos clásicos como k-means para este tipo de problemas
@@ -597,23 +586,42 @@ dat <- ess4.gb %>% select(idno, gvjbevn:sbcwkfm)
 nombres <- data_frame(var = c("gvjbevn", "gvhlthc", "gvslvol", "gvslvue", "gvcldcr", "gvpdlwk", 
 "sbprvpv", "sbeqsoc", "sbcwkfm"),
 nombre = c('trabajo_a_todos','cuidados_salud_enfermos','garantizar_nivel_mayores','garantizar_nivel_desempleados','ayuda_padres_trabajadores','ausencia_cuidar_enfermos','beneficios_pobreza','beneficios_igualdad','beneficios_fam_trabajo'))
+head(dat)
+```
+
+```
+##     idno gvjbevn gvhlthc gvslvol gvslvue gvcldcr gvpdlwk sbprvpv sbeqsoc
+## 1 110701       0      10       8       5       5       4       2       4
+## 2 110702       5      10      10      10       5      10       4       4
+## 3 110703       8       9      10       0       8      10       4       4
+## 4 110704       8      10      10       3       8       6       3       2
+## 5 110705       7      10       8       8       9       8       4       2
+## 6 110708       0      10      10       5       7       7       2       2
+##   sbcwkfm
+## 1       2
+## 2       4
+## 3       3
+## 4       2
+## 5       2
+## 6       2
 ```
 
 En este caso particular tenemos unas variables que están en escala 1-5 y otras 1-10. Esta variabilidad
 distinta sólo es escala de las respuestas, así que normalizamos dividiendo cada pregunta por
-su máximo (dividir entre 10 las preguntas en escala de 1 a 10 y entre 5 las de 1 a 5):
+su máximo (dividir entre 10 las preguntas en escala de 1 a 10 y entre 5 las de 1 a 5.
+ Podríamos también estandarizar):
 
 
 
 
 ```r
-dat.2 <- dat %>% gather(var, valor, gvjbevn:sbcwkfm) %>% 
+dat_2 <- dat %>% gather(var, valor, gvjbevn:sbcwkfm) %>% 
   left_join(nombres) %>%
   select(-var) %>%
   group_by(nombre) %>%
-  mutate(valor.esc = valor/max(valor, na.rm=T)) %>%
+  mutate(valor_escalado = valor/max(valor, na.rm=T)) %>%
   select(-valor) %>%
-  spread(nombre, valor.esc)
+  spread(nombre, valor_escalado)
 ```
 
 ```
@@ -621,15 +629,38 @@ dat.2 <- dat %>% gather(var, valor, gvjbevn:sbcwkfm) %>%
 ```
 
 ```r
-dat.3 <- filter(dat.2, apply(dat.2, 1, function(x){!any(is.na(x))}))
-dat.na <- filter(ess4.gb, apply(dat.2, 1, function(x){!any(is.na(x))}))
+dat_3 <- filter(dat_2, apply(dat_2, 1, function(x){!any(is.na(x))}))
+dat_3
+```
 
-ajustes.km <- lapply(1:10, function(k){
-  kmedias <- kmeans(dat.3[,-1], centers = k, nstart = 20, iter.max=40)    
+```
+## # A tibble: 2,108 x 10
+##      idno ausencia_cuidar_enfermos ayuda_padres_trabajadores
+##     <int>                    <dbl>                     <dbl>
+##  1 110701                      0.4                       0.5
+##  2 110702                      1.0                       0.5
+##  3 110703                      1.0                       0.8
+##  4 110704                      0.6                       0.8
+##  5 110705                      0.8                       0.9
+##  6 110708                      0.7                       0.7
+##  7 110710                      0.5                       0.3
+##  8 110711                      0.7                       0.5
+##  9 110712                      0.9                       0.3
+## 10 110713                      0.7                       0.8
+## # ... with 2,098 more rows, and 7 more variables:
+## #   beneficios_fam_trabajo <dbl>, beneficios_igualdad <dbl>,
+## #   beneficios_pobreza <dbl>, cuidados_salud_enfermos <dbl>,
+## #   garantizar_nivel_desempleados <dbl>, garantizar_nivel_mayores <dbl>,
+## #   trabajo_a_todos <dbl>
+```
+
+```r
+ajustes_km <- lapply(1:10, function(k){
+  kmedias <- kmeans(dat_3[,-1], centers = k, nstart = 20, iter.max=40)    
   kmedias
 })
-tot.within <- sapply(ajustes.km, function(aj){ aj$tot.withinss})
-qplot(1:length(tot.within), tot.within, geom='line') + geom_point()
+tot_within <- sapply(ajustes_km, function(aj){ aj$tot.withinss})
+qplot(1:length(tot_within), tot_within, geom='line') + geom_point()
 ```
 
 <img src="15-clustering_files/figure-html/unnamed-chunk-18-1.png" width="480" />
@@ -639,8 +670,8 @@ dos grupos:
 
 
 ```r
-sol.cl <- ajustes.km[[2]]
-table(sol.cl$cluster)
+sol_cl <- ajustes_km[[2]]
+table(sol_cl$cluster)
 ```
 
 ```
@@ -649,42 +680,76 @@ table(sol.cl$cluster)
 ## 1116  992
 ```
 
-Todos los grupos tienen tamaño razonable. No queremos tener grupos muy chicos, **pues entonces es difícil caracterizarlos o entenderlos**: si hay 15 personas en un grupo, cualquier resumen de este grupo estaría sujeto a variación muestral alta.
-
-Consideramos las variables originales:
+Ahora veamos cómo resumir grupos para entender qué tipo de casos están
+en cada uno de ellos. Consideramos las variables originales escaladas:
 
 
 ```r
-cluster.df <- data.frame(idno = dat.3$idno, cluster = sol.cl$cluster)
-dat.4 <- dat.3 %>% gather(variable, valor, ausencia_cuidar_enfermos:trabajo_a_todos) %>%
-  left_join(cluster.df)
+cluster_df <- data.frame(idno = dat_3$idno, cluster = sol_cl$cluster)
+dat_4 <- dat_3 %>% 
+  gather(variable, valor, ausencia_cuidar_enfermos:trabajo_a_todos) %>%
+  left_join(cluster_df)
 ```
 
 ```
 ## Joining, by = "idno"
 ```
 
+Y resumimos dentro de cada grupo cada una de las variables. Elecciones
+populares son la media y el error estándar de la media (desviación estándar
+dividida entre la raíz del número de casos):
+
+
 ```r
-resumen.1 <- dat.4 %>% group_by(cluster, variable) %>%
+resumen_1 <- dat_4 %>% group_by(cluster, variable) %>%
   summarise(media = mean(valor), ee = sd(valor)/sqrt(length(valor)))
+resumen_1
+```
 
-
-## adicionalmente, invertimos las 3 preguntas en escala de 1 a 5, pues 1 representa mayor acuerdo. 
-filtro <- resumen.1$variable %in% c('beneficios_fam_trabajo','beneficios_igualdad','beneficios_pobreza')
-resumen.1$media[filtro] <- 1-resumen.1$media[filtro]
+```
+## # A tibble: 18 x 4
+## # Groups:   cluster [?]
+##    cluster                      variable media     ee
+##      <int>                         <chr> <dbl>  <dbl>
+##  1       1      ausencia_cuidar_enfermos  0.82 0.0048
+##  2       1     ayuda_padres_trabajadores  0.80 0.0048
+##  3       1        beneficios_fam_trabajo  0.49 0.0047
+##  4       1           beneficios_igualdad  0.55 0.0056
+##  5       1            beneficios_pobreza  0.51 0.0053
+##  6       1       cuidados_salud_enfermos  0.93 0.0032
+##  7       1 garantizar_nivel_desempleados  0.71 0.0057
+##  8       1      garantizar_nivel_mayores  0.92 0.0031
+##  9       1               trabajo_a_todos  0.74 0.0056
+## 10       2      ausencia_cuidar_enfermos  0.60 0.0063
+## 11       2     ayuda_padres_trabajadores  0.57 0.0060
+## 12       2        beneficios_fam_trabajo  0.53 0.0051
+## 13       2           beneficios_igualdad  0.60 0.0057
+## 14       2            beneficios_pobreza  0.53 0.0055
+## 15       2       cuidados_salud_enfermos  0.82 0.0050
+## 16       2 garantizar_nivel_desempleados  0.47 0.0055
+## 17       2      garantizar_nivel_mayores  0.79 0.0047
+## 18       2               trabajo_a_todos  0.42 0.0067
 ```
 
 
 ```r
-resumen.1$variable <- reorder(resumen.1$variable, resumen.1$media, mean)
-ggplot(resumen.1, aes(x=variable, y=media, ymin=media-ee, ymax=media+ee,
+## adicionalmente, invertimos las 3 preguntas en escala de 1 a 5, pues 1 representa mayor acuerdo. 
+filtro <- resumen_1$variable %in% c('beneficios_fam_trabajo','beneficios_igualdad','beneficios_pobreza')
+resumen_1$media[filtro] <- 1-resumen_1$media[filtro]
+```
+
+
+```r
+resumen_1$variable <- reorder(resumen_1$variable, resumen_1$media, mean)
+ggplot(resumen_1, aes(x=variable, y=media, ymin=media-ee, ymax=media+ee,
                       colour=factor(cluster), group=cluster)) + geom_point() +
   coord_flip() + geom_line() + geom_linerange()
 ```
 
-<img src="15-clustering_files/figure-html/unnamed-chunk-21-1.png" width="480" />
+<img src="15-clustering_files/figure-html/unnamed-chunk-23-1.png" width="480" />
 
-Y notamos dos grupos claros que esperábamos ver desde el principio. Esta
+Y notamos dos grupos claros que esperaríamos ver. ¿Cómo la describirías?
+Esta
 puede ser una solución aceptable (por ejemplo, si vamos a usar los grupos
 en otro modelo, como parte de diseños de estrategias de comunicación, etc.)
 
@@ -693,8 +758,8 @@ Intentemos ahora con 5 grupos:
 
 
 ```r
-sol.cl <- ajustes.km[[5]]
-table(sol.cl$cluster)
+sol_cl <- ajustes_km[[5]]
+table(sol_cl$cluster)
 ```
 
 ```
@@ -709,9 +774,10 @@ Consideramos las variables originales:
 
 
 ```r
-cluster.df <- data.frame(idno = dat.3$idno, cluster = sol.cl$cluster)
-dat.4 <- dat.3 %>% gather(variable, valor, ausencia_cuidar_enfermos:trabajo_a_todos) %>%
-  left_join(cluster.df)
+cluster_df <- data_frame(idno = dat_3$idno, cluster = sol_cl$cluster)
+dat_4 <- dat_3 %>% 
+  gather(variable, valor, ausencia_cuidar_enfermos:trabajo_a_todos) %>%
+  left_join(cluster_df)
 ```
 
 ```
@@ -719,131 +785,83 @@ dat.4 <- dat.3 %>% gather(variable, valor, ausencia_cuidar_enfermos:trabajo_a_to
 ```
 
 ```r
-resumen.1 <- dat.4 %>% group_by(cluster, variable) %>%
+resumen_5 <- dat_4 %>% group_by(cluster, variable) %>%
   summarise(media = mean(valor), ee = sd(valor)/sqrt(length(valor)))
 
-
 ## adicionalmente, invertimos las 3 preguntas en escala de 1 a 5, pues 1 representa mayor acuerdo. 
-filtro <- resumen.1$variable %in% c('beneficios_fam_trabajo','beneficios_igualdad','beneficios_pobreza')
-resumen.1$media[filtro] <- 1-resumen.1$media[filtro]
+filtro <- resumen_5$variable %in% c('beneficios_fam_trabajo','beneficios_igualdad','beneficios_pobreza')
+resumen_5$media[filtro] <- 1-resumen_5$media[filtro]
 ```
 
 
 ```r
-resumen.1$variable <- reorder(resumen.1$variable, resumen.1$media, mean)
-ggplot(resumen.1, aes(x=variable, y=media, ymin=media-ee, ymax=media+ee,
+resumen_5$variable <- reorder(resumen_5$variable, resumen_5$media, mean)
+ggplot(resumen_5, aes(x=variable, y=media, ymin=media-ee, ymax=media+ee,
                       colour=factor(cluster), group=cluster)) + geom_point() +
   coord_flip() + geom_line() + geom_linerange()
 ```
 
-<img src="15-clustering_files/figure-html/unnamed-chunk-24-1.png" width="480" />
+<img src="15-clustering_files/figure-html/unnamed-chunk-26-1.png" width="480" />
 
 
 
-
-
-
-Y es especialmente útil perfilar los grupos, es decir, mostrar las diferencias en cada variable en lugar de los promedios simples:
+Y en estos casos es especialmente útil perfilar los grupos, es decir, mostrar las diferencias en las medias de cada grupo con respecto a la media general:
 
 
 ```r
-resumen.2 <- resumen.1 %>% group_by(variable) %>%
-  mutate(perfil = media -mean(media))
+resumen_perfil_5 <- resumen_5 %>% group_by(variable) %>%
+  mutate(perfil = media - mean(media))
 
-ggplot(resumen.2, aes(x=variable, y=perfil, 
-                      colour=factor(cluster), group=cluster)) + geom_point() +
-  coord_flip() + geom_line() 
+ggplot(resumen_perfil_5, aes(x = variable, y = perfil, 
+                      colour = factor(cluster), group = cluster)) + 
+  geom_point() + coord_flip() + geom_line() + facet_wrap(~cluster) + geom_hline(yintercept=0, colour='gray')
 ```
 
-<img src="15-clustering_files/figure-html/unnamed-chunk-25-1.png" width="480" />
-
-```r
-ggplot(resumen.2, aes(x=variable, y=perfil, 
-                      colour=factor(cluster), group=cluster)) + geom_point() +
-  coord_flip() + geom_line() + facet_wrap(~cluster) + geom_hline(yintercept=0, colour='gray')
-```
-
-<img src="15-clustering_files/figure-html/unnamed-chunk-25-2.png" width="480" />
+<img src="15-clustering_files/figure-html/unnamed-chunk-27-1.png" width="672" />
 
 ¿Cómo les llamarías a cada uno de estos grupos?
 
+**Observación: heterogeneidad en uso de escalas**
 
-```r
-tab <- table(ess4.gb$stratval)
-names(tab[tab > 50])
-```
+Los datos en escalas de acuerdo, que son usados frecuentemente en encuestas
+sociales y de negocios, tienen dificultades adicionales:
 
-```
-##  [1] " Devon and Cornwall"                     
-##  [2] " Avon and Wiltshire  "                   
-##  [3] " Gloucestershire and Gwent   "           
-##  [4] " Oxfordshire and Berkshire  "            
-##  [5] " Hampshire, W Sussex, Isle of Wight  "   
-##  [6] " Kent and E Sussex  "                    
-##  [7] " Rest of the Outer London Boroughs  "    
-##  [8] " Inner London Boroughs  "                
-##  [9] " Essex and Hertfordshire  "              
-## [10] " Suffolk and Norfolk  "                  
-## [11] " Bucks and Beds  "                       
-## [12] " Cambs and Northants  "                  
-## [13] " Warwickshire and Hereford & Worcester  "
-## [14] " West Midlands metropolitan area  "      
-## [15] " Leicestershire and Lincolnshire  "      
-## [16] " Nottinghamshire and Derbyshire  "       
-## [17] " Merseyside  "                           
-## [18] " Greater Manchester  "                   
-## [19] " Lancashire  "                           
-## [20] " South Yorkshire  "                      
-## [21] " West Yorkshire  "                       
-## [22] " North Yorkshire and Humberside  "
-```
+- Desde el punto de vista estadístico, usamos una medición ordinal como si
+fuera numérica. Esto sugiere utilizar técnicas de clustering más compicadas 
+adaptadas a datos ordinales. Pero en realidad este es un aspecto menor
+en el análisis de este tipo de datos.
 
-```r
-tab.1 <- data.frame(round(100*prop.table(table(dat.na$stratval, sol.cl$cluster),margin=2),2))
-tab.2 <- tab.1 %>% group_by(Var1) %>%
-  mutate(perfil = Freq/mean(Freq))
-tab.3 <- tab.2 %>% select(-Freq) %>%spread(Var2, perfil) %>% arrange(`5`) %>% data.frame
-tab.3[tab.3$Var1 %in% names(tab[tab > 50]),]
-```
+- La dificultad grande en el análisis de este tipo de datos es la heterogeneidad
+en el uso de la escala. Esto quiere decir que no todas las personas usan
+escalas 1-10 (o 1-5, o 1-100, o Totalmente de acuerdo-Totalmente en desacuerdo)
+de la misma manera. Hay algunos que usan todo el rango de la escala, otros que se
+concentran en la mitad, etc. y muchas veces eso no tienen que ver sólo con el verdadero
+nivel de acuerdo o desacuerdo de la persona, sino también con cómo usa el lenguaje
+cada persona.
 
-```
-##                                        Var1   X1   X2   X3   X4   X5
-## 2                              Lancashire   1.65 1.38 0.59 1.10 0.28
-## 4                          West Yorkshire   2.06 0.56 0.96 0.85 0.56
-## 5                              Merseyside   0.98 1.38 1.31 0.72 0.61
-## 7                      Greater Manchester   1.06 1.14 1.09 1.06 0.66
-## 9       Rest of the Outer London Boroughs   0.95 0.91 1.04 1.39 0.71
-## 11                         Bucks and Beds   1.61 0.43 0.87 1.33 0.75
-## 12             Gloucestershire and Gwent    0.95 0.91 1.41 0.93 0.79
-## 15        West Midlands metropolitan area   0.72 1.72 1.07 0.70 0.79
-## 17     Hampshire, W Sussex, Isle of Wight   0.84 0.96 0.87 1.44 0.88
-## 20                Essex and Hertfordshire   1.10 0.97 0.92 0.98 1.02
-## 21                     Avon and Wiltshire   0.59 1.14 1.24 0.97 1.06
-## 22         Nottinghamshire and Derbyshire   1.04 0.73 1.25 0.90 1.07
-## 23                    Cambs and Northants   0.52 1.04 1.46 0.87 1.11
-## 25                    Suffolk and Norfolk   0.80 1.13 0.82 1.06 1.19
-## 26              Oxfordshire and Berkshire   0.53 0.76 1.73 0.78 1.21
-## 27         North Yorkshire and Humberside   0.85 1.37 0.72 0.83 1.23
-## 29                        South Yorkshire   0.65 1.19 1.09 0.81 1.26
-## 30                  Inner London Boroughs   1.34 0.60 0.87 0.93 1.27
-## 32  Warwickshire and Hereford & Worcester   0.63 0.85 1.11 1.04 1.37
-## 33                       Devon and Cornwall 0.97 1.12 0.97 0.57 1.37
-## 34                      Kent and E Sussex   0.73 0.90 0.94 1.00 1.43
-## 36        Leicestershire and Lincolnshire   0.49 0.79 0.96 1.08 1.67
-```
+- El verdadero problema es entonces en la medición, no que tratemos como numérica a una variable que no lo es. Los datos de una persona no son realmente directamente comparables con
+los de otra persona. Hay maneras de lidiar con esto: por ejemplo, centrar los
+niveles de respuesta de cada persona, usar modelos que intentan medir la heterogeneidad de uso en la escala y separar de niveles de acuerdo, pero lo mejor
+ en estos casos siempre es (si es posible) mejorar la medición.
+
+
+## Dificultades en segmentación/clustering.
+
+Aunque la idea conceptual de clustering es más o menos clara,
+en la práctica es una tarea difícil.
+Vamos a empezar apuntando dificultades que se comunmente se encuentran:
+
+- La estructura de grupos naturales que buscamos no es necesariamente de 
+clusters compactos.
+- No existen grupos naturales
+- En dimensiones altas (digamos > 30) muchas veces todos los puntos
+están a distancias similares entre ellos, especialmente cuando hay variables 
+que aportan la separación entre grupos.
+- Dificultades en la selección de medida de distancia (o disimilitud).
 
 
 
-
-
-
-
-
-
-
-
-
-### ¿Cuándo usar o no usar k-medias? Estructura "esférica"
+### Estructuras no compactas
 
 En algunos casos se dice que k-medias no tiene supuestos, otros dicen que tienen supuestos
 de clusters esféricos, etc.
@@ -864,7 +882,7 @@ df$grupo <- kmeans(df, centers=2, nstart=20)$cluster
 ggplot(df, aes(x=x, y=y, colour=factor(grupo))) + geom_point()
 ```
 
-<img src="15-clustering_files/figure-html/unnamed-chunk-27-1.png" width="432" />
+<img src="15-clustering_files/figure-html/unnamed-chunk-28-1.png" width="432" />
 
 ¿Por qué falla k-medias? Porque la estructura de grupos que estábamos buscando
 **no** es una donde los clusters están definidos por distancia baja a su centro.
@@ -884,15 +902,19 @@ df$grupo <- kmeans(df, centers=5, nstart=20)$cluster
 ggplot(df, aes(x=x, y=y, colour=factor(grupo))) + geom_point()
 ```
 
-<img src="15-clustering_files/figure-html/unnamed-chunk-28-1.png" width="432" />
+<img src="15-clustering_files/figure-html/unnamed-chunk-29-1.png" width="432" />
 
 Como ejemplo, pensemos que el espacio es un espacio de "gustos por películas". Aún cuando
 podría ser muy interesante descubrir esta estructura concéntrica, el grupo exterior contiene
-personas con gustos diametralmente opuestos!
+personas con gustos diametralmente opuestos! El problema de hacer dos clusters,
+uno central y otro concéntrico puede ser un poco artificial.
 
 
 
-### ¿Cuándo usar o no usar k-medias? Existencia o no de grupos "naturales"
+
+
+
+### Existencia o no de grupos "naturales"
 
 Otro punto que se discute usualmente es si hay o no grupos naturales, que se
 refiere a grupos bien compactos y diferenciados entre sí, como en el ejemplo inicial
@@ -902,7 +924,7 @@ refiere a grupos bien compactos y diferenciados entre sí, como en el ejemplo in
 ggplot(filter(iris, Species %in% c('setosa','versicolor')), aes(x=Sepal.Length, y=Petal.Width)) + geom_point()
 ```
 
-<img src="15-clustering_files/figure-html/unnamed-chunk-29-1.png" width="432" />
+<img src="15-clustering_files/figure-html/unnamed-chunk-30-1.png" width="432" />
 
 Pero es común, por ejemplo, encontrar cosas como siguen:
 
@@ -914,7 +936,7 @@ df$grupo <- kmeans(df, centers=5, nstart=20)$cluster
 ggplot(df, aes(x=x, y=y, colour=factor(grupo))) + geom_point()
 ```
 
-<img src="15-clustering_files/figure-html/unnamed-chunk-30-1.png" width="432" />
+<img src="15-clustering_files/figure-html/unnamed-chunk-31-1.png" width="432" />
 
 Nótese que k-means logró encontrar una buena solución, y esta solución puede
 ser muy útil para nuestros fines (agrupa puntos "similares"). Sin embargo, en esta situación debemos reconocer que los tamaños, las posiciones,
@@ -928,7 +950,7 @@ df$grupo <- kmeans(df, centers=5, nstart=20)$cluster
 ggplot(df, aes(x=x, y=y, colour=factor(grupo))) + geom_point()
 ```
 
-<img src="15-clustering_files/figure-html/unnamed-chunk-31-1.png" width="432" />
+<img src="15-clustering_files/figure-html/unnamed-chunk-32-1.png" width="432" />
 
 Sin embargo, si tomamos otra muestra distinta
 
@@ -940,7 +962,7 @@ df$grupo <- kmeans(df, centers=5, nstart=20)$cluster
 ggplot(df, aes(x=x, y=y, colour=factor(grupo))) + geom_point()
 ```
 
-<img src="15-clustering_files/figure-html/unnamed-chunk-32-1.png" width="432" />
+<img src="15-clustering_files/figure-html/unnamed-chunk-33-1.png" width="432" />
 
 La solución es bastante diferente. Esta diferencia no se debe al comienzo aleatorio
 del algoritmo. Se debe más bien a que los grupos se están definiendo por variación muestral,
@@ -955,7 +977,7 @@ son en ciertos aspectos arbitrarios.
 
 
 
-### Ejemplo {#ejemplo}
+#### Ejemplo {-}
 También en esta situación puede ser que el criterio para segmentar no es
 uno apropiado para un algoritmo de segmentación.
 Por ejemplo, supongamos que un fabricante de zapatos nos pide segmentar a sus
@@ -969,7 +991,7 @@ df <- data.frame(estatura=x, pie= 6 + 2*(x-160)/30 + rnorm(200,0,0.5))
 ggplot(df, aes(x=estatura, y=pie)) + geom_point()
 ```
 
-<img src="15-clustering_files/figure-html/unnamed-chunk-33-1.png" width="480" />
+<img src="15-clustering_files/figure-html/unnamed-chunk-34-1.png" width="480" />
 
 ¿Dónde cortamos los grupos? Aunque cualquier algoritmo no supervisado nos va
 a dar una respuesta, muy posiblemente sería buena idea encontrar puntos de cortes
@@ -979,82 +1001,13 @@ ocurre en la segmentación por actitudes/ideología: no hay "buenos" y "malos" o
 
 
 
-### Caracterización y descripción de grupos
 
 
 
 
-### Dificultades en segmentación/clustering.
-
-Aunque la idea conceptual de clustering es más o menos clara,
-en la práctica es una tarea difícil.
-Vamos a empezar apuntando dificultades que se comunmente se encuentran:
-
-- No existen grupos naturales
-- En dimensiones altas (digamos > 30) muchas veces todos los puntos
-están a distancias similares entre ellos, especialmente cuando hay variables 
-que aportan la separación entre grupos.
-- Dificultades en la selección de medida de distancia (o disimilitud).
 
 
-
-#### Ejemplo: grupos bien definidos en dimensión baja {-}
-
-Generalmente, cuando empezamos a discutir clustering consideramos unos datos como sigue:
-
-
-```r
-ggplot(filter(iris, Species %in% c('setosa','versicolor')), aes(x=Sepal.Length, y=Petal.Width)) + geom_point()
-```
-
-<img src="15-clustering_files/figure-html/unnamed-chunk-34-1.png" width="480" />
-
-Donde es más o menos claro por donde debería ir la segmentación, por ejemplo:
-
-
-```r
-ggplot(filter(iris, Species %in% c('setosa','versicolor')), aes(x=Sepal.Length, y=Petal.Width, colour=Species)) + geom_point()
-```
-
-<img src="15-clustering_files/figure-html/unnamed-chunk-35-1.png" width="480" />
-
-En este caso la medida de distancia es la euclideana, las dos variables
-están dadas en centímetros, y tienen escalas similares. 
-
-#### Ejemplo: grupos no tan bien definidos {-}
-
-Sin embargo, podríamos encontrarnos 
-
-
-```r
-ggplot(airquality, aes(x=Ozone, y=Wind)) + geom_point()
-```
-
-```
-## Warning: Removed 37 rows containing missing values (geom_point).
-```
-
-<img src="15-clustering_files/figure-html/unnamed-chunk-36-1.png" width="480" />
-
-donde no hay clusters bien definidos. Aquí veremos que el tipo de algoritmo, 
-decisiones de configuración y variación muestral pueden afectar los resultados
-considerablemente.
-
-Adicionalmente, no está claro cómo deberíamos comparar las distintas escalas de
-datos. En este caso, podríamos normalizar, pero el problema de que no parece 
-haber clusters naturales persiste:
-
-
-```r
-airquality_s <- airquality %>% filter(!is.na(Ozone), !is.na(Wind)) %>%
-                mutate(Ozone_s = (Ozone - mean(Ozone))/sd(Ozone),
-                                      Wind_s  = (Wind - mean(Wind))/sd(Wind))
-ggplot(airquality_s, aes(x=Ozone_s, y=Wind_s)) + geom_point()
-```
-
-<img src="15-clustering_files/figure-html/unnamed-chunk-37-1.png" width="480" />
-
-#### Ejemplo: grupos en dimensión alta {-}
+### Grupos en dimensión alta {-}
 
 
 En dimensión más alta (50 variables, 10 casos) observamos cosas como la siguiente:
@@ -1106,11 +1059,14 @@ dist(mat_1, method = 'euclidean')
 ggplot(data.frame(mat_1), aes(x=X1, y=X2)) + geom_point()
 ```
 
-<img src="15-clustering_files/figure-html/unnamed-chunk-39-1.png" width="480" />
+<img src="15-clustering_files/figure-html/unnamed-chunk-36-1.png" width="480" />
 
-Y cualquier técnica razonable que usemos lograría encontrar estos grupos.
+Y cualquier técnica razonable que usemos lograría encontrar estos grupos. 
 
-#### Ejemplo: dificultades en la selección de métrica {-}
+- Muchas veces pueden encontrarse mejores soluciones aplicando alguna
+técnica de reducción de dimensionalidad antes de hacer clustering.
+
+### Dificultades en la selección de métrica {-}
 
 Muchas veces no hay una métrica natural para el problema. En este caso,
 muchas veces escogemos distancia euclideana (con variables estandarizadas o no,
@@ -1135,9 +1091,12 @@ En otros casos, como:
   
 - Dimensión alta con muchas variables ruidosas o que no aportan en la definición
 de los clusters.
+- Estructuras relativamente dispersas que quisiéramos agrupar
 - Clusters no bien definidos.
-- Dificultad en escoger una métrica única apropiada para el problema.
+- Dificultad en escoger una métrica única apropiada para el problema,
 
-El resultado puede depender mucho del algoritmo, el criterio del analista, 
-y la muestra de entrenamiento.</div>\EndKnitrBlock{comentario}
+el resultado puede depender mucho del algoritmo, el criterio del analista, 
+y la muestra de entrenamiento. Eso no quiere decir que **la segmentación 
+de casos que produce el algoritmo no sea útil**, más bien que es difìcil 
+obtener grupos *naturales*</div>\EndKnitrBlock{comentario}
 

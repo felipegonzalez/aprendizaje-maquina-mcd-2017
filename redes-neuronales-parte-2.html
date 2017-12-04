@@ -25,7 +25,7 @@
 <meta name="author" content="Felipe González">
 
 
-<meta name="date" content="2017-12-03">
+<meta name="date" content="2017-12-04">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -393,11 +393,12 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="15.4" data-path="analisis-de-conglomerados-clustering.html"><a href="analisis-de-conglomerados-clustering.html#seleccion-de-numero-de-clusters."><i class="fa fa-check"></i><b>15.4</b> Selección de número de clusters.</a><ul>
 <li class="chapter" data-level="" data-path="analisis-de-conglomerados-clustering.html"><a href="analisis-de-conglomerados-clustering.html#variacion-dentro-de-clusters-para-distintas-soluciones"><i class="fa fa-check"></i>Variación dentro de clusters para distintas soluciones</a></li>
 <li class="chapter" data-level="15.4.1" data-path="analisis-de-conglomerados-clustering.html"><a href="analisis-de-conglomerados-clustering.html#criterios-especificos"><i class="fa fa-check"></i><b>15.4.1</b> Criterios específicos</a></li>
-<li class="chapter" data-level="15.4.2" data-path="analisis-de-conglomerados-clustering.html"><a href="analisis-de-conglomerados-clustering.html#cuando-usar-o-no-usar-k-medias-estructura-esferica"><i class="fa fa-check"></i><b>15.4.2</b> ¿Cuándo usar o no usar k-medias? Estructura “esférica”</a></li>
-<li class="chapter" data-level="15.4.3" data-path="analisis-de-conglomerados-clustering.html"><a href="analisis-de-conglomerados-clustering.html#cuando-usar-o-no-usar-k-medias-existencia-o-no-de-grupos-naturales"><i class="fa fa-check"></i><b>15.4.3</b> ¿Cuándo usar o no usar k-medias? Existencia o no de grupos “naturales”</a></li>
-<li class="chapter" data-level="15.4.4" data-path="introduccion.html"><a href="introduccion.html#ejemplo"><i class="fa fa-check"></i><b>15.4.4</b> Ejemplo</a></li>
-<li class="chapter" data-level="15.4.5" data-path="analisis-de-conglomerados-clustering.html"><a href="analisis-de-conglomerados-clustering.html#caracterizacion-y-descripcion-de-grupos"><i class="fa fa-check"></i><b>15.4.5</b> Caracterización y descripción de grupos</a></li>
-<li class="chapter" data-level="15.4.6" data-path="analisis-de-conglomerados-clustering.html"><a href="analisis-de-conglomerados-clustering.html#dificultades-en-segmentacionclustering."><i class="fa fa-check"></i><b>15.4.6</b> Dificultades en segmentación/clustering.</a></li>
+</ul></li>
+<li class="chapter" data-level="15.5" data-path="analisis-de-conglomerados-clustering.html"><a href="analisis-de-conglomerados-clustering.html#dificultades-en-segmentacionclustering."><i class="fa fa-check"></i><b>15.5</b> Dificultades en segmentación/clustering.</a><ul>
+<li class="chapter" data-level="15.5.1" data-path="analisis-de-conglomerados-clustering.html"><a href="analisis-de-conglomerados-clustering.html#estructuras-no-compactas"><i class="fa fa-check"></i><b>15.5.1</b> Estructuras no compactas</a></li>
+<li class="chapter" data-level="15.5.2" data-path="analisis-de-conglomerados-clustering.html"><a href="analisis-de-conglomerados-clustering.html#existencia-o-no-de-grupos-naturales"><i class="fa fa-check"></i><b>15.5.2</b> Existencia o no de grupos “naturales”</a></li>
+<li class="chapter" data-level="" data-path="analisis-de-conglomerados-clustering.html"><a href="analisis-de-conglomerados-clustering.html#grupos-en-dimension-alta"><i class="fa fa-check"></i>Grupos en dimensión alta</a></li>
+<li class="chapter" data-level="" data-path="analisis-de-conglomerados-clustering.html"><a href="analisis-de-conglomerados-clustering.html#dificultades-en-la-seleccion-de-metrica"><i class="fa fa-check"></i>Dificultades en la selección de métrica</a></li>
 </ul></li>
 </ul></li>
 <li class="divider"></li>
@@ -781,13 +782,13 @@ history &lt;-<span class="st"> </span>modelo <span class="op">%&gt;%</span><span
 <p>Ver los pesos:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">get_weights</span>(modelo)</code></pre></div>
 <pre><code>## [[1]]
-##             [,1]
-## [1,] -0.70884073
-## [2,]  0.07273419
-## [3,]  0.43473148
+##            [,1]
+## [1,] -0.6161945
+## [2,]  0.1486183
+## [3,]  0.3301837
 ## 
 ## [[2]]
-## [1] 1.680798</code></pre>
+## [1] 1.643175</code></pre>
 <p>Y verificamos que concuerda con la salida de <em>glm</em>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mod_logistico &lt;-<span class="st"> </span><span class="kw">glm</span>(g <span class="op">~</span><span class="st"> </span>x_<span class="dv">1</span> <span class="op">+</span><span class="st"> </span>x_<span class="dv">2</span><span class="op">+</span><span class="st"> </span>x_<span class="dv">3</span>, <span class="dt">data =</span> dat_ent, <span class="dt">family =</span> <span class="st">&#39;binomial&#39;</span>) 
 <span class="kw">coef</span>(mod_logistico)</code></pre></div>
@@ -852,13 +853,13 @@ history &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><s
 score &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">evaluate</span>(x_test, y_test)
 score</code></pre></div>
 <pre><code>## $loss
-## [1] 0.2873057
+## [1] 0.289874
 ## 
 ## $acc
 ## [1] 0.9322372
 ## 
 ## $categorical_crossentropy
-## [1] 0.2862551</code></pre>
+## [1] 0.2888266</code></pre>
 <p>Podemos también intentar con el ejemplo de spam:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(readr)
 <span class="kw">library</span>(tidyr)
@@ -894,13 +895,13 @@ tab_confusion &lt;-<span class="st"> </span><span class="kw">table</span>(modelo
 tab_confusion</code></pre></div>
 <pre><code>##    y_valid
 ##       0   1
-##   0 891  62
-##   1  36 545</code></pre>
+##   0 895  51
+##   1  32 556</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">prop.table</span>(tab_confusion, <span class="dv">2</span>)</code></pre></div>
 <pre><code>##    y_valid
 ##              0          1
-##   0 0.96116505 0.10214168
-##   1 0.03883495 0.89785832</code></pre>
+##   0 0.96548004 0.08401977
+##   1 0.03451996 0.91598023</code></pre>
 </div>
 </div>
 <div id="activaciones-relu" class="section level2">
@@ -952,13 +953,13 @@ history &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><s
 score &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">evaluate</span>(x_test, y_test)
 score</code></pre></div>
 <pre><code>## $loss
-## [1] 0.3066721
+## [1] 0.306811
 ## 
 ## $acc
-## [1] 0.9387145
+## [1] 0.937718
 ## 
 ## $categorical_crossentropy
-## [1] 0.2234086</code></pre>
+## [1] 0.2302181</code></pre>
 </div>
 </div>
 <div id="dropout-para-regularizacion" class="section level2">
@@ -1048,37 +1049,37 @@ hist_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">as
 <span class="kw">graf_pesos</span>(pesos) </code></pre></div>
 <p><img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-46-1.png" width="480" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">get_weights</span>(modelo_dropout)[[<span class="dv">3</span>]]</code></pre></div>
-<pre><code>##              [,1]
-##  [1,]  1.06936157
-##  [2,] -1.14472234
-##  [3,]  1.32936299
-##  [4,]  1.11771393
-##  [5,]  0.01064988
-##  [6,]  1.12949598
-##  [7,]  0.73905784
-##  [8,] -1.41379774
-##  [9,] -1.14593041
-## [10,]  1.36083508
-## [11,] -0.53736299
-## [12,]  1.19996881
-## [13,] -1.17018628
-## [14,]  0.21937427
-## [15,] -1.57806265
-## [16,] -1.50108755
-## [17,]  1.38576472
-## [18,] -1.64813960
-## [19,]  1.10584891
-## [20,]  0.08622821
-## [21,]  0.36325893
-## [22,] -1.17593110
-## [23,] -1.74543476
-## [24,] -1.81962812
-## [25,]  0.67279887
-## [26,] -1.35226047
-## [27,] -1.38156021
-## [28,]  1.19655681
-## [29,]  1.15403235
-## [30,] -1.68039668</code></pre>
+<pre><code>##             [,1]
+##  [1,]  0.9462458
+##  [2,]  1.1251847
+##  [3,] -1.2114600
+##  [4,] -1.8621342
+##  [5,] -1.4936250
+##  [6,] -1.7433792
+##  [7,]  0.6438074
+##  [8,]  0.6887447
+##  [9,] -1.8599489
+## [10,]  0.4505588
+## [11,] -1.3033893
+## [12,] -1.4795946
+## [13,]  0.8259149
+## [14,] -1.8407480
+## [15,] -1.1295906
+## [16,]  0.2313877
+## [17,] -1.3052378
+## [18,]  1.2520509
+## [19,] -1.6137439
+## [20,] -1.6147356
+## [21,]  0.5183135
+## [22,]  1.3550167
+## [23,]  0.3537257
+## [24,]  0.8939205
+## [25,] -1.3237253
+## [26,] -1.1852925
+## [27,]  1.4269055
+## [28,] -1.0926743
+## [29,] -1.2425480
+## [30,] -1.4729238</code></pre>
 <p>¿Cuáles de estas unidades tienen peso positivo y negativo en la capa final?</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pesos_capa_f &lt;-<span class="st"> </span><span class="kw">get_weights</span>(modelo_dropout)[[<span class="dv">3</span>]]
 <span class="kw">graf_pesos</span>(pesos[, pesos_capa_f <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.5</span>], <span class="dt">mostrar_facets =</span> <span class="ot">TRUE</span>)</code></pre></div>
@@ -1121,13 +1122,13 @@ history &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><s
 score &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">evaluate</span>(x_test, y_test)
 score</code></pre></div>
 <pre><code>## $loss
-## [1] 0.2269664
+## [1] 0.228538
 ## 
 ## $acc
-## [1] 0.9481814
+## [1] 0.9496761
 ## 
 ## $categorical_crossentropy
-## [1] 0.2227323</code></pre>
+## [1] 0.2243333</code></pre>
 
 </div>
 </div>
