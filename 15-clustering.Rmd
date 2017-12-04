@@ -457,58 +457,67 @@ su máximo (dividir entre 10 las preguntas en escala de 1 a 10 y entre 5 las de 
 
 
 ```{r}
-dat.2 <- dat %>% gather(var, valor, gvjbevn:sbcwkfm) %>% 
+dat_2 <- dat %>% gather(var, valor, gvjbevn:sbcwkfm) %>% 
   left_join(nombres) %>%
   select(-var) %>%
   group_by(nombre) %>%
-  mutate(valor.esc = valor/max(valor, na.rm=T)) %>%
+  mutate(valor_escalado = valor/max(valor, na.rm=T)) %>%
   select(-valor) %>%
-  spread(nombre, valor.esc)
-dat.3 <- filter(dat.2, apply(dat.2, 1, function(x){!any(is.na(x))}))
-dat.na <- filter(ess4.gb, apply(dat.2, 1, function(x){!any(is.na(x))}))
+  spread(nombre, valor_escalado)
+dat_3 <- filter(dat_2, apply(dat_2, 1, function(x){!any(is.na(x))}))
+dat_3
 
-ajustes.km <- lapply(1:10, function(k){
-  kmedias <- kmeans(dat.3[,-1], centers = k, nstart = 20, iter.max=40)    
+ajustes_km <- lapply(1:10, function(k){
+  kmedias <- kmeans(dat_3[,-1], centers = k, nstart = 20, iter.max=40)    
   kmedias
 })
-tot.within <- sapply(ajustes.km, function(aj){ aj$tot.withinss})
-qplot(1:length(tot.within), tot.within, geom='line') + geom_point()
-
+tot_within <- sapply(ajustes_km, function(aj){ aj$tot.withinss})
+qplot(1:length(tot_within), tot_within, geom='line') + geom_point()
 ```
 
 En esta gráfica no vemos un codo claro. Veamos primero la solución de
 dos grupos:
 
 ```{r}
-sol.cl <- ajustes.km[[2]]
-table(sol.cl$cluster)
+sol_cl <- ajustes_km[[2]]
+table(sol_cl$cluster)
 ```
 
-Todos los grupos tienen tamaño razonable. No queremos tener grupos muy chicos, **pues entonces es difícil caracterizarlos o entenderlos**: si hay 15 personas en un grupo, cualquier resumen de este grupo estaría sujeto a variación muestral alta.
-
-Consideramos las variables originales:
+Ahora veamos cómo resumir grupos para entender qué tipo de casos están
+en cada uno de ellos. Consideramos las variables originales escaladas:
 
 ```{r}
-cluster.df <- data.frame(idno = dat.3$idno, cluster = sol.cl$cluster)
-dat.4 <- dat.3 %>% gather(variable, valor, ausencia_cuidar_enfermos:trabajo_a_todos) %>%
-  left_join(cluster.df)
-resumen.1 <- dat.4 %>% group_by(cluster, variable) %>%
+cluster_df <- data.frame(idno = dat_3$idno, cluster = sol_cl$cluster)
+dat_4 <- dat_3 %>% 
+  gather(variable, valor, ausencia_cuidar_enfermos:trabajo_a_todos) %>%
+  left_join(cluster_df)
+```
+
+Y resumimos dentro de cada grupo cada una de las variables. Elecciones
+populares son la media y el error estándar de la media (desviación estándar
+dividida entre la raíz del número de casos):
+
+```{r}
+resumen_1 <- dat_4 %>% group_by(cluster, variable) %>%
   summarise(media = mean(valor), ee = sd(valor)/sqrt(length(valor)))
-
-
-## adicionalmente, invertimos las 3 preguntas en escala de 1 a 5, pues 1 representa mayor acuerdo. 
-filtro <- resumen.1$variable %in% c('beneficios_fam_trabajo','beneficios_igualdad','beneficios_pobreza')
-resumen.1$media[filtro] <- 1-resumen.1$media[filtro]
+resumen_1
 ```
 
 ```{r}
-resumen.1$variable <- reorder(resumen.1$variable, resumen.1$media, mean)
-ggplot(resumen.1, aes(x=variable, y=media, ymin=media-ee, ymax=media+ee,
+## adicionalmente, invertimos las 3 preguntas en escala de 1 a 5, pues 1 representa mayor acuerdo. 
+filtro <- resumen_1$variable %in% c('beneficios_fam_trabajo','beneficios_igualdad','beneficios_pobreza')
+resumen_1$media[filtro] <- 1-resumen_1$media[filtro]
+```
+
+```{r}
+resumen_1$variable <- reorder(resumen_1$variable, resumen_1$media, mean)
+ggplot(resumen_1, aes(x=variable, y=media, ymin=media-ee, ymax=media+ee,
                       colour=factor(cluster), group=cluster)) + geom_point() +
   coord_flip() + geom_line() + geom_linerange()
 ```
 
-Y notamos dos grupos claros que esperábamos ver desde el principio. Esta
+Y notamos dos grupos claros que esperaríamos ver. ¿Cómo la describirías?
+Esta
 puede ser una solución aceptable (por ejemplo, si vamos a usar los grupos
 en otro modelo, como parte de diseños de estrategias de comunicación, etc.)
 
@@ -516,8 +525,8 @@ en otro modelo, como parte de diseños de estrategias de comunicación, etc.)
 Intentemos ahora con 5 grupos:
 
 ```{r}
-sol.cl <- ajustes.km[[5]]
-table(sol.cl$cluster)
+sol_cl <- ajustes_km[[5]]
+table(sol_cl$cluster)
 ```
 
 Todos los grupos tienen tamaño razonable. No queremos tener grupos muy chicos, **pues entonces es difícil caracterizarlos o entenderlos**: si hay 15 personas en un grupo, cualquier resumen de este grupo estaría sujeto a variación muestral alta.
@@ -525,69 +534,39 @@ Todos los grupos tienen tamaño razonable. No queremos tener grupos muy chicos, 
 Consideramos las variables originales:
 
 ```{r}
-cluster.df <- data.frame(idno = dat.3$idno, cluster = sol.cl$cluster)
-dat.4 <- dat.3 %>% gather(variable, valor, ausencia_cuidar_enfermos:trabajo_a_todos) %>%
-  left_join(cluster.df)
-resumen.1 <- dat.4 %>% group_by(cluster, variable) %>%
+cluster_df <- data_frame(idno = dat_3$idno, cluster = sol_cl$cluster)
+dat_4 <- dat_3 %>% 
+  gather(variable, valor, ausencia_cuidar_enfermos:trabajo_a_todos) %>%
+  left_join(cluster_df)
+resumen_5 <- dat_4 %>% group_by(cluster, variable) %>%
   summarise(media = mean(valor), ee = sd(valor)/sqrt(length(valor)))
 
-
 ## adicionalmente, invertimos las 3 preguntas en escala de 1 a 5, pues 1 representa mayor acuerdo. 
-filtro <- resumen.1$variable %in% c('beneficios_fam_trabajo','beneficios_igualdad','beneficios_pobreza')
-resumen.1$media[filtro] <- 1-resumen.1$media[filtro]
+filtro <- resumen_5$variable %in% c('beneficios_fam_trabajo','beneficios_igualdad','beneficios_pobreza')
+resumen_5$media[filtro] <- 1-resumen_5$media[filtro]
 ```
 
 ```{r}
-resumen.1$variable <- reorder(resumen.1$variable, resumen.1$media, mean)
-ggplot(resumen.1, aes(x=variable, y=media, ymin=media-ee, ymax=media+ee,
+resumen_5$variable <- reorder(resumen_5$variable, resumen_5$media, mean)
+ggplot(resumen_5, aes(x=variable, y=media, ymin=media-ee, ymax=media+ee,
                       colour=factor(cluster), group=cluster)) + geom_point() +
   coord_flip() + geom_line() + geom_linerange()
 ```
 
 
 
+Y en estos casos es especialmente útil perfilar los grupos, es decir, mostrar las diferencias en las medias de cada grupo con respecto a la media general:
 
+```{r, fig.width=7,fig.asp=0.5}
+resumen_perfil_5 <- resumen_5 %>% group_by(variable) %>%
+  mutate(perfil = media - mean(media))
 
-
-Y es especialmente útil perfilar los grupos, es decir, mostrar las diferencias en cada variable en lugar de los promedios simples:
-
-```{r}
-resumen.2 <- resumen.1 %>% group_by(variable) %>%
-  mutate(perfil = media -mean(media))
-
-ggplot(resumen.2, aes(x=variable, y=perfil, 
-                      colour=factor(cluster), group=cluster)) + geom_point() +
-  coord_flip() + geom_line() 
-ggplot(resumen.2, aes(x=variable, y=perfil, 
-                      colour=factor(cluster), group=cluster)) + geom_point() +
-  coord_flip() + geom_line() + facet_wrap(~cluster) + geom_hline(yintercept=0, colour='gray')
+ggplot(resumen_perfil_5, aes(x = variable, y = perfil, 
+                      colour = factor(cluster), group = cluster)) + 
+  geom_point() + coord_flip() + geom_line() + facet_wrap(~cluster) + geom_hline(yintercept=0, colour='gray')
 ```
 
 ¿Cómo les llamarías a cada uno de estos grupos?
-
-```{r}
-tab <- table(ess4.gb$stratval)
-names(tab[tab > 50])
-tab.1 <- data.frame(round(100*prop.table(table(dat.na$stratval, sol.cl$cluster),margin=2),2))
-tab.2 <- tab.1 %>% group_by(Var1) %>%
-  mutate(perfil = Freq/mean(Freq))
-tab.3 <- tab.2 %>% select(-Freq) %>%spread(Var2, perfil) %>% arrange(`5`) %>% data.frame
-tab.3[tab.3$Var1 %in% names(tab[tab > 50]),]
-```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 ## Dificultades en segmentación/clustering.
 
@@ -784,9 +763,11 @@ En otros casos, como:
 de los clusters.
 - Estructuras relativamente dispersas que quisiéramos agrupar
 - Clusters no bien definidos.
-- Dificultad en escoger una métrica única apropiada para el problema.
+- Dificultad en escoger una métrica única apropiada para el problema,
 
-El resultado puede depender mucho del algoritmo, el criterio del analista, 
-y la muestra de entrenamiento.
+el resultado puede depender mucho del algoritmo, el criterio del analista, 
+y la muestra de entrenamiento. Eso no quiere decir que **la segmentación 
+de casos que produce el algoritmo no sea útil**, más bien que es difìcil 
+obtener grupos *naturales*
 ```
 
