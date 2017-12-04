@@ -568,6 +568,30 @@ ggplot(resumen_perfil_5, aes(x = variable, y = perfil,
 
 ¿Cómo les llamarías a cada uno de estos grupos?
 
+**Observación: heterogeneidad en uso de escalas**
+
+Los datos en escalas de acuerdo, que son usados frecuentemente en encuestas
+sociales y de negocios, tienen dificultades adicionales:
+
+- Desde el punto de vista estadístico, usamos una medición ordinal como si
+fuera numérica. Esto sugiere utilizar técnicas de clustering más compicadas 
+adaptadas a datos ordinales. Pero en realidad este es un aspecto menor
+en el análisis de este tipo de datos.
+
+- La dificultad grande en el análisis de este tipo de datos es la heterogeneidad
+en el uso de la escala. Esto quiere decir que no todas las personas usan
+escalas 1-10 (o 1-5, o 1-100, o Totalmente de acuerdo-Totalmente en desacuerdo)
+de la misma manera. Hay algunos que usan todo el rango de la escala, otros que se
+concentran en la mitad, etc. y muchas veces eso no tienen que ver sólo con el verdadero
+nivel de acuerdo o desacuerdo de la persona, sino también con cómo usa el lenguaje
+cada persona.
+
+- El verdadero problema es entonces en la medición, no que tratemos como numérica a una variable que no lo es. Los datos de una persona no son realmente directamente comparables con
+los de otra persona. Hay maneras de lidiar con esto: por ejemplo, centrar los
+niveles de respuesta de cada persona, usar modelos que intentan medir la heterogeneidad de uso en la escala y separar de niveles de acuerdo, pero lo mejor
+ en estos casos siempre es (si es posible) mejorar la medición.
+
+
 ## Dificultades en segmentación/clustering.
 
 Aunque la idea conceptual de clustering es más o menos clara,
