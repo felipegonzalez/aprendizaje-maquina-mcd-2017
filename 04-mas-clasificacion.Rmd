@@ -16,9 +16,9 @@ de esta medida es que, contrario al problema de regresión, hay errores
 de clasificación que son cualitativamente diferentes.
 
 #### Ejemplo {-}
-- Por ejemplo, diagnosticar a alguien con una enfermedad cuando no la tiene
+- Por ejemplo, diagnosticar a alguien con una enfermedad cuando no la tiene,
 tiene consecuencias distintas a diagnosticar como libre de enfermedad a alguien
-que la tiene. Estas consecuencias dependen de cómo son son los tratamientos consecuentes, de y qué tan peligrosa es la enfermedad.
+que la tiene. Estas consecuencias dependen de cómo son son los tratamientos consecuentes, y de qué tan peligrosa es la enfermedad.
 
 - Cuando usamos un buscador como Google, es cualitativamente diferente que el
 buscador omita resultados relevantes a que nos presente resultados irrelevantes.
@@ -36,7 +36,7 @@ reportar el tipo de errores que ocurren
 Sea $\hat{G}$ un clasificador binario. La matriz de confusión $C$ de $\hat{G}$ está 
 dada por
 
-$C_{i,j} = $\text{Número de casos de la clase verdadera j que son clasificados como clase i
+$C_{i,j}$ = $\text{Número de casos de la clase verdadera j que son clasificados como clase i
  por el clasificador}$
 ```
 
@@ -107,7 +107,7 @@ La matriz de confusion es entonces
 
 ```{r, warning=FALSE, message=FALSE}
 library(dplyr)
-tabla <- data_frame('-' = c('positivo.pred','negativo.pred','total'),
+tabla <- data_frame('Pred\Obs' = c('positivo.pred','negativo.pred','total'),
                     'positivo'=c('pv','fn','pos'),
                     'negativo'=c('fp','nv','neg'),
                     'total' = c('pred.pos','pred.neg',''))
@@ -376,7 +376,7 @@ auc_2
 
 En este ejemplo, vemos que casi no importa que perfil de especificidad y sensibilidad busquemos: el clasificador que usa todas las variables
 domina casi siempre al clasificador que sólo utiliza las variables de glucosa. 
-La razón es que para cualquier punto de corte (con sensibilidad menor a 0.4) en el clasificador de una variable, existe otro clasificador en la curva roja (todas las variable), que domina al primero. La excepción es para clasificadores de valores de sensibilidad baja, con tasas de falsos positivos muy chicas: 
+La razón es que para cualquier punto de corte (con sensibilidad mayor a 0.4) en el clasificador de una variable, existe otro clasificador en la curva azul (todas las variable), que domina al primero. La excepción es para clasificadores de valores de sensibilidad baja, con tasas de falsos positivos muy chicas: 
 en este caso, el modelo de una variable puede ser ligeramente superior.
 
 ## Regresión logística para problemas de más de 2 clases
@@ -435,7 +435,7 @@ $$Z = 1 + \sum_{j=1}^{K-1}\exp(\beta_0^j + \beta_1^jx_2 + \ldots + \beta_p^j x_p
 
 Para ajustar coeficientes, usamos el mismo criterio de devianza de entrenamiento.
 Buscamos minimizar:
-$$D(\beta)=−2 \sum_{i=1}^N p_{g^{(i)}}(x^{(i)}),$$
+$$D(\beta)=−2 \sum_{i=1}^N log[p_{g^{(i)}}(x^{(i)})],$$
 Donde $\beta$ contiene todos los coeficientes organizados en un vector
 de tamaño $(p+1)(K+1)$:
 $$\beta = ( \beta_0^1, \beta_1^1, \ldots , \beta_p^1,  \beta_0^2, \beta_1^2, \ldots , \beta_p^2, \ldots \beta_0^{K-1}, \beta_1^{K-1}, \ldots , \beta_p^{K-1} )$$
@@ -449,7 +449,7 @@ dos métodos dan resultados similares.
 ### Interpretación de coeficientes
 
 Los coeficientes mostrados en la parametrización de arriba se intrepretan
-más fácilmente como comparaciones de la clase $j$ contra la clase $K$, pues
+más fácilmente como comparaciones de la clase $g$ contra la clase $K$, pues
 
 $$\log\left (\frac{p_g(x)}{p_K(x)}\right ) = \beta_{0,{g}} + \beta_{1,{g}}x_2 + \ldots + \beta_{p,{g}} x_p$$
 
