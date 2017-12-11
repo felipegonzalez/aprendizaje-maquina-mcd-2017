@@ -16,7 +16,7 @@ que el error es
 $$Y - \hat{f}(x_0) = (f(x_0) - \hat{f}(x_0)) + \epsilon$$
 Como discutimos antes, no podemos hacer nada por la variación de $\epsilon$.
 La pregunta es entonces ¿por qué podría pasar que $\hat{f}(x_0)$ estuviera lejos
-de $\hat{f}(x_0)$? Recordemos que $\hat{f}(x_0)$ depende de una muestra
+de $f(x_0)$? Recordemos que $\hat{f}(x_0)$ depende de una muestra
 de entrenamiento ${\mathcal L}$, de modo que:
 
 - Puede ser que $\hat{f}(x_0)$ está consistentemente lejos de $f(x_0)$, independientemente
@@ -353,9 +353,9 @@ abline(a=0, b=1, col ='gray')
 
 
 
-## Regularización ridge
+## Regularización Ridge
 
-Arriba vimos un ejemplo de regresión penalizada tipo **ridge**. Recordemos
+Arriba vimos un ejemplo de regresión penalizada tipo **Ridge**. Recordemos
 que para regresión lineal, buscábamos minimizar la cantidad
 $$D(\beta)=\frac{1}{n}\sum_{i=1}^n (y_i -\beta_0 - \sum_{j=1}^p \beta_j x_{ij})^2$$
 y en regresión logística,
@@ -477,7 +477,7 @@ ggplot(devianzas_prueba, aes(x = lambda, y= devianza)) +
 ```
 
 Buscamos entonces minimizar la devianza (evaluada en la muestra de prueba),
-que corresponde a tomar un valor de $\lambda$ alrededor de exp(-2).
+que corresponde a tomar un valor de $\lambda$ alrededor de exp(1/2).
 
 **Discusión**: ¿por qué la devianza de prueba tiene esta forma, que es
 típica para problemas de regularización? 
@@ -592,7 +592,7 @@ knitr::include_graphics("./imagenes/div_muestra_cv.png")
 Construimos $k$ modelos distintos, digamos $\hat{f}_j$, usando solamente
 la muestra ${\mathcal L}-{\mathcal L}_j$. Este modelo lo evaluamos
 usando la parte que no usamos, ${\mathcal L}_j$, para obtener una 
-estimación honesta del error del modelo $\hat{f}_k$, a la que denotamos
+estimación honesta del error del modelo $\hat{f}_j$, a la que denotamos
 por $\hat{e}_j$. 
 
 Notemos entonces que tenemos $k$ estimaciones del error
@@ -723,26 +723,26 @@ La salida de glmnet,
 sin embargo, tiene coeficientes para todas las clases ($K(p+1)$ parámetros). 
 ¿Por qué en regresión ridge no está sobreparametrizado el modelo? 
 
-## Regularización lasso
+## Regularización Lasso
 
 
-Otra forma de regularización es el **lasso**, que en lugar de penalizar
+Otra forma de regularización es el **Lasso**, que en lugar de penalizar
 con la suma de cuadrados en los coeficientes, penaliza por la suma
 de su valor absoluto.
 
 ```{block2, type='comentario'}
-En regresión **lasso** (lineal/logística), para $\lambda>0$ fija minimizamos
+En regresión **Lasso** (lineal/logística), para $\lambda>0$ fija minimizamos
 $$D_{\lambda}^2 (\beta)=D(\beta)  + \lambda\sum_{i=1}^p |\beta_j|$$,
 donde suponemos que las entradas están estandarizadas (centradas y escaladas por
 la desviación estándar).
 ```
 
-El problema de minimización de ridge y de lasso se pueden reescribir como
+El problema de minimización de ridge y de Lasso se pueden reescribir como
 problemas de restricción:
 
 
 ```{block2, type='comentario'}
-En regresión **lasso** (lineal/logística), para $s>0$ fija minimizamos
+En regresión **Lasso** (lineal/logística), para $s>0$ fija minimizamos
 $$D(\beta), $$
 sujeto a
 $$\sum_{i=1}^p |\beta_j|< s$$
@@ -761,7 +761,7 @@ la desviación estándar).
 $s$ y $t$ chicas corresponden a valores de penalización $\lambda$ grandes.
 
 
-En un principio, puede parecer que ridge y lasso deben dar resultados
+En un principio, puede parecer que ridge y Lasso deben dar resultados
 muy similares, pues en ambos casos penalizamos por el tamaño de los coeficientes.
 Sin embargo, son distintos de una manera muy importante.
 
@@ -774,15 +774,15 @@ bien la curva de nivel más baja que intersecta la restricción:
 ```{r}
 knitr::include_graphics('./imagenes/ridge_lasso.png')
 ```
-Y obsérvese ahora que la solución de lasso *puede hacer algunos coeficientes
+Y obsérvese ahora que la solución de Lasso *puede hacer algunos coeficientes
 igual a 0*. Es decir,
 
 ```{block2, type='comentario'}
 En regresión ridge, los coeficientes se encogen gradualmente desde la solución
 no restringida hasta el origen. Ridge es un método de **encogimiento de coeficientes.**
 
-En regresión lasso, los coeficientes se encogen gradualmente, pero también
-se excluyen  variables del modelo. Por eso lasso es un método de
+En regresión Lasso, los coeficientes se encogen gradualmente, pero también
+se excluyen  variables del modelo. Por eso Lasso es un método de
 *encogimiento y selección de variables*.
 ```
 
@@ -793,8 +793,8 @@ correlacionadas para reducir varianza en las predicciones.
 - Lasso encoge igualmente coeficientes para reducir varianza, pero también comparte
 similitudes con *regresión de mejor subconjunto*, en donde para cada número de variables $l$
 buscamos escoger las $l$ variables que den el mejor modelo. Sin embargo, el enfoque
-de lasso es más escalable y puede calcularse de manera más simple.
-- Descenso en gradiente no es apropiado para regresión lasso (ver documentación de
+de Lasso es más escalable y puede calcularse de manera más simple.
+- Descenso en gradiente no es apropiado para regresión Lasso (ver documentación de
 glmnet para ver cómo se hace en este paquete). El problema es que los coeficientes
 nunca se hacen exactamente cero, pues la restricción no es diferenciable en el origen 
 (coeficientes igual a cero).
@@ -822,7 +822,7 @@ dat_p <- dat_grasa[151:252,]
 x_e <- dat_e %>% select(-grasacorp, -id, -unif) %>% as.matrix
 x_p <- dat_p %>% select(-grasacorp, -id, -unif) %>% as.matrix
 
-mod_bodyfat <- cv.glmnet(x = x_e, y = dat_e$grasacorp, alpha = 1) #alpha=1 para lasso
+mod_bodyfat <- cv.glmnet(x = x_e, y = dat_e$grasacorp, alpha = 1) #alpha=1 para Lasso
 plot(mod_bodyfat)
 ```
 ```{r}
