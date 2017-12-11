@@ -124,7 +124,7 @@ iteraciones_descenso <- descenso(300, rep(0,4), 0.8,
 ggplot(iteraciones_descenso, aes(x=beta_1, y=beta_2)) + geom_point()
 ```
 
-Y ahora hacemos descenso estocástico. Vamos a hacer minilotes de tamaño 5:
+Y ahora hacemos descenso estocástico. Vamos a hacer minilotes de tamaño 10:
 
 ```{r}
 dat_ent$minilote <- rep(1:10, each=5)
@@ -136,7 +136,7 @@ minilotes <- lapply(split_ml, function(dat_ml){
 length(minilotes)
 ```
 
-Ahora iteramos. Nótese cómo descenso en gradiente tiene un patrón aleatorio
+Ahora iteramos. Nótese cómo descenso estocástico tiene un patrón aleatorio
 de avance hacia el mínimo, y una vez que llega a una región oscila
 alrededor de este mínimo.
 
