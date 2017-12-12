@@ -460,7 +460,7 @@ Podemos estimar su  error de clasificación $P(\hat{G} \neq G)$ con una muestra
 de prueba
 $${\mathcal T}=\{ (x_0^{(1)},g_0^{(1)}),(x_0^{(2)},g_0^{(2)}), \ldots, (x_0^{(m)}, g_0^{(m)})$$
 mediante
-$$\hat{Err} = \frac{1}{m} \sum_{j=i}^m I(\hat{G}(x_0^{(i)}) \neq g_0^{(i)}),$$
+$$\hat{Err} = \frac{1}{m} \sum_{j=1}^m I(\hat{G}(x_0^{(j)}) \neq g_0^{(j)}),$$
 es decir, la proporción de casos de prueba que son clasificados incorrectamente.
 ```
 
@@ -884,7 +884,7 @@ la variable $x$ está en su media.
 
 Si $x$ se incrementa en una desviación estándar, la cantidad
 $$z = \beta_0 + \beta_1x$$
-baja por la cantidad
+cambia por la cantidad
 ```{r}
 coeficientes[2]
 ```
