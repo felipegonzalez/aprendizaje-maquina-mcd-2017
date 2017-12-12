@@ -25,7 +25,7 @@
 <meta name="author" content="Felipe González">
 
 
-<meta name="date" content="2017-12-04">
+<meta name="date" content="2017-12-12">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -424,8 +424,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div id="validacion-de-modelos-problemas-comunes" class="section level1">
 <h1><span class="header-section-number">Clase 13</span> Validación de modelos: problemas comunes</h1>
 <p>En aprendizaje de máquina, el ajuste y afinación de parámetros es tan importante como la evaluación de desempeño o validación de los modelos resultantes. Ninguna funciona bien sin que la otra sea correctamente ejecutada. Hemos visto que ambas partes tienen dificultades algunas veces sutiles (tanto el ajuste y optimización como la evaluación de las predicciones) que pueden hacer fracasar nuestro ejercicio de modelación.</p>
-<p>En esta parte hablaremos de la evaluación de modelos. En aprendizaje máqina, considerando que utilizamos relativamente pocos supuestos teóricos, dependemos de esa evaluación para asegurarnos que estamos capturando patrones reales y útiles en los datos.</p>
-<p>Todo lo que veremos aplica tanto a separación de muestras de validación como a uso de algún tipo de validación cruzada (validación cruzada, estimación OOB en árboles, validación bootstrap, etc.)</p>
+<p>En esta parte hablaremos de la evaluación de modelos. En aprendizaje máquina, considerando que utilizamos relativamente pocos supuestos teóricos, dependemos de esa evaluación para asegurarnos que estamos capturando patrones reales y útiles en los datos.</p>
+<p>Todo lo que veremos aplica tanto a separación de muestras de validación como a uso de algún tipo de validación (validación cruzada, estimación OOB en árboles, validación bootstrap, etc.)</p>
 <div id="filtracion-de-datos" class="section level2">
 <h2><span class="header-section-number">13.1</span> Filtración de datos</h2>
 
@@ -481,7 +481,7 @@ ajustar_evaluar &lt;-<span class="st"> </span><span class="cf">function</span>(d
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">errores &lt;-<span class="st"> </span><span class="kw">simular_datos</span>(<span class="dv">500</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">separar</span>(<span class="dt">prop=</span> <span class="kw">c</span>(<span class="fl">0.4</span>,<span class="fl">0.4</span>,<span class="fl">0.2</span>)) <span class="op">%&gt;%</span><span class="st"> </span>ajustar_evaluar
 errores</code></pre></div>
 <pre><code>## error_valida error_prueba 
-##     1.462734     3.726633</code></pre>
+##     1.691497     3.914501</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">reps_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">map</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">50</span>, simular_datos, <span class="dt">n =</span> <span class="dv">500</span>) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">        </span><span class="kw">map</span>(separar, <span class="dt">prop=</span> <span class="kw">c</span>(<span class="fl">0.6</span>,<span class="fl">0.2</span>,<span class="fl">0.2</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">        </span><span class="kw">map</span>(ajustar_evaluar) <span class="op">%&gt;%</span>
@@ -551,7 +551,7 @@ gr_reps_<span class="dv">2</span> &lt;-<span class="st"> </span>reps_<span class
 }
 <span class="kw">seleccion_ajuste</span>()</code></pre></div>
 <pre><code>## error_valida error_prueba 
-##        0.120        0.504</code></pre>
+##        0.080        0.495</code></pre>
 <p>El resultado es catastrófico otra vez:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">errores_selec &lt;-<span class="st"> </span><span class="kw">map</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">30</span>, seleccion_ajuste) <span class="op">%&gt;%</span><span class="st"> </span>transpose <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">map</span>(unlist) <span class="op">%&gt;%</span><span class="st"> </span>as.data.frame
 <span class="kw">ggplot</span>(errores_selec, <span class="kw">aes</span>(<span class="dt">x=</span>error_prueba, <span class="dt">y=</span>error_valida)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span><span class="kw">geom_abline</span>(<span class="dt">colour=</span><span class="st">&#39;red&#39;</span>) <span class="op">+</span>
@@ -594,7 +594,7 @@ gr_reps_<span class="dv">2</span> &lt;-<span class="st"> </span>reps_<span class
 <p>Imaginemos que queremos predecir los clientes que se van a quedar y los que se van a ir en función de las visitas que hacen a un sitio.</p>
 <ul>
 <li><p>Vamos a simular el tiempo que se queda cada cliente independiente de otras variables, y construimos una variable de entrada, el número de visitas, que depende del tiempo que un cliente permanece. Por simplicidad, suponemos que todos los clientes empiezan en el tiempo 0.</p></li>
-<li><p>Vamos a suponer durante el tiempo 0.5 y 1.5, hubo una campaña de ventas para intentar recuperar a clientes abandonadores. Una fracción los clientes que abandonaron entre el tiempo 0.5 y 1.5 recibieron una llamada de servicio a cliente. Esto está registrado en la base de datos.</p></li>
+<li><p>Vamos a suponer que durante el tiempo 0.5 y 1.5, hubo una campaña de ventas para intentar recuperar a clientes abandonadores. Una fracción los clientes que abandonaron entre el tiempo 0.5 y 1.5 recibieron una llamada de servicio a cliente. Esto está registrado en la base de datos.</p></li>
 </ul>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">simular_clientes &lt;-<span class="st"> </span><span class="cf">function</span>(n,...){
     tiempo_cliente &lt;-<span class="st"> </span><span class="kw">rexp</span>(n, <span class="fl">0.5</span>)
@@ -889,7 +889,7 @@ valida<span class="op">$</span>preds_valida &lt;-<span class="st"> </span>preds_
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">preds_log &lt;-<span class="st"> </span><span class="kw">predict</span>(mod_log, tiendas_prueba)
 <span class="kw">sd</span>(preds_log<span class="op">-</span><span class="kw">log</span>(tiendas_prueba<span class="op">$</span>ventas))</code></pre></div>
 <pre><code>## [1] 0.5730244</code></pre>
-<p>El error es más alto de lo que esperábamos, y nuestra predicción para las tiendas malas es especialmente malo:</p>
+<p>El error es más alto de lo que esperábamos, y nuestra predicción para las tiendas cerradas es especialmente malo:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tiendas_prueba<span class="op">$</span>pred_prueba &lt;-<span class="st"> </span>preds_log
 <span class="kw">ggplot</span>(tiendas_prueba, <span class="kw">aes</span>(<span class="dt">y=</span><span class="kw">log</span>(ventas), <span class="dt">x=</span> pred_prueba,<span class="dt">colour=</span>cerrada))<span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>() <span class="op">+</span>
 <span class="st">    </span><span class="kw">geom_abline</span>(<span class="dt">colour=</span><span class="st">&#39;red&#39;</span>)</code></pre></div>
@@ -906,7 +906,7 @@ valida<span class="op">$</span>preds_valida &lt;-<span class="st"> </span>preds_
 </div>
 <div id="muestras-de-validacion-chicas" class="section level2">
 <h2><span class="header-section-number">13.6</span> Muestras de validación chicas</h2>
-<p>Una muestra de validación chica es casi tan malo como una muestra de entrenamiento chica. Una muestra de entrenamiento grande nos permite intentar modelos más complejos y flexible. Pero con una muestra de validación demasiado chica, no es posible discriminar entre los que se desempeñan bien y mal, desaprovechando las ganancias que podríamos tener por tener una buena muestra de entrenamiento.</p>
+<p>Una muestra de validación chica es casi tan malo como una muestra de entrenamiento chica. Una muestra de entrenamiento grande nos permite intentar modelos más complejos y flexibles. Pero con una muestra de validación demasiado chica, no es posible discriminar entre los que se desempeñan bien y mal, desaprovechando las ganancias que podríamos tener por tener una buena muestra de entrenamiento.</p>
 <p>Podemos ver la situación con el ejemplo de spam</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">spam &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&#39;datos/spam-entrena.csv&#39;</span>)
 spam_prueba &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&#39;datos/spam-prueba.csv&#39;</span>)
