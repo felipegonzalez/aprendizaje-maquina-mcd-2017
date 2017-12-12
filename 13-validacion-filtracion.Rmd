@@ -7,13 +7,13 @@ dificultades algunas veces sutiles
 (tanto el ajuste y optimización como la evaluación de las predicciones) que pueden 
 hacer fracasar nuestro ejercicio de modelación. 
 
-En esta parte hablaremos de la evaluación de modelos. En aprendizaje máqina, considerando que utilizamos 
+En esta parte hablaremos de la evaluación de modelos. En aprendizaje máquina, considerando que utilizamos 
 relativamente pocos supuestos
 teóricos, dependemos de esa evaluación para asegurarnos que estamos capturando patrones
 reales y útiles en los datos.
 
 Todo lo que veremos aplica tanto a separación de muestras de validación como
-a uso de algún tipo de validación cruzada (validación cruzada, estimación OOB en árboles,
+a uso de algún tipo de validación (validación cruzada, estimación OOB en árboles,
 validación bootstrap, etc.)
 
 ## Filtración de datos
@@ -259,7 +259,7 @@ y construimos una variable de entrada, el número de visitas, que depende del ti
 que un cliente permanece. Por simplicidad, suponemos que todos los clientes empiezan
 en el tiempo 0.
 
-- Vamos a suponer durante el tiempo 0.5 y 1.5, hubo una campaña de ventas para
+- Vamos a suponer que durante el tiempo 0.5 y 1.5, hubo una campaña de ventas para
 intentar recuperar a clientes abandonadores. Una fracción los clientes que abandonaron entre el tiempo 0.5 y 1.5 recibieron una llamada de servicio a cliente. Esto está registrado en la base de datos.
 
 
@@ -618,7 +618,7 @@ sd(preds_log-log(tiendas_prueba$ventas))
 ```
 
 El error es más alto de lo que esperábamos, y nuestra predicción para las
-tiendas malas es especialmente malo:
+tiendas cerradas es especialmente malo:
 
 ```{r}
 tiendas_prueba$pred_prueba <- preds_log
@@ -647,7 +647,7 @@ de las variables explicativas - en este caso podríamos intentar imputación de 
 
 Una muestra de validación chica es casi tan malo como una muestra de entrenamiento
 chica. Una muestra de entrenamiento grande nos permite intentar modelos más
-complejos y flexible. Pero con una muestra de validación demasiado chica, no es
+complejos y flexibles. Pero con una muestra de validación demasiado chica, no es
 posible discriminar entre los que se desempeñan bien y mal, desaprovechando las
 ganancias que podríamos tener por tener una buena muestra de entrenamiento.
 
