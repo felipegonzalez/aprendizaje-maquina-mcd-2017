@@ -285,7 +285,7 @@ dim(digitos_entrena)
 table(digitos_entrena$digito)
 ```
 
-Ponemos el rango entre [0,2] (pixeles positivos) y usamos codificación dummy
+Ponemos el rango entre [0,1] (pixeles positivos) y usamos codificación dummy
 
 ```{r}
 x_train <- digitos_entrena %>% select(contains('pixel')) %>% as.matrix + 1
