@@ -77,7 +77,7 @@ reescribimos el problema anterior como
 
 Este problema consiste en *ajustar un árbol a los residuales o errores
 del paso anterior*. Otra manera de decir esto es que añadimos un término adicional
-que intenta coregir lo que el modelo anterior no pudo predecir bien.
+que intenta corregir lo que el modelo anterior no pudo predecir bien.
 La idea es repetir este proceso para ir reduciendo los residuales, agregando
 un árbol a la vez.
 
