@@ -451,7 +451,7 @@ Esta es una cantidad aleatoria, de modo que en algunos casos este error
 puede ser más grande o más chico. Usualmente buscamos una $\hat{f}$ de
 modo que el error promedio sea chico:
 
-$$Err = E (Y - \hat{f}(X))^2 $$
+$$Err = E[(Y - \hat{f}(X))^2]$$
 
 **Nota**: Intenta demostrar que bajo error cuadrático medio y suponiendo
 el modelo aditivo $Y=f(X)+\epsilon$, el mejor predictor
