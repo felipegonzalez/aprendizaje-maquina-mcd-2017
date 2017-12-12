@@ -91,7 +91,7 @@ read_file(positivos[1])
 este caso, quisiéramos hacer dar una calificación a cada película basada en el 
 % de reseñas positivas que tiene. Supongamos que se ha decidido que
 necesitamos al menos una tasa de correctos de 90\% para que el score sea confiable
- (cómo calcularías algo así?). 
+ (¿cómo calcularías algo así?). 
  
 - Ahora necesitamos construir un pipeline para obtener las primeras predicciones.
  Tenemos que pensar qué entradas podríamos construir. 
