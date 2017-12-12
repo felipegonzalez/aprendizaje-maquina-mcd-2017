@@ -186,14 +186,14 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="5.1.1" data-path="regularizacion.html"><a href="regularizacion.html#sesgo-y-varianza-en-modelos-lineales"><i class="fa fa-check"></i><b>5.1.1</b> Sesgo y varianza en modelos lineales</a></li>
 <li class="chapter" data-level="5.1.2" data-path="regularizacion.html"><a href="regularizacion.html#reduciendo-varianza-de-los-coeficientes"><i class="fa fa-check"></i><b>5.1.2</b> Reduciendo varianza de los coeficientes</a></li>
 </ul></li>
-<li class="chapter" data-level="5.2" data-path="regularizacion.html"><a href="regularizacion.html#regularizacion-ridge"><i class="fa fa-check"></i><b>5.2</b> Regularización ridge</a><ul>
+<li class="chapter" data-level="5.2" data-path="regularizacion.html"><a href="regularizacion.html#regularizacion-ridge"><i class="fa fa-check"></i><b>5.2</b> Regularización Ridge</a><ul>
 <li class="chapter" data-level="5.2.1" data-path="regularizacion.html"><a href="regularizacion.html#seleccion-de-coeficiente-de-regularizacion"><i class="fa fa-check"></i><b>5.2.1</b> Selección de coeficiente de regularización</a></li>
 </ul></li>
 <li class="chapter" data-level="5.3" data-path="regularizacion.html"><a href="regularizacion.html#entrenamiento-validacion-y-prueba"><i class="fa fa-check"></i><b>5.3</b> Entrenamiento, Validación y Prueba</a><ul>
 <li class="chapter" data-level="5.3.1" data-path="regularizacion.html"><a href="regularizacion.html#validacion-cruzada"><i class="fa fa-check"></i><b>5.3.1</b> Validación cruzada</a></li>
 <li class="chapter" data-level="" data-path="regularizacion.html"><a href="regularizacion.html#ejercicio-5"><i class="fa fa-check"></i>Ejercicio</a></li>
 </ul></li>
-<li class="chapter" data-level="5.4" data-path="regularizacion.html"><a href="regularizacion.html#regularizacion-lasso"><i class="fa fa-check"></i><b>5.4</b> Regularización lasso</a></li>
+<li class="chapter" data-level="5.4" data-path="regularizacion.html"><a href="regularizacion.html#regularizacion-lasso"><i class="fa fa-check"></i><b>5.4</b> Regularización Lasso</a></li>
 <li class="chapter" data-level="5.5" data-path="regularizacion.html"><a href="regularizacion.html#tarea-3"><i class="fa fa-check"></i><b>5.5</b> Tarea</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="extensiones-para-regresion-lineal-y-logistica.html"><a href="extensiones-para-regresion-lineal-y-logistica.html"><i class="fa fa-check"></i><b>6</b> Extensiones para regresión lineal y logística</a><ul>
@@ -1079,16 +1079,16 @@ beta &lt;-<span class="st"> </span><span class="kw">runif</span>(<span class="dv
 dev_ent &lt;-<span class="st"> </span><span class="kw">devianza_calc</span>(x_ent_s, y_ent)
 grad &lt;-<span class="st"> </span><span class="kw">grad_calc</span>(x_ent_s, y_ent)
 <span class="kw">dev_ent</span>(beta)</code></pre></div>
-<pre><code>## [1] 228972.1</code></pre>
+<pre><code>## [1] 251560.5</code></pre>
 <p>Hacemos algunas revisiiones del gradiente:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">beta_<span class="dv">2</span> &lt;-<span class="st"> </span>beta 
 epsilon &lt;-<span class="st"> </span><span class="fl">0.00001</span>
 beta_<span class="dv">2</span>[<span class="dv">1000</span>] &lt;-<span class="st"> </span>beta[<span class="dv">1000</span>] <span class="op">+</span><span class="st"> </span>epsilon
 
 (<span class="kw">dev_ent</span>(beta_<span class="dv">2</span>) <span class="op">-</span><span class="st"> </span><span class="kw">dev_ent</span>(beta))<span class="op">/</span>epsilon</code></pre></div>
-<pre><code>## [1] -986.2305</code></pre>
+<pre><code>## [1] -236.7353</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">grad</span>(beta)[<span class="dv">1000</span>]</code></pre></div>
-<pre><code>## [1] -986.2317</code></pre>
+<pre><code>## [1] -236.7382</code></pre>
 <p>Ya ahora podemos hacer descenso:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">iteraciones &lt;-<span class="st"> </span><span class="kw">descenso</span>(<span class="dv">2000</span>, <span class="kw">rep</span>(<span class="dv">0</span>, <span class="dv">257</span><span class="op">*</span><span class="dv">9</span>), <span class="dt">eta=</span><span class="fl">0.001</span>, 
                         <span class="dt">h_deriv =</span> grad, <span class="dt">dev_fun =</span> dev_ent)</code></pre></div>

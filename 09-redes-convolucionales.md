@@ -122,7 +122,7 @@ filtro_difuminar
 ## [3,] 0.1111111 0.1111111 0.1111111
 ```
 
-El centro de este filtro se sobrepone sobre la cada pixel de la imagen $x$,
+El centro de este filtro se sobrepone sobre cada pixel de la imagen $x$,
 se multiplican los valores de la imagen por los del filtro y se suma
 para obtener el nuevo pixel de la imagen $y$. Por ejemplo, si tenemos la imagen
 

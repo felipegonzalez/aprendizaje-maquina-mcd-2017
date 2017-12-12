@@ -186,14 +186,14 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="5.1.1" data-path="regularizacion.html"><a href="regularizacion.html#sesgo-y-varianza-en-modelos-lineales"><i class="fa fa-check"></i><b>5.1.1</b> Sesgo y varianza en modelos lineales</a></li>
 <li class="chapter" data-level="5.1.2" data-path="regularizacion.html"><a href="regularizacion.html#reduciendo-varianza-de-los-coeficientes"><i class="fa fa-check"></i><b>5.1.2</b> Reduciendo varianza de los coeficientes</a></li>
 </ul></li>
-<li class="chapter" data-level="5.2" data-path="regularizacion.html"><a href="regularizacion.html#regularizacion-ridge"><i class="fa fa-check"></i><b>5.2</b> Regularización ridge</a><ul>
+<li class="chapter" data-level="5.2" data-path="regularizacion.html"><a href="regularizacion.html#regularizacion-ridge"><i class="fa fa-check"></i><b>5.2</b> Regularización Ridge</a><ul>
 <li class="chapter" data-level="5.2.1" data-path="regularizacion.html"><a href="regularizacion.html#seleccion-de-coeficiente-de-regularizacion"><i class="fa fa-check"></i><b>5.2.1</b> Selección de coeficiente de regularización</a></li>
 </ul></li>
 <li class="chapter" data-level="5.3" data-path="regularizacion.html"><a href="regularizacion.html#entrenamiento-validacion-y-prueba"><i class="fa fa-check"></i><b>5.3</b> Entrenamiento, Validación y Prueba</a><ul>
 <li class="chapter" data-level="5.3.1" data-path="regularizacion.html"><a href="regularizacion.html#validacion-cruzada"><i class="fa fa-check"></i><b>5.3.1</b> Validación cruzada</a></li>
 <li class="chapter" data-level="" data-path="regularizacion.html"><a href="regularizacion.html#ejercicio-5"><i class="fa fa-check"></i>Ejercicio</a></li>
 </ul></li>
-<li class="chapter" data-level="5.4" data-path="regularizacion.html"><a href="regularizacion.html#regularizacion-lasso"><i class="fa fa-check"></i><b>5.4</b> Regularización lasso</a></li>
+<li class="chapter" data-level="5.4" data-path="regularizacion.html"><a href="regularizacion.html#regularizacion-lasso"><i class="fa fa-check"></i><b>5.4</b> Regularización Lasso</a></li>
 <li class="chapter" data-level="5.5" data-path="regularizacion.html"><a href="regularizacion.html#tarea-3"><i class="fa fa-check"></i><b>5.5</b> Tarea</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="extensiones-para-regresion-lineal-y-logistica.html"><a href="extensiones-para-regresion-lineal-y-logistica.html"><i class="fa fa-check"></i><b>6</b> Extensiones para regresión lineal y logística</a><ul>
@@ -512,7 +512,7 @@ dat_valid &lt;-<span class="st"> </span><span class="kw">sim_datos</span>(<span 
 <span class="st">  </span>data.frame <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">rename</span>(<span class="dt">beta_1 =</span> X2, <span class="dt">beta_2 =</span> X3)
 <span class="kw">ggplot</span>(iteraciones_descenso, <span class="kw">aes</span>(<span class="dt">x=</span>beta_<span class="dv">1</span>, <span class="dt">y=</span>beta_<span class="dv">2</span>)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>()</code></pre></div>
 <p><img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-6-1.png" width="480" /></p>
-<p>Y ahora hacemos descenso estocástico. Vamos a hacer minilotes de tamaño 5:</p>
+<p>Y ahora hacemos descenso estocástico. Vamos a hacer minilotes de tamaño 10:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dat_ent<span class="op">$</span>minilote &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>, <span class="dt">each=</span><span class="dv">5</span>)
 split_ml &lt;-<span class="st"> </span><span class="kw">split</span>(dat_ent <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">sample_n</span>(<span class="kw">nrow</span>(dat_ent)), dat_ent<span class="op">$</span>minilote) 
 minilotes &lt;-<span class="st"> </span><span class="kw">lapply</span>(split_ml, <span class="cf">function</span>(dat_ml){
@@ -521,7 +521,7 @@ minilotes &lt;-<span class="st"> </span><span class="kw">lapply</span>(split_ml,
 })
 <span class="kw">length</span>(minilotes)</code></pre></div>
 <pre><code>## [1] 10</code></pre>
-<p>Ahora iteramos. Nótese cómo descenso en gradiente tiene un patrón aleatorio de avance hacia el mínimo, y una vez que llega a una región oscila alrededor de este mínimo.</p>
+<p>Ahora iteramos. Nótese cómo descenso estocástico tiene un patrón aleatorio de avance hacia el mínimo, y una vez que llega a una región oscila alrededor de este mínimo.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">iter_estocastico &lt;-<span class="st"> </span>descenso_estocá<span class="kw">stico</span>(<span class="dv">30</span>, <span class="kw">rep</span>(<span class="dv">0</span>, <span class="dv">4</span>), <span class="fl">0.1</span>, minilotes) <span class="op">%&gt;%</span>
 <span class="st">  </span>data.frame <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">rename</span>(<span class="dt">beta_0 =</span> X1, <span class="dt">beta_1 =</span> X2, <span class="dt">beta_2 =</span> X3)
 <span class="kw">ggplot</span>(iteraciones_descenso, <span class="kw">aes</span>(<span class="dt">x=</span>beta_<span class="dv">1</span>, <span class="dt">y=</span>beta_<span class="dv">2</span>)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_path</span>() <span class="op">+</span>
@@ -782,13 +782,13 @@ history &lt;-<span class="st"> </span>modelo <span class="op">%&gt;%</span><span
 <p>Ver los pesos:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">get_weights</span>(modelo)</code></pre></div>
 <pre><code>## [[1]]
-##            [,1]
-## [1,] -0.6273920
-## [2,]  0.1363298
-## [3,]  0.2878922
+##             [,1]
+## [1,] -0.66511565
+## [2,]  0.07884058
+## [3,]  0.36421624
 ## 
 ## [[2]]
-## [1] 1.630825</code></pre>
+## [1] 1.65669</code></pre>
 <p>Y verificamos que concuerda con la salida de <em>glm</em>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mod_logistico &lt;-<span class="st"> </span><span class="kw">glm</span>(g <span class="op">~</span><span class="st"> </span>x_<span class="dv">1</span> <span class="op">+</span><span class="st"> </span>x_<span class="dv">2</span><span class="op">+</span><span class="st"> </span>x_<span class="dv">3</span>, <span class="dt">data =</span> dat_ent, <span class="dt">family =</span> <span class="st">&#39;binomial&#39;</span>) 
 <span class="kw">coef</span>(mod_logistico)</code></pre></div>
@@ -853,13 +853,13 @@ history &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><s
 score &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">evaluate</span>(x_test, y_test)
 score</code></pre></div>
 <pre><code>## $loss
-## [1] 0.2815114
+## [1] 0.2876599
 ## 
 ## $acc
-## [1] 0.9342302
+## [1] 0.9332337
 ## 
 ## $categorical_crossentropy
-## [1] 0.2804635</code></pre>
+## [1] 0.2866114</code></pre>
 <p>Podemos también intentar con el ejemplo de spam:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(readr)
 <span class="kw">library</span>(tidyr)
@@ -895,13 +895,13 @@ tab_confusion &lt;-<span class="st"> </span><span class="kw">table</span>(modelo
 tab_confusion</code></pre></div>
 <pre><code>##    y_valid
 ##       0   1
-##   0 898  58
-##   1  29 549</code></pre>
+##   0 887  52
+##   1  40 555</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">prop.table</span>(tab_confusion, <span class="dv">2</span>)</code></pre></div>
 <pre><code>##    y_valid
 ##              0          1
-##   0 0.96871629 0.09555189
-##   1 0.03128371 0.90444811</code></pre>
+##   0 0.95685005 0.08566722
+##   1 0.04314995 0.91433278</code></pre>
 </div>
 </div>
 <div id="activaciones-relu" class="section level2">
@@ -953,13 +953,13 @@ history &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><s
 score &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">evaluate</span>(x_test, y_test)
 score</code></pre></div>
 <pre><code>## $loss
-## [1] 0.2933802
+## [1] 0.2858994
 ## 
 ## $acc
-## [1] 0.9441953
+## [1] 0.9436971
 ## 
 ## $categorical_crossentropy
-## [1] 0.2138475</code></pre>
+## [1] 0.2092146</code></pre>
 </div>
 </div>
 <div id="dropout-para-regularizacion" class="section level2">
@@ -1050,36 +1050,36 @@ hist_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">as
 <p><img src="08-redes-neuronales-2_files/figure-html/unnamed-chunk-46-1.png" width="480" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">get_weights</span>(modelo_dropout)[[<span class="dv">3</span>]]</code></pre></div>
 <pre><code>##             [,1]
-##  [1,]  1.0292941
-##  [2,] -1.3260852
-##  [3,]  1.0585358
-##  [4,] -1.1086664
-##  [5,]  1.2115519
-##  [6,] -1.3927555
-##  [7,] -1.6719068
-##  [8,] -1.5776783
-##  [9,] -1.2764388
-## [10,] -1.2863319
-## [11,]  0.7537144
-## [12,] -1.4264631
-## [13,]  1.2554176
-## [14,] -1.5248156
-## [15,] -1.0587579
-## [16,] -1.5495013
-## [17,]  0.8861459
-## [18,] -0.9200451
-## [19,] -0.8496433
-## [20,] -1.4919937
-## [21,] -1.2332799
-## [22,]  1.1101166
-## [23,]  1.0596821
-## [24,] -0.5288064
-## [25,]  0.1705483
-## [26,] -1.5090884
-## [27,] -1.8186605
-## [28,] -0.8458863
-## [29,] -1.5623782
-## [30,]  1.3305250</code></pre>
+##  [1,]  1.4835734
+##  [2,]  0.8957390
+##  [3,] -1.3726541
+##  [4,]  0.5598395
+##  [5,] -1.3712981
+##  [6,] -1.5325543
+##  [7,]  1.2936413
+##  [8,] -1.6855346
+##  [9,] -1.2206645
+## [10,] -1.7785237
+## [11,]  0.8105805
+## [12,]  1.0990301
+## [13,] -1.4322059
+## [14,] -0.6889786
+## [15,] -1.2649192
+## [16,] -1.2567142
+## [17,] -1.2123851
+## [18,]  0.7488905
+## [19,]  0.9122798
+## [20,]  0.7372572
+## [21,] -1.3435022
+## [22,] -1.6926709
+## [23,] -1.3275084
+## [24,] -1.7255599
+## [25,]  1.0240284
+## [26,] -1.3276024
+## [27,]  1.1075138
+## [28,]  1.1400822
+## [29,]  1.1931159
+## [30,]  0.6283348</code></pre>
 <p>¿Cuáles de estas unidades tienen peso positivo y negativo en la capa final?</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pesos_capa_f &lt;-<span class="st"> </span><span class="kw">get_weights</span>(modelo_dropout)[[<span class="dv">3</span>]]
 <span class="kw">graf_pesos</span>(pesos[, pesos_capa_f <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.5</span>], <span class="dt">mostrar_facets =</span> <span class="ot">TRUE</span>)</code></pre></div>
@@ -1122,13 +1122,13 @@ history &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><s
 score &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">evaluate</span>(x_test, y_test)
 score</code></pre></div>
 <pre><code>## $loss
-## [1] 0.2270762
+## [1] 0.2236872
 ## 
 ## $acc
 ## [1] 0.9496761
 ## 
 ## $categorical_crossentropy
-## [1] 0.2230139</code></pre>
+## [1] 0.2194841</code></pre>
 
 </div>
 </div>

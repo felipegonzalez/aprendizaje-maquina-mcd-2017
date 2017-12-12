@@ -186,14 +186,14 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="5.1.1" data-path="regularizacion.html"><a href="regularizacion.html#sesgo-y-varianza-en-modelos-lineales"><i class="fa fa-check"></i><b>5.1.1</b> Sesgo y varianza en modelos lineales</a></li>
 <li class="chapter" data-level="5.1.2" data-path="regularizacion.html"><a href="regularizacion.html#reduciendo-varianza-de-los-coeficientes"><i class="fa fa-check"></i><b>5.1.2</b> Reduciendo varianza de los coeficientes</a></li>
 </ul></li>
-<li class="chapter" data-level="5.2" data-path="regularizacion.html"><a href="regularizacion.html#regularizacion-ridge"><i class="fa fa-check"></i><b>5.2</b> Regularización ridge</a><ul>
+<li class="chapter" data-level="5.2" data-path="regularizacion.html"><a href="regularizacion.html#regularizacion-ridge"><i class="fa fa-check"></i><b>5.2</b> Regularización Ridge</a><ul>
 <li class="chapter" data-level="5.2.1" data-path="regularizacion.html"><a href="regularizacion.html#seleccion-de-coeficiente-de-regularizacion"><i class="fa fa-check"></i><b>5.2.1</b> Selección de coeficiente de regularización</a></li>
 </ul></li>
 <li class="chapter" data-level="5.3" data-path="regularizacion.html"><a href="regularizacion.html#entrenamiento-validacion-y-prueba"><i class="fa fa-check"></i><b>5.3</b> Entrenamiento, Validación y Prueba</a><ul>
 <li class="chapter" data-level="5.3.1" data-path="regularizacion.html"><a href="regularizacion.html#validacion-cruzada"><i class="fa fa-check"></i><b>5.3.1</b> Validación cruzada</a></li>
 <li class="chapter" data-level="" data-path="regularizacion.html"><a href="regularizacion.html#ejercicio-5"><i class="fa fa-check"></i>Ejercicio</a></li>
 </ul></li>
-<li class="chapter" data-level="5.4" data-path="regularizacion.html"><a href="regularizacion.html#regularizacion-lasso"><i class="fa fa-check"></i><b>5.4</b> Regularización lasso</a></li>
+<li class="chapter" data-level="5.4" data-path="regularizacion.html"><a href="regularizacion.html#regularizacion-lasso"><i class="fa fa-check"></i><b>5.4</b> Regularización Lasso</a></li>
 <li class="chapter" data-level="5.5" data-path="regularizacion.html"><a href="regularizacion.html#tarea-3"><i class="fa fa-check"></i><b>5.5</b> Tarea</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="extensiones-para-regresion-lineal-y-logistica.html"><a href="extensiones-para-regresion-lineal-y-logistica.html"><i class="fa fa-check"></i><b>6</b> Extensiones para regresión lineal y logística</a><ul>
@@ -481,7 +481,7 @@ ajustar_evaluar &lt;-<span class="st"> </span><span class="cf">function</span>(d
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">errores &lt;-<span class="st"> </span><span class="kw">simular_datos</span>(<span class="dv">500</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">separar</span>(<span class="dt">prop=</span> <span class="kw">c</span>(<span class="fl">0.4</span>,<span class="fl">0.4</span>,<span class="fl">0.2</span>)) <span class="op">%&gt;%</span><span class="st"> </span>ajustar_evaluar
 errores</code></pre></div>
 <pre><code>## error_valida error_prueba 
-##     1.572431     3.662041</code></pre>
+##     1.680640     2.950755</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">reps_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">map</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">50</span>, simular_datos, <span class="dt">n =</span> <span class="dv">500</span>) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">        </span><span class="kw">map</span>(separar, <span class="dt">prop=</span> <span class="kw">c</span>(<span class="fl">0.6</span>,<span class="fl">0.2</span>,<span class="fl">0.2</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">        </span><span class="kw">map</span>(ajustar_evaluar) <span class="op">%&gt;%</span>
@@ -551,7 +551,7 @@ gr_reps_<span class="dv">2</span> &lt;-<span class="st"> </span>reps_<span class
 }
 <span class="kw">seleccion_ajuste</span>()</code></pre></div>
 <pre><code>## error_valida error_prueba 
-##        0.040        0.518</code></pre>
+##        0.040        0.516</code></pre>
 <p>El resultado es catastrófico otra vez:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">errores_selec &lt;-<span class="st"> </span><span class="kw">map</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">30</span>, seleccion_ajuste) <span class="op">%&gt;%</span><span class="st"> </span>transpose <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">map</span>(unlist) <span class="op">%&gt;%</span><span class="st"> </span>as.data.frame
 <span class="kw">ggplot</span>(errores_selec, <span class="kw">aes</span>(<span class="dt">x=</span>error_prueba, <span class="dt">y=</span>error_valida)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span><span class="kw">geom_abline</span>(<span class="dt">colour=</span><span class="st">&#39;red&#39;</span>) <span class="op">+</span>

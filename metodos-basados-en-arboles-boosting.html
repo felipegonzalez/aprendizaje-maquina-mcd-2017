@@ -186,14 +186,14 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="5.1.1" data-path="regularizacion.html"><a href="regularizacion.html#sesgo-y-varianza-en-modelos-lineales"><i class="fa fa-check"></i><b>5.1.1</b> Sesgo y varianza en modelos lineales</a></li>
 <li class="chapter" data-level="5.1.2" data-path="regularizacion.html"><a href="regularizacion.html#reduciendo-varianza-de-los-coeficientes"><i class="fa fa-check"></i><b>5.1.2</b> Reduciendo varianza de los coeficientes</a></li>
 </ul></li>
-<li class="chapter" data-level="5.2" data-path="regularizacion.html"><a href="regularizacion.html#regularizacion-ridge"><i class="fa fa-check"></i><b>5.2</b> Regularización ridge</a><ul>
+<li class="chapter" data-level="5.2" data-path="regularizacion.html"><a href="regularizacion.html#regularizacion-ridge"><i class="fa fa-check"></i><b>5.2</b> Regularización Ridge</a><ul>
 <li class="chapter" data-level="5.2.1" data-path="regularizacion.html"><a href="regularizacion.html#seleccion-de-coeficiente-de-regularizacion"><i class="fa fa-check"></i><b>5.2.1</b> Selección de coeficiente de regularización</a></li>
 </ul></li>
 <li class="chapter" data-level="5.3" data-path="regularizacion.html"><a href="regularizacion.html#entrenamiento-validacion-y-prueba"><i class="fa fa-check"></i><b>5.3</b> Entrenamiento, Validación y Prueba</a><ul>
 <li class="chapter" data-level="5.3.1" data-path="regularizacion.html"><a href="regularizacion.html#validacion-cruzada"><i class="fa fa-check"></i><b>5.3.1</b> Validación cruzada</a></li>
 <li class="chapter" data-level="" data-path="regularizacion.html"><a href="regularizacion.html#ejercicio-5"><i class="fa fa-check"></i>Ejercicio</a></li>
 </ul></li>
-<li class="chapter" data-level="5.4" data-path="regularizacion.html"><a href="regularizacion.html#regularizacion-lasso"><i class="fa fa-check"></i><b>5.4</b> Regularización lasso</a></li>
+<li class="chapter" data-level="5.4" data-path="regularizacion.html"><a href="regularizacion.html#regularizacion-lasso"><i class="fa fa-check"></i><b>5.4</b> Regularización Lasso</a></li>
 <li class="chapter" data-level="5.5" data-path="regularizacion.html"><a href="regularizacion.html#tarea-3"><i class="fa fa-check"></i><b>5.5</b> Tarea</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="extensiones-para-regresion-lineal-y-logistica.html"><a href="extensiones-para-regresion-lineal-y-logistica.html"><i class="fa fa-check"></i><b>6</b> Extensiones para regresión lineal y logística</a><ul>
@@ -423,7 +423,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
             <section class="normal" id="section-">
 <div id="metodos-basados-en-arboles-boosting" class="section level1">
 <h1><span class="header-section-number">Clase 12</span> Métodos basados en árboles: boosting</h1>
-<p>Boosting también utiliza la idea de un “ensamble” de árboles. La diferencia grande con bagging y bosques aleatorios en que la sucesión de árboles de boosting se ‘adapta’ al comportamiento del predictor a lo largo de las iteraciones, haciendo reponderaciones de los datos de entrenamiento para que el algoritmo se concentre en las predicciones más pobres. Boosting generalmente funciona bien con árboles chicos (cada uno con sesgo alto), mientras que bosques aleatorios funciona con árboles grandes (sesgo bajo).</p>
+<p>Boosting también utiliza la idea de un “ensamble” de árboles. La diferencia grande con bagging y bosques aleatorios es que la sucesión de árboles de boosting se ‘adapta’ al comportamiento del predictor a lo largo de las iteraciones, haciendo reponderaciones de los datos de entrenamiento para que el algoritmo se concentre en las predicciones más pobres. Boosting generalmente funciona bien con árboles chicos (cada uno con sesgo alto), mientras que bosques aleatorios funciona con árboles grandes (sesgo bajo).</p>
 <ul>
 <li><p>En boosting usamos muchos árboles chicos adaptados secuencialmente. La disminución del sesgo proviene de usar distintos árboles que se encargan de adaptar el predictor a distintas partes del conjunto de entrenamiento. El control de varianza se logra con tasas de aprendizaje y tamaño de árboles, como veremos más adelante.</p></li>
 <li><p>En bosques aleatorios usamos muchos árboles grandes, cada uno con una muestra de entrenamiento perturbada (bootstrap). El control de varianza se logra promediando sobre esas muestras bootstrap de entrenamiento.</p></li>
@@ -439,7 +439,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p><span class="math display">\[f(x) = \sum_{k=1}^m T_k(x),\]</span></p>
 <p>Para ajustar este tipo de modelos, buscamos minimizar la pérdida de entrenamiento:</p>
 <span class="math display">\[\begin{equation}
-\min \sum_{i=1}^N L(y^{(i)}, \sum_{k=1}^M T_k(x^{(i)}))
+\min \sum_{i=1}^N L\left(y^{(i)}, \sum_{k=1}^M T_k(x^{(i)})\right)
 \end{equation}\]</span>
 <p>Este puede ser un problema difícil, dependiendo de la familia que usemos para los árboles <span class="math inline">\(T_k\)</span>, y sería difícil resolver por fuerza bruta. Para resolver este problema, podemos intentar una heurística secuencial o por etapas:</p>
 <p>Si tenemos <span class="math display">\[f_{m-1}(x) = \sum_{k=1}^{m-1} T_k(x),\]</span></p>
@@ -455,7 +455,7 @@ Si ponemos <span class="math display">\[ r_{m-1}^{(i)} = y^{(i)} - f_{m-1}(x^{(i
 <span class="math display">\[\begin{equation}
 \min_{T} \sum_{i=1}^N ( r_{m-1}^{(i)} - T(x^{(i)}))^2
 \end{equation}\]</span>
-<p>Este problema consiste en <em>ajustar un árbol a los residuales o errores del paso anterior</em>. Otra manera de decir esto es que añadimos un término adicional que intenta corregir los que el modelo anterior no pudo predecir bien. La idea es repetir este proceso para ir reduciendo los residuales, agregando un árbol a la vez.</p>
+<p>Este problema consiste en <em>ajustar un árbol a los residuales o errores del paso anterior</em>. Otra manera de decir esto es que añadimos un término adicional que intenta corregir lo que el modelo anterior no pudo predecir bien. La idea es repetir este proceso para ir reduciendo los residuales, agregando un árbol a la vez.</p>
 
 <div class="comentario">
 La primera idea central de boosting es concentrarnos, en el siguiente paso, en los datos donde tengamos errores, e intentar corregir añadiendo un término adicional al modelo.
@@ -598,7 +598,7 @@ Sin embargo, necesitamos que las <span class="math inline">\(z_i\)</span> estén
 <li><p>Para <span class="math inline">\(m=0,1,\ldots, M\)</span>,</p></li>
 </ol>
 <ul>
-<li><p>Para <span class="math inline">\(i=1,\ldots, n\)</span>, calculamos el residual <span class="math display">\[r_{i,m}=-\frac{\partial L}{\partial z}(y^{(i)}, f_{m-1}(x^{(i)}))\]</span></p></li>
+<li><p>Para <span class="math inline">\(i=1,\ldots, N\)</span>, calculamos el residual <span class="math display">\[r_{i,m}=-\frac{\partial L}{\partial z}(y^{(i)}, f_{m-1}(x^{(i)}))\]</span></p></li>
 <li><p>Ajustamos un árbol de regresión a la respuesta <span class="math inline">\(r_{1,m},r_{2,m},\ldots, r_{n,m}\)</span>. Supongamos que tiene regiones <span class="math inline">\(R_{j,m}\)</span>.</p></li>
 <li>Resolvemos (optimizamos directamente el valor que toma el árbol en cada región - este es un problema univariado, más fácil de resolver) <span class="math display">\[\gamma_{j,m} = argmin_\gamma \sum_{x^{(i)}\in R_{j,m}} L(y^{(i)},f_{m-1}(x^{i})+\gamma )\]</span> para cada región <span class="math inline">\(R_{j,m}\)</span> del árbol del inciso anterior.</li>
 <li>Actualizamos <span class="math display">\[f_m (x) = f_{m-1}(x) + \sum_j \gamma_{j,m} I(x\in R_{j,m})\]</span></li>
@@ -615,7 +615,7 @@ Sin embargo, necesitamos que las <span class="math inline">\(z_i\)</span> estén
 <ul>
 <li>Pérdida cuadrática: <span class="math inline">\(L(y,f(x))=(y-f(x))^2\)</span>, <span class="math inline">\(\frac{\partial L}{\partial z} = -2(y-f(x))\)</span>.</li>
 <li>Pérdida absoluta (más robusta a atípicos que la cuadrática) <span class="math inline">\(L(y,f(x))=|y-f(x)|\)</span>, <span class="math inline">\(\frac{\partial L}{\partial z} = signo(y-f(x))\)</span>.</li>
-<li>Devianza binomial <span class="math inline">\(L(y, f(x))\)</span> = -(1+e^{-yf(x)}), <span class="math inline">\(y\in\{-1,1\}\)</span>, <span class="math inline">\(\frac{\partial L}{\partial z} = I(y=1) - h(f(x))\)</span>.</li>
+<li>Devianza binomial <span class="math inline">\(L(y, f(x)) = -\log(1+e^{-yf(x)})\)</span>, <span class="math inline">\(y\in\{-1,1\}\)</span>, <span class="math inline">\(\frac{\partial L}{\partial z} = I(y=1) - h(f(x))\)</span>.</li>
 <li>Adaboost, pérdida exponencial (para clasificación) <span class="math inline">\(L(y,z) = e^{-yf(x)}\)</span>, <span class="math inline">\(y\in\{-1,1\}\)</span>, <span class="math inline">\(\frac{\partial L}{\partial z} = -ye^{-yf(x)}\)</span>.</li>
 </ul>
 <div id="discusion-adaboost-opcional" class="section level3">

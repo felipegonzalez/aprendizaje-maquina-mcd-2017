@@ -186,14 +186,14 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="5.1.1" data-path="regularizacion.html"><a href="regularizacion.html#sesgo-y-varianza-en-modelos-lineales"><i class="fa fa-check"></i><b>5.1.1</b> Sesgo y varianza en modelos lineales</a></li>
 <li class="chapter" data-level="5.1.2" data-path="regularizacion.html"><a href="regularizacion.html#reduciendo-varianza-de-los-coeficientes"><i class="fa fa-check"></i><b>5.1.2</b> Reduciendo varianza de los coeficientes</a></li>
 </ul></li>
-<li class="chapter" data-level="5.2" data-path="regularizacion.html"><a href="regularizacion.html#regularizacion-ridge"><i class="fa fa-check"></i><b>5.2</b> Regularización ridge</a><ul>
+<li class="chapter" data-level="5.2" data-path="regularizacion.html"><a href="regularizacion.html#regularizacion-ridge"><i class="fa fa-check"></i><b>5.2</b> Regularización Ridge</a><ul>
 <li class="chapter" data-level="5.2.1" data-path="regularizacion.html"><a href="regularizacion.html#seleccion-de-coeficiente-de-regularizacion"><i class="fa fa-check"></i><b>5.2.1</b> Selección de coeficiente de regularización</a></li>
 </ul></li>
 <li class="chapter" data-level="5.3" data-path="regularizacion.html"><a href="regularizacion.html#entrenamiento-validacion-y-prueba"><i class="fa fa-check"></i><b>5.3</b> Entrenamiento, Validación y Prueba</a><ul>
 <li class="chapter" data-level="5.3.1" data-path="regularizacion.html"><a href="regularizacion.html#validacion-cruzada"><i class="fa fa-check"></i><b>5.3.1</b> Validación cruzada</a></li>
 <li class="chapter" data-level="" data-path="regularizacion.html"><a href="regularizacion.html#ejercicio-5"><i class="fa fa-check"></i>Ejercicio</a></li>
 </ul></li>
-<li class="chapter" data-level="5.4" data-path="regularizacion.html"><a href="regularizacion.html#regularizacion-lasso"><i class="fa fa-check"></i><b>5.4</b> Regularización lasso</a></li>
+<li class="chapter" data-level="5.4" data-path="regularizacion.html"><a href="regularizacion.html#regularizacion-lasso"><i class="fa fa-check"></i><b>5.4</b> Regularización Lasso</a></li>
 <li class="chapter" data-level="5.5" data-path="regularizacion.html"><a href="regularizacion.html#tarea-3"><i class="fa fa-check"></i><b>5.5</b> Tarea</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="extensiones-para-regresion-lineal-y-logistica.html"><a href="extensiones-para-regresion-lineal-y-logistica.html"><i class="fa fa-check"></i><b>6</b> Extensiones para regresión lineal y logística</a><ul>
@@ -479,7 +479,7 @@ filtro_difuminar</code></pre></div>
 ## [1,] 0.1111111 0.1111111 0.1111111
 ## [2,] 0.1111111 0.1111111 0.1111111
 ## [3,] 0.1111111 0.1111111 0.1111111</code></pre>
-<p>El centro de este filtro se sobrepone sobre la cada pixel de la imagen <span class="math inline">\(x\)</span>, se multiplican los valores de la imagen por los del filtro y se suma para obtener el nuevo pixel de la imagen <span class="math inline">\(y\)</span>. Por ejemplo, si tenemos la imagen</p>
+<p>El centro de este filtro se sobrepone sobre cada pixel de la imagen <span class="math inline">\(x\)</span>, se multiplican los valores de la imagen por los del filtro y se suma para obtener el nuevo pixel de la imagen <span class="math inline">\(y\)</span>. Por ejemplo, si tenemos la imagen</p>
 <p>¿Qué efecto tiene este filtro? Este filtro promedia los pixeles de un parche de 3x3 de la imagen, o suaviza la imagen. Es el análogo en 2 dimensiones del filtro de promedios móviles que vimos arriba.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(imager)
 estatua &lt;-<span class="st"> </span><span class="kw">load.image</span>(<span class="st">&#39;imagenes/escultura.jpg&#39;</span>) <span class="op">%&gt;%</span><span class="st"> </span>grayscale

@@ -729,7 +729,7 @@ básica de redes neuronales y cómo se hacen cálculos en las redes.
 y a la variable de salida *capa de salida*. Puede haber más de una 
 capa intermedia. A estas les llamamos *capas ocultas*.
 
-Cuando todas las conexiones posibles de cada capa a la siguiente están presente,
+Cuando todas las conexiones posibles de cada capa a la siguiente están presentes,
 decimos que la red es *completamente conexa*.</div>\EndKnitrBlock{comentario}
 
 
@@ -859,7 +859,7 @@ La red completa entonces se caracteriza por:
 Adicionalmente, escribimos en forma vectorial:
 $$a^{(l)} = (a^{(l)}_0, a^{(l)}_1, a^{(l)}_2, \ldots, a^{(l)}_{n_l})^t$$
 
-Para calcular la salidas, igual que hicimos, antes, propagaremos hacia
+Para calcular las salidas, igual que hicimos, antes, propagaremos hacia
 adelante los valores de las variables de entrada usando los *pesos*.
 Agregando entradas adicionales en cada capa $a_0^{(l)}$, $l=1,2,\ldots, L-1$,
 donde $a_0^{l}=1$, y agregando a $\Theta^{(l)}$ una columna con
@@ -870,7 +870,7 @@ las ordenadas al origen (o sesgos) podemos escribir:
 - Capa 1 (vector de entradas)
 $$ a^{(1)} = x$$
 - Capa 2
-$$ a^{(2)} = h(\Theta^{(1)}a^{(1)})$$
+$$ a^{(2)} = h(\Theta^{(2)}a^{(1)})$$
 - Capa $l$ (oculta)
 $$ a^{(l)} = h(\Theta^{(l)}a^{(l-1)})$$
 - Capa de salida:
@@ -1264,13 +1264,13 @@ score
 
 ```
 ## $loss
-## [1] 0.435365
+## [1] 0.4375311
 ## 
 ## $acc
-## [1] 0.7921687
+## [1] 0.7891566
 ## 
 ## $binary_crossentropy
-## [1] 0.43099
+## [1] 0.4330492
 ```
 
 ```r
@@ -1281,8 +1281,8 @@ tab_confusion
 ```
 ##    y_valid
 ##       0   1
-##   0 194  40
-##   1  29  69
+##   0 190  37
+##   1  33  72
 ```
 
 ```r
@@ -1292,8 +1292,8 @@ prop.table(tab_confusion, 2)
 ```
 ##    y_valid
 ##             0         1
-##   0 0.8699552 0.3669725
-##   1 0.1300448 0.6330275
+##   0 0.8520179 0.3394495
+##   1 0.1479821 0.6605505
 ```
 
 Es importante monitorear las curvas de aprendizaje (entrenamiento y
@@ -1679,7 +1679,7 @@ su valor. Por ejemplo, tenemos que $\theta^{(2)}_{1,0} = 0$ (tienes que escribir
 7 valores como este).
 2. Supón que tenemos un caso (observación) con  $(x, p)=(1, 0)$. ¿Qué es $a_1^{(1)}$?
 Haz forward feed para
-calcular los valores de $a_1^{(2)}$, $a_1^{(2)}$ y $p=a_1^{(3)}$.
+calcular los valores de $a_1^{(2)}$, $a_2^{(2)}$ y $p=a_1^{(3)}$.
 3. Calcula la devianza para el caso $(x, p)=(1, 0)$
 4. Según el cálculo que hiciste en 3, intuitivamente, ¿qué conviene
 hacer con los dos últimos pesos de la última capa para reducir

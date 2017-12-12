@@ -186,14 +186,14 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="5.1.1" data-path="regularizacion.html"><a href="regularizacion.html#sesgo-y-varianza-en-modelos-lineales"><i class="fa fa-check"></i><b>5.1.1</b> Sesgo y varianza en modelos lineales</a></li>
 <li class="chapter" data-level="5.1.2" data-path="regularizacion.html"><a href="regularizacion.html#reduciendo-varianza-de-los-coeficientes"><i class="fa fa-check"></i><b>5.1.2</b> Reduciendo varianza de los coeficientes</a></li>
 </ul></li>
-<li class="chapter" data-level="5.2" data-path="regularizacion.html"><a href="regularizacion.html#regularizacion-ridge"><i class="fa fa-check"></i><b>5.2</b> Regularización ridge</a><ul>
+<li class="chapter" data-level="5.2" data-path="regularizacion.html"><a href="regularizacion.html#regularizacion-ridge"><i class="fa fa-check"></i><b>5.2</b> Regularización Ridge</a><ul>
 <li class="chapter" data-level="5.2.1" data-path="regularizacion.html"><a href="regularizacion.html#seleccion-de-coeficiente-de-regularizacion"><i class="fa fa-check"></i><b>5.2.1</b> Selección de coeficiente de regularización</a></li>
 </ul></li>
 <li class="chapter" data-level="5.3" data-path="regularizacion.html"><a href="regularizacion.html#entrenamiento-validacion-y-prueba"><i class="fa fa-check"></i><b>5.3</b> Entrenamiento, Validación y Prueba</a><ul>
 <li class="chapter" data-level="5.3.1" data-path="regularizacion.html"><a href="regularizacion.html#validacion-cruzada"><i class="fa fa-check"></i><b>5.3.1</b> Validación cruzada</a></li>
 <li class="chapter" data-level="" data-path="regularizacion.html"><a href="regularizacion.html#ejercicio-5"><i class="fa fa-check"></i>Ejercicio</a></li>
 </ul></li>
-<li class="chapter" data-level="5.4" data-path="regularizacion.html"><a href="regularizacion.html#regularizacion-lasso"><i class="fa fa-check"></i><b>5.4</b> Regularización lasso</a></li>
+<li class="chapter" data-level="5.4" data-path="regularizacion.html"><a href="regularizacion.html#regularizacion-lasso"><i class="fa fa-check"></i><b>5.4</b> Regularización Lasso</a></li>
 <li class="chapter" data-level="5.5" data-path="regularizacion.html"><a href="regularizacion.html#tarea-3"><i class="fa fa-check"></i><b>5.5</b> Tarea</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="extensiones-para-regresion-lineal-y-logistica.html"><a href="extensiones-para-regresion-lineal-y-logistica.html"><i class="fa fa-check"></i><b>6</b> Extensiones para regresión lineal y logística</a><ul>
@@ -428,7 +428,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <h2><span class="header-section-number">5.1</span> Sesgo y varianza de predictores</h2>
 <p>Consideremos el problema de regresión, donde el proceso que genera los datos está dado por <span class="math display">\[Y = f(X) + \epsilon\]</span></p>
 <p>Consideremos que queremos hacer predicciones para una <span class="math inline">\(X=x_0\)</span> particular, de modo que el error es</p>
-<p><span class="math display">\[Y - \hat{f}(x_0) = (f(x_0) - \hat{f}(x_0)) + \epsilon\]</span> Como discutimos antes, no podemos hacer nada por la variación de <span class="math inline">\(\epsilon\)</span>. La pregunta es entonces ¿por qué podría pasar que <span class="math inline">\(\hat{f}(x_0)\)</span> estuviera lejos de <span class="math inline">\(\hat{f}(x_0)\)</span>? Recordemos que <span class="math inline">\(\hat{f}(x_0)\)</span> depende de una muestra de entrenamiento <span class="math inline">\({\mathcal L}\)</span>, de modo que:</p>
+<p><span class="math display">\[Y - \hat{f}(x_0) = (f(x_0) - \hat{f}(x_0)) + \epsilon\]</span> Como discutimos antes, no podemos hacer nada por la variación de <span class="math inline">\(\epsilon\)</span>. La pregunta es entonces ¿por qué podría pasar que <span class="math inline">\(\hat{f}(x_0)\)</span> estuviera lejos de <span class="math inline">\(f(x_0)\)</span>? Recordemos que <span class="math inline">\(\hat{f}(x_0)\)</span> depende de una muestra de entrenamiento <span class="math inline">\({\mathcal L}\)</span>, de modo que:</p>
 <ul>
 <li>Puede ser que <span class="math inline">\(\hat{f}(x_0)\)</span> está consistentemente lejos de <span class="math inline">\(f(x_0)\)</span>, independientemente de cuál es la muestra de entrenamiento.</li>
 <li>Puede ser que <span class="math inline">\(\hat{f}(x_0)\)</span> varía mucho dependiendo de la muestra de entrenamiento, y en consecuencia es poco probable que <span class="math inline">\(\hat{f}(x_0)\)</span> esté cerca de <span class="math inline">\(f(x_0)\)</span>.</li>
@@ -645,8 +645,8 @@ perf_r &lt;-<span class="st"> </span><span class="kw">performance</span>(pred_r,
 </div>
 </div>
 <div id="regularizacion-ridge" class="section level2">
-<h2><span class="header-section-number">5.2</span> Regularización ridge</h2>
-<p>Arriba vimos un ejemplo de regresión penalizada tipo <strong>ridge</strong>. Recordemos que para regresión lineal, buscábamos minimizar la cantidad <span class="math display">\[D(\beta)=\frac{1}{n}\sum_{i=1}^n (y_i -\beta_0 - \sum_{j=1}^p \beta_j x_{ij})^2\]</span> y en regresión logística, <span class="math display">\[D(\beta)=-\frac{2}{n}\sum_{i=1}^n y_i \log(h(\beta_0 + \sum_{j=1}^p \beta_j x_{ij})) + (1-y_i) \log(1 - h(\beta_0 + \sum_{j=1}^p \beta_j x_{ij}))    ,\]</span> donde los denotamos de la misma forma para unificar notación.</p>
+<h2><span class="header-section-number">5.2</span> Regularización Ridge</h2>
+<p>Arriba vimos un ejemplo de regresión penalizada tipo <strong>Ridge</strong>. Recordemos que para regresión lineal, buscábamos minimizar la cantidad <span class="math display">\[D(\beta)=\frac{1}{n}\sum_{i=1}^n (y_i -\beta_0 - \sum_{j=1}^p \beta_j x_{ij})^2\]</span> y en regresión logística, <span class="math display">\[D(\beta)=-\frac{2}{n}\sum_{i=1}^n y_i \log(h(\beta_0 + \sum_{j=1}^p \beta_j x_{ij})) + (1-y_i) \log(1 - h(\beta_0 + \sum_{j=1}^p \beta_j x_{ij}))    ,\]</span> donde los denotamos de la misma forma para unificar notación.</p>
 
 <div class="comentario">
 En regresión <strong>ridge</strong> (lineal/logística), para <span class="math inline">\(\lambda&gt;0\)</span> fija minimizamos <span class="math display">\[D_{\lambda}^{ridge} (\beta)=D(\beta)  + \lambda\sum_{i=1}^p \beta_j^2\]</span>, donde suponemos que las entradas están estandarizadas (centradas y escaladas por la desviación estándar).
@@ -725,7 +725,7 @@ devianzas_prueba &lt;-<span class="st"> </span>preds_ridge <span class="op">%&gt
 <span class="st">  </span><span class="kw">scale_x_log10</span>(<span class="dt">breaks =</span> <span class="kw">round</span>(<span class="dv">2</span><span class="op">^</span><span class="kw">seq</span>(<span class="op">-</span><span class="dv">5</span>,<span class="dv">5</span>,<span class="dv">1</span>),<span class="dv">2</span>)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_point</span>()</code></pre></div>
 <p><img src="05-regularizacion_files/figure-html/unnamed-chunk-30-1.png" width="672" /></p>
-<p>Buscamos entonces minimizar la devianza (evaluada en la muestra de prueba), que corresponde a tomar un valor de <span class="math inline">\(\lambda\)</span> alrededor de exp(-2).</p>
+<p>Buscamos entonces minimizar la devianza (evaluada en la muestra de prueba), que corresponde a tomar un valor de <span class="math inline">\(\lambda\)</span> alrededor de exp(1/2).</p>
 <p><strong>Discusión</strong>: ¿por qué la devianza de prueba tiene esta forma, que es típica para problemas de regularización?</p>
 <p>El modelo final queda como sigue:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df_lambdas </code></pre></div>
@@ -820,7 +820,7 @@ bfat_p &lt;-<span class="st"> </span>dat_grasa[<span class="dv">101</span><span 
 <p><span class="math display">\[ {\mathcal L}={\mathcal L}_1\cup {\mathcal L}_2\cup\cdots\cup {\mathcal L}_k.\]</span></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="st">&quot;./imagenes/div_muestra_cv.png&quot;</span>)</code></pre></div>
 <p><img src="imagenes/div_muestra_cv.png" width="320" /></p>
-<p>Construimos <span class="math inline">\(k\)</span> modelos distintos, digamos <span class="math inline">\(\hat{f}_j\)</span>, usando solamente la muestra <span class="math inline">\({\mathcal L}-{\mathcal L}_j\)</span>. Este modelo lo evaluamos usando la parte que no usamos, <span class="math inline">\({\mathcal L}_j\)</span>, para obtener una estimación honesta del error del modelo <span class="math inline">\(\hat{f}_k\)</span>, a la que denotamos por <span class="math inline">\(\hat{e}_j\)</span>.</p>
+<p>Construimos <span class="math inline">\(k\)</span> modelos distintos, digamos <span class="math inline">\(\hat{f}_j\)</span>, usando solamente la muestra <span class="math inline">\({\mathcal L}-{\mathcal L}_j\)</span>. Este modelo lo evaluamos usando la parte que no usamos, <span class="math inline">\({\mathcal L}_j\)</span>, para obtener una estimación honesta del error del modelo <span class="math inline">\(\hat{f}_j\)</span>, a la que denotamos por <span class="math inline">\(\hat{e}_j\)</span>.</p>
 <p>Notemos entonces que tenemos <span class="math inline">\(k\)</span> estimaciones del error <span class="math inline">\(\hat{e}_1,\ldots, \hat{e}_k\)</span>, una para cada uno de los modelos que construimos. La idea ahora es que</p>
 <ul>
 <li>Cada uno de los modelos <span class="math inline">\(\hat{f}_j\)</span> es similar al modelo ajustado con toda la muestra <span class="math inline">\(\hat{f}\)</span>, de forma que podemos pensar que cada una de las estimaciones <span class="math inline">\(\hat{e}_j\)</span> es un estimador del error de <span class="math inline">\(\hat{f}\)</span>.</li>
@@ -917,17 +917,17 @@ digitos_cv &lt;-<span class="st"> </span><span class="kw">cv.glmnet</span>(<span
 </div>
 </div>
 <div id="regularizacion-lasso" class="section level2">
-<h2><span class="header-section-number">5.4</span> Regularización lasso</h2>
-<p>Otra forma de regularización es el <strong>lasso</strong>, que en lugar de penalizar con la suma de cuadrados en los coeficientes, penaliza por la suma de su valor absoluto.</p>
+<h2><span class="header-section-number">5.4</span> Regularización Lasso</h2>
+<p>Otra forma de regularización es el <strong>Lasso</strong>, que en lugar de penalizar con la suma de cuadrados en los coeficientes, penaliza por la suma de su valor absoluto.</p>
 
 <div class="comentario">
-En regresión <strong>lasso</strong> (lineal/logística), para <span class="math inline">\(\lambda&gt;0\)</span> fija minimizamos <span class="math display">\[D_{\lambda}^2 (\beta)=D(\beta)  + \lambda\sum_{i=1}^p |\beta_j|\]</span>, donde suponemos que las entradas están estandarizadas (centradas y escaladas por la desviación estándar).
+En regresión <strong>Lasso</strong> (lineal/logística), para <span class="math inline">\(\lambda&gt;0\)</span> fija minimizamos <span class="math display">\[D_{\lambda}^2 (\beta)=D(\beta)  + \lambda\sum_{i=1}^p |\beta_j|\]</span>, donde suponemos que las entradas están estandarizadas (centradas y escaladas por la desviación estándar).
 </div>
 
-<p>El problema de minimización de ridge y de lasso se pueden reescribir como problemas de restricción:</p>
+<p>El problema de minimización de ridge y de Lasso se pueden reescribir como problemas de restricción:</p>
 
 <div class="comentario">
-En regresión <strong>lasso</strong> (lineal/logística), para <span class="math inline">\(s&gt;0\)</span> fija minimizamos <span class="math display">\[D(\beta), \]</span> sujeto a <span class="math display">\[\sum_{i=1}^p |\beta_j|&lt; s\]</span> donde suponemos que las entradas están estandarizadas (centradas y escaladas por la desviación estándar).
+En regresión <strong>Lasso</strong> (lineal/logística), para <span class="math inline">\(s&gt;0\)</span> fija minimizamos <span class="math display">\[D(\beta), \]</span> sujeto a <span class="math display">\[\sum_{i=1}^p |\beta_j|&lt; s\]</span> donde suponemos que las entradas están estandarizadas (centradas y escaladas por la desviación estándar).
 </div>
 
 
@@ -935,22 +935,22 @@ En regresión <strong>lasso</strong> (lineal/logística), para <span class="math
 En regresión <strong>ridge</strong> (lineal/logística), para <span class="math inline">\(t&gt;0\)</span> fija minimizamos <span class="math display">\[D(\beta), \]</span> sujeto a <span class="math display">\[\sum_{i=1}^p \beta_j^2 &lt; t\]</span> donde suponemos que las entradas están estandarizadas (centradas y escaladas por la desviación estándar).
 </div>
 <p> <span class="math inline">\(s\)</span> y <span class="math inline">\(t\)</span> chicas corresponden a valores de penalización <span class="math inline">\(\lambda\)</span> grandes.</p>
-<p>En un principio, puede parecer que ridge y lasso deben dar resultados muy similares, pues en ambos casos penalizamos por el tamaño de los coeficientes. Sin embargo, son distintos de una manera muy importante.</p>
+<p>En un principio, puede parecer que ridge y Lasso deben dar resultados muy similares, pues en ambos casos penalizamos por el tamaño de los coeficientes. Sin embargo, son distintos de una manera muy importante.</p>
 <p>En la siguiente gráfica regresentamos las curvas de nivel de <span class="math inline">\(D(\beta)\)</span>. Recordemos que en mínimos cuadrados o regresión logística intentamos minimizar esta cantidad sin restricciones, y este mínimo se encuentra en el centro de estas curvas de nivel. Para el problema restringido, buscamos más bien la curva de nivel más baja que intersecta la restricción:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="st">&#39;./imagenes/ridge_lasso.png&#39;</span>)</code></pre></div>
-<p><img src="imagenes/ridge_lasso.png" width="318" /> Y obsérvese ahora que la solución de lasso <em>puede hacer algunos coeficientes igual a 0</em>. Es decir,</p>
+<p><img src="imagenes/ridge_lasso.png" width="318" /> Y obsérvese ahora que la solución de Lasso <em>puede hacer algunos coeficientes igual a 0</em>. Es decir,</p>
 
 <div class="comentario">
 <p>En regresión ridge, los coeficientes se encogen gradualmente desde la solución no restringida hasta el origen. Ridge es un método de <strong>encogimiento de coeficientes.</strong></p>
-En regresión lasso, los coeficientes se encogen gradualmente, pero también se excluyen variables del modelo. Por eso lasso es un método de <em>encogimiento y selección de variables</em>.
+En regresión Lasso, los coeficientes se encogen gradualmente, pero también se excluyen variables del modelo. Por eso Lasso es un método de <em>encogimiento y selección de variables</em>.
 </div>
 
 
 <div class="comentario">
 <ul>
 <li>Regresión ridge es especialmente útil cuando tenemos varias variables de entrada fuertemente correlacionadas. Regresión ridge intenta encoger juntos coeficientes de variables correlacionadas para reducir varianza en las predicciones.</li>
-<li>Lasso encoge igualmente coeficientes para reducir varianza, pero también comparte similitudes con <em>regresión de mejor subconjunto</em>, en donde para cada número de variables <span class="math inline">\(l\)</span> buscamos escoger las <span class="math inline">\(l\)</span> variables que den el mejor modelo. Sin embargo, el enfoque de lasso es más escalable y puede calcularse de manera más simple.</li>
-<li>Descenso en gradiente no es apropiado para regresión lasso (ver documentación de glmnet para ver cómo se hace en este paquete). El problema es que los coeficientes nunca se hacen exactamente cero, pues la restricción no es diferenciable en el origen (coeficientes igual a cero).
+<li>Lasso encoge igualmente coeficientes para reducir varianza, pero también comparte similitudes con <em>regresión de mejor subconjunto</em>, en donde para cada número de variables <span class="math inline">\(l\)</span> buscamos escoger las <span class="math inline">\(l\)</span> variables que den el mejor modelo. Sin embargo, el enfoque de Lasso es más escalable y puede calcularse de manera más simple.</li>
+<li>Descenso en gradiente no es apropiado para regresión Lasso (ver documentación de glmnet para ver cómo se hace en este paquete). El problema es que los coeficientes nunca se hacen exactamente cero, pues la restricción no es diferenciable en el origen (coeficientes igual a cero).
 </div>
 </li>
 </ul>
@@ -982,7 +982,7 @@ dat_p &lt;-<span class="st"> </span>dat_grasa[<span class="dv">151</span><span c
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x_e &lt;-<span class="st"> </span>dat_e <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="op">-</span>grasacorp, <span class="op">-</span>id, <span class="op">-</span>unif) <span class="op">%&gt;%</span><span class="st"> </span>as.matrix
 x_p &lt;-<span class="st"> </span>dat_p <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="op">-</span>grasacorp, <span class="op">-</span>id, <span class="op">-</span>unif) <span class="op">%&gt;%</span><span class="st"> </span>as.matrix
 
-mod_bodyfat &lt;-<span class="st"> </span><span class="kw">cv.glmnet</span>(<span class="dt">x =</span> x_e, <span class="dt">y =</span> dat_e<span class="op">$</span>grasacorp, <span class="dt">alpha =</span> <span class="dv">1</span>) <span class="co">#alpha=1 para lasso</span>
+mod_bodyfat &lt;-<span class="st"> </span><span class="kw">cv.glmnet</span>(<span class="dt">x =</span> x_e, <span class="dt">y =</span> dat_e<span class="op">$</span>grasacorp, <span class="dt">alpha =</span> <span class="dv">1</span>) <span class="co">#alpha=1 para Lasso</span>
 <span class="kw">plot</span>(mod_bodyfat)</code></pre></div>
 <p><img src="05-regularizacion_files/figure-html/unnamed-chunk-48-1.png" width="672" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">coeficientes &lt;-<span class="st"> </span><span class="kw">predict</span>(mod_bodyfat, <span class="dt">s =</span><span class="st">&#39;lambda.1se&#39;</span>, <span class="dt">type=</span><span class="st">&#39;coefficients&#39;</span>)

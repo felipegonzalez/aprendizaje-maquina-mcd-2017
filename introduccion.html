@@ -186,14 +186,14 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="5.1.1" data-path="regularizacion.html"><a href="regularizacion.html#sesgo-y-varianza-en-modelos-lineales"><i class="fa fa-check"></i><b>5.1.1</b> Sesgo y varianza en modelos lineales</a></li>
 <li class="chapter" data-level="5.1.2" data-path="regularizacion.html"><a href="regularizacion.html#reduciendo-varianza-de-los-coeficientes"><i class="fa fa-check"></i><b>5.1.2</b> Reduciendo varianza de los coeficientes</a></li>
 </ul></li>
-<li class="chapter" data-level="5.2" data-path="regularizacion.html"><a href="regularizacion.html#regularizacion-ridge"><i class="fa fa-check"></i><b>5.2</b> Regularización ridge</a><ul>
+<li class="chapter" data-level="5.2" data-path="regularizacion.html"><a href="regularizacion.html#regularizacion-ridge"><i class="fa fa-check"></i><b>5.2</b> Regularización Ridge</a><ul>
 <li class="chapter" data-level="5.2.1" data-path="regularizacion.html"><a href="regularizacion.html#seleccion-de-coeficiente-de-regularizacion"><i class="fa fa-check"></i><b>5.2.1</b> Selección de coeficiente de regularización</a></li>
 </ul></li>
 <li class="chapter" data-level="5.3" data-path="regularizacion.html"><a href="regularizacion.html#entrenamiento-validacion-y-prueba"><i class="fa fa-check"></i><b>5.3</b> Entrenamiento, Validación y Prueba</a><ul>
 <li class="chapter" data-level="5.3.1" data-path="regularizacion.html"><a href="regularizacion.html#validacion-cruzada"><i class="fa fa-check"></i><b>5.3.1</b> Validación cruzada</a></li>
 <li class="chapter" data-level="" data-path="regularizacion.html"><a href="regularizacion.html#ejercicio-5"><i class="fa fa-check"></i>Ejercicio</a></li>
 </ul></li>
-<li class="chapter" data-level="5.4" data-path="regularizacion.html"><a href="regularizacion.html#regularizacion-lasso"><i class="fa fa-check"></i><b>5.4</b> Regularización lasso</a></li>
+<li class="chapter" data-level="5.4" data-path="regularizacion.html"><a href="regularizacion.html#regularizacion-lasso"><i class="fa fa-check"></i><b>5.4</b> Regularización Lasso</a></li>
 <li class="chapter" data-level="5.5" data-path="regularizacion.html"><a href="regularizacion.html#tarea-3"><i class="fa fa-check"></i><b>5.5</b> Tarea</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="extensiones-para-regresion-lineal-y-logistica.html"><a href="extensiones-para-regresion-lineal-y-logistica.html"><i class="fa fa-check"></i><b>6</b> Extensiones para regresión lineal y logística</a><ul>
@@ -785,7 +785,7 @@ En aprendizaje buscamos que estos errores sean lo más cercano a cero que sea po
 <p><span class="math display">\[L(Y, \hat{f}(X)),\]</span></p>
 <p>que nos dice cuánto nos cuesta hacer la predicción <span class="math inline">\(\hat{f}(X)\)</span> cuando el verdadero valor es <span class="math inline">\(Y\)</span> y las variables de entrada son <span class="math inline">\(X\)</span>. Una opción conveniente para problemas de regresión es la pérdida cuadrática:</p>
 <p><span class="math display">\[L(Y, \hat{f}(X)) =  (Y - \hat{f}(X))^2\]</span> Esta es una cantidad aleatoria, de modo que en algunos casos este error puede ser más grande o más chico. Usualmente buscamos una <span class="math inline">\(\hat{f}\)</span> de modo que el error promedio sea chico:</p>
-<p><span class="math display">\[Err = E (Y - \hat{f}(X))^2 \]</span></p>
+<p><span class="math display">\[Err = E[(Y - \hat{f}(X))^2]\]</span></p>
 <p><strong>Nota</strong>: Intenta demostrar que bajo error cuadrático medio y suponiendo el modelo aditivo <span class="math inline">\(Y=f(X)+\epsilon\)</span>, el mejor predictor de <span class="math inline">\(Y\)</span> es <span class="math inline">\(f(x)= E[Y|X=x]\)</span>. Es decir: lo que nos interesa es aproximar lo mejor que se pueda la esperanza condicional</p>
 </div>
 <div id="aprendizaje" class="section level2">

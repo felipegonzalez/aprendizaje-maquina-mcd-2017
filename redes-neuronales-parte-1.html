@@ -186,14 +186,14 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="5.1.1" data-path="regularizacion.html"><a href="regularizacion.html#sesgo-y-varianza-en-modelos-lineales"><i class="fa fa-check"></i><b>5.1.1</b> Sesgo y varianza en modelos lineales</a></li>
 <li class="chapter" data-level="5.1.2" data-path="regularizacion.html"><a href="regularizacion.html#reduciendo-varianza-de-los-coeficientes"><i class="fa fa-check"></i><b>5.1.2</b> Reduciendo varianza de los coeficientes</a></li>
 </ul></li>
-<li class="chapter" data-level="5.2" data-path="regularizacion.html"><a href="regularizacion.html#regularizacion-ridge"><i class="fa fa-check"></i><b>5.2</b> Regularización ridge</a><ul>
+<li class="chapter" data-level="5.2" data-path="regularizacion.html"><a href="regularizacion.html#regularizacion-ridge"><i class="fa fa-check"></i><b>5.2</b> Regularización Ridge</a><ul>
 <li class="chapter" data-level="5.2.1" data-path="regularizacion.html"><a href="regularizacion.html#seleccion-de-coeficiente-de-regularizacion"><i class="fa fa-check"></i><b>5.2.1</b> Selección de coeficiente de regularización</a></li>
 </ul></li>
 <li class="chapter" data-level="5.3" data-path="regularizacion.html"><a href="regularizacion.html#entrenamiento-validacion-y-prueba"><i class="fa fa-check"></i><b>5.3</b> Entrenamiento, Validación y Prueba</a><ul>
 <li class="chapter" data-level="5.3.1" data-path="regularizacion.html"><a href="regularizacion.html#validacion-cruzada"><i class="fa fa-check"></i><b>5.3.1</b> Validación cruzada</a></li>
 <li class="chapter" data-level="" data-path="regularizacion.html"><a href="regularizacion.html#ejercicio-5"><i class="fa fa-check"></i>Ejercicio</a></li>
 </ul></li>
-<li class="chapter" data-level="5.4" data-path="regularizacion.html"><a href="regularizacion.html#regularizacion-lasso"><i class="fa fa-check"></i><b>5.4</b> Regularización lasso</a></li>
+<li class="chapter" data-level="5.4" data-path="regularizacion.html"><a href="regularizacion.html#regularizacion-lasso"><i class="fa fa-check"></i><b>5.4</b> Regularización Lasso</a></li>
 <li class="chapter" data-level="5.5" data-path="regularizacion.html"><a href="regularizacion.html#tarea-3"><i class="fa fa-check"></i><b>5.5</b> Tarea</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="extensiones-para-regresion-lineal-y-logistica.html"><a href="extensiones-para-regresion-lineal-y-logistica.html"><i class="fa fa-check"></i><b>6</b> Extensiones para regresión lineal y logística</a><ul>
@@ -794,7 +794,7 @@ capa_final</code></pre></div>
 
 <div class="comentario">
 <p>A las variables originales les llamamos <em>capa de entrada</em> de la red, y a la variable de salida <em>capa de salida</em>. Puede haber más de una capa intermedia. A estas les llamamos <em>capas ocultas</em>.</p>
-Cuando todas las conexiones posibles de cada capa a la siguiente están presente, decimos que la red es <em>completamente conexa</em>.
+Cuando todas las conexiones posibles de cada capa a la siguiente están presentes, decimos que la red es <em>completamente conexa</em>.
 </div>
 
 <p><img src="07-redes-neuronales_files/figure-html/unnamed-chunk-29-1.png" width="672" /></p>
@@ -857,13 +857,13 @@ Para la primera capa, escribimos las variables de entrada: <span class="math dis
 </li>
 </ul>
 <p>Adicionalmente, escribimos en forma vectorial: <span class="math display">\[a^{(l)} = (a^{(l)}_0, a^{(l)}_1, a^{(l)}_2, \ldots, a^{(l)}_{n_l})^t\]</span></p>
-<p>Para calcular la salidas, igual que hicimos, antes, propagaremos hacia adelante los valores de las variables de entrada usando los <em>pesos</em>. Agregando entradas adicionales en cada capa <span class="math inline">\(a_0^{(l)}\)</span>, <span class="math inline">\(l=1,2,\ldots, L-1\)</span>, donde <span class="math inline">\(a_0^{l}=1\)</span>, y agregando a <span class="math inline">\(\Theta^{(l)}\)</span> una columna con las ordenadas al origen (o sesgos) podemos escribir:</p>
+<p>Para calcular las salidas, igual que hicimos, antes, propagaremos hacia adelante los valores de las variables de entrada usando los <em>pesos</em>. Agregando entradas adicionales en cada capa <span class="math inline">\(a_0^{(l)}\)</span>, <span class="math inline">\(l=1,2,\ldots, L-1\)</span>, donde <span class="math inline">\(a_0^{l}=1\)</span>, y agregando a <span class="math inline">\(\Theta^{(l)}\)</span> una columna con las ordenadas al origen (o sesgos) podemos escribir:</p>
 
 <div class="comentario">
 <p><strong>Feed-forward</strong>(matricial)</p>
 <ul>
 <li>Capa 1 (vector de entradas) <span class="math display">\[ a^{(1)} = x\]</span></li>
-<li>Capa 2 <span class="math display">\[ a^{(2)} = h(\Theta^{(1)}a^{(1)})\]</span></li>
+<li>Capa 2 <span class="math display">\[ a^{(2)} = h(\Theta^{(2)}a^{(1)})\]</span></li>
 <li>Capa <span class="math inline">\(l\)</span> (oculta) <span class="math display">\[ a^{(l)} = h(\Theta^{(l)}a^{(l-1)})\]</span></li>
 <li>Capa de salida: <span class="math display">\[a^{(L)}= p = h(\Theta^{(L)}a^{(L-1)})\]</span> donde <span class="math inline">\(h\)</span> se aplica componente a componente sobre los vectores correspondientes. Nótese que feed-foward consiste principalmente de mutliplicaciones de matrices con algunas aplicaciones de <span class="math inline">\(h\)</span>
 </div>
@@ -1065,24 +1065,24 @@ modelo_tc <span class="op">%&gt;%</span><span class="st"> </span>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">score &lt;-<span class="st"> </span>modelo_tc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">evaluate</span>(x_valid_s, y_valid)
 score</code></pre></div>
 <pre><code>## $loss
-## [1] 0.435365
+## [1] 0.4375311
 ## 
 ## $acc
-## [1] 0.7921687
+## [1] 0.7891566
 ## 
 ## $binary_crossentropy
-## [1] 0.43099</code></pre>
+## [1] 0.4330492</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tab_confusion &lt;-<span class="st"> </span><span class="kw">table</span>(modelo_tc <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">predict_classes</span>(x_valid_s),y_valid) 
 tab_confusion</code></pre></div>
 <pre><code>##    y_valid
 ##       0   1
-##   0 194  40
-##   1  29  69</code></pre>
+##   0 190  37
+##   1  33  72</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">prop.table</span>(tab_confusion, <span class="dv">2</span>)</code></pre></div>
 <pre><code>##    y_valid
 ##             0         1
-##   0 0.8699552 0.3669725
-##   1 0.1300448 0.6330275</code></pre>
+##   0 0.8520179 0.3394495
+##   1 0.1479821 0.6605505</code></pre>
 <p>Es importante monitorear las curvas de aprendizaje (entrenamiento y validación) para diagnosticar mejoras:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df_iteraciones &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(iteraciones)
 <span class="kw">ggplot</span>(df_iteraciones, <span class="kw">aes</span>(<span class="dt">x=</span>epoch, <span class="dt">y=</span>value, <span class="dt">colour=</span>data, <span class="dt">group=</span>data)) <span class="op">+</span><span class="st"> </span>
@@ -1302,7 +1302,7 @@ hiperparams<span class="op">$</span>init_grupo &lt;-<span class="st"> </span><sp
 <p>Supón que los sesgos son 0 para la unidad <span class="math inline">\(a_1\)</span>, 0 para la unidad <span class="math inline">\(a_2\)</span> y -0.5 para la unidad <span class="math inline">\(p\)</span>.</p>
 <ol style="list-style-type: decimal">
 <li>Escribe cada <span class="math inline">\(\theta_{i,j}^{(l)}\)</span> según la notación de clase e identifica su valor. Por ejemplo, tenemos que <span class="math inline">\(\theta^{(2)}_{1,0} = 0\)</span> (tienes que escribir 7 valores como este).</li>
-<li>Supón que tenemos un caso (observación) con <span class="math inline">\((x, p)=(1, 0)\)</span>. ¿Qué es <span class="math inline">\(a_1^{(1)}\)</span>? Haz forward feed para calcular los valores de <span class="math inline">\(a_1^{(2)}\)</span>, <span class="math inline">\(a_1^{(2)}\)</span> y <span class="math inline">\(p=a_1^{(3)}\)</span>.</li>
+<li>Supón que tenemos un caso (observación) con <span class="math inline">\((x, p)=(1, 0)\)</span>. ¿Qué es <span class="math inline">\(a_1^{(1)}\)</span>? Haz forward feed para calcular los valores de <span class="math inline">\(a_1^{(2)}\)</span>, <span class="math inline">\(a_2^{(2)}\)</span> y <span class="math inline">\(p=a_1^{(3)}\)</span>.</li>
 <li>Calcula la devianza para el caso <span class="math inline">\((x, p)=(1, 0)\)</span></li>
 <li>Según el cálculo que hiciste en 3, intuitivamente, ¿qué conviene hacer con los dos últimos pesos de la última capa para reducir la devianza? ¿Incrementarlos o disminuirlos?</li>
 <li>Error en la última capa (3): Calcula <span class="math inline">\(\delta^{(3)}_1\)</span></li>

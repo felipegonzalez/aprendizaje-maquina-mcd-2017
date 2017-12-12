@@ -186,14 +186,14 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="5.1.1" data-path="regularizacion.html"><a href="regularizacion.html#sesgo-y-varianza-en-modelos-lineales"><i class="fa fa-check"></i><b>5.1.1</b> Sesgo y varianza en modelos lineales</a></li>
 <li class="chapter" data-level="5.1.2" data-path="regularizacion.html"><a href="regularizacion.html#reduciendo-varianza-de-los-coeficientes"><i class="fa fa-check"></i><b>5.1.2</b> Reduciendo varianza de los coeficientes</a></li>
 </ul></li>
-<li class="chapter" data-level="5.2" data-path="regularizacion.html"><a href="regularizacion.html#regularizacion-ridge"><i class="fa fa-check"></i><b>5.2</b> Regularización ridge</a><ul>
+<li class="chapter" data-level="5.2" data-path="regularizacion.html"><a href="regularizacion.html#regularizacion-ridge"><i class="fa fa-check"></i><b>5.2</b> Regularización Ridge</a><ul>
 <li class="chapter" data-level="5.2.1" data-path="regularizacion.html"><a href="regularizacion.html#seleccion-de-coeficiente-de-regularizacion"><i class="fa fa-check"></i><b>5.2.1</b> Selección de coeficiente de regularización</a></li>
 </ul></li>
 <li class="chapter" data-level="5.3" data-path="regularizacion.html"><a href="regularizacion.html#entrenamiento-validacion-y-prueba"><i class="fa fa-check"></i><b>5.3</b> Entrenamiento, Validación y Prueba</a><ul>
 <li class="chapter" data-level="5.3.1" data-path="regularizacion.html"><a href="regularizacion.html#validacion-cruzada"><i class="fa fa-check"></i><b>5.3.1</b> Validación cruzada</a></li>
 <li class="chapter" data-level="" data-path="regularizacion.html"><a href="regularizacion.html#ejercicio-5"><i class="fa fa-check"></i>Ejercicio</a></li>
 </ul></li>
-<li class="chapter" data-level="5.4" data-path="regularizacion.html"><a href="regularizacion.html#regularizacion-lasso"><i class="fa fa-check"></i><b>5.4</b> Regularización lasso</a></li>
+<li class="chapter" data-level="5.4" data-path="regularizacion.html"><a href="regularizacion.html#regularizacion-lasso"><i class="fa fa-check"></i><b>5.4</b> Regularización Lasso</a></li>
 <li class="chapter" data-level="5.5" data-path="regularizacion.html"><a href="regularizacion.html#tarea-3"><i class="fa fa-check"></i><b>5.5</b> Tarea</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="extensiones-para-regresion-lineal-y-logistica.html"><a href="extensiones-para-regresion-lineal-y-logistica.html"><i class="fa fa-check"></i><b>6</b> Extensiones para regresión lineal y logística</a><ul>
@@ -736,7 +736,7 @@ dat_dev <span class="op">%&gt;%</span><span class="st"> </span>ungroup <span cla
 <p>Aunque esta definición aplica para cualquier clasificador, podemos usarlo para clasificadores construidos con probabilidades de clase de la siguiente forma:</p>
 
 <div class="comentario">
-Sean <span class="math inline">\(\hat{p}_g(x)\)</span> probabilidades de clase estimadas. El clasificador asociado está dado por <span class="math display">\[\hat{G} (x) = \arg\max_g \hat{p}_g(x)\]</span> Podemos estimar su error de clasificación <span class="math inline">\(P(\hat{G} \neq G)\)</span> con una muestra de prueba <span class="math display">\[{\mathcal T}=\{ (x_0^{(1)},g_0^{(1)}),(x_0^{(2)},g_0^{(2)}), \ldots, (x_0^{(m)}, g_0^{(m)})\]</span> mediante <span class="math display">\[\hat{Err} = \frac{1}{m} \sum_{j=i}^m I(\hat{G}(x_0^{(i)}) \neq g_0^{(i)}),\]</span> es decir, la proporción de casos de prueba que son clasificados incorrectamente.
+Sean <span class="math inline">\(\hat{p}_g(x)\)</span> probabilidades de clase estimadas. El clasificador asociado está dado por <span class="math display">\[\hat{G} (x) = \arg\max_g \hat{p}_g(x)\]</span> Podemos estimar su error de clasificación <span class="math inline">\(P(\hat{G} \neq G)\)</span> con una muestra de prueba <span class="math display">\[{\mathcal T}=\{ (x_0^{(1)},g_0^{(1)}),(x_0^{(2)},g_0^{(2)}), \ldots, (x_0^{(m)}, g_0^{(m)})\]</span> mediante <span class="math display">\[\hat{Err} = \frac{1}{m} \sum_{j=1}^m I(\hat{G}(x_0^{(j)}) \neq g_0^{(j)}),\]</span> es decir, la proporción de casos de prueba que son clasificados incorrectamente.
 </div>
 
 <div id="ejemplo-14" class="section level4 unnumbered">
@@ -1046,7 +1046,7 @@ coeficientes</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">h</span>(coeficientes[<span class="dv">1</span>])</code></pre></div>
 <pre><code>## [1] 0.8825891</code></pre>
 <p>Esto quiere decir que la probabilidad de estar al corriente ds de 87% cuando la variable <span class="math inline">\(x\)</span> está en su media.</p>
-<p>Si <span class="math inline">\(x\)</span> se incrementa en una desviación estándar, la cantidad <span class="math display">\[z = \beta_0 + \beta_1x\]</span> baja por la cantidad</p>
+<p>Si <span class="math inline">\(x\)</span> se incrementa en una desviación estándar, la cantidad <span class="math display">\[z = \beta_0 + \beta_1x\]</span> cambia por la cantidad</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">coeficientes[<span class="dv">2</span>]</code></pre></div>
 <pre><code>## [1] -1.085145</code></pre>
 <p>Y la probabilidad de estar al corriente cambia a 70%:</p>
