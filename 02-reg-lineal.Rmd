@@ -195,9 +195,9 @@ de manera relativamente simple: descenso en gradiente, o descenso máximo.
 
 Supongamos que una función $h(x)$ es convexa y tiene un mínimo. La idea
 de descenso en gradiente es comenzar con un candidato inicial $z_0$ y calcular
-la derivada en $z^{(0)}$. Si $h(z^{(0)})>0$, la función es creciente en $z^{(0)}$ y nos
+la derivada en $z^{(0)}$. Si $h'(z^{(0)})>0$, la función es creciente en $z^{(0)}$ y nos
 movemos ligeramente 
-a la izquierda para obtener un nuevo candidato $z^{(1)}$. si $h(z^{(0)})<0$, la
+a la izquierda para obtener un nuevo candidato $z^{(1)}$. si $h'(z^{(0)})<0$, la
 función es decreciente en $z^{(0)}$ y nos
 movemos ligeramente a la derecha  para obtener un nuevo candidato $z^{(1)}$. Iteramos este
 proceso hasta que la derivada es cercana a cero (estamos cerca del óptimo).
@@ -475,7 +475,7 @@ tenemos entonces (de las fórmulas \@ref(eq:grad1) y \@ref(eq:grad2)):
 ## Normalización de entradas
 
 La convergencia de descenso en gradiente (y también el desempeño numérico
-para otros algoritmos) puede dificultarse cuando las escalas tienen escalas
+para otros algoritmos) puede dificultarse cuando las entradas tienen escalas
 muy diferentes. En este ejemplo simple, una variable tiene desviación estándar
 10 y otra 1:
 
@@ -807,7 +807,7 @@ entrenamiento (independientemente del tamaño) sufre fuertemente por uno o ambas
  Consideremos que la salida Y es determinística $Y = e^{-8\sum_{j=1}^p x_j^2}$.
 Vamos a usar 1-vecino más cercano para hacer predicciones, c
 on una muestra de entrenamiento de 1000 casos.
-Generamos $x^{i}‘s uniformes en $[ 1,1]$, para $p = 2$, y calculamos la respuesta 
+Generamos $x^{i}$‘s uniformes en $[1,1]$, para $p = 2$, y calculamos la respuesta 
 $Y$ para cada caso:
 
 ```{r}
