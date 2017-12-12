@@ -6,7 +6,7 @@ knitr::opts_chunk$set(fig.width=5, fig.asp=0.7)
 
 Boosting también utiliza la idea de un "ensamble" de árboles. La diferencia
 grande con
- bagging y bosques aleatorios en que la sucesión de árboles de boosting se 
+ bagging y bosques aleatorios es que la sucesión de árboles de boosting se 
 'adapta' al comportamiento del predictor a lo largo de las iteraciones, 
 haciendo reponderaciones de los datos de entrenamiento para que el algoritmo
 se concentre en las predicciones más pobres. Boosting generalmente funciona
@@ -45,7 +45,7 @@ Para ajustar este tipo de modelos, buscamos minimizar
 la pérdida de entrenamiento:
 
 \begin{equation}
-\min \sum_{i=1}^N L(y^{(i)}, \sum_{k=1}^M T_k(x^{(i)}))
+\min \sum_{i=1}^N L\left(y^{(i)}, \sum_{k=1}^M T_k(x^{(i)})\right)
 \end{equation}
 
 Este puede ser un problema difícil, dependiendo de la familia 
@@ -77,7 +77,7 @@ reescribimos el problema anterior como
 
 Este problema consiste en *ajustar un árbol a los residuales o errores
 del paso anterior*. Otra manera de decir esto es que añadimos un término adicional
-que intenta corregir los que el modelo anterior no pudo predecir bien.
+que intenta corregir lo que el modelo anterior no pudo predecir bien.
 La idea es repetir este proceso para ir reduciendo los residuales, agregando
 un árbol a la vez.
 
@@ -296,7 +296,7 @@ Podemos hacer un refinamiento adicional que consiste en encontrar los cortes del
 
 2. Para $m=0,1,\ldots, M$, 
 
-  - Para $i=1,\ldots, n$, calculamos el residual
+  - Para $i=1,\ldots, N$, calculamos el residual
   $$r_{i,m}=-\frac{\partial L}{\partial z}(y^{(i)}, f_{m-1}(x^{(i)}))$$
   
   - Ajustamos un árbol de regresión  a la respuesta $r_{1,m},r_{2,m},\ldots, r_{n,m}$. Supongamos que tiene regiones $R_{j,m}$.
@@ -318,7 +318,7 @@ el gradiente de la función de pérdida. Algunos ejemplos populares son:
 $\frac{\partial L}{\partial z} = -2(y-f(x))$.
 - Pérdida absoluta (más robusta a atípicos que la cuadrática) $L(y,f(x))=|y-f(x)|$,
 $\frac{\partial L}{\partial z} = signo(y-f(x))$.
-- Devianza binomial $L(y, f(x))$ = -\log(1+e^{-yf(x)}), $y\in\{-1,1\}$,
+- Devianza binomial $L(y, f(x)) = -\log(1+e^{-yf(x)})$, $y\in\{-1,1\}$,
 $\frac{\partial L}{\partial z} = I(y=1) - h(f(x))$.
 - Adaboost, pérdida exponencial (para clasificación) $L(y,z) = e^{-yf(x)}$,
 $y\in\{-1,1\}$,
