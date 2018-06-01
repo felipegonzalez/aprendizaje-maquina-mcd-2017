@@ -1276,7 +1276,7 @@ grande si se trata de muestras relativamente chicas de entrenamiento/prueba.
 
 ## Tarea (para 25 de septiembre) {-}
 
-- Instalar (keras para R)[https://keras.rstudio.com] (versión CPU).
+- Instalar [keras para R](https://keras.rstudio.com) (versión CPU).
 - Suscribirse a kaggle (pueden ser equipos de 2 máximo, entonces
 les conviene suscribirse como un equipo).
 - Hacer el ejercicio de arriba \@ref(ejercicio-red)
